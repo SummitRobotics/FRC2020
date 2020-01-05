@@ -3,7 +3,9 @@ package frc.robot.logging;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
@@ -15,7 +17,7 @@ import frc.robot.utilities.Constants.LoggerRelations;
  */
 public class SyncLogger implements Subsystem {
 
-    private Logger elements[];
+    private ArrayList<Logger> elements;
     private int attempts, logNumber;
     private String logFileLocation;
     private double[] values;
@@ -23,11 +25,15 @@ public class SyncLogger implements Subsystem {
     /**
      * @param elements all logger classes
      */
-    public SyncLogger(Logger... elements) {
-        this.elements = elements;
+    public SyncLogger() {
+        this.elements = new ArrayList<>();
         values = new double[LoggerRelations.values().length];
 
         generateLogFile();
+    }
+
+    public void addElements(Logger... newElements) {
+        Collections.addAll(elements, newElements);
     }
 
     /**

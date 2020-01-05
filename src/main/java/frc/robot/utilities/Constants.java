@@ -48,6 +48,27 @@ public final class Constants {
         }
     }
 
+    public enum DPadValues {
+        UP(0, 45, 315),
+        DOWN(180, 135, 225),
+        LEFT(90, 45, 135),
+        RIGHT(270, 225, 315);
+
+        public int[] values;
+        private DPadValues(int... values) {
+            this.values = values;
+        }
+
+        public boolean isEqual(int value) {
+            for (int element : values) {
+                if (value == element) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     //all the values used in the robot such as can addressed
     public final static int
     //controlers
