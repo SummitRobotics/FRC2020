@@ -11,6 +11,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+/**
+ * Subsystem to control the drivetrain of the robot
+ */
 public class Drivetrain implements Subsystem, Logger {
 
     //data for logger

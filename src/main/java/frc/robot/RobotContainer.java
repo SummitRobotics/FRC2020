@@ -30,9 +30,7 @@ public class RobotContainer {
 
     scheduler.registerSubsystem(drivetrain);
 
-    logger = new SyncLogger(new Logger[] {
-      drivetrain
-    });
+    logger = new SyncLogger(drivetrain);
     scheduler.registerSubsystem(logger);
 
     configureButtonBindings();
