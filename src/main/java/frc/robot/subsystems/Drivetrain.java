@@ -25,8 +25,8 @@ public class Drivetrain implements Subsystem, Logger {
         values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
         values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
         values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[Constants.LoggerRelations.LEFT_MOTOR_POSISION.value] = getLeftEncoderPosition();
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POSISION.value] = getRightEncoderPosition();
+        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
+        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
         
         return values;
     }
@@ -41,7 +41,7 @@ public class Drivetrain implements Subsystem, Logger {
     private CANSparkMax rightMiddle = new CANSparkMax(Constants.RIGHT_DRIVE_0, MotorType.kBrushless);
     private CANSparkMax rightBack = new CANSparkMax(Constants.RIGHT_DRIVE_1, MotorType.kBrushless);
 
-    // pid controlers
+    // pid controllers
     private CANPIDController leftPID = left.getPIDController();
     private CANPIDController rightPID = right.getPIDController();
 
@@ -64,7 +64,7 @@ public class Drivetrain implements Subsystem, Logger {
     OUTPUT_MAX = .25;
 
     public Drivetrain() {
-        // tells other two motors to folow the first
+        // tells other two motors to follow the first
         leftMiddle.follow(left);
         leftBack.follow(left);
 
@@ -179,7 +179,7 @@ public class Drivetrain implements Subsystem, Logger {
      * @param rate time in seconds to go from 0 to full power
      */
     public void setOpenRampRate(double rate) {
-        // checks aginst old ramp rate to prevent unnessary ramprate sets at they take
+        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
         // lots of cpu time
         if (rate != oldOpenRampRate) {
             left.setOpenLoopRampRate(rate);
@@ -189,13 +189,13 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * Sets the rate at wich the motors ramp up and down in closed loop control
+     * Sets the rate at which the motors ramp up and down in closed loop control
      * mode
      * 
      * @param rate time in seconds to go from 0 to full power
      */
     public void setClosedRampRate(double rate) {
-        // checks aginst old ramp rate to prevent unnessary ramprate sets at they take
+        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
         // lots of cpu time
         if (rate != oldClosedRampRate) {
             left.setClosedLoopRampRate(rate);

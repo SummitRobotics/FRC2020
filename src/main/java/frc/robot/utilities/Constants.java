@@ -11,10 +11,10 @@ package frc.robot.utilities;
 public final class Constants {
 
     /**
-     * contrains all the index arrays for eah pice of data that is logged
+     * contains all the index arrays for eah pice of data that is logged
      */
     public enum LoggerRelations {
-        //controler -must start at 0 or modifacations need to oi.java
+        //controller -must start at 0 or modifications need to oi.java
         RIGHT_TRIGGER(0),
         LEFT_TRIGGER(1),
         RIGHT_BUMPER(2),
@@ -39,8 +39,8 @@ public final class Constants {
         RIGHT_MOTOR_POWER(19),
         LEFT_MOTOR_TARGET(20),
         RIGHT_MOTOR_TARGET(21),
-        LEFT_MOTOR_POSISION(22),
-        RIGHT_MOTOR_POSISION(23);
+        LEFT_MOTOR_POSITION(22),
+        RIGHT_MOTOR_POSITION(23);
 
         public int value;
         private LoggerRelations(int value) {
@@ -50,7 +50,7 @@ public final class Constants {
 
     //all the values used in the robot such as can addressed
     public final static int
-    //controlers
+    //controllers
     XBOX_PORT = 0, //xbox controller
 
     //ect
