@@ -2,8 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.logging.Logger;
 import frc.robot.logging.SyncLogger;
+import frc.robot.oi.ButtonDriver;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -15,6 +15,8 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
 
   private CommandScheduler scheduler;
+
+  private ButtonDriver buttonDriver;
 
   private SyncLogger logger;
 
@@ -28,10 +30,12 @@ public class RobotContainer {
 
     drivetrain = new Drivetrain();
 
-    scheduler.registerSubsystem(drivetrain);
+    buttonDriver = new ButtonDriver(logger);
 
-    logger = new SyncLogger(drivetrain);
-    scheduler.registerSubsystem(logger);
+    logger = new SyncLogger();
+    logger.addElements(drivetrain);
+
+    scheduler.registerSubsystem(drivetrain, logger);
 
     configureButtonBindings();
   }
