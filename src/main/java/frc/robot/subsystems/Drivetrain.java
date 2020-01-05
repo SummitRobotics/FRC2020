@@ -28,8 +28,6 @@ public class Drivetrain implements Subsystem, Logger {
         return values;
     }
 
-    private static Drivetrain instance;
-
     // left motors
     private CANSparkMax left = new CANSparkMax(Constants.LEFT_DRIVE_MAIN, MotorType.kBrushless);
     private CANSparkMax leftMiddle = new CANSparkMax(Constants.LEFT_DRIVE_0, MotorType.kBrushless);
@@ -62,7 +60,7 @@ public class Drivetrain implements Subsystem, Logger {
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
 
-    private Drivetrain() {
+    public Drivetrain() {
         // tells other two motors to folow the first
         leftMiddle.follow(left);
         leftBack.follow(left);
@@ -88,13 +86,6 @@ public class Drivetrain implements Subsystem, Logger {
         rightPID.setFF(FEED_FWD);
         rightPID.setIZone(I_ZONE);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
-    }
-
-    public static Drivetrain getInstance() {
-        if (instance == null) {
-            instance = new Drivetrain();
-        }
-        return instance;
     }
 
     /**
