@@ -22,7 +22,4 @@ public static double clampDouble(double in, double max, double min){
     }
 }
 
-
-
-
 }
