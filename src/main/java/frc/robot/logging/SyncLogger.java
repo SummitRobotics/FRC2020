@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Constants.LoggerRelations;
 
-public class SyncLogger implements Subsystem{
+public class SyncLogger implements Subsystem {
 
     private Logger elements[];
     private int attempts, logNumber;

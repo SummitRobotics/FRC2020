@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
 import frc.robot.utilities.Constants;
-import frc.robot.utilities.Clamp;
+import frc.robot.utilities.Functions;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -56,7 +56,7 @@ public class Drivetrain implements Subsystem, Logger {
     D = 0.01, 
     FEED_FWD = 0, 
     I_ZONE = 0,
-    // change later, just so a problem donsent breake my walls
+    // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
 
@@ -89,29 +89,29 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * sets the power of the left side of the drivetrain
+     * Sets the power of the left side of the drivetrain
      * 
      * @param power -1 - 1
      */
     public void setLeftMotorPower(double power) {
-        power = Clamp.clampDouble(power, -1.0, 1.0);
+        power = Functions.clampDouble(power, -1.0, 1.0);
         leftMotorPower = power;
         left.set(power);
     }
 
     /**
-     * sets the power of the right side of the drivetrain
+     * Sets the power of the right side of the drivetrain
      * 
      * @param power -1 - 1
      */
     public void setRightMotorPower(double power) {
-        power = Clamp.clampDouble(power, -1, 1);
+        power = Functions.clampDouble(power, -1, 1);
         rightMotorPower = power;
         right.set(power);
     }
 
     /**
-     * sets the target position of the left side of the drivetrain
+     * Sets the target position of the left side of the drivetrain
      * 
      * @param position the target position in terms of motor rotations
      */
@@ -122,7 +122,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * sets the target position of the right side of the drivetrain
+     * Sets the target position of the right side of the drivetrain
      * 
      * @param position the target position in terms of motor rotations
      */
@@ -133,7 +133,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * the position you want the left side to register when it is in the posiston it
+     * The position you want the left side to register when it is in the position it
      * is currently in
      * 
      * @param position the position for the encoder to register in rotations
@@ -143,7 +143,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * the position you want the right side to register when it is in the posiston
+     * The position you want the right side to register when it is in the position
      * it is currently in
      * 
      * @param position the position for the encoder to register in rotations
@@ -153,7 +153,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * returns the current position of right side of the drivetrain
+     * Returns the current position of right side of the drivetrain
      * 
      * @return position of motor in rotations
      */
@@ -162,7 +162,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * returns the current position of right side of the drivetrain
+     * Returns the current position of right side of the drivetrain
      * 
      * @return position of motor in rotations
      */
@@ -171,9 +171,9 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * sets the rate at witch the motors ramp up and down in open loop control mode
+     * Sets the rate at witch the motors ramp up and down in open loop control mode
      * 
-     * @param rate Time in seconds to go from 0 to full power
+     * @param rate time in seconds to go from 0 to full power
      */
     public void setOpenRampRate(double rate) {
         // checks aginst old ramp rate to prevent unnessary ramprate sets at they take
@@ -186,10 +186,10 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * sets the rate at witch the motors ramp up and down in closed loop control
+     * Sets the rate at wich the motors ramp up and down in closed loop control
      * mode
      * 
-     * @param rate Time in seconds to go from 0 to full power
+     * @param rate time in seconds to go from 0 to full power
      */
     public void setClosedRampRate(double rate) {
         // checks aginst old ramp rate to prevent unnessary ramprate sets at they take
@@ -202,7 +202,7 @@ public class Drivetrain implements Subsystem, Logger {
     }
 
     /**
-     * stops the motors
+     * Stops the motors
      */
     public void stop() {
         left.stopMotor();
