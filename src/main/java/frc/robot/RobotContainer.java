@@ -3,8 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
-import frc.robot.oi.ButtonDriver;
+import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utilities.Constants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -16,7 +17,7 @@ public class RobotContainer {
 
   private CommandScheduler scheduler;
 
-  private ButtonDriver buttonDriver;
+  private ControllerDriver controller1;
 
   private SyncLogger logger;
 
@@ -30,7 +31,7 @@ public class RobotContainer {
 
     drivetrain = new Drivetrain();
 
-    buttonDriver = new ButtonDriver(logger);
+    controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
     logger = new SyncLogger();
     logger.addElements(drivetrain);
