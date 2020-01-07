@@ -30,9 +30,9 @@ public class ControllerDriver implements Logger{
     rightBumper,
     leftBumper;
 
-    public ControllerDriver(SyncLogger logger, int port) {
+    public ControllerDriver(SyncLogger logger, int controllerPort) {
 
-        controller = new XboxController(port);
+        controller = new XboxController(controllerPort);
 
         //wpi compatable butttons
         buttonA = new LoggerButton(LoggerRelations.BTN_A, logger) {
