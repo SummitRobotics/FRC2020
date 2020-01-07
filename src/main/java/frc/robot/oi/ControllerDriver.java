@@ -10,9 +10,9 @@ import frc.robot.utilities.Constants.DPadValues;
 import frc.robot.utilities.Constants.LoggerRelations;
 
 
-public class ButtonDriver implements Logger{
+public class ControllerDriver implements Logger{
 
-    XboxController controller = new XboxController(Constants.XBOX_PORT);
+    XboxController controller;
 
     public LoggerButton
     buttonA,
@@ -30,7 +30,9 @@ public class ButtonDriver implements Logger{
     rightBumper,
     leftBumper;
 
-    public ButtonDriver(SyncLogger logger) {
+    public ControllerDriver(SyncLogger logger, int port) {
+
+        controller = new XboxController(port);
 
         //wpi compatable butttons
         buttonA = new LoggerButton(LoggerRelations.BTN_A, logger) {
@@ -126,11 +128,11 @@ public class ButtonDriver implements Logger{
     }
 
     //trigers
-    public double rightTriger(){
+    public double rightTrigger(){
         return controller.getTriggerAxis(Hand.kRight);
     }
 
-    public double leftTriger(){
+    public double leftTrigger(){
         return controller.getTriggerAxis(Hand.kLeft);
     }
 
@@ -153,8 +155,8 @@ public class ButtonDriver implements Logger{
 
     @Override
     public double[] getValues(double[] values) {
-        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTriger();
-        values[LoggerRelations.LEFT_TRIGGER.value] = leftTriger();
+        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTrigger();
+        values[LoggerRelations.LEFT_TRIGGER.value] = leftTrigger();
         values[LoggerRelations.LEFT_STICK_X.value] = leftStickX();
         values[LoggerRelations.LEFT_STICK_Y.value] = leftStickY();
         values[LoggerRelations.RIGHT_STICK_X.value] = rightStickX();
