@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
@@ -210,5 +210,13 @@ public class Drivetrain implements Subsystem, Logger {
     public void stop() {
         left.stopMotor();
         right.stopMotor();
+    }
+
+    public void arcadeDrive(double power, double turn) {
+        double leftPower = power + turn;
+        double rightPower = power - turn;
+
+        setLeftMotorPower(leftPower);
+        setRightMotorPower(rightPower);
     }
 }

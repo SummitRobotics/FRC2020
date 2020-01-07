@@ -125,36 +125,36 @@ public class ButtonDriver implements Logger{
         logger.addElements(this);
     }
 
-    //trigers
-    public double rightTriger(){
+    //triggers
+    public double rightTrigger() {
         return controller.getTriggerAxis(Hand.kRight);
     }
 
-    public double leftTriger(){
+    public double leftTrigger() {
         return controller.getTriggerAxis(Hand.kLeft);
     }
 
     //sticks - x is left and right and y is up and down
-    public double leftStickX(){
+    public double leftStickX() {
         return controller.getX(Hand.kLeft);
     }
 
-    public double leftStickY(){
+    public double leftStickY() {
         return controller.getY(Hand.kLeft);
     }
 
-    public double rightStickX(){
+    public double rightStickX() {
         return controller.getX(Hand.kRight);
     }
 
-    public double rightStickY(){
+    public double rightStickY() {
         return controller.getY(Hand.kRight);
     }
 
     @Override
     public double[] getValues(double[] values) {
-        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTriger();
-        values[LoggerRelations.LEFT_TRIGGER.value] = leftTriger();
+        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTrigger();
+        values[LoggerRelations.LEFT_TRIGGER.value] = leftTrigger();
         values[LoggerRelations.LEFT_STICK_X.value] = leftStickX();
         values[LoggerRelations.LEFT_STICK_Y.value] = leftStickY();
         values[LoggerRelations.RIGHT_STICK_X.value] = rightStickX();
