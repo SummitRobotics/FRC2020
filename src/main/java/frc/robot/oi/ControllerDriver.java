@@ -10,9 +10,9 @@ import frc.robot.utilities.Constants.DPadValues;
 import frc.robot.utilities.Constants.LoggerRelations;
 
 
-public class ButtonDriver implements Logger{
+public class ControllerDriver implements Logger{
 
-    XboxController controller = new XboxController(Constants.XBOX_PORT);
+    XboxController controller;
 
     public LoggerButton
     buttonA,
@@ -30,7 +30,9 @@ public class ButtonDriver implements Logger{
     rightBumper,
     leftBumper;
 
-    public ButtonDriver(SyncLogger logger) {
+    public ControllerDriver(SyncLogger logger, int controllerPort) {
+
+        controller = new XboxController(controllerPort);
 
         //wpi compatable butttons
         buttonA = new LoggerButton(LoggerRelations.BTN_A, logger) {
