@@ -128,11 +128,11 @@ public class ControllerDriver implements Logger{
     }
 
     //trigers
-    public double rightTriger(){
+    public double rightTrigger(){
         return controller.getTriggerAxis(Hand.kRight);
     }
 
-    public double leftTriger(){
+    public double leftTrigger(){
         return controller.getTriggerAxis(Hand.kLeft);
     }
 
@@ -155,8 +155,8 @@ public class ControllerDriver implements Logger{
 
     @Override
     public double[] getValues(double[] values) {
-        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTriger();
-        values[LoggerRelations.LEFT_TRIGGER.value] = leftTriger();
+        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTrigger();
+        values[LoggerRelations.LEFT_TRIGGER.value] = leftTrigger();
         values[LoggerRelations.LEFT_STICK_X.value] = leftStickX();
         values[LoggerRelations.LEFT_STICK_Y.value] = leftStickY();
         values[LoggerRelations.RIGHT_STICK_X.value] = rightStickX();

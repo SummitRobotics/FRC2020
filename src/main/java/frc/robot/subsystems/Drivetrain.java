@@ -211,4 +211,12 @@ public class Drivetrain implements Subsystem, Logger {
         left.stopMotor();
         right.stopMotor();
     }
+
+    public void arcadeDrive(double power, double turn) {
+        double leftPower = power + turn;
+        double rightPower = power - turn;
+
+        setLeftMotorPower(leftPower);
+        setRightMotorPower(rightPower);
+    }
 }

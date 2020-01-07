@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
@@ -17,9 +18,9 @@ public class RobotContainer {
 
   private CommandScheduler scheduler;
 
-  private ControllerDriver controller1;
-
   private SyncLogger logger;
+
+  private ControllerDriver controller1;
 
   private Drivetrain drivetrain;
 
@@ -28,12 +29,16 @@ public class RobotContainer {
    */
   public RobotContainer() {
     scheduler = CommandScheduler.getInstance();
-
-    drivetrain = new Drivetrain();
+    logger = new SyncLogger();
 
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
-    logger = new SyncLogger();
+    drivetrain = new Drivetrain();
+    drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.arcadeDrive(
+      controller1.rightTrigger() - controller1.leftTrigger(), 
+      controller1.leftStickX()),
+      drivetrain));
+
     logger.addElements(drivetrain);
 
     scheduler.registerSubsystem(drivetrain, logger);
