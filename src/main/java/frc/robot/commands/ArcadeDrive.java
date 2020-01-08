@@ -7,24 +7,31 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import java.util.Set;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.oi.ControllerDriver;
 
-public class ArcadeDrive extends CommandBase {
+public class ArcadeDrive implements Command {
 
   private Drivetrain drivetrain;
-  private ControllerDriver cDriver;
+  private ControllerDriver controller;
 
   /**
-   * telyop driver control
+   * teleop driver control
    * @param drivetrain drivetrain instance
-   * @param cDriver controler instance
+   * @param controller controller instance
    */
-  public ArcadeDrive(Drivetrain drivetrain, ControllerDriver cDriver) {
+  public ArcadeDrive(Drivetrain drivetrain, ControllerDriver controller) {
     this.drivetrain = drivetrain;
-    this.cDriver = cDriver;
-    addRequirements(drivetrain);
+    this.controller = controller;
+  }
+
+  @Override
+  public Set<Subsystem> getRequirements() {
+    return null;
   }
 
   // Called when the command is initially scheduled.
@@ -35,9 +42,9 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double power = cDriver.rightTrigger() - cDriver.leftTrigger();
-    double leftPower = power + cDriver.leftStickX();
-    double rightPower = power - cDriver.leftStickX();
+    double power = controller.rightTrigger() - controller.leftTrigger();
+    double leftPower = power + controller.leftStickX();
+    double rightPower = power - controller.leftStickX();
     System.out.println(leftPower);
     System.out.println(rightPower);
     drivetrain.setLeftMotorPower(leftPower);

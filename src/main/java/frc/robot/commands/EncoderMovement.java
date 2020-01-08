@@ -7,10 +7,15 @@
 
 package frc.robot.commands;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
 
-public class EncoderMovement extends CommandBase {
+public class EncoderMovement implements Command {
 
   private Drivetrain drivetrain;
 
@@ -18,7 +23,7 @@ public class EncoderMovement extends CommandBase {
   private double leftTarget = 0, rightTarget = 0;
   private boolean finished = false;
 
-  //acceptable error in motor rotations
+  // acceptable error in motor rotations
   private final double ACCEPTABLE_ERROR = 1;
 
   /**
@@ -28,13 +33,19 @@ public class EncoderMovement extends CommandBase {
     this.rightDistance = rightDistance;
     this.leftDistance = leftDistance;
     this.drivetrain = drivetrain;
-    addRequirements(drivetrain);
+  }
+  
+  @Override
+  public Set<Subsystem> getRequirements() {
+    Set<Subsystem> requirements = new HashSet<Subsystem>();
+    requirements.add(drivetrain);
+    return requirements;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //adds current encoder position to targets
+    // adds current encoder position to targets
     leftTarget = leftDistance + drivetrain.getLeftEncoderPosition();
     rightTarget = rightDistance + drivetrain.getRightEncoderPosition();
   }
@@ -45,8 +56,10 @@ public class EncoderMovement extends CommandBase {
     drivetrain.setLeftMotorPosition(leftTarget);
     drivetrain.setRightMotorPosition(rightTarget);
 
-    //checks if both sides are under or equal to acceptable error and if they are then finish the command
-    if((Math.abs(drivetrain.getLeftEncoderPosition() - leftTarget)<= ACCEPTABLE_ERROR) && (Math.abs(drivetrain.getRightEncoderPosition() - rightTarget)<= ACCEPTABLE_ERROR)){
+    // checks if both sides are under or equal to acceptable error and if they are
+    // then finish the command
+    if ((Math.abs(drivetrain.getLeftEncoderPosition() - leftTarget) <= ACCEPTABLE_ERROR)
+        && (Math.abs(drivetrain.getRightEncoderPosition() - rightTarget) <= ACCEPTABLE_ERROR)) {
       finished = true;
     }
   }

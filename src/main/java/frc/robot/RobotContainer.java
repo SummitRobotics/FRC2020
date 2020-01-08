@@ -39,11 +39,10 @@ public class RobotContainer {
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
     drivetrain = new Drivetrain();
-    //drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1));
+    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
 
     logger.addElements(drivetrain);
-
-    scheduler.registerSubsystem(drivetrain, logger);
+    scheduler.registerSubsystem(logger);
 
     configureButtonBindings();
   }
@@ -55,8 +54,6 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //dosent work
-    controller1.buttonA.whenActive(new ArcadeDrive(drivetrain, controller1));
   }
 
   /**
