@@ -7,15 +7,10 @@
 
 package frc.robot.commands;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.Drivetrain;
 
-public class EncoderMovement implements Command {
+public class EncoderMovement extends CommandBase {
 
   private Drivetrain drivetrain;
 
@@ -33,15 +28,10 @@ public class EncoderMovement implements Command {
     this.rightDistance = rightDistance;
     this.leftDistance = leftDistance;
     this.drivetrain = drivetrain;
+
+    addRequirements(drivetrain);
   }
   
-  @Override
-  public Set<Subsystem> getRequirements() {
-    Set<Subsystem> requirements = new HashSet<Subsystem>();
-    requirements.add(drivetrain);
-    return requirements;
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {

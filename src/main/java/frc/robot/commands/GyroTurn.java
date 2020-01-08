@@ -7,12 +7,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.devices.PigeonGyro;
@@ -20,7 +15,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
 
-public class GyroTurn implements Command {
+public class GyroTurn extends CommandBase {
 
   private PIDController pidController = new PIDController(Constants.GYRO_P, Constants.GYRO_I, Constants.GYRO_D);
   private Drivetrain drivetrain;
@@ -48,14 +43,8 @@ public class GyroTurn implements Command {
 
     // sets acceptable error
     pidController.setTolerance(ACCEPATBLE_ERROR);
-  }
 
-  // Gets required subsystems
-  @Override
-  public Set<Subsystem> getRequirements() {
-    Set<Subsystem> requirements = new HashSet<Subsystem>();
-    requirements.add(drivetrain);
-    return requirements;
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.

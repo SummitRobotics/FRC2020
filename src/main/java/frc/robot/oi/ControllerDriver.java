@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.logging.Logger;
 import frc.robot.logging.SyncLogger;
-import frc.robot.utilities.Constants;
 import frc.robot.utilities.Constants.DPadValues;
 import frc.robot.utilities.Constants.LoggerRelations;
 
