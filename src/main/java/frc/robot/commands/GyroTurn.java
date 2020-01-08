@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IMU;
+import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
 
 
 public class GyroTurn extends CommandBase {
 
-  private PIDController pidController = new PIDController(0.05, 0, 0);
+  private PIDController pidController = new PIDController(Constants.GYRO_P, Constants.GYRO_I, Constants.GYRO_D);
   private Drivetrain drivetrain;
   private IMU gyro;
 

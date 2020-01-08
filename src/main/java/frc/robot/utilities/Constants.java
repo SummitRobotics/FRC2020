@@ -94,6 +94,16 @@ public final class Constants {
 
     //sensors
     PIGEON_IMU = 10;
+    
+    //PID Values
+    public final static double
+    DRIVETRAIN_P = .2,
+    DRIVETRAIN_I = 0.0,
+    DRIVETRAIN_D = 0.01,
+
+    GYRO_P = 0.05,
+    GYRO_I = 0,
+    GYRO_D = 0;
 
     public final static String
     LOG_FILE_PATH = "/home/admin/";
