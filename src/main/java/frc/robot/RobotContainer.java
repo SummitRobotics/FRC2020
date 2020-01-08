@@ -7,6 +7,7 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Constants;
+import frc.robot.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -24,6 +25,8 @@ public class RobotContainer {
 
   private Drivetrain drivetrain;
 
+  //commands
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -34,10 +37,7 @@ public class RobotContainer {
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
     drivetrain = new Drivetrain();
-    drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.arcadeDrive(
-      controller1.rightTrigger() - controller1.leftTrigger(), 
-      controller1.leftStickX()),
-      drivetrain));
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1));
 
     logger.addElements(drivetrain);
 

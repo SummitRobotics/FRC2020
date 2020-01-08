@@ -17,7 +17,9 @@ public class ArcadeDrive extends CommandBase {
   private ControllerDriver cDriver;
 
   /**
-   * Creates a new ArcadeDrive.
+   * telyop driver control
+   * @param drivetrain drivetrain instance
+   * @param cDriver controler instance
    */
   public ArcadeDrive(Drivetrain drivetrain, ControllerDriver cDriver) {
     this.drivetrain = drivetrain;
