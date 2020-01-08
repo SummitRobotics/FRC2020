@@ -38,7 +38,8 @@ public class ArcadeDrive extends CommandBase {
     double power = cDriver.rightTrigger() - cDriver.leftTrigger();
     double leftPower = power + cDriver.leftStickX();
     double rightPower = power - cDriver.leftStickX();
-
+    System.out.println(leftPower);
+    System.out.println(rightPower);
     drivetrain.setLeftMotorPower(leftPower);
     drivetrain.setRightMotorPower(rightPower);
   }

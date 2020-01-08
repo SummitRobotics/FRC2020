@@ -21,9 +21,11 @@ public class RobotContainer {
 
   private SyncLogger logger;
 
-  private ControllerDriver controller1;
+  // public just to make things work
+  public ControllerDriver controller1;
 
-  private Drivetrain drivetrain;
+  // public just to make things work
+  public Drivetrain drivetrain;
 
   //commands
 
@@ -37,7 +39,7 @@ public class RobotContainer {
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
     drivetrain = new Drivetrain();
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1));
+    //drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1));
 
     logger.addElements(drivetrain);
 
@@ -53,6 +55,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //dosent work
+    controller1.buttonA.whenActive(new ArcadeDrive(drivetrain, controller1));
   }
 
   /**

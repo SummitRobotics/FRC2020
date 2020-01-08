@@ -165,7 +165,7 @@ public class ControllerDriver implements Logger{
         return values;
     }
 
-    private class LoggerButton extends Button implements Logger {
+    public class LoggerButton extends Button implements Logger {
         private LoggerRelations logReference;
 
         public LoggerButton(LoggerRelations logReference, SyncLogger logger) {
