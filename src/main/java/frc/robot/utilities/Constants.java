@@ -40,7 +40,13 @@ public final class Constants {
         LEFT_MOTOR_TARGET(20),
         RIGHT_MOTOR_TARGET(21),
         LEFT_MOTOR_POSITION(22),
-        RIGHT_MOTOR_POSITION(23);
+        RIGHT_MOTOR_POSITION(23),
+
+        //sensors
+        IMU_X_GFORCE(24),
+        IMU_Y_ANGLE(25),
+        IMU_HEADING(26);
+        
 
         public int value;
         private LoggerRelations(int value) {
@@ -84,7 +90,10 @@ public final class Constants {
     
     RIGHT_DRIVE_0 = 30,
     RIGHT_DRIVE_MAIN = 31,
-    RIGHT_DRIVE_1 = 32;
+    RIGHT_DRIVE_1 = 32,
+
+    //sensors
+    PIGEON_IMU = 10;
 
     public final static String
     LOG_FILE_PATH = "/home/admin/";
