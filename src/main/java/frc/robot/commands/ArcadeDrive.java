@@ -13,8 +13,10 @@ import frc.robot.oi.ControllerDriver;
 
 public class ArcadeDrive extends CommandBase {
 
-  private final Drivetrain drivetrain;
-  private final ControllerDriver controller;
+  private Drivetrain drivetrain;
+  private ControllerDriver controller;
+
+  private double turn = 0;
 
   /**
    * teleop driver control
@@ -39,7 +41,14 @@ public class ArcadeDrive extends CommandBase {
   public void execute() {
 
     double power = controller.rightTrigger() - controller.leftTrigger();
-    double turn = controller.leftStickX()*.5;
+    double stick = controller.leftStickX();
+    //makes it so turnin is easyer beacuse shorter controler inputs will have less effect
+    if(stick == 0){
+      turn = 0;
+    }
+    else{
+      turn = turn+(stick*.125);
+    }
     
     double leftPower = power + turn;
     double rightPower = power - turn;

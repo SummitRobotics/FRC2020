@@ -18,7 +18,7 @@ public class PigeonGyro implements Logger {
         values[LoggerRelations.IMU_Y_ANGLE.value] = getYAngle();
         values[LoggerRelations.IMU_HEADING.value] = getHeading();
 
-        return null;
+        return values;
     }
 
     public double getXGForce() {

@@ -27,7 +27,7 @@ public class RobotContainer {
   private ControllerDriver controller1;
 
   // public just to make things work
-  public PigeonGyro gyro;
+  private PigeonGyro gyro;
   private Drivetrain drivetrain;
 
   private Pneumatics pneumatics;
@@ -50,8 +50,9 @@ public class RobotContainer {
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
 
     pneumatics = new Pneumatics();
+    CommandScheduler.getInstance().schedule(new Shift(pneumatics, true));
 
-    logger.addElements(drivetrain);
+    logger.addElements(drivetrain, gyro);
     scheduler.registerSubsystem(logger);
 
     configureButtonBindings();

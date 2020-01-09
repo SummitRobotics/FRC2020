@@ -5,16 +5,16 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
 
-public class Pneumatics{
+public class Pneumatics implements Subsystem{
 
     private Compressor compressor = new Compressor(Constants.PCM_1);
-    private Solenoid chairOpen = new Solenoid(Constants.PCM_1, Constants.PANEL_SOLENOID_OPEN);
-    private Solenoid chairClose = new Solenoid(Constants.PCM_1, Constants.PANEL_SOLENOID_CLOSE);
     private Solenoid shiftHigh = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_OPEN);
     private Solenoid shiftLow = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_CLOSE);
     private boolean oldShift;
 
-    public Pneumatics(){}
+    public Pneumatics(){
+        compressor.setClosedLoopControl(true);
+    }
 
     /**
      * controls the shifting of the drivetrain on the robot
