@@ -92,6 +92,13 @@ public final class Constants {
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
 
+    //pneumatics
+    PCM_1 = 1,
+    DRIVE_SOLENOID_OPEN = 1,
+    DRIVE_SOLENOID_CLOSE = 0,
+    PANEL_SOLENOID_OPEN = 2,
+    PANEL_SOLENOID_CLOSE = 3,
+
     //sensors
     PIGEON_IMU = 10;
     

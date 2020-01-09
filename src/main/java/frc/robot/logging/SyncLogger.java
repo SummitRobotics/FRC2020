@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Constants.LoggerRelations;
@@ -21,6 +22,7 @@ public class SyncLogger implements Subsystem {
     private int attempts, logNumber;
     private String logFileLocation;
     private double[] values;
+    private Timer robotTimer = new Timer();
 
     /**
      * @param elements all logger classes
@@ -52,6 +54,10 @@ public class SyncLogger implements Subsystem {
      * Creates a new log file
      */
     private void generateLogFile() {
+        //timer stuff
+        robotTimer.reset();
+        robotTimer.start();
+
         attempts = 0;
         values = new double[LoggerRelations.values().length];
 
@@ -92,7 +98,7 @@ public class SyncLogger implements Subsystem {
      */
     private void writeLogFile() {
         try (FileWriter writer = new FileWriter(logFileLocation, true)) {
-            writer.append(System.nanoTime() / 1_000_000_000 + ", ");
+            writer.append(Math.round(robotTimer.get()*1000) + ", ");
             writer.append(getFormatedLogData());
             writer.append("\n");
 

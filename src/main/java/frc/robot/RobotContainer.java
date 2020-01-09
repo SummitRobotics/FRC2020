@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Pneumatics;
 import frc.robot.utilities.Constants;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
@@ -23,11 +24,15 @@ public class RobotContainer {
   private SyncLogger logger;
 
   // public just to make things work
-  public ControllerDriver controller1;
+  private ControllerDriver controller1;
 
   // public just to make things work
   public PigeonGyro gyro;
-  public Drivetrain drivetrain;
+  private Drivetrain drivetrain;
+
+  private Pneumatics pneumatics;
+
+
 
   //commands
 
@@ -44,6 +49,8 @@ public class RobotContainer {
     drivetrain = new Drivetrain();
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
 
+    pneumatics = new Pneumatics();
+
     logger.addElements(drivetrain);
     scheduler.registerSubsystem(logger);
 
@@ -57,6 +64,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    controller1.buttonA.whenPressed(new Shift(pneumatics));
   }
 
   /**
