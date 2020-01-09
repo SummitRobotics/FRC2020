@@ -6,7 +6,9 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Constants;
+import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
+import frc.robot.devices.PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -24,6 +26,7 @@ public class RobotContainer {
   public ControllerDriver controller1;
 
   // public just to make things work
+  public PigeonGyro gyro;
   public Drivetrain drivetrain;
 
   //commands
@@ -37,6 +40,7 @@ public class RobotContainer {
 
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
+    gyro = new PigeonGyro(Constants.PIGEON_IMU);
     drivetrain = new Drivetrain();
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
 
@@ -61,6 +65,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return new AppeaseDuane(drivetrain, gyro);
   }
 }
