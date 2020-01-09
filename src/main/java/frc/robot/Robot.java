@@ -84,7 +84,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     //just to force things to work !!!!!REMOVE LATER!!!!!!
-    CommandScheduler.getInstance().schedule(new ArcadeDrive(m_robotContainer.drivetrain, m_robotContainer.controller1));
   }
 
   /**

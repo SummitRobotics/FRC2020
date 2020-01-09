@@ -94,7 +94,7 @@ public class Drivetrain implements Subsystem, Logger {
      * @param power -1 - 1
      */
     public void setLeftMotorPower(double power) {
-        power = Functions.clampDouble(power, -1.0, 1.0);
+        power = Functions.clampDouble(power, 1.0, -1.0);
         leftMotorPower = power;
         left.set(power);
     }
@@ -105,7 +105,7 @@ public class Drivetrain implements Subsystem, Logger {
      * @param power -1 - 1
      */
     public void setRightMotorPower(double power) {
-        power = Functions.clampDouble(power, -1, 1);
+        power = Functions.clampDouble(power, 1.0, -1.0);
         rightMotorPower = power;
         right.set(power);
     }
