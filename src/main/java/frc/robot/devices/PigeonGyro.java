@@ -14,6 +14,7 @@ public class PigeonGyro implements Logger {
 
     @Override
     public double[] getValues(double[] values) {
+        System.out.println("geting gyro values");
         values[LoggerRelations.IMU_X_GFORCE.value] = getXGForce();
         values[LoggerRelations.IMU_Y_ANGLE.value] = getYAngle();
         values[LoggerRelations.IMU_HEADING.value] = getHeading();
@@ -21,6 +22,10 @@ public class PigeonGyro implements Logger {
         return values;
     }
 
+    /**
+     * gets the force expreinced by the robots x axis (parallel whith the drivetrain)
+     * @return force in g's
+     */
     public double getXGForce() {
         short[] axies = {0,0,0};
         gyro.getBiasedAccelerometer(axies);
@@ -28,6 +33,10 @@ public class PigeonGyro implements Logger {
         return out;
     }
 
+    /**
+     * gets the fowards and backwards tilit of the robot
+     * @return the tilt angle
+     */
     public double getYAngle() {
         double[] angles = {0,0,0};
         gyro.getYawPitchRoll(angles);
@@ -35,10 +44,18 @@ public class PigeonGyro implements Logger {
         return out;
     }
 
+    /**
+     * gets the heading of the robot
+     * @return heading angle, not limited to 180
+     */
     public double getHeading() {
         return gyro.getFusedHeading();
     }
 
+    /**
+     * makes the curent heading of the robot read as the argument
+     * @param setpoint the heading you want the current posision to be
+     */
     public void setHeading(double setpoint) {
         gyro.setFusedHeading(setpoint);
     }

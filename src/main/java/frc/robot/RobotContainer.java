@@ -52,7 +52,7 @@ public class RobotContainer {
     pneumatics = new Pneumatics();
     CommandScheduler.getInstance().schedule(new Shift(pneumatics, true));
 
-    logger.addElements(drivetrain, gyro);
+    logger.addElements(drivetrain, gyro, pneumatics);
     scheduler.registerSubsystem(logger);
 
     configureButtonBindings();

@@ -34,7 +34,13 @@ public class SyncLogger implements Subsystem {
         generateLogFile();
     }
 
+    /**
+     * adds passed in instances to logger so data from it is logged
+     * the passed in must implement logger
+     * @param newElements the instances to add to the logger
+     */
     public void addElements(Logger... newElements) {
+        // adds passed in instace to logger elements array
         Collections.addAll(elements, newElements);
     }
 
@@ -97,6 +103,7 @@ public class SyncLogger implements Subsystem {
      * Writes a new entry in an open log file
      */
     private void writeLogFile() {
+        getFormatedLogData();
         try (FileWriter writer = new FileWriter(logFileLocation, true)) {
             writer.append(Math.round(robotTimer.get()*1000) + ", ");
             writer.append(getFormatedLogData());
@@ -111,8 +118,8 @@ public class SyncLogger implements Subsystem {
      * Retrieves log data from logging classes 
      */
     private void getLogData() {
-        for (Logger l : elements) {
-            values = l.getValues(values);
+        for (Logger loggerImplimentation : elements) {
+            values = loggerImplimentation.getValues(values);
         }
     }
 
@@ -123,6 +130,8 @@ public class SyncLogger implements Subsystem {
     private String getFormatedLogData() {
         getLogData();
         String data = Arrays.toString(values);
-        return data.substring(1, data.length()-2);
+        String out = data.substring(1, data.length()-1);
+        System.out.println(out);
+        return out;
     }
 }

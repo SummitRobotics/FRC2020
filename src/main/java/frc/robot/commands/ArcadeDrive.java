@@ -17,6 +17,10 @@ public class ArcadeDrive extends CommandBase {
   private ControllerDriver controller;
 
   private double turn = 0;
+  private int index = 0;
+  //last 8 turn inputs from controler
+  private double[] turns = new double[8];
+
 
   /**
    * teleop driver control
@@ -41,13 +45,25 @@ public class ArcadeDrive extends CommandBase {
   public void execute() {
 
     double power = controller.rightTrigger() - controller.leftTrigger();
+
+    //turning stuff
     double stick = controller.leftStickX();
+    //loops through array
+    if(index == turns.length){
+      index = 0;
+    }
+    //adds current stick value / by array length to array. devided so if stick is pussed fully one way for 8 loops than the arrays sum will be 1
+    turns[index] = stick/turns.length;
+    //increments index
+    index++;
     //makes it so turnin is easyer beacuse shorter controler inputs will have less effect
     if(stick == 0){
       turn = 0;
     }
     else{
-      turn = turn+(stick*.125);
+      for(int i = 0; i<turns.length; i++){
+        turn += turns[i];
+      }
     }
     
     double leftPower = power + turn;

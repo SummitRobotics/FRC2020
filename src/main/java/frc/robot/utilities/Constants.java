@@ -45,7 +45,10 @@ public final class Constants {
         //sensors
         IMU_X_GFORCE(24),
         IMU_Y_ANGLE(25),
-        IMU_HEADING(26);
+        IMU_HEADING(26),
+
+        //pneumatics
+        SHIFT_STATE(27);
         
 
         public int value;
