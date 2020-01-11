@@ -209,4 +209,13 @@ public class Drivetrain implements Subsystem, Logger {
         right.stopMotor();
     }
 
+    /**
+     * Makes the robot turn by a power
+     * 
+     * @param power power of the motors
+     */
+    public void turn(double power) {
+        setLeftMotorPower(-power);
+        setRightMotorPower(power);
+    }
 }
