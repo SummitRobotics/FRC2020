@@ -15,6 +15,7 @@ public class Shifter implements Subsystem, Logger{
 
     public Shifter(){
         compressor.setClosedLoopControl(true);
+        oldShift = shiftHigh.get();
     }
 
     /**

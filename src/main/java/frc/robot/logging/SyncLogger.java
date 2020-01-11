@@ -130,8 +130,6 @@ public class SyncLogger implements Subsystem {
     private String getFormatedLogData() {
         getLogData();
         String data = Arrays.toString(values);
-        String out = data.substring(1, data.length()-1);
-        System.out.println(out);
-        return out;
+        return data.substring(1, data.length()-1);
     }
 }

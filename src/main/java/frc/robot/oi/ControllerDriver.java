@@ -116,7 +116,7 @@ public class ControllerDriver implements Logger{
             }
         };
 
-        rightBumper = new LoggerButton(LoggerRelations.LEFT_BUMPER, logger) {
+        leftBumper = new LoggerButton(LoggerRelations.LEFT_BUMPER, logger) {
             @Override
             public boolean get() {
                 return controller.getBumper(Hand.kLeft);

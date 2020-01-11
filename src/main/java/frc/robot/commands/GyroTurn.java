@@ -21,7 +21,7 @@ public class GyroTurn extends CommandBase {
   private Drivetrain drivetrain;
   private PigeonGyro gyro;
 
-  private double setPoint;
+  private double setPoint, angle;
 
   private final double ACCEPATBLE_ERROR = .5;
 
@@ -35,10 +35,7 @@ public class GyroTurn extends CommandBase {
   public GyroTurn(PigeonGyro gyro, Drivetrain drivetrain, double angle) {
     this.gyro = gyro;
     this.drivetrain = drivetrain;
-
-    // finds setpoint for pid controler
-    setPoint = angle + gyro.getHeading();
-    pidController.setSetpoint(setPoint);
+    this.angle = angle;
 
     // sets acceptable error
     pidController.setTolerance(ACCEPATBLE_ERROR);
@@ -49,6 +46,9 @@ public class GyroTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // finds setpoint for pid controler
+    setPoint = angle + gyro.getHeading();
+    pidController.setSetpoint(setPoint);
     // sets ramprate to 0 so pid works right
     drivetrain.setOpenRampRate(0);
   }

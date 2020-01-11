@@ -29,12 +29,7 @@ public class RobotContainer {
   // public just to make things work
   private PigeonGyro gyro;
   private Drivetrain drivetrain;
-
   private Shifter shifter;
-
-
-
-  //commands
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -47,10 +42,9 @@ public class RobotContainer {
 
     gyro = new PigeonGyro(Constants.PIGEON_IMU);
     drivetrain = new Drivetrain();
-    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
-
     shifter = new Shifter();
-    CommandScheduler.getInstance().schedule(new Shift(shifter, true));
+
+    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
     logger.addElements(drivetrain, gyro, shifter);
     scheduler.registerSubsystem(logger);
@@ -65,7 +59,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller1.buttonA.whenPressed(new Shift(shifter));
+    controller1.leftBumper.whenPressed(new Shift(shifter));
+    controller1.dPadRight.whenPressed(new GyroTurn(gyro, drivetrain, 90));
+    controller1.dPadLeft.whenPressed(new GyroTurn(gyro, drivetrain, -90));
   }
 
   /**

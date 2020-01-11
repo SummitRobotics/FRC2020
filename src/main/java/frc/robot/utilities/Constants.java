@@ -99,8 +99,6 @@ public final class Constants {
     PCM_1 = 1,
     DRIVE_SOLENOID_OPEN = 1,
     DRIVE_SOLENOID_CLOSE = 0,
-    PANEL_SOLENOID_OPEN = 2,
-    PANEL_SOLENOID_CLOSE = 3,
 
     //sensors
     PIGEON_IMU = 10;

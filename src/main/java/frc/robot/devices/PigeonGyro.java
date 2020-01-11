@@ -14,7 +14,7 @@ public class PigeonGyro implements Logger {
 
     @Override
     public double[] getValues(double[] values) {
-        System.out.println("geting gyro values");
+
         values[LoggerRelations.IMU_X_GFORCE.value] = getXGForce();
         values[LoggerRelations.IMU_Y_ANGLE.value] = getYAngle();
         values[LoggerRelations.IMU_HEADING.value] = getHeading();
