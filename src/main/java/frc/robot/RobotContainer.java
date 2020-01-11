@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Constants;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
@@ -30,7 +30,7 @@ public class RobotContainer {
   private PigeonGyro gyro;
   private Drivetrain drivetrain;
 
-  private Pneumatics pneumatics;
+  private Shifter shifter;
 
 
 
@@ -49,8 +49,8 @@ public class RobotContainer {
     drivetrain = new Drivetrain();
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1));
 
-    pneumatics = new Pneumatics();
-    CommandScheduler.getInstance().schedule(new Shift(pneumatics, true));
+    shifter = new Shifter();
+    CommandScheduler.getInstance().schedule(new Shift(shifter, true));
 
     logger.addElements(drivetrain, gyro);
     scheduler.registerSubsystem(logger);
@@ -65,7 +65,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller1.buttonA.whenPressed(new Shift(pneumatics));
+    controller1.buttonA.whenPressed(new Shift(shifter));
   }
 
   /**

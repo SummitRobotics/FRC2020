@@ -32,10 +32,9 @@ public class GyroTurn extends CommandBase {
    * @param drivetrain drivetrain instance
    * @param angle      the angle you want to turn
    */
-  public GyroTurn(PigeonGyro imu, Drivetrain dt, double angle) {
-    gyro = imu;
-
-    drivetrain = dt;
+  public GyroTurn(PigeonGyro gyro, Drivetrain drivetrain, double angle) {
+    this.gyro = gyro;
+    this.drivetrain = drivetrain;
 
     // finds setpoint for pid controler
     setPoint = angle + gyro.getHeading();

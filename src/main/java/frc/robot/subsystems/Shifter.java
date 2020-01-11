@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
 
-public class Pneumatics implements Subsystem{
+public class Shifter implements Subsystem{
 
     private Compressor compressor = new Compressor(Constants.PCM_1);
     private Solenoid shiftHigh = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_OPEN);
     private Solenoid shiftLow = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_CLOSE);
     private boolean oldShift;
 
-    public Pneumatics(){
+    public Shifter(){
         compressor.setClosedLoopControl(true);
     }
 
@@ -37,5 +37,4 @@ public class Pneumatics implements Subsystem{
     public boolean getShiftState(){
         return oldShift;
     }
-
 }

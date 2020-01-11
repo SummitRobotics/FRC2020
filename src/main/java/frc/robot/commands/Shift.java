@@ -8,11 +8,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Pneumatics;
+import frc.robot.subsystems.Shifter;
 
 public class Shift extends CommandBase {
 
-  private Pneumatics pneumatics;
+  private Shifter shifter;
 
   private boolean finished = false;
   private boolean shiftState;
@@ -20,25 +20,25 @@ public class Shift extends CommandBase {
   /**
    * Creates a new Shift.
    */
-  public Shift(Pneumatics pneumatics) {
-    this.pneumatics = pneumatics;
-    shiftState = !pneumatics.getShiftState();
+  public Shift(Shifter shifter) {
+    this.shifter = shifter;
+    shiftState = !shifter.getShiftState();
   }
 
   /**
    * shifts to a prrticular state
-   * @param pneumatics instance of pneumatics
+   * @param shifter instance of shifter
    * @param state true is slow, false is fast
    */
-  public Shift(Pneumatics pneumatics, boolean state) {
-    this.pneumatics = pneumatics;
+  public Shift(Shifter shifter, boolean state) {
+    this.shifter = shifter;
     shiftState = state;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pneumatics.Shift(shiftState);
+    shifter.Shift(shiftState);
     finished = true;
   }
 
