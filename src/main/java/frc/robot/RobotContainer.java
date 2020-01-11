@@ -52,7 +52,7 @@ public class RobotContainer {
     shifter = new Shifter();
     CommandScheduler.getInstance().schedule(new Shift(shifter, true));
 
-    logger.addElements(drivetrain, gyro);
+    logger.addElements(drivetrain, gyro, shifter);
     scheduler.registerSubsystem(logger);
 
     configureButtonBindings();

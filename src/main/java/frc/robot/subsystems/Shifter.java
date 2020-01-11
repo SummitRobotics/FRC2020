@@ -3,9 +3,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.logging.Logger;
 import frc.robot.utilities.Constants;
 
-public class Shifter implements Subsystem{
+public class Shifter implements Subsystem, Logger{
 
     private Compressor compressor = new Compressor(Constants.PCM_1);
     private Solenoid shiftHigh = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_OPEN);
@@ -37,4 +38,11 @@ public class Shifter implements Subsystem{
     public boolean getShiftState(){
         return oldShift;
     }
+
+    public double[] getValues(double[] values){
+        values[Constants.LoggerRelations.SHIFT_STATE.value] = oldShift? 1.0 : 0.0;
+
+        return values;
+    }
+
 }
