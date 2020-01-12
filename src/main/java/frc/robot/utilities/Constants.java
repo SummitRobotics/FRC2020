@@ -41,14 +41,15 @@ public final class Constants {
         RIGHT_MOTOR_TARGET(21),
         LEFT_MOTOR_POSITION(22),
         RIGHT_MOTOR_POSITION(23),
+        TURRET(24),
 
         //sensors
-        IMU_X_GFORCE(24),
-        IMU_Y_ANGLE(25),
-        IMU_HEADING(26),
+        IMU_X_GFORCE(25),
+        IMU_Y_ANGLE(26),
+        IMU_HEADING(27),
 
         //pneumatics
-        SHIFT_STATE(27);
+        SHIFT_STATE(28);
         
 
         public int value;
@@ -94,6 +95,8 @@ public final class Constants {
     RIGHT_DRIVE_0 = 30,
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
+
+    TURRET = 40,
 
     //pneumatics
     PCM_1 = 1,
