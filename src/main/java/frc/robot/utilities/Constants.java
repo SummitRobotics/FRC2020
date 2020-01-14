@@ -47,9 +47,12 @@ public final class Constants {
         IMU_X_GFORCE(25),
         IMU_Y_ANGLE(26),
         IMU_HEADING(27),
+        LEMONLIGHT_HAS_TARGET(28),
+        LEMONLIGHT_X_OFF(29),
+        LEMONLIGHT_Y_OFF(30),
 
         //pneumatics
-        SHIFT_STATE(28);
+        SHIFT_STATE(31);
         
 
         public int value;

@@ -3,8 +3,10 @@
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.logging.Logger;
+import frc.robot.utilities.Constants;
 
-public class Lemonlight {
+public class Lemonlight implements Logger{
 
     NetworkTable limelight;
 
@@ -22,6 +24,14 @@ public class Lemonlight {
         camMode = limelight.getEntry("camMode");
 
         pipeline = limelight.getEntry("pipeline");
+    }
+
+    @Override
+    public double[] getValues(double[] values) {
+        values[Constants.LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
+        values[Constants.LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
+        values[Constants.LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
+        return values;
     }
 
     public enum LEDModes {
