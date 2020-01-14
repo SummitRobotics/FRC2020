@@ -7,6 +7,7 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
+import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Constants;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
@@ -33,6 +34,7 @@ public class RobotContainer {
   private PigeonGyro gyro;
   private Lemonlight limelight;
 
+  private Turret turret;
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -47,6 +49,8 @@ public class RobotContainer {
 
     gyro = new PigeonGyro(Constants.PIGEON_IMU);
     limelight = new Lemonlight();
+
+    turret = new Turret();
 
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
@@ -63,6 +67,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    scheduler.getInstance().schedule(false, new VisionTrack(limelight, turret));
     controller1.leftBumper.whenPressed(new Shift(shifter));
     controller1.dPadRight.whenPressed(new GyroTurn(gyro, drivetrain, 90));
     controller1.dPadLeft.whenPressed(new GyroTurn(gyro, drivetrain, -90));

@@ -13,16 +13,20 @@ public class Turret implements Logger{
     TalonSRX turret = new TalonSRX(Constants.TURRET);
     double oldPower = 0;
 
-    Turret(){
+    public Turret(){
         //limits motor power so we dont break stuff
-        turret.configPeakOutputForward(.1);
-        turret.configPeakOutputReverse(.1);
+        turret.configPeakOutputForward(.2);
+        turret.configPeakOutputReverse(-.2);
     }
 
     public void setPower(double power){
         oldPower = power;
         power = Functions.clampDouble(power, 1, -1);
         turret.set(ControlMode.PercentOutput, power);
+    }
+
+    public void stop(){
+        turret.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
