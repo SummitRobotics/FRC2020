@@ -50,9 +50,11 @@ public final class Constants {
         LEMONLIGHT_HAS_TARGET(28),
         LEMONLIGHT_X_OFF(29),
         LEMONLIGHT_Y_OFF(30),
+        PDP_VOLTAGE(31),
+        PDP_CURRENT(32),
 
         //pneumatics
-        SHIFT_STATE(31);
+        SHIFT_STATE(33);
         
 
         public int value;
