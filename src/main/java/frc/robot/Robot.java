@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       
-      System.out.println(lidar.getDistance()/2.54);
+      System.out.println(lidar.getDistance());
   }
 
   @Override

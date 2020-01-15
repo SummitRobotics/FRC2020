@@ -14,10 +14,9 @@ public class Turret implements Logger{
     double oldPower = 0;
 
     public Turret(){
-        turret.configPeakOutputForward(1);
-        turret.configPeakOutputReverse(-1);
         //limits motor power so we dont break stuff
-        turret.setInverted(true);
+        turret.configPeakOutputForward(.2);
+        turret.configPeakOutputReverse(-.2);
     }
 
     public void setPower(double power){

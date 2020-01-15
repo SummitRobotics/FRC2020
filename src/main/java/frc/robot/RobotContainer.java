@@ -67,7 +67,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller1.buttonB.whenPressed(new VisionTrack(limelight, turret));
+    scheduler.getInstance().schedule(false, new VisionTrack(limelight, turret));
     controller1.leftBumper.whenPressed(new Shift(shifter));
     controller1.dPadRight.whenPressed(new GyroTurn(gyro, drivetrain, 90));
     controller1.dPadLeft.whenPressed(new GyroTurn(gyro, drivetrain, -90));
