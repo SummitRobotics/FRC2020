@@ -41,14 +41,18 @@ public final class Constants {
         RIGHT_MOTOR_TARGET(21),
         LEFT_MOTOR_POSITION(22),
         RIGHT_MOTOR_POSITION(23),
+        TURRET(24),
 
         //sensors
-        IMU_X_GFORCE(24),
-        IMU_Y_ANGLE(25),
-        IMU_HEADING(26),
+        IMU_X_GFORCE(25),
+        IMU_Y_ANGLE(26),
+        IMU_HEADING(27),
+        LEMONLIGHT_HAS_TARGET(28),
+        LEMONLIGHT_X_OFF(29),
+        LEMONLIGHT_Y_OFF(30),
 
         //pneumatics
-        SHIFT_STATE(27);
+        SHIFT_STATE(31);
         
 
         public int value;
@@ -95,6 +99,8 @@ public final class Constants {
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
 
+    TURRET = 40,
+
     //pneumatics
     PCM_1 = 1,
     DRIVE_SOLENOID_OPEN = 1,
@@ -111,7 +117,11 @@ public final class Constants {
 
     GYRO_P = 0.05,
     GYRO_I = 0,
-    GYRO_D = 0;
+    GYRO_D = 0,
+
+    TURRET_P = .03,
+    TURRET_I = 0.0015,
+    TURRET_D = 0.0001;
 
     public final static String
     LOG_FILE_PATH = "/home/admin/",
