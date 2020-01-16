@@ -41,5 +41,9 @@ public class PDP implements Logger{
         return PDP_panel.getCurrent(PDP_Channel);
     }
 
+    public double getChanelPDPCurrentPrecent(int PDP_Channel){
+        return getChanelPDPCurrent(PDP_Channel)/getTotalPDPCurrent();
+    }
+
 
 }
