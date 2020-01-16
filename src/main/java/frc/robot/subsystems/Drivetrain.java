@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -14,7 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger {
+public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
@@ -217,5 +218,20 @@ public class Drivetrain implements Subsystem, Logger {
     public void turn(double power) {
         setLeftMotorPower(-power);
         setRightMotorPower(power);
+    }
+
+    @Override
+    public int[] usedPorts() {
+        return null;
+    }
+
+    @Override
+    public double getPriority() {
+        return 0;
+    }
+
+    @Override
+    public void limitPower(double factor) {
+
     }
 }
