@@ -91,7 +91,7 @@ public class Lemonlight implements Logger{
      * Checks if the limelight has aquired a vision target
      */
     public boolean hasTarget() {
-        return tv.getBoolean(false);
+        return tv.getDouble(0) == 1;
     }
 
     /**
