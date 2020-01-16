@@ -37,8 +37,8 @@ public class VisionTrack extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if(!lemonlight.hasTarget){
-        pidController.disable();
+      if(!lemonlight.hasTarget()){
+        pidController.reset();
       }
       pidController.update();
       double in = lemonlight.getHorizontalOffset();
