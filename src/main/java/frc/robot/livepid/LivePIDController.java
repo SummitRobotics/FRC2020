@@ -16,6 +16,13 @@ public class LivePIDController extends PIDController {
     private double defaultP, defaultI, defaultD;
     private NetworkTableEntry[] PID;
 
+    /**
+     * loive pid controler
+     * @param name name to display
+     * @param defaultP
+     * @param defaultI
+     * @param defaultD
+     */
     public LivePIDController(String name, double defaultP, double defaultI, double defaultD) {
         super(
             defaultP, 
@@ -43,10 +50,12 @@ public class LivePIDController extends PIDController {
     }
 
     public void update() {
+        double p = PID[0].getDouble(defaultP);
+        double i = PID[1].getDouble(defaultI);
+        double d = PID[2].getDouble(defaultD);
+        System.out.println(p);
         setPID(
-            PID[0].getDouble(defaultP), 
-            PID[1].getDouble(defaultI), 
-            PID[2].getDouble(defaultD)
+            p,i,d
         );
     }
 }

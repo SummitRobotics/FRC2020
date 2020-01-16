@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
+import frc.robot.livepid.LivePIDController;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Constants;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -17,7 +18,7 @@ public class VisionTrack extends CommandBase {
 
   private Lemonlight lemonlight;
   private Turret turret;
-  private PIDController pidController = new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D);
+  private LivePIDController pidController = new LivePIDController("Turret", Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D);
 
   /**
    * Creates a new VisionTrack.
@@ -36,6 +37,10 @@ public class VisionTrack extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      if(!lemonlight.hasTarget){
+        pidController.disable();
+      }
+      pidController.update();
       double in = lemonlight.getHorizontalOffset();
       //System.out.println(in);
       double power = pidController.calculate(in);
