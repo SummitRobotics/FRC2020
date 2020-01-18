@@ -17,6 +17,7 @@ public class LivePIDController extends PIDController {
     private double defaultP, defaultI, defaultD;
     private NetworkTableEntry[] PID;
 
+
     /**
      * loive pid controler
      * @param name name to display
@@ -24,7 +25,7 @@ public class LivePIDController extends PIDController {
      * @param defaultI
      * @param defaultD
      */
-    public LivePIDController(String name, double defaultP, double defaultI, double defaultD) {
+    public LivePIDController(String name, double defaultP, double defaultI, double defaultD, double scaleP, double scaleI, double scaleD) {
         super(
             defaultP, 
             defaultI,
@@ -38,9 +39,9 @@ public class LivePIDController extends PIDController {
         } else {
             PID = new NetworkTableEntry[3];
 
-            PID[0] = layout.add("P", defaultP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .05)).getEntry();
-            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .3)).getEntry();
-            PID[2] = layout.add("D", defaultD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .002)).getEntry();
+            PID[0] = layout.add("P", defaultP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", scaleP)).getEntry();
+            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", scaleI)).getEntry();
+            PID[2] = layout.add("D", defaultD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", scaleD)).getEntry();
 
             PIDNetworkEntries.put(name, PID);
         }

@@ -19,7 +19,7 @@ public class VisionTrack extends CommandBase {
 
   private Lemonlight lemonlight;
   private Turret turret;
-  private LivePIDController pidController = new LivePIDController("Turret", Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D);
+  private LivePIDController pidController = new LivePIDController("Turret", Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D, 0.05, .3, .002);
 
   /**
    * Creates a new VisionTrack.
