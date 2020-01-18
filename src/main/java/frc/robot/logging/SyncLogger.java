@@ -84,7 +84,14 @@ public class SyncLogger implements Subsystem {
      */
     private int getLogNumber() {
         try (FileReader reader = new FileReader(Constants.LOG_FILE_PATH + "LFN.txt")) {
-            return reader.read();
+            String number = "";
+
+            int val = 0;
+            while ((val = reader.read()) != -1) {
+                number += (char) val;
+            }
+
+            return Integer.parseInt(number);
 
         } catch (IOException x) {
             System.out.println("LFN file not found");
@@ -98,7 +105,7 @@ public class SyncLogger implements Subsystem {
      */
     private void setLogNumber(int num) {
         try (FileWriter writer = new FileWriter(Constants.LOG_FILE_PATH + "LFN.txt")) {
-            writer.write(num);
+            writer.write(Integer.toString(num));
         } catch (IOException x) {
             System.out.println("LFN file not found");
         }
