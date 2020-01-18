@@ -39,7 +39,7 @@ public class LivePIDController extends PIDController {
             PID = new NetworkTableEntry[3];
 
             PID[0] = layout.add("P", defaultP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .05)).getEntry();
-            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .02)).getEntry();
+            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .3)).getEntry();
             PID[2] = layout.add("D", defaultD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .002)).getEntry();
 
             PIDNetworkEntries.put(name, PID);

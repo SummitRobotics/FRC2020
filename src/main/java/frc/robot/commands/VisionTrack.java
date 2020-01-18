@@ -47,8 +47,11 @@ public class VisionTrack extends CommandBase {
         double power = pidController.calculate(in);
         System.out.println(power);
         turret.setPower(power);
+        System.out.println("HAS TARGET");
       }else{
         turret.setPower(0);
+        pidController.reset();
+        System.out.println("NO TARGET");
       }
   }
 

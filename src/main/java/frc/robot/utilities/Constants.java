@@ -119,9 +119,9 @@ public final class Constants {
     GYRO_I = 0,
     GYRO_D = 0,
 
-    TURRET_P = .03,
-    TURRET_I = 0.0015,
-    TURRET_D = 0.0001;
+    TURRET_P = 0.018743457494605896,
+    TURRET_I = 0.11189639446569542,
+    TURRET_D = 0.00033;
 
     public final static String
     LOG_FILE_PATH = "/home/admin/",
