@@ -72,8 +72,8 @@ public class SyncLogger implements Subsystem {
         attempts = 0;
         values = new double[LoggerRelations.values().length];
 
-        logNumber = getLogNumber() + 1;
-        setLogNumber(logNumber);
+        logNumber = getLogNumber();
+        setLogNumber(logNumber + 1);
 
         logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
     }
