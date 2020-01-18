@@ -3,8 +3,10 @@ package frc.robot.logging;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +24,10 @@ public class SyncLogger implements Subsystem {
     private int attempts, logNumber;
     private String logFileLocation;
     private double[] values;
+
     private Timer robotTimer = new Timer();
+    private Calendar cal = Calendar.getInstance();
+    private SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm:ss");
 
     /**
      * @param elements all logger classes
@@ -105,6 +110,7 @@ public class SyncLogger implements Subsystem {
     private void writeLogFile() {
         getFormatedLogData();
         try (FileWriter writer = new FileWriter(logFileLocation, true)) {
+            writer.append(dateFormater.format(cal.getTime()) + ", ");
             writer.append(Math.round(robotTimer.get()*1000) + ", ");
             writer.append(getFormatedLogData());
             writer.append("\n");
