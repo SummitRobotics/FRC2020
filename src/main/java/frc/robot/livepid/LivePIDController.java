@@ -1,6 +1,7 @@
 package frc.robot.livepid;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -37,9 +38,9 @@ public class LivePIDController extends PIDController {
         } else {
             PID = new NetworkTableEntry[3];
 
-            PID[0] = layout.add("P", defaultP).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
-            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
-            PID[2] = layout.add("D", defaultD).withWidget(BuiltInWidgets.kNumberSlider).getEntry();
+            PID[0] = layout.add("P", defaultP).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .05)).getEntry();
+            PID[1] = layout.add("I", defaultI).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .02)).getEntry();
+            PID[2] = layout.add("D", defaultD).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", .002)).getEntry();
 
             PIDNetworkEntries.put(name, PID);
         }

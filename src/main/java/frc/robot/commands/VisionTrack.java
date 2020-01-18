@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.livepid.LivePIDController;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Constants;
@@ -32,6 +33,8 @@ public class VisionTrack extends CommandBase {
   @Override
   public void initialize() {
     pidController.setSetpoint(0);
+    lemonlight.setLEDMode(LEDModes.FORCE_ON);
+    pidController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,6 +55,8 @@ public class VisionTrack extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    turret.setPower(0);
+    lemonlight.setLEDMode(LEDModes.FORCE_OFF);
   }
 
   // Returns true when the command should end.
