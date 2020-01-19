@@ -26,7 +26,6 @@ public class SyncLogger implements Subsystem {
     private double[] values;
 
     private Timer robotTimer = new Timer();
-    private Calendar cal = Calendar.getInstance();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm:ss");
 
     /**
@@ -110,7 +109,7 @@ public class SyncLogger implements Subsystem {
     private void writeLogFile() {
         getFormatedLogData();
         try (FileWriter writer = new FileWriter(logFileLocation, true)) {
-            writer.append(dateFormater.format(cal.getTime()) + ", ");
+            writer.append(dateFormater.format(Calendar.getInstance().getTime()) + ", ");
             writer.append(Math.round(robotTimer.get()*1000) + ", ");
             writer.append(getFormatedLogData());
             writer.append("\n");
