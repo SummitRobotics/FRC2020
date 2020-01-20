@@ -1,15 +1,16 @@
 package frc.robot.logging;
 
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Constants.LoggerRelations;
@@ -18,16 +19,17 @@ import frc.robot.utilities.Constants.LoggerRelations;
  * Class to manage robot logging. It acts as a psuedosubsystem in order to use
  * the scheduler's periodic method to make updates.
  */
-public class SyncLogger implements Subsystem {
+public class SyncLogger implements Subsystem, Command {
 
     private ArrayList<Logger> elements;
-    private int attempts, logNumber;
+    private int attempts;
     private String logFileLocation;
     private double[] values;
 
     private Timer robotTimer = new Timer();
-    private Calendar cal = Calendar.getInstance();
-    private SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm:ss");
+
+    private SimpleDateFormat timeStampFormatter;
+    private SimpleDateFormat fileFormatter;
 
     /**
      * @param elements all logger classes
@@ -36,12 +38,14 @@ public class SyncLogger implements Subsystem {
         this.elements = new ArrayList<>();
         values = new double[LoggerRelations.values().length];
 
-        generateLogFile();
+        timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
+        fileFormatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
     }
 
     /**
-     * adds passed in instances to logger so data from it is logged
-     * the passed in must implement logger
+     * adds passed in instances to logger so data from it is logged the passed in
+     * must implement logger
+     * 
      * @param newElements the instances to add to the logger
      */
     public void addElements(Logger... newElements) {
@@ -50,10 +54,28 @@ public class SyncLogger implements Subsystem {
     }
 
     /**
+     * Creates a new log file
+     */
+    @Override
+    public void initialize() {
+        // timer stuff
+        robotTimer.reset();
+        robotTimer.start();
+
+        attempts = 0;
+        values = new double[LoggerRelations.values().length];
+
+        Date timeInMillis = new Date(System.currentTimeMillis());
+        String logTimeStamp = fileFormatter.format(timeInMillis);
+
+        logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
+    }
+
+    /**
      * Is run every loop. Will log data based on the rate value
      */
     @Override
-    public void periodic() {
+    public void execute() {
         if (attempts == 0) {
             writeLogFile();
         }
@@ -62,63 +84,13 @@ public class SyncLogger implements Subsystem {
     }
 
     /**
-     * Creates a new log file
-     */
-    private void generateLogFile() {
-        //timer stuff
-        robotTimer.reset();
-        robotTimer.start();
-
-        attempts = 0;
-        values = new double[LoggerRelations.values().length];
-
-        logNumber = getLogNumber();
-        setLogNumber(logNumber + 1);
-
-        logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
-    }
-
-    /**
-     * Reads the LFN file to find the current log number
-     * @return the log number, or 0 if no LFN file is found
-     */
-    private int getLogNumber() {
-        try (FileReader reader = new FileReader(Constants.LOG_FILE_PATH + "LFN.txt")) {
-            String number = "";
-
-            int val = 0;
-            while ((val = reader.read()) != -1) {
-                number += (char) val;
-            }
-
-            return Integer.parseInt(number);
-
-        } catch (IOException x) {
-            System.out.println("LFN file not found");
-            return 0;
-        }
-    }
-
-    /**
-     * Sets the log number in the LFN
-     * @param num value to set the LFN to
-     */
-    private void setLogNumber(int num) {
-        try (FileWriter writer = new FileWriter(Constants.LOG_FILE_PATH + "LFN.txt")) {
-            writer.write(Integer.toString(num));
-        } catch (IOException x) {
-            System.out.println("LFN file not found");
-        }
-    }
-
-    /**
      * Writes a new entry in an open log file
      */
     private void writeLogFile() {
         getFormatedLogData();
         try (FileWriter writer = new FileWriter(logFileLocation, true)) {
-            writer.append(dateFormater.format(cal.getTime()) + ", ");
-            writer.append(Math.round(robotTimer.get()*1000) + ", ");
+            writer.append(timeStampFormatter.format(System.currentTimeMillis()) + ", ");
+            writer.append(Math.round(robotTimer.get() * 1000) + ", ");
             writer.append(getFormatedLogData());
             writer.append("\n");
 
@@ -128,21 +100,27 @@ public class SyncLogger implements Subsystem {
     }
 
     /**
-     * Retrieves log data from logging classes 
+     * Retrieves log data from logging classes
      */
     private void getLogData() {
-        for (Logger loggerImplimentation : elements) {
-            values = loggerImplimentation.getValues(values);
+        for (Logger loggerImplementation : elements) {
+            values = loggerImplementation.getValues(values);
         }
     }
 
     /**
      * Formats log data into a comma seperated string
+     * 
      * @return formated data
      */
     private String getFormatedLogData() {
         getLogData();
         String data = Arrays.toString(values);
-        return data.substring(1, data.length()-1);
+        return data.substring(1, data.length() - 1);
+    }
+
+    @Override
+    public Set<Subsystem> getRequirements() {
+        return null;
     }
 }
