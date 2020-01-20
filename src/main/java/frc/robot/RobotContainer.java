@@ -47,7 +47,7 @@ public class RobotContainer {
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
     logger.addElements(drivetrain, gyro, shifter);
-    scheduler.registerSubsystem(logger);
+    scheduler.setDefaultCommand(logger, logger);
 
     configureButtonBindings();
   }
