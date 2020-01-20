@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -31,6 +32,8 @@ public class SyncLogger implements Subsystem, Command {
     private SimpleDateFormat timeStampFormatter;
     private SimpleDateFormat fileFormatter;
 
+    private HashSet<Subsystem> requirements;
+
     /**
      * @param elements all logger classes
      */
@@ -40,6 +43,9 @@ public class SyncLogger implements Subsystem, Command {
 
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
         fileFormatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+
+        requirements = new HashSet<>();
+        requirements.add(this);
     }
 
     /**
@@ -121,6 +127,6 @@ public class SyncLogger implements Subsystem, Command {
 
     @Override
     public Set<Subsystem> getRequirements() {
-        return null;
+        return requirements;
     }
 }
