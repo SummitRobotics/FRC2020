@@ -6,17 +6,24 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.logging.Logger;
 import frc.robot.utilities.Constants;
 import frc.robot.utilities.Constants.LoggerRelations;
+import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 import frc.robot.utilities.Functions;
 
-public class Turret implements Logger{
+public class Turret implements Logger, LimitedSubsystem{
 
     TalonSRX turret = new TalonSRX(Constants.TURRET);
     double oldPower = 0;
 
     public Turret(){
-        //limits motor power so we dont break stuff
-        turret.configPeakOutputForward(.2);
-        turret.configPeakOutputReverse(-.2);
+        turret.configPeakCurrentLimit(0);
+        turret.configPeakCurrentDuration(0);
+    }
+
+    public double getPriority(){
+        return .8;
+    }
+    public void limitPower(double amount){
+        turret.configContinuousCurrentLimit((int)(500*amount));
     }
 
     public void setPower(double power){

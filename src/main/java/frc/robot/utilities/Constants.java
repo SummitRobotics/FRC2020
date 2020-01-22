@@ -122,6 +122,11 @@ public final class Constants {
     TURRET_I = 0.11189639446569542,
     TURRET_D = 0.00033;
 
+    VOLTAGE_TARGET = 10,
+    VOLTAGE_P = -1,
+    VOLTAGE_I = 0,
+    VOLTAGE_D = 0;
+
     public final static String
     LOG_FILE_PATH = "/home/admin/";
 }

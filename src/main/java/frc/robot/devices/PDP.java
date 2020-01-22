@@ -18,8 +18,8 @@ public class PDP implements Logger{
 
     PowerDistributionPanel PDP_panel;
 
-    public PDP(int module){
-        PDP_panel = new PowerDistributionPanel(module);
+    public PDP(){
+        PDP_panel = new PowerDistributionPanel();
     }
 
     @Override

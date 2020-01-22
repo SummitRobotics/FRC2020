@@ -20,18 +20,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
-    @Override
-    public double[] getValues(double[] values) {
-        values[Constants.LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
-        
-        return values;
-    }
-
     // left motors
     private CANSparkMax left = new CANSparkMax(Constants.LEFT_DRIVE_MAIN, MotorType.kBrushless);
     private CANSparkMax leftMiddle = new CANSparkMax(Constants.LEFT_DRIVE_0, MotorType.kBrushless);
@@ -60,6 +48,35 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
+
+    
+    @Override
+    public double[] getValues(double[] values) {
+        values[Constants.LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
+        values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
+        values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
+        values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
+        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
+        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
+        
+        return values;
+    }
+
+    
+    public double getPriority(){
+        return 1;
+    }
+    public void limitPower(double amount){
+        int cl = (int)(500*amount);
+        System.out.println(cl);
+        left.setSecondaryCurrentLimit(cl);
+        leftBack.setSecondaryCurrentLimit(cl);
+        leftMiddle.setSecondaryCurrentLimit(cl);
+
+        right.setSecondaryCurrentLimit(cl);
+        rightBack.setSecondaryCurrentLimit(cl);
+        rightMiddle.setSecondaryCurrentLimit(cl);
+    }
 
     public Drivetrain() {
         // tells other two motors to follow the first
@@ -218,20 +235,5 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     public void turn(double power) {
         setLeftMotorPower(-power);
         setRightMotorPower(power);
-    }
-
-    @Override
-    public int[] usedPorts() {
-        return null;
-    }
-
-    @Override
-    public double getPriority() {
-        return 0;
-    }
-
-    @Override
-    public void limitPower(double factor) {
-
     }
 }
