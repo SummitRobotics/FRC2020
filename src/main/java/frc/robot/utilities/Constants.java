@@ -53,7 +53,8 @@ public final class Constants {
         PDP_CURRENT(32),
 
         //pneumatics
-        SHIFT_STATE(31);
+        SHIFT_STATE(31), 
+        TURRET(32);
         
 
         public int value;
@@ -100,6 +101,8 @@ public final class Constants {
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
 
+    TURRET = 40,
+
     //pneumatics
     PCM_1 = 1,
     DRIVE_SOLENOID_OPEN = 1,
@@ -116,11 +119,11 @@ public final class Constants {
 
     GYRO_P = 0.05,
     GYRO_I = 0,
-    GYRO_D = 0;
+    GYRO_D = 0,
 
     TURRET_P = 0.018743457494605896,
     TURRET_I = 0.11189639446569542,
-    TURRET_D = 0.00033;
+    TURRET_D = 0.00033,
 
     VOLTAGE_TARGET = 10,
     VOLTAGE_P = -1,
