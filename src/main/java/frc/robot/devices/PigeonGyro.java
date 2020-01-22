@@ -1,8 +1,8 @@
 package frc.robot.devices;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import frc.robot.utilities.Constants.LoggerRelations;
 import frc.robot.logging.Logger;
+import frc.robot.logging.LoggerRelations;
 
 public class PigeonGyro implements Logger {
 

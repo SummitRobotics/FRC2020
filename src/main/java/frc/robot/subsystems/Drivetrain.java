@@ -2,8 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
-import frc.robot.utilities.Constants;
+import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.Ports;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -16,30 +17,35 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class Drivetrain implements Subsystem, Logger {
 
+    private static final double
+    P = .2,
+    I = 0,
+    D = 0.01;
+
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
     @Override
     public double[] getValues(double[] values) {
-        values[Constants.LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
+        values[LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
+        values[LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
+        values[LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
+        values[LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
+        values[LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
+        values[LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
         
         return values;
     }
 
     // left motors
-    private CANSparkMax left = new CANSparkMax(Constants.LEFT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax leftMiddle = new CANSparkMax(Constants.LEFT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax leftBack = new CANSparkMax(Constants.LEFT_DRIVE_1, MotorType.kBrushless);
+    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN.port, MotorType.kBrushless);
+    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0.port, MotorType.kBrushless);
+    private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1.port, MotorType.kBrushless);
 
     // right motors
-    private CANSparkMax right = new CANSparkMax(Constants.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax rightMiddle = new CANSparkMax(Constants.RIGHT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax rightBack = new CANSparkMax(Constants.RIGHT_DRIVE_1, MotorType.kBrushless);
+    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN.port, MotorType.kBrushless);
+    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0.port, MotorType.kBrushless);
+    private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1.port, MotorType.kBrushless);
 
     // pid controllers
     private CANPIDController leftPID = left.getPIDController();
@@ -73,14 +79,14 @@ public class Drivetrain implements Subsystem, Logger {
         // sets pid values
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
-        leftPID.setP(Constants.DRIVETRAIN_P);
-        leftPID.setI(Constants.DRIVETRAIN_I);
-        leftPID.setD(Constants.DRIVETRAIN_D);
+        leftPID.setP(P);
+        leftPID.setI(I);
+        leftPID.setD(D);
         leftPID.setFF(FEED_FWD);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
-        rightPID.setP(Constants.DRIVETRAIN_P);
-        rightPID.setI(Constants.DRIVETRAIN_I);
-        rightPID.setD(Constants.DRIVETRAIN_D);
+        rightPID.setP(P);
+        rightPID.setI(I);
+        rightPID.setD(D);
         rightPID.setFF(FEED_FWD);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
@@ -206,4 +212,13 @@ public class Drivetrain implements Subsystem, Logger {
         right.stopMotor();
     }
 
+    /**
+     * Makes the robot turn by a power
+     * 
+     * @param power power of the motors
+     */
+    public void turn(double power) {
+        setLeftMotorPower(-power);
+        setRightMotorPower(power);
+    }
 }
