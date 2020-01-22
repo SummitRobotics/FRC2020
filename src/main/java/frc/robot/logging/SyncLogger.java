@@ -13,14 +13,15 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.utilities.Constants;
-import frc.robot.utilities.Constants.LoggerRelations;
 
 /**
  * Class to manage robot logging. It acts as a psuedosubsystem in order to use
  * the scheduler's periodic method to make updates.
  */
 public class SyncLogger implements Subsystem, Command {
+
+    private static final String LOG_FILE_PATH = "/home/admin/";
+    public final static int LOGGER_RATE = 1;
 
     private ArrayList<Logger> elements;
     private int attempts;
@@ -74,7 +75,7 @@ public class SyncLogger implements Subsystem, Command {
         Date timeInMillis = new Date(System.currentTimeMillis());
         String logTimeStamp = fileFormatter.format(timeInMillis);
 
-        logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
+        logFileLocation = LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
     }
 
     /**
@@ -86,7 +87,7 @@ public class SyncLogger implements Subsystem, Command {
             writeLogFile();
         }
 
-        attempts = (attempts++) % Constants.LOGGER_RATE;
+        attempts = (attempts++) % LOGGER_RATE;
     }
 
     /**

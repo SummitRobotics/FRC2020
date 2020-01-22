@@ -12,16 +12,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.Ports;
 
 /**
  * Add your docs here.
  */
 public class IntakeArm extends SubsystemBase {
 
-  private CANSparkMax intake = new CANSparkMax(Constants.INTAKE_ARM_INTAKE, MotorType.kBrushless);
-  private CANSparkMax pivot = new CANSparkMax(Constants.INTAKE_ARM_PIVOT, MotorType.kBrushless);
+  private CANSparkMax intake = new CANSparkMax(Ports.INTAKE_ARM_INTAKE.port, MotorType.kBrushless);
+  private CANSparkMax pivot = new CANSparkMax(Ports.INTAKE_ARM_PIVOT.port, MotorType.kBrushless);
 
   private CANEncoder pivotEncoder = new CANEncoder(pivot);
 
