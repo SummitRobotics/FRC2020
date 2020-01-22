@@ -60,17 +60,6 @@ public class SyncLogger implements Subsystem, Command {
         Collections.addAll(elements, newElements);
     }
 
-    /**
-     * Is run every loop. Will log data based on the rate value
-     */
-    @Override
-    public void periodic() {
-        if (attempts == 0) {
-            writeLogFile();
-        }
-
-        attempts = (attempts++) % LOGGER_RATE;
-    }
 
     /**
      * Creates a new log file
@@ -88,6 +77,18 @@ public class SyncLogger implements Subsystem, Command {
         String logTimeStamp = fileFormatter.format(timeInMillis);
 
         logFileLocation = LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
+    }
+
+    /**
+     * Is run every loop. Will log data based on the rate value
+     */
+    @Override
+    public void execute() {
+        if (attempts == 0) {
+            writeLogFile();
+        }
+
+        attempts = (attempts++) % LOGGER_RATE;
     }
 
     /**
