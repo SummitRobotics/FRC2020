@@ -34,7 +34,7 @@ public final class Constants {
         DPAD_LEFT(16),
         DPAD_RIGHT(17),
 
-        //motors
+        //Drivetrain
         LEFT_MOTOR_POWER(18),
         RIGHT_MOTOR_POWER(19),
         LEFT_MOTOR_TARGET(20),
@@ -42,13 +42,19 @@ public final class Constants {
         LEFT_MOTOR_POSITION(22),
         RIGHT_MOTOR_POSITION(23),
 
+        //Conveyor
+        CONVEYOR_LEFT_POWER(24),
+        CONVEYOR_RIGHT_POWER(25),
+        CONVEYOR_BREAKBEAM_ENTER(26),
+        CONVEYOR_BREAKBEAM_EXIT(27),
+
         //sensors
-        IMU_X_GFORCE(24),
-        IMU_Y_ANGLE(25),
-        IMU_HEADING(26),
+        IMU_X_GFORCE(28),
+        IMU_Y_ANGLE(29),
+        IMU_HEADING(30),
 
         //pneumatics
-        SHIFT_STATE(27);
+        SHIFT_STATE(31);
         
 
         public int value;
@@ -94,6 +100,12 @@ public final class Constants {
     RIGHT_DRIVE_0 = 30,
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
+
+    //Conveyor
+    CONVEYOR_RIGHT = 33,
+    CONVEYOR_LEFT = 34,
+    BREAKBEAM_ENTER = 0,
+    BREAKBEAM_EXIT = 1,
 
     //pneumatics
     PCM_1 = 1,
