@@ -6,7 +6,7 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
-import frc.robot.utilities.Constants;
+import frc.robot.utilities.Ports;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
 import frc.robot.devices.PigeonGyro;
@@ -38,9 +38,9 @@ public class RobotContainer {
     scheduler = CommandScheduler.getInstance();
     logger = new SyncLogger();
 
-    controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
+    controller1 = new ControllerDriver(logger, Ports.XBOX_PORT.port);
 
-    gyro = new PigeonGyro(Constants.PIGEON_IMU);
+    gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
     drivetrain = new Drivetrain();
     shifter = new Shifter();
 

@@ -9,14 +9,15 @@ import java.util.Collections;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.utilities.Constants;
-import frc.robot.utilities.Constants.LoggerRelations;
 
 /**
  * Class to manage robot logging. It acts as a psuedosubsystem in order to use
  * the scheduler's periodic method to make updates.
  */
 public class SyncLogger implements Subsystem {
+
+    private static final String LOG_FILE_PATH = "/home/admin/";
+    public final static int LOGGER_RATE = 1;
 
     private ArrayList<Logger> elements;
     private int attempts, logNumber;
@@ -53,7 +54,7 @@ public class SyncLogger implements Subsystem {
             writeLogFile();
         }
 
-        attempts = (attempts++) % Constants.LOGGER_RATE;
+        attempts = (attempts++) % LOGGER_RATE;
     }
 
     /**
@@ -70,7 +71,7 @@ public class SyncLogger implements Subsystem {
         logNumber = getLogNumber() + 1;
         setLogNumber(logNumber);
 
-        logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
+        logFileLocation = LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
     }
 
     /**
@@ -78,7 +79,7 @@ public class SyncLogger implements Subsystem {
      * @return the log number, or 0 if no LFN file is found
      */
     private int getLogNumber() {
-        try (FileReader reader = new FileReader(Constants.LOG_FILE_PATH + "LFN.txt")) {
+        try (FileReader reader = new FileReader(LOG_FILE_PATH + "LFN.txt")) {
             return reader.read();
 
         } catch (IOException x) {
@@ -92,7 +93,7 @@ public class SyncLogger implements Subsystem {
      * @param num value to set the LFN to
      */
     private void setLogNumber(int num) {
-        try (FileWriter writer = new FileWriter(Constants.LOG_FILE_PATH + "LFN.txt")) {
+        try (FileWriter writer = new FileWriter(LOG_FILE_PATH + "LFN.txt")) {
             writer.write(num);
         } catch (IOException x) {
             System.out.println("LFN file not found");
