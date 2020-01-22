@@ -4,13 +4,14 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
-import frc.robot.utilities.Constants;
+import frc.robot.logging.LoggerRelations;
+import frc.robot.utilities.Ports;
 
 public class Shifter implements Subsystem, Logger{
 
-    private Compressor compressor = new Compressor(Constants.PCM_1);
-    private Solenoid shiftHigh = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_OPEN);
-    private Solenoid shiftLow = new Solenoid(Constants.PCM_1, Constants.DRIVE_SOLENOID_CLOSE);
+    private Compressor compressor = new Compressor(Ports.PCM_1.port);
+    private Solenoid shiftHigh = new Solenoid(Ports.PCM_1.port, Ports.DRIVE_SOLENOID_OPEN.port);
+    private Solenoid shiftLow = new Solenoid(Ports.PCM_1.port, Ports.DRIVE_SOLENOID_CLOSE.port);
     private boolean oldShift;
 
     public Shifter(){
@@ -41,7 +42,7 @@ public class Shifter implements Subsystem, Logger{
     }
 
     public double[] getValues(double[] values){
-        values[Constants.LoggerRelations.SHIFT_STATE.value] = oldShift? 1.0 : 0.0;
+        values[LoggerRelations.SHIFT_STATE.value] = oldShift? 1.0 : 0.0;
 
         return values;
     }

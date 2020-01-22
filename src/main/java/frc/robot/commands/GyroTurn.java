@@ -12,12 +12,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.PigeonGyro;
 import frc.robot.livepid.LivePIDController;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
 
 public class GyroTurn extends CommandBase {
 
-  private LivePIDController pidController;
+  private static final double
+  P = 0.05,
+  I = 0,
+  D = 0;
+
+  private PIDController pidController = new PIDController(P, I, D);
   private Drivetrain drivetrain;
   private PigeonGyro gyro;
 

@@ -4,12 +4,32 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.logging.Logger;
+import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-import frc.robot.utilities.Constants.DPadValues;
-import frc.robot.utilities.Constants.LoggerRelations;
 
 
-public class ControllerDriver implements Logger{
+public class ControllerDriver implements Logger {
+
+    public enum DPadValues {
+        UP(0, 45, 315),
+        DOWN(180, 135, 225),
+        LEFT(90, 45, 135),
+        RIGHT(270, 225, 315);
+
+        public int[] values;
+        private DPadValues(int... values) {
+            this.values = values;
+        }
+
+        public boolean isEqual(int value) {
+            for (int element : values) {
+                if (value == element) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 
     XboxController controller;
 
