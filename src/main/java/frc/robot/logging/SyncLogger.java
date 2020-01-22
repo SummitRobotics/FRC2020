@@ -87,31 +87,7 @@ public class SyncLogger implements Subsystem, Command {
         Date timeInMillis = new Date(System.currentTimeMillis());
         String logTimeStamp = fileFormatter.format(timeInMillis);
 
-        logFileLocation = LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
-    }
-
-    /**
-     * Is run every loop. Will log data based on the rate value
-     */
-    private int getLogNumber() {
-        try (FileReader reader = new FileReader(LOG_FILE_PATH + "LFN.txt")) {
-            return reader.read();
-
-        } catch (IOException x) {
-            System.out.println("LFN file not found");
-            return 0;
-        }
-
-    /**
-     * Sets the log number in the LFN
-     * @param num value to set the LFN to
-     */
-    private void setLogNumber(int num) {
-        try (FileWriter writer = new FileWriter(LOG_FILE_PATH + "LFN.txt")) {
-            writer.write(num);
-        } catch (IOException x) {
-            System.out.println("LFN file not found");
-        }
+        logFileLocation = LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
     }
 
     /**

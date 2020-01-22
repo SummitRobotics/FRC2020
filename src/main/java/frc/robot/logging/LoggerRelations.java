@@ -35,8 +35,21 @@ public enum LoggerRelations {
     IMU_HEADING(26),
 
     //pneumatics
-    SHIFT_STATE(27);
+    SHIFT_STATE(27),
     
+    //lemonlight
+    LEMONLIGHT_HAS_TARGET(28),
+    LEMONLIGHT_X_OFF(29),
+    LEMONLIGHT_Y_OFF(30),
+    
+    //turret
+    TURRET(31),
+
+    //Conveyor
+    CONVEYOR_RIGHT(32),
+    CONVEYOR_LEFT(33),
+    CONVEYOR_BREAKBEAM_ENTER(34),
+    CONVEYOR_BREAKBEAM_EXIT(35);
 
     public int value;
     private LoggerRelations(int value) {

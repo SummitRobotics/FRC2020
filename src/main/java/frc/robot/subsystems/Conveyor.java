@@ -13,8 +13,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
-import frc.robot.utilities.Constants;
+import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.Ports;
 
 /**
  * Add your docs here.
@@ -23,21 +24,21 @@ public class Conveyor extends SubsystemBase implements Logger{
 
   private double leftConveyorMotorPower = 0, rightConveyorMotorPower = 0;
 
-  private CANSparkMax leftConveyor = new CANSparkMax(Constants.CONVEYOR_LEFT, MotorType.kBrushless);
-  private CANSparkMax rightConveyor = new CANSparkMax(Constants.CONVEYOR_RIGHT, MotorType.kBrushless);
+  private CANSparkMax leftConveyor = new CANSparkMax(Ports.CONVEYOR_LEFT.port, MotorType.kBrushless);
+  private CANSparkMax rightConveyor = new CANSparkMax(Ports.CONVEYOR_RIGHT.port, MotorType.kBrushless);
 
-  private DigitalInput breakbeamEnter = new DigitalInput(Constants.BREAKBEAM_ENTER);
-  private DigitalInput breakbeamExit = new DigitalInput(Constants.BREAKBEAM_EXIT);
+  private DigitalInput breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER.port);
+  private DigitalInput breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT.port);
 
   public Conveyor(){
   }
 
   @Override
   public double[] getValues(double[] values) {
-    values[Constants.LoggerRelations.CONVEYOR_LEFT_POWER.value] = leftConveyorMotorPower;
-    values[Constants.LoggerRelations.CONVEYOR_RIGHT_POWER.value] = rightConveyorMotorPower;
-    values[Constants.LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
-    values[Constants.LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
+    values[LoggerRelations.CONVEYOR_LEFT.value] = leftConveyorMotorPower;
+    values[LoggerRelations.CONVEYOR_RIGHT.value] = rightConveyorMotorPower;
+    values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
+    values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
     return values;
   }
 

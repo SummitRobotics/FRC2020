@@ -21,7 +21,7 @@ public class GyroTurn extends CommandBase {
   I = 0,
   D = 0;
 
-  private PIDController pidController = new PIDController(P, I, D);
+  private LivePIDController pidController;
   private Drivetrain drivetrain;
   private PigeonGyro gyro;
 
@@ -37,7 +37,7 @@ public class GyroTurn extends CommandBase {
    * @param angle      the angle you want to turn
    */
   public GyroTurn(PigeonGyro gyro, Drivetrain drivetrain, double angle) {
-    pidController = new LivePIDController("Gyro Turn", Constants.GYRO_P, Constants.GYRO_I, Constants.GYRO_D, 1, 1, 1);
+    pidController = new LivePIDController("Gyro Turn", P, I, D, 1, 1, 1);
 
     this.gyro = gyro;
     this.drivetrain = drivetrain;

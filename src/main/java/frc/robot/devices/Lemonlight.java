@@ -1,10 +1,10 @@
- package frc.robot.devices;
+package frc.robot.devices;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.logging.Logger;
-import frc.robot.utilities.Constants;
+import frc.robot.logging.LoggerRelations;
 
 public class Lemonlight implements Logger{
 
@@ -28,9 +28,9 @@ public class Lemonlight implements Logger{
 
     @Override
     public double[] getValues(double[] values) {
-        values[Constants.LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
-        values[Constants.LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
-        values[Constants.LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
+        values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
+        values[LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
+        values[LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
         return values;
     }
 

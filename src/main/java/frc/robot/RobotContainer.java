@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
@@ -26,7 +25,7 @@ public class RobotContainer {
 
   private SyncLogger logger;
 
- private ControllerDriver controller1;
+  private ControllerDriver controller1;
 
   private Drivetrain drivetrain;
   private Shifter shifter;
@@ -48,7 +47,6 @@ public class RobotContainer {
     drivetrain = new Drivetrain();
     shifter = new Shifter();
 
-    gyro = new PigeonGyro(Constants.PIGEON_IMU);
     limelight = new Lemonlight();
 
     turret = new Turret();
