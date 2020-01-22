@@ -2,16 +2,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
-import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Constants;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
-import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
 
 /**
@@ -26,15 +23,14 @@ public class RobotContainer {
 
   private SyncLogger logger;
 
- private ControllerDriver controller1;
+  // public just to make things work
+  private ControllerDriver controller1;
 
+  // public just to make things work
+  private PigeonGyro gyro;
   private Drivetrain drivetrain;
   private Shifter shifter;
 
-  private PigeonGyro gyro;
-  private Lemonlight limelight;
-
-  private Turret turret;
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -44,13 +40,9 @@ public class RobotContainer {
 
     controller1 = new ControllerDriver(logger, Constants.XBOX_PORT);
 
+    gyro = new PigeonGyro(Constants.PIGEON_IMU);
     drivetrain = new Drivetrain();
     shifter = new Shifter();
-
-    gyro = new PigeonGyro(Constants.PIGEON_IMU);
-    limelight = new Lemonlight();
-
-    turret = new Turret();
 
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
