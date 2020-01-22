@@ -34,7 +34,7 @@ public final class Constants {
         DPAD_LEFT(16),
         DPAD_RIGHT(17),
 
-        //motors
+        //Drivetrain
         LEFT_MOTOR_POWER(18),
         RIGHT_MOTOR_POWER(19),
         LEFT_MOTOR_TARGET(20),
@@ -42,13 +42,18 @@ public final class Constants {
         LEFT_MOTOR_POSITION(22),
         RIGHT_MOTOR_POSITION(23),
 
+        //IntakeArm
+        INTAKE_ARM_INTAKE_POWER(24),
+        INTAKE_ARM_PIVOT_POWER(25),
+        INTAKE_ARM_PIVOT_POSITION(26),
+
         //sensors
-        IMU_X_GFORCE(24),
-        IMU_Y_ANGLE(25),
-        IMU_HEADING(26),
+        IMU_X_GFORCE(27),
+        IMU_Y_ANGLE(28),
+        IMU_HEADING(29),
 
         //pneumatics
-        SHIFT_STATE(27);
+        SHIFT_STATE(30);
         
 
         public int value;
@@ -95,6 +100,9 @@ public final class Constants {
     RIGHT_DRIVE_MAIN = 31,
     RIGHT_DRIVE_1 = 32,
 
+    INTAKE_ARM_PIVOT = 33,
+    INTAKE_ARM_INTAKE = 34,
+
     //pneumatics
     PCM_1 = 1,
     DRIVE_SOLENOID_OPEN = 1,
@@ -111,7 +119,11 @@ public final class Constants {
 
     GYRO_P = 0.05,
     GYRO_I = 0,
-    GYRO_D = 0;
+    GYRO_D = 0,
+    
+    INTAKE_ARM_PIVOT_P = 0,
+    INTAKE_ARM_PIVOT_I = 0,
+    INTAKE_ARM_PIVOT_D = 0;
 
     public final static String
     LOG_FILE_PATH = "/home/admin/";

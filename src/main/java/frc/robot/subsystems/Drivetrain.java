@@ -55,7 +55,6 @@ public class Drivetrain implements Subsystem, Logger {
     // pid config
     private double 
     FEED_FWD = 0, 
-    I_ZONE = 0,
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
@@ -78,13 +77,11 @@ public class Drivetrain implements Subsystem, Logger {
         leftPID.setI(Constants.DRIVETRAIN_I);
         leftPID.setD(Constants.DRIVETRAIN_D);
         leftPID.setFF(FEED_FWD);
-        leftPID.setIZone(I_ZONE);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
         rightPID.setP(Constants.DRIVETRAIN_P);
         rightPID.setI(Constants.DRIVETRAIN_I);
         rightPID.setD(Constants.DRIVETRAIN_D);
         rightPID.setFF(FEED_FWD);
-        rightPID.setIZone(I_ZONE);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
