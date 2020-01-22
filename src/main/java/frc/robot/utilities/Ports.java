@@ -29,7 +29,11 @@ public enum Ports {
     CONVEYOR_RIGHT(33),
     CONVEYOR_LEFT(34),
     BREAKBEAM_ENTER(0),
-    BREAKBEAM_EXIT(1);
+    BREAKBEAM_EXIT(1),
+    
+    //intake arm
+    INTAKE_ARM_INTAKE(0),
+    INTAKE_ARM_PIVOT(0);
 
     public int port;
     private Ports(int port) {

@@ -49,7 +49,11 @@ public enum LoggerRelations {
     CONVEYOR_RIGHT(32),
     CONVEYOR_LEFT(33),
     CONVEYOR_BREAKBEAM_ENTER(34),
-    CONVEYOR_BREAKBEAM_EXIT(35);
+    CONVEYOR_BREAKBEAM_EXIT(35),
+
+    INTAKE_ARM_INTAKE_POWER(36),
+    INTAKE_ARM_PIVOT_POWER(37),
+    INTAKE_ARM_PIVOT_POSITION(38);
 
     public int value;
     private LoggerRelations(int value) {

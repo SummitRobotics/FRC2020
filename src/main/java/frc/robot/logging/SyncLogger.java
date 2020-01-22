@@ -60,7 +60,6 @@ public class SyncLogger implements Subsystem, Command {
         Collections.addAll(elements, newElements);
     }
 
-
     /**
      * Creates a new log file
      */
