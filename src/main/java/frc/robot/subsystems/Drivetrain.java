@@ -61,7 +61,6 @@ public class Drivetrain implements Subsystem, Logger {
     // pid config
     private double 
     FEED_FWD = 0, 
-    I_ZONE = 0,
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
@@ -84,13 +83,11 @@ public class Drivetrain implements Subsystem, Logger {
         leftPID.setI(I);
         leftPID.setD(D);
         leftPID.setFF(FEED_FWD);
-        leftPID.setIZone(I_ZONE);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
         rightPID.setP(P);
         rightPID.setI(I);
         rightPID.setD(D);
         rightPID.setFF(FEED_FWD);
-        rightPID.setIZone(I_ZONE);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
@@ -215,4 +212,13 @@ public class Drivetrain implements Subsystem, Logger {
         right.stopMotor();
     }
 
+    /**
+     * Makes the robot turn by a power
+     * 
+     * @param power power of the motors
+     */
+    public void turn(double power) {
+        setLeftMotorPower(-power);
+        setRightMotorPower(power);
+    }
 }

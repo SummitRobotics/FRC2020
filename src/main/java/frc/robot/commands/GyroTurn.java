@@ -9,8 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.devices.PigeonGyro;
+import frc.robot.livepid.LivePIDController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Functions;
 
@@ -37,6 +37,8 @@ public class GyroTurn extends CommandBase {
    * @param angle      the angle you want to turn
    */
   public GyroTurn(PigeonGyro gyro, Drivetrain drivetrain, double angle) {
+    pidController = new LivePIDController("Gyro Turn", Constants.GYRO_P, Constants.GYRO_I, Constants.GYRO_D, 1, 1, 1);
+
     this.gyro = gyro;
     this.drivetrain = drivetrain;
     this.angle = angle;
@@ -50,6 +52,8 @@ public class GyroTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // sets PID values based on shuffleboard tuning
+    pidController.update();
     // finds setpoint for pid controler
     setPoint = angle + gyro.getHeading();
     pidController.setSetpoint(setPoint);
@@ -62,10 +66,8 @@ public class GyroTurn extends CommandBase {
   public void execute() {
     // gives pid controler values and gets back power that is then limited to .25
     double power = Functions.clampDouble(pidController.calculate(gyro.getHeading()), .25, -.25);
-    System.out.println(power);
     // sets motor power to pid output
-    drivetrain.setLeftMotorPower(-power);
-    drivetrain.setRightMotorPower(power);
+    drivetrain.turn(power);
   }
 
   // Called once the command ends or is interrupted.

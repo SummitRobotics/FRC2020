@@ -8,7 +8,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,24 +20,48 @@ import frc.robot.utilities.Ports;
 /**
  * Add your docs here.
  */
-public class IntakeArm extends SubsystemBase {
+public class IntakeArm extends SubsystemBase implements Logger{
 
   private CANSparkMax intake = new CANSparkMax(Ports.INTAKE_ARM_INTAKE.port, MotorType.kBrushless);
   private CANSparkMax pivot = new CANSparkMax(Ports.INTAKE_ARM_PIVOT.port, MotorType.kBrushless);
 
   private CANEncoder pivotEncoder = new CANEncoder(pivot);
+  
+  private CANPIDController pivotPID = pivot.getPIDController();
+
+  //data for logger
+  private double pivotPower = 0, intakePower = 0;
+
+  private int
+  //PID Config
+  PID_OUTPUT_MIN = -1,
+  PID_OUTPUT_MAX = 1;
 
   public IntakeArm(){
     pivotEncoder.setPosition(0);
+    pivotPID.setP(Constants.INTAKE_ARM_PIVOT_P);
+    pivotPID.setI(Constants.INTAKE_ARM_PIVOT_I);
+    pivotPID.setD(Constants.INTAKE_ARM_PIVOT_D);
+    pivotPID.setOutputRange(PID_OUTPUT_MIN, PID_OUTPUT_MAX);
+  }
+
+  @Override
+  public double[] getValues(double[] values) {
+    values[Constants.LoggerRelations.INTAKE_ARM_INTAKE_POWER.value] = intakePower;
+    values[Constants.LoggerRelations.INTAKE_ARM_PIVOT_POWER.value] = pivotPower;
+    values[Constants.LoggerRelations.INTAKE_ARM_PIVOT_POSITION.value] = getPivotEncoderPosition();
+    return values;
   }
 
   public void setPivotPower(double power){
     power = Functions.clampDouble(power, 1, -1);
+    pivotPower = power;
     pivot.set(power);
   }
 
   public void setIntakePower(double power){
     power = Functions.clampDouble(power, 1, -1);
+    intakePower = power;
     intake.set(power);
   }
 
@@ -45,6 +71,10 @@ public class IntakeArm extends SubsystemBase {
 
   public double getPivotEncoderPosition(){
     return pivotEncoder.getPosition();
+  }
+
+  public void setPivotMotorPosition(double position){
+    pivotPID.setReference(position, ControlType.kPosition);
   }
 
   public void stop(){
