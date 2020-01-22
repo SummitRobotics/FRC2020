@@ -13,14 +13,15 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.utilities.Constants;
-import frc.robot.utilities.Constants.LoggerRelations;
 
 /**
  * Class to manage robot logging. It acts as a psuedosubsystem in order to use
  * the scheduler's periodic method to make updates.
  */
 public class SyncLogger implements Subsystem, Command {
+
+    private static final String LOG_FILE_PATH = "/home/admin/";
+    public final static int LOGGER_RATE = 1;
 
     private ArrayList<Logger> elements;
     private int attempts;
@@ -60,6 +61,18 @@ public class SyncLogger implements Subsystem, Command {
     }
 
     /**
+     * Is run every loop. Will log data based on the rate value
+     */
+    @Override
+    public void periodic() {
+        if (attempts == 0) {
+            writeLogFile();
+        }
+
+        attempts = (attempts++) % LOGGER_RATE;
+    }
+
+    /**
      * Creates a new log file
      */
     @Override
@@ -74,19 +87,31 @@ public class SyncLogger implements Subsystem, Command {
         Date timeInMillis = new Date(System.currentTimeMillis());
         String logTimeStamp = fileFormatter.format(timeInMillis);
 
-        logFileLocation = Constants.LOG_FILE_PATH + "SyncLog-" + logTimeStamp + ".csv";
+        logFileLocation = LOG_FILE_PATH + "SyncLog-" + logNumber + ".csv";
     }
 
     /**
      * Is run every loop. Will log data based on the rate value
      */
-    @Override
-    public void execute() {
-        if (attempts == 0) {
-            writeLogFile();
+    private int getLogNumber() {
+        try (FileReader reader = new FileReader(LOG_FILE_PATH + "LFN.txt")) {
+            return reader.read();
+
+        } catch (IOException x) {
+            System.out.println("LFN file not found");
+            return 0;
         }
 
-        attempts = (attempts++) % Constants.LOGGER_RATE;
+    /**
+     * Sets the log number in the LFN
+     * @param num value to set the LFN to
+     */
+    private void setLogNumber(int num) {
+        try (FileWriter writer = new FileWriter(LOG_FILE_PATH + "LFN.txt")) {
+            writer.write(num);
+        } catch (IOException x) {
+            System.out.println("LFN file not found");
+        }
     }
 
     /**
