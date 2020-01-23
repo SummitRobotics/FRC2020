@@ -10,6 +10,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -67,8 +68,9 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         return 1;
     }
     public void limitPower(double amount){
-        int cl = (int)(500*amount);
-        System.out.println(cl);
+        int cl = 500;//(int)((500*amount)+1);
+
+        //System.out.println(cl);
         left.setSmartCurrentLimit(cl);
         leftBack.setSmartCurrentLimit(cl);
         leftMiddle.setSmartCurrentLimit(cl);
@@ -80,11 +82,17 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
     public Drivetrain() {
         // tells other two motors to follow the first
-        leftMiddle.follow(left);
-        leftBack.follow(left);
+        // leftMiddle.follow(left);
+        // leftBack.follow(left);
 
-        rightMiddle.follow(right);
-        rightBack.follow(right);
+        // rightMiddle.follow(right);
+        // rightBack.follow(right);
+
+        leftMiddle.setIdleMode(IdleMode.kCoast);
+        leftBack.setIdleMode(IdleMode.kCoast);
+
+        rightMiddle.setIdleMode(IdleMode.kCoast);
+        rightBack.setIdleMode(IdleMode.kCoast);
 
         // inverts right side
         left.setInverted(true);
@@ -92,12 +100,14 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         // sets pid values
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+
         leftPID.setP(Constants.DRIVETRAIN_P);
         leftPID.setI(Constants.DRIVETRAIN_I);
         leftPID.setD(Constants.DRIVETRAIN_D);
         leftPID.setFF(FEED_FWD);
         leftPID.setIZone(I_ZONE);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
+
         rightPID.setP(Constants.DRIVETRAIN_P);
         rightPID.setI(Constants.DRIVETRAIN_I);
         rightPID.setD(Constants.DRIVETRAIN_D);

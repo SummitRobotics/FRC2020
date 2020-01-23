@@ -53,8 +53,8 @@ public final class Constants {
         PDP_CURRENT(32),
 
         //pneumatics
-        SHIFT_STATE(31), 
-        TURRET(32);
+        SHIFT_STATE(33), 
+        TURRET(34);
         
 
         public int value;
@@ -126,8 +126,8 @@ public final class Constants {
     TURRET_D = 0.00033,
 
     VOLTAGE_TARGET = 10,
-    VOLTAGE_P = -1,
-    VOLTAGE_I = 0,
+    VOLTAGE_P = 0,
+    VOLTAGE_I = -.5,
     VOLTAGE_D = 0;
 
     public final static String
