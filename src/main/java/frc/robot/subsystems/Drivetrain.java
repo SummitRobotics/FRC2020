@@ -42,6 +42,9 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
+
+    private CANSparkMax shot = new CANSparkMax(60, MotorType.kBrushless);
+
     // pid config
     private double 
     FEED_FWD = 0, 
@@ -68,9 +71,9 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         return 1;
     }
     public void limitPower(double amount){
-        int cl = 500;//(int)((500*amount)+1);
+        int cl = (int)((200*amount)+1);
 
-        //System.out.println(cl);
+        System.out.println(cl);
         left.setSmartCurrentLimit(cl);
         leftBack.setSmartCurrentLimit(cl);
         leftMiddle.setSmartCurrentLimit(cl);
@@ -82,17 +85,11 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
     public Drivetrain() {
         // tells other two motors to follow the first
-        // leftMiddle.follow(left);
-        // leftBack.follow(left);
+        leftMiddle.follow(left);
+        leftBack.follow(left);
 
-        // rightMiddle.follow(right);
-        // rightBack.follow(right);
-
-        leftMiddle.setIdleMode(IdleMode.kCoast);
-        leftBack.setIdleMode(IdleMode.kCoast);
-
-        rightMiddle.setIdleMode(IdleMode.kCoast);
-        rightBack.setIdleMode(IdleMode.kCoast);
+        rightMiddle.follow(right);
+        rightBack.follow(right);
 
         // inverts right side
         left.setInverted(true);
@@ -116,6 +113,9 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
+    public void setShotPower(double power){
+        shot.set(power);
+    }
     /**
      * Sets the power of the left side of the drivetrain
      * 

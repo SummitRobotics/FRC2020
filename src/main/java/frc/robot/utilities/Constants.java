@@ -126,8 +126,8 @@ public final class Constants {
     TURRET_D = 0.00033,
 
     VOLTAGE_TARGET = 10,
-    VOLTAGE_P = 0,
-    VOLTAGE_I = -.5,
+    VOLTAGE_P = .2,
+    VOLTAGE_I = 0.4,
     VOLTAGE_D = 0;
 
     public final static String

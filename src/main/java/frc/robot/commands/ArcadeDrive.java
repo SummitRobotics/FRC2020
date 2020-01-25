@@ -36,12 +36,14 @@ public class ArcadeDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.setOpenRampRate(.3);
+    drivetrain.setOpenRampRate(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    drivetrain.setShotPower(controller.rightStickY());
 
     double power = controller.rightTrigger() - controller.leftTrigger();
 
@@ -54,14 +56,9 @@ public class ArcadeDrive extends CommandBase {
       turn = controller.leftStickX()*.25;
     }
     
-    
     double leftPower = power + turn;
     double rightPower = power - turn;
-    if (turn != 0.0) {
-      drivetrain.setOpenRampRate(0);
-    } else {
-      drivetrain.setOpenRampRate(.5);
-    }
+
     drivetrain.setLeftMotorPower(leftPower);
     drivetrain.setRightMotorPower(rightPower);
   }

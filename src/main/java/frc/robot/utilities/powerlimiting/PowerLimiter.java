@@ -33,9 +33,8 @@ public class PowerLimiter implements Subsystem, Command {
 
     @Override
     public void execute() {
-        System.out.println(pdp.getTotalPDPCurrent());
         double voltage = pdp.getPDPVoltage();
-        double pidValue = Functions.clampDouble(pidController.calculate(voltage), 1, 0);
+        double pidValue = Functions.clampDouble(-pidController.calculate(voltage), 1, 0);
 
         for (LimitedSubsystem s : subsystems) {
             s.limitPower(pidValue * s.getPriority());

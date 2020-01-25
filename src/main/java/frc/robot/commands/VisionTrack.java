@@ -37,9 +37,7 @@ public class VisionTrack extends CommandBase {
   @Override
   public void execute() {
       double in = lemonlight.getHorizontalOffset();
-      System.out.println(in);
       double power = pidController.calculate(in);
-      System.out.println(power);
       turret.setPower(power);
   }
 
