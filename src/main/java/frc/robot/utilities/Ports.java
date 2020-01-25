@@ -33,7 +33,15 @@ public enum Ports {
     
     //intake arm
     INTAKE_ARM_INTAKE(0),
-    INTAKE_ARM_PIVOT(0);
+    INTAKE_ARM_PIVOT(0),
+
+    //climber
+    LEFT_ARM_MOTOR(0),
+    RIGHT_ARM_MOTOR(0),
+    LEFT_PISTON_OPEN(0),
+    LEFT_PISTON_CLOSE(0),
+    RIGHT_PISTON_OPEN(0),
+    RIGHT_PISTON_CLOSE(0);
 
     public int port;
     private Ports(int port) {

@@ -45,7 +45,7 @@ public enum LoggerRelations {
     //turret
     TURRET(31),
 
-    //Conveyor
+    //conveyor
     CONVEYOR_RIGHT(32),
     CONVEYOR_LEFT(33),
     CONVEYOR_BREAKBEAM_ENTER(34),
@@ -53,7 +53,11 @@ public enum LoggerRelations {
 
     INTAKE_ARM_INTAKE_POWER(36),
     INTAKE_ARM_PIVOT_POWER(37),
-    INTAKE_ARM_PIVOT_POSITION(38);
+    INTAKE_ARM_PIVOT_POSITION(38),
+
+    //climber
+    CLIMB_LEFT_MOTOR(39),
+    CLIMB_RIGHT_MOTOR(40);
 
     public int value;
     private LoggerRelations(int value) {
