@@ -18,6 +18,9 @@ public class PDP implements Logger{
 
     PowerDistributionPanel PDP_panel;
 
+    private static double[] oldVoltages = new double[4];
+    private int index = 0;
+
     public PDP(){
         PDP_panel = new PowerDistributionPanel();
     }
@@ -31,6 +34,19 @@ public class PDP implements Logger{
 
     public double getPDPVoltage(){
         return PDP_panel.getVoltage();
+    }
+
+    public double getAvragePDPVoltage(){
+        oldVoltages[index]=PDP_panel.getVoltage();
+        index++;
+        if(index == oldVoltages.length){
+            index=0;
+        }
+        double out = 0;
+        for(int i = 0; i<oldVoltages.length; i++){
+            out = out+(oldVoltages[i]/oldVoltages.length);
+        }
+        return out;
     }
 
     public double getTotalPDPCurrent(){

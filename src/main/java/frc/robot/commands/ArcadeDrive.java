@@ -18,6 +18,10 @@ public class ArcadeDrive extends CommandBase {
   private ControllerDriver controller;
   private Shifter shift;
 
+  private double oldLeft = 0, oldRight = 0;
+  //max amount motors can change per 20 ms
+  private final double max_change_rate = .05;
+
   /**
    * teleop driver control
    * @param drivetrain drivetrain instance
@@ -59,8 +63,37 @@ public class ArcadeDrive extends CommandBase {
     double leftPower = power + turn;
     double rightPower = power - turn;
 
-    drivetrain.setLeftMotorPower(leftPower);
-    drivetrain.setRightMotorPower(rightPower);
+    //limits left power change rate
+    if(leftPower > oldLeft+max_change_rate){
+      leftPower = oldLeft+max_change_rate;
+      drivetrain.setLeftMotorPower(leftPower);
+      oldLeft = leftPower;
+    }
+    else if(leftPower < oldLeft-max_change_rate){
+        leftPower = oldLeft-max_change_rate;
+        drivetrain.setLeftMotorPower(leftPower);
+        oldLeft = leftPower;
+    }
+    else{
+      drivetrain.setLeftMotorPower(leftPower);
+      oldLeft = leftPower;
+    }
+    
+    //limits right power change rate
+    if(rightPower > oldRight+max_change_rate){
+      rightPower = oldRight+max_change_rate;
+      drivetrain.setRightMotorPower(rightPower);
+      oldRight = rightPower;
+    }
+    else if(rightPower < oldRight-max_change_rate){
+      rightPower = oldRight-max_change_rate;
+        drivetrain.setRightMotorPower(rightPower);
+        oldRight = rightPower;
+    }
+    else{
+      drivetrain.setRightMotorPower(rightPower);
+      oldRight = rightPower;
+    }  
   }
 
   // Called once the command ends or is interrupted.
