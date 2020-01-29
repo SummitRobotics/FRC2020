@@ -66,14 +66,22 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         return values;
     }
 
-    
+    /**
+     * returns priority
+     */
     public double getPriority(){
         return 1;
     }
+
+    /**
+     * limits the current each motor can draw
+     */
     public void limitPower(double amount){
+        //finds current limit by multiplying the max current by the amount and adding the min current
         int cl = (int)((60*amount)+1);
 
-        System.out.println(cl);
+        //System.out.println(cl);
+        //sets all limits on the motors
         left.setSmartCurrentLimit(cl);
         leftBack.setSmartCurrentLimit(cl);
         leftMiddle.setSmartCurrentLimit(cl);

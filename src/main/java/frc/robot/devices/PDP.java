@@ -36,19 +36,9 @@ public class PDP implements Logger{
         return PDP_panel.getVoltage();
     }
 
-    public double getAvragePDPVoltage(){
-        oldVoltages[index]=PDP_panel.getVoltage();
-        index++;
-        if(index == oldVoltages.length){
-            index=0;
-        }
-        double out = 0;
-        for(int i = 0; i<oldVoltages.length; i++){
-            out = out+(oldVoltages[i]/oldVoltages.length);
-        }
-        return out;
-    }
-
+    /**
+     * @return the minumum of the last 4 voltages read from the pdp
+     */
     public double getMinimumPDPVoltage(){
         oldVoltages[index]=PDP_panel.getVoltage();
         index++;

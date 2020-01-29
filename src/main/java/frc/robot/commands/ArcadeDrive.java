@@ -60,7 +60,7 @@ public class ArcadeDrive extends CommandBase {
       turn = controller.leftStickX()*.25;
     }
 
-    //limits left power change rate
+    //power rate of change
       if(power > old+max_change_rate){
         power = old+max_change_rate;
         old = power;
@@ -73,6 +73,7 @@ public class ArcadeDrive extends CommandBase {
         old = power;
       }
   
+      //calculates power to the motors
     double leftPower = power + turn;
     double rightPower = power - turn;
 
