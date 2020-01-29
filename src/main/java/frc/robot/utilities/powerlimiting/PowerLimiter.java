@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.devices.PDP;
-import frc.robot.utilities.Constants;
 import frc.robot.utilities.Functions;
 
 public class PowerLimiter implements Subsystem, Command {
@@ -23,13 +22,15 @@ public class PowerLimiter implements Subsystem, Command {
     private double[] oldPid = new double[32];
     private int index = 0;
 
+    private final double VOLTAGE_TARGET = 9.5;
+
     public PowerLimiter(PDP pdp, LimitedSubsystem... subsystems) {
         this.pdp = pdp;
         this.subsystems = subsystems;
+        
+        this.pidController = new PIDController(0.075, 0.001, 0);
 
-        this.pidController = new PIDController(Constants.VOLTAGE_P, Constants.VOLTAGE_I, Constants.VOLTAGE_D);
-
-        this.pidController.setSetpoint(Constants.VOLTAGE_TARGET);
+        this.pidController.setSetpoint(VOLTAGE_TARGET);
 
         requirements = new HashSet<>();
         requirements.add(this);
@@ -41,7 +42,7 @@ public class PowerLimiter implements Subsystem, Command {
         //deafult pad value
         double pidValue = 1;
         // if voltage is good, dont use limiting
-        if(voltage<Constants.VOLTAGE_TARGET+.5){
+        if(voltage < VOLTAGE_TARGET+.5){
             //System.out.println(voltage);
             pidValue = Functions.clampDouble(-pidController.calculate(voltage), 1, 0);
         }

@@ -5,8 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
-import frc.robot.utilities.Constants;
-import frc.robot.utilities.Constants.LoggerRelations;
 import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;

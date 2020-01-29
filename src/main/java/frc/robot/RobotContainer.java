@@ -8,7 +8,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
 import frc.robot.subsystems.Turret;
-import frc.robot.utilities.Constants;
 import frc.robot.utilities.powerlimiting.PowerLimiter;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;

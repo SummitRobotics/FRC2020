@@ -11,7 +11,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -69,19 +68,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
-
-    
-    @Override
-    public double[] getValues(double[] values) {
-        values[Constants.LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
-        
-        return values;
-    }
 
     /**
      * returns priority
