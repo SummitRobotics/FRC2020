@@ -19,6 +19,9 @@ public class PowerLimiter implements Subsystem, Command {
 
     private HashSet<Subsystem> requirements;
 
+    private double[] oldPid = new double[32];
+    private int index = 0;
+
     public PowerLimiter(PDP pdp, LimitedSubsystem... subsystems) {
         this.pdp = pdp;
         this.subsystems = subsystems;
@@ -33,11 +36,26 @@ public class PowerLimiter implements Subsystem, Command {
 
     @Override
     public void execute() {
-        double voltage = pdp.getAvragePDPVoltage();
-        double pidValue = Functions.clampDouble(-pidController.calculate(voltage), 1, 0);
+        double voltage = pdp.getMinimumPDPVoltage();
+        double pidValue = 1;
+        if(voltage<Constants.VOLTAGE_TARGET+.5){
+            System.out.println(voltage);
+            pidValue = Functions.clampDouble(-pidController.calculate(voltage), 1, 0);
+        }
+        
+        oldPid[index] = pidValue;
+        index++;
+        if(index == oldPid.length){
+            index=0;
+        }
+        double limit = 0;
+        for(int i = 0; i<oldPid.length; i++){
+            limit = limit+oldPid[i];
+        }
+        limit = limit / oldPid.length;
 
         for (LimitedSubsystem s : subsystems) {
-            s.limitPower(pidValue * s.getPriority());
+            s.limitPower(limit * s.getPriority());
         }
     }
 

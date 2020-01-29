@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    //just to force things to work !!!!!REMOVE LATER!!!!!!
   }
 
   /**
@@ -91,7 +90,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       
-      //System.out.println(lidar.getDistance());
   }
 
   @Override

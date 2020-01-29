@@ -125,9 +125,9 @@ public final class Constants {
     TURRET_I = 0.11189639446569542,
     TURRET_D = 0.00033,
 
-    VOLTAGE_TARGET = 10,
-    VOLTAGE_P = .2,
-    VOLTAGE_I = 0.4,
+    VOLTAGE_TARGET = 9.5,
+    VOLTAGE_P = .075,
+    VOLTAGE_I = 0.001,
     VOLTAGE_D = 0;
 
     public final static String

@@ -18,7 +18,7 @@ public class ArcadeDrive extends CommandBase {
   private ControllerDriver controller;
   private Shifter shift;
 
-  private double oldLeft = 0, oldRight = 0;
+  private double old = 0;
   //max amount motors can change per 20 ms
   private final double max_change_rate = .05;
 
@@ -59,43 +59,28 @@ public class ArcadeDrive extends CommandBase {
     else{
       turn = controller.leftStickX()*.25;
     }
-    
+
+    //limits left power change rate
+      if(power > old+max_change_rate){
+        power = old+max_change_rate;
+        old = power;
+      }
+      else if(power < old-max_change_rate){
+          power = old-max_change_rate;
+          old = power;
+      }
+      else{
+        old = power;
+      }
+  
     double leftPower = power + turn;
     double rightPower = power - turn;
 
-    //limits left power change rate
-    if(leftPower > oldLeft+max_change_rate){
-      leftPower = oldLeft+max_change_rate;
-      drivetrain.setLeftMotorPower(leftPower);
-      oldLeft = leftPower;
-    }
-    else if(leftPower < oldLeft-max_change_rate){
-        leftPower = oldLeft-max_change_rate;
-        drivetrain.setLeftMotorPower(leftPower);
-        oldLeft = leftPower;
-    }
-    else{
-      drivetrain.setLeftMotorPower(leftPower);
-      oldLeft = leftPower;
-    }
-    
-    //limits right power change rate
-    if(rightPower > oldRight+max_change_rate){
-      rightPower = oldRight+max_change_rate;
-      drivetrain.setRightMotorPower(rightPower);
-      oldRight = rightPower;
-    }
-    else if(rightPower < oldRight-max_change_rate){
-      rightPower = oldRight-max_change_rate;
-        drivetrain.setRightMotorPower(rightPower);
-        oldRight = rightPower;
-    }
-    else{
-      drivetrain.setRightMotorPower(rightPower);
-      oldRight = rightPower;
-    }  
-  }
 
+    drivetrain.setLeftMotorPower(leftPower);
+    drivetrain.setRightMotorPower(rightPower);
+
+  }
   // Called once the command ends or is interrupted.
   @Override
   public void end(final boolean interrupted) {

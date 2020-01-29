@@ -71,7 +71,7 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         return 1;
     }
     public void limitPower(double amount){
-        int cl = (int)((200*amount)+1);
+        int cl = (int)((60*amount)+1);
 
         System.out.println(cl);
         left.setSmartCurrentLimit(cl);

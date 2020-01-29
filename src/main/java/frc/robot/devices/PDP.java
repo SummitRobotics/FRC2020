@@ -49,6 +49,21 @@ public class PDP implements Logger{
         return out;
     }
 
+    public double getMinimumPDPVoltage(){
+        oldVoltages[index]=PDP_panel.getVoltage();
+        index++;
+        if(index == oldVoltages.length){
+            index=0;
+        }
+        double out = 1000;
+        for(int i = 0; i<oldVoltages.length; i++){
+            if (oldVoltages[i] < out){
+                out = oldVoltages[i];
+            }
+        }
+        return out;
+    }
+
     public double getTotalPDPCurrent(){
         return PDP_panel.getTotalCurrent();
     }
