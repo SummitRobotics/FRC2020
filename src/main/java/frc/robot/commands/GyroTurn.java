@@ -66,8 +66,10 @@ public class GyroTurn extends CommandBase {
   public void execute() {
     // gives pid controler values and gets back power that is then limited to .25
     double power = Functions.clampDouble(pidController.calculate(gyro.getHeading()), .25, -.25);
+    System.out.println(power);
     // sets motor power to pid output
-    drivetrain.turn(power);
+    drivetrain.setLeftMotorPower(-power);
+    drivetrain.setRightMotorPower(power);
   }
 
   // Called once the command ends or is interrupted.

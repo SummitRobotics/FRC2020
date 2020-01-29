@@ -18,6 +18,10 @@ public class ArcadeDrive extends CommandBase {
   private ControllerDriver controller;
   private Shifter shift;
 
+  private double old = 0;
+  //max amount motors can change per 20 ms
+  private final double max_change_rate = .05;
+
   /**
    * teleop driver control
    * @param drivetrain drivetrain instance
@@ -36,13 +40,14 @@ public class ArcadeDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.setOpenRampRate(.3);
+    drivetrain.setOpenRampRate(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //temp turret stuff
+
+    drivetrain.setShotPower(controller.rightStickY());
 
     double power = controller.rightTrigger() - controller.leftTrigger();
 
@@ -54,19 +59,29 @@ public class ArcadeDrive extends CommandBase {
     else{
       turn = controller.leftStickX()*.25;
     }
-    
-    
+
+    //power rate of change
+      if(power > old+max_change_rate){
+        power = old+max_change_rate;
+        old = power;
+      }
+      else if(power < old-max_change_rate){
+          power = old-max_change_rate;
+          old = power;
+      }
+      else{
+        old = power;
+      }
+  
+      //calculates power to the motors
     double leftPower = power + turn;
     double rightPower = power - turn;
-    if (turn != 0.0) {
-      drivetrain.setOpenRampRate(0);
-    } else {
-      drivetrain.setOpenRampRate(.5);
-    }
+
+
     drivetrain.setLeftMotorPower(leftPower);
     drivetrain.setRightMotorPower(rightPower);
-  }
 
+  }
   // Called once the command ends or is interrupted.
   @Override
   public void end(final boolean interrupted) {

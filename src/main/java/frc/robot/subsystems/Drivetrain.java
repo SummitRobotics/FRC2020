@@ -5,17 +5,19 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
+import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger {
+public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
     private static final double
     P = .2,
@@ -58,12 +60,53 @@ public class Drivetrain implements Subsystem, Logger {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
+
+    private CANSparkMax shot = new CANSparkMax(60, MotorType.kBrushless);
+
     // pid config
     private double 
     FEED_FWD = 0, 
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
+
+    
+    @Override
+    public double[] getValues(double[] values) {
+        values[Constants.LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
+        values[Constants.LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
+        values[Constants.LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
+        values[Constants.LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
+        values[Constants.LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
+        values[Constants.LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
+        
+        return values;
+    }
+
+    /**
+     * returns priority
+     */
+    public double getPriority(){
+        return 1;
+    }
+
+    /**
+     * limits the current each motor can draw
+     */
+    public void limitPower(double amount){
+        //finds current limit by multiplying the max current by the amount and adding the min current
+        int cl = (int)((60*amount)+1);
+
+        //System.out.println(cl);
+        //sets all limits on the motors
+        left.setSmartCurrentLimit(cl);
+        leftBack.setSmartCurrentLimit(cl);
+        leftMiddle.setSmartCurrentLimit(cl);
+
+        right.setSmartCurrentLimit(cl);
+        rightBack.setSmartCurrentLimit(cl);
+        rightMiddle.setSmartCurrentLimit(cl);
+    }
 
     public Drivetrain() {
         // tells other two motors to follow the first
@@ -91,6 +134,9 @@ public class Drivetrain implements Subsystem, Logger {
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
+    public void setShotPower(double power){
+        shot.set(power);
+    }
     /**
      * Sets the power of the left side of the drivetrain
      * 
