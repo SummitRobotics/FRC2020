@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 
-public class Lemonlight {
+public class Lemonlight implements Logger{
 
     NetworkTable limelight;
 

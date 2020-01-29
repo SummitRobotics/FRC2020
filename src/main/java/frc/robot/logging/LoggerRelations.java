@@ -53,7 +53,10 @@ public enum LoggerRelations {
 
     INTAKE_ARM_INTAKE_POWER(36),
     INTAKE_ARM_PIVOT_POWER(37),
-    INTAKE_ARM_PIVOT_POSITION(38);
+    INTAKE_ARM_PIVOT_POSITION(38),
+
+    PDP_CURRENT(39),
+    PDP_VOLTAGE(40);
 
     public int value;
     private LoggerRelations(int value) {

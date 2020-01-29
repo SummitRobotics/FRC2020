@@ -9,7 +9,7 @@ package frc.robot.devices;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import frc.robot.logging.Logger;
-import frc.robot.utilities.Constants;
+import frc.robot.logging.LoggerRelations;
 
 /**
  * Add your docs here.
@@ -27,8 +27,8 @@ public class PDP implements Logger{
 
     @Override
     public double[] getValues(double[] values) {
-        values[Constants.LoggerRelations.PDP_VOLTAGE.value] = getPDPVoltage();
-        values[Constants.LoggerRelations.PDP_CURRENT.value] = getTotalPDPCurrent();
+        values[LoggerRelations.PDP_VOLTAGE.value] = getPDPVoltage();
+        values[LoggerRelations.PDP_CURRENT.value] = getTotalPDPCurrent();
         return values;
     }
 
