@@ -1,6 +1,9 @@
 package frc.robot.logging;
 
 public enum LoggerRelations {
+    //placeholder for testing
+    PLACEHOLDER(-1),
+
     //controller -must start at 0 or modifications need to oi.java
     RIGHT_TRIGGER(0),
     LEFT_TRIGGER(1),
@@ -56,7 +59,9 @@ public enum LoggerRelations {
     INTAKE_ARM_PIVOT_POSITION(38),
 
     PDP_CURRENT(39),
-    PDP_VOLTAGE(40);
+    PDP_VOLTAGE(40),
+
+    BUTTON1(41);
 
     public int value;
     private LoggerRelations(int value) {

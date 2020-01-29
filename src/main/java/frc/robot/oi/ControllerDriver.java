@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.Ports;
 
 
 public class ControllerDriver implements Logger {
@@ -48,9 +49,9 @@ public class ControllerDriver implements Logger {
     rightBumper,
     leftBumper;
 
-    public ControllerDriver(SyncLogger logger, int controllerPort) {
+    public ControllerDriver(SyncLogger logger) {
 
-        controller = new XboxController(controllerPort);
+        controller = new XboxController(Ports.XBOX_PORT.port);
 
         buttonA = new LoggerButton(controller::getAButton, LoggerRelations.BTN_A);
         buttonB = new LoggerButton(controller::getBButton, LoggerRelations.BTN_B);

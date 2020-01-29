@@ -46,7 +46,7 @@ public class RobotContainer {
     scheduler = CommandScheduler.getInstance();
     logger = new SyncLogger();
 
-    controller1 = new ControllerDriver(logger, Ports.XBOX_PORT.port);
+    controller1 = new ControllerDriver(logger);
 
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
     drivetrain = new Drivetrain();
