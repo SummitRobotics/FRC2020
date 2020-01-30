@@ -41,7 +41,11 @@ public class LidarV4{
 			
 			//tells lidar to take another measurement
 			i2c.write(0x00, 0x04);
-			value = out;
+
+			//prevent bad values
+			if(out < 1000){
+				value = out;
+			}
 		}
 		return value;
 	}

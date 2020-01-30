@@ -25,7 +25,7 @@ public enum Ports {
     PIGEON_IMU(10),
 
     //turret
-    TURRET(0),
+    TURRET(40),
 
     //conveyor
     CONVEYOR_RIGHT(33),

@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import edu.wpi.first.hal.HAL;
 
 public class LaunchpadDriver implements Logger {
 
     private DriverStation driverStation;
     private int port;
+    private int outputs;
 
     public LoggerButton
     buttonA,
@@ -60,10 +62,12 @@ public class LaunchpadDriver implements Logger {
         return driverStation.getStickAxis(port, axis);
     }
 
+    //buttons
     private boolean getRawButton(int button) {
         return driverStation.getStickButton(port, button);
     }
 
+    //analog inputs
     public double getAxisA() {
         return getRawAxis(1);
     }
@@ -96,6 +100,51 @@ public class LaunchpadDriver implements Logger {
         return getRawAxis(8);
     }
 
+    //outputs
+    public void setOutput1(boolean state){
+        setOutput(1, state);
+    }
+
+    public void setOutput2(boolean state){
+        setOutput(2, state);
+    }
+
+    public void setOutput3(boolean state){
+        setOutput(3, state);
+    }
+
+    public void setOutput4(boolean state){
+        setOutput(4, state);
+    }
+
+    public void setOutput5(boolean state){
+        setOutput(5, state);
+    }
+
+    public void setOutput6(boolean state){
+        setOutput(6, state);
+    }
+
+    public void setOutput7(boolean state){
+        setOutput(7, state);
+    }
+
+    public void setOutput8(boolean state){
+        setOutput(8, state);
+    }
+
+    public void setOutput9(boolean state){
+        setOutput(9, state);
+    }
+
+    public void setOutput10(boolean state){
+        setOutput(10, state);
+    }
+
+    public void setOutput11(boolean state){
+        setOutput(11, state);
+    }
+
     @Override
     public double[] getValues(double[] values) {
         values[LoggerRelations.PLACEHOLDER.value] = getAxisA();
@@ -109,4 +158,9 @@ public class LaunchpadDriver implements Logger {
         return values;
     }
 
+    //coppyed from genericHID
+    public void setOutput(int outputNumber, boolean value) {
+        outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
+        HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
+    }
 }
