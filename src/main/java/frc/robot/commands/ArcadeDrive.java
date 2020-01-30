@@ -17,10 +17,11 @@ public class ArcadeDrive extends CommandBase {
   private Drivetrain drivetrain;
   private ControllerDriver controller;
   private Shifter shift;
+  private final double deadzone = .1;
 
   private double old = 0;
   //max amount motors can change per 20 ms
-  private final double max_change_rate = .05;
+  private final double max_change_rate = .15;
 
   /**
    * teleop driver control
@@ -41,6 +42,7 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void initialize() {
     drivetrain.setOpenRampRate(0);
+    shift.Shift(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,13 +53,11 @@ public class ArcadeDrive extends CommandBase {
 
     double power = controller.rightTrigger() - controller.leftTrigger();
 
-    double turn = 0;
-    //decreses turing power if in high gear
-    if(shift.getShiftState()){
-      turn = controller.leftStickX()*.5;
-    }
-    else{
-      turn = controller.leftStickX()*.25;
+    double turn = controller.leftStickX();
+
+    //turn deadzone
+    if (Math.abs(turn) < deadzone){
+      turn = 0;
     }
 
     //power rate of change
@@ -76,7 +76,6 @@ public class ArcadeDrive extends CommandBase {
       //calculates power to the motors
     double leftPower = power + turn;
     double rightPower = power - turn;
-
 
     drivetrain.setLeftMotorPower(leftPower);
     drivetrain.setRightMotorPower(rightPower);

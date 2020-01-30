@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
@@ -68,7 +69,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-    /**
+  /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
@@ -79,12 +80,11 @@ public class RobotContainer {
     controller1.leftBumper.whenPressed(new Shift(shifter));
     controller1.dPadRight.whenPressed(new GyroTurn(gyro, drivetrain, 90));
     controller1.dPadLeft.whenPressed(new GyroTurn(gyro, drivetrain, -90));
-/*
+
     controller1.buttonA.toggleWhenPressed(new StartEndCommand(
       () -> limelight.setLEDMode(Lemonlight.LEDModes.FORCE_ON),
       () -> limelight.setLEDMode(Lemonlight.LEDModes.FORCE_OFF)
     ));
-  */
   }
 
   /**

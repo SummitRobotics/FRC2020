@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.devices.PDP;
 import frc.robot.utilities.Functions;
 
-public class PowerLimiter implements Subsystem, Command {
+public class PowerLimiter implements Subsystem, Command{
 
     private PDP pdp;
     private LimitedSubsystem[] subsystems;
