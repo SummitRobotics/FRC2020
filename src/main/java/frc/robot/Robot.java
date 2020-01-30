@@ -16,6 +16,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private Lidar lidar = new Lidar();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -65,6 +67,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    
   }
 
   /**
@@ -83,7 +86,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
+    lidar.startMeasuring();
   }
 
   /**
@@ -91,7 +94,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-      
+    System.out.println(lidar.getDistance());
   }
 
   @Override
