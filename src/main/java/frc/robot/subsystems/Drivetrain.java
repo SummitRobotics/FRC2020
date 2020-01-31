@@ -5,7 +5,6 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
-import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -16,14 +15,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
+public class Drivetrain implements Subsystem, Logger {
 
     private static final double
     P = .2,
     I = 0,
     D = 0.01;
-
-    private int oldCurrentLimit = 0;
 
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
@@ -73,27 +70,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
      */
     public double getPriority(){
         return 1;
-    }
-
-    /**
-     * limits the current each motor can draw
-     */
-    public void limitPower(double amount){
-        //finds current limit by multiplying the max current by the amount and adding the min current
-        int currentLimit = (int)((60*amount)+1);
-
-        if ((currentLimit > (oldCurrentLimit+5))||(currentLimit < (oldCurrentLimit-5))){
-            oldCurrentLimit = currentLimit;
-        //System.out.println(cl);
-        //sets all limits on the motors
-        left.setSmartCurrentLimit(currentLimit);
-        leftBack.setSmartCurrentLimit(currentLimit);
-        leftMiddle.setSmartCurrentLimit(currentLimit);
-
-        right.setSmartCurrentLimit(currentLimit);
-        rightBack.setSmartCurrentLimit(currentLimit);
-        rightMiddle.setSmartCurrentLimit(currentLimit);
-        }
     }
 
     public Drivetrain() {
