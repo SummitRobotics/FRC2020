@@ -23,6 +23,8 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     I = 0,
     D = 0.01;
 
+    private int oldCurrentLimit = 0;
+
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
@@ -59,9 +61,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
-
-    private CANSparkMax shot = new CANSparkMax(60, MotorType.kBrushless);
-
     // pid config
     private double 
     FEED_FWD = 0, 
@@ -81,17 +80,20 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
      */
     public void limitPower(double amount){
         //finds current limit by multiplying the max current by the amount and adding the min current
-        int cl = (int)((60*amount)+1);
+        int currentLimit = (int)((60*amount)+1);
 
+        if ((currentLimit > (oldCurrentLimit+5))||(currentLimit < (oldCurrentLimit-5))){
+            oldCurrentLimit = currentLimit;
         //System.out.println(cl);
         //sets all limits on the motors
-        left.setSmartCurrentLimit(cl);
-        leftBack.setSmartCurrentLimit(cl);
-        leftMiddle.setSmartCurrentLimit(cl);
+        left.setSmartCurrentLimit(currentLimit);
+        leftBack.setSmartCurrentLimit(currentLimit);
+        leftMiddle.setSmartCurrentLimit(currentLimit);
 
-        right.setSmartCurrentLimit(cl);
-        rightBack.setSmartCurrentLimit(cl);
-        rightMiddle.setSmartCurrentLimit(cl);
+        right.setSmartCurrentLimit(currentLimit);
+        rightBack.setSmartCurrentLimit(currentLimit);
+        rightMiddle.setSmartCurrentLimit(currentLimit);
+        }
     }
 
     public Drivetrain() {
@@ -120,9 +122,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
-    public void setShotPower(double power){
-        shot.set(power);
-    }
     /**
      * Sets the power of the left side of the drivetrain
      * 

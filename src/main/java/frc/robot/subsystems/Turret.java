@@ -17,6 +17,7 @@ public class Turret implements Logger, LimitedSubsystem{
     public Turret(){
         turret.configPeakCurrentLimit(0);
         turret.configPeakCurrentDuration(0);
+        turret.setInverted(true);
     }
 
     public double getPriority(){
