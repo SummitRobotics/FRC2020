@@ -1,1 +1,0 @@
--agentpath:/home/lvuser/javaProfiler/bin/linux-arm/libjprofilerti.so=port=8849,nowait
