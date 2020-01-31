@@ -1,0 +1,53 @@
+import com.jprofiler.gradle.JavaProfile
+import java.util.regex.Matcher
+
+plugins {
+    id 'com.jprofiler' version '10.1'
+    id 'java'
+}
+
+jprofiler {
+    installDir = jprofilerHome
+}
+defaultTasks 'run'
+
+dependencies {
+    compile project('app')
+    // This artifact contains the platform API
+    compile files("$jprofilerHome/bin/platform.jar")
+}
+
+task run(type: JavaProfile) {
+    main = 'TestProfiler'
+    classpath sourceSets.main.runtimeClasspath
+    offline = true
+    sessionId = 80
+    doFirst {
+        configFile = createConfigFile()
+    }
+}
+
+// Using the platform API requires a license key. The config file in the samples/common directory
+// does not contain a license key, so the license key from your JProfiler installation is extracted
+// and a temporary copy of the config file with the license key is made.
+File createConfigFile() {
+    File userConfigFile = file("${System.getProperty('user.home')}/.jprofiler11/jprofiler_config.xml")
+    Matcher matcher = userConfigFile.text =~ /key="(.+)"/
+    if (!matcher) {
+        throw new RuntimeException("No license key was found in the config file ${userConfigFile}. Please run JProfiler and enter your license key.")
+    }
+    String licenseKey = matcher[0][1]
+    File configFile = File.createTempFile('jprofiler_config', '.xml')
+    copy {
+        from file('../common/jprofiler_config.xml')
+        into configFile.parentFile
+        rename { String fileName ->
+            configFile.name
+        }
+        filter { String line ->
+            line.replaceAll('key=""', /key="${licenseKey}"/)
+        }
+    }
+    configFile.deleteOnExit()
+    return configFile
+}

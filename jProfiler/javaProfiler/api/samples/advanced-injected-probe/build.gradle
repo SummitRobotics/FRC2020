@@ -1,0 +1,44 @@
+import com.jprofiler.gradle.JavaProfile
+
+plugins {
+    id 'com.jprofiler' version '10.1'
+    id 'java'
+}
+
+// Execute ../gradlew in this directory to compile and run the custom probe.
+// See src/main/java/AdvancedAwtEventProbe.java for more information.
+
+jprofiler {
+    installDir = jprofilerHome
+}
+defaultTasks 'run'
+
+dependencies {
+    // This artifact contains the API for writing the injected probe, it is also available in the "$JPROFILER_HOME/api" directory
+    compile "com.jprofiler:jprofiler-probe-injected:$version"
+}
+
+/*
+Starts the "Animated Bezier Curve Demo" demo program with the custom probe. You can create a remote session,
+keep the default values and connect to the created process. To see more event types, type into the
+demo window, click with the mouse into it, resize it and maximize it.
+
+Alternatively, you can add
+
+-Djprofiler.probeClassPath=<user home>/.jprofiler11/samples/build/advanced-injected-probe/classes/java/main
+
+to the "VM arguments" in the application settings of the "Animated Bezier Curve Demo" demo session in the JProfiler
+GUI after running the "classes" target of this gradle build script.
+*/
+task run(type: JavaProfile) {
+    main = 'bezier.BezierAnim'
+    classpath sourceSets.main.runtimeClasspath, "$jprofilerHome/demo/bezier/classes"
+    // add the system property that specifies the class path for custom probes
+    jvmArgs "-Djprofiler.probeClassPath=$buildDir/classes/java/main"
+
+    doFirst {
+        println '------------------------------------------------------------'
+        println 'Please connect with a remote session from the JProfiler GUI'
+        println '------------------------------------------------------------'
+    }
+}

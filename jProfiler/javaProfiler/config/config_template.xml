@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="11.0">
+  <generalSettings setupHasRun="false">
+    <recordingProfiles>
+      <recordingProfile name="CPU recording" id="10">
+        <actionKey id="cpu" />
+      </recordingProfile>
+    </recordingProfiles>
+  </generalSettings>
+  <sessions>
+    <session id="80" name="Animated Bezier Curve Demo" type="launch" mainClass="bezier.BezierAnim">
+      <filters>
+        <filter type="inclusive" name="bezier." />
+      </filters>
+      <classPath>
+        <entry path="demo/bezier/classes" />
+      </classPath>
+      <sourcePath>
+        <entry path="demo/bezier/src" />
+      </sourcePath>
+    </session>
+    <session id="81" name="JDBC demo" type="launch" mainClass="jdbc.JdbcDemo" methodCallRecordingType="instrumentation" autoTuneInstrumentation="false">
+      <filters>
+        <filter type="inclusive" name="jdbc." />
+        <filter type="ignored" name="jdbc.CustomFunction" />
+      </filters>
+      <probes>
+        <probe name="builtin.JdbcProbe" events="true" />
+        <probe name="builtin.JndiProbe" events="true" />
+      </probes>
+      <classPath>
+        <entry path="demo/jdbc/classes" />
+        <entry path="demo/jdbc/lib" />
+      </classPath>
+      <sourcePath>
+        <entry path="demo/jdbc/src" />
+      </sourcePath>
+    </session>
+    <session id="82" name="Demo server" type="launch" timeout="20" mainClass="com.ejt.demo.server.gui.GuiDemoServer" nextScriptId="5" methodCallRecordingType="instrumentation" recordArrayAlloc="false" perThreadEventCap="5000" compilationTarget="1.6">
+      <filters>
+        <filter type="inclusive" name="com.ejt.demo.server.handlers." />
+      </filters>
+      <probes>
+        <probe name="builtin.JdbcProbe" preparedStatementParameters="true" events="true" />
+        <probe name="builtin.PersistenceProbe" events="true" />
+        <probe name="builtin.ServletProbe" splitType="script" fullQuery="true" events="true">
+          <requestResolvers enabled="true">
+            <entry>
+              <script id="3" compiledClassName="__JProfiler_ProbeScript_3" lastModified="1425460905661" enabled="false">
+                <code>servletRequest.getRequestURI()</code>
+              </script>
+            </entry>
+            <entry>
+              <script id="4" compiledClassName="__JProfiler_ProbeScript_4" lastModified="1425466124080" enabled="false">
+                <code>import javax.servlet.http.HttpSession;
+
+HttpSession session = servletRequest.getSession(false);
+if (session != null) {
+    Object user = session.getAttribute("user");
+    if (user != null) {
+        return "User \"" + user.toString() + "\"";
+    } else {
+        return "Unauthenticated";
+    }
+} else {
+    return null; // Do not split
+}</code>
+              </script>
+            </entry>
+          </requestResolvers>
+        </probe>
+        <probe name="builtin.JndiProbe" events="true" />
+        <probe name="builtin.JmsProbe" events="true" />
+        <probe name="builtin.RmiProbe" events="true" />
+        <probe name="builtin.WsProbe" events="true" />
+      </probes>
+      <classPath>
+        <entry path="demo/server/classes" />
+        <entry path="demo/server/lib" />
+      </classPath>
+      <sourcePath>
+        <entry path="demo/server/src" />
+      </sourcePath>
+    </session>
+  </sessions>
+  <nextId id="100" />
+</config>

@@ -1,0 +1,61 @@
+import com.jprofiler.gradle.JavaProfile
+
+plugins {
+    id 'com.jprofiler' version '10.1'
+    id 'java'
+}
+
+// Execute ../gradlew in this directory to Compile and run the MBean access example.
+// See src/main/java/MBeanProgrammaticAccessExample.java for more information.
+
+ext.jmxPort = 55827 // The JMX port of the profiled application
+
+jprofiler {
+    installDir = jprofilerHome
+}
+defaultTasks 'run'
+
+ext.process = null
+
+dependencies {
+    // This artifact contains the MBean API, it is also available in the "$JPROFILER_HOME/api" directory
+    compile "com.jprofiler:jprofiler-mbean:$version"
+}
+
+// Starts the "Animated Bezier Curve Demo" demo program with an MBean server
+task profileBezier(type: JavaProfile) {
+    main = 'bezier.BezierAnim'
+    classpath sourceSets.main.runtimeClasspath, "$jprofilerHome/demo/bezier/classes"
+    offline = true
+    sessionId = 80
+    configFile = file("../common/jprofiler_config.xml")
+    // This is the directory where the JProfiler snapshot will be saved
+    workingDir = file(findProperty('snapshotsDir') ?: "$buildDir/snapshots")
+    workingDir.mkdirs()
+    jvmArgs "-Djprofiler.jmxServerPort=$jmxPort" //This starts the JMX server on the specified port
+}
+
+task profileBezierInBackground {
+    doLast {
+        // This starts a process in the background and is not a standard feature of Gradle's JavaExec task.
+        // The argument is a prefix for the output, in order to suppress output pass null as an argument.
+        process = profileBezier.createProcess('Bezier> ')
+        println 'Waiting for 5 seconds ...'
+        Thread.sleep(5000)
+    }
+}
+
+task stopBezier {
+    doLast {
+        process?.destroy()
+    }
+}
+
+task run(type: JavaExec) {
+    dependsOn profileBezierInBackground
+    finalizedBy stopBezier
+
+    main = 'MBeanProgrammaticAccessExample'
+    classpath sourceSets.main.runtimeClasspath
+    args jmxPort
+}

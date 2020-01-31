@@ -1,0 +1,8 @@
+include 'mbean',
+        'offline',
+        'platform',
+        'platform:app',
+        'simple-injected-probe',
+        'advanced-injected-probe',
+        'simple-embedded-probe',
+        'advanced-embedded-probe'
