@@ -2,10 +2,10 @@ package frc.robot.logging;
 
 public enum LoggerRelations {
     //placeholder for testing
-    PLACEHOLDER(-1),
+    PLACEHOLDER(0),
 
     //controller -must start at 0 or modifications need to oi.java
-    RIGHT_TRIGGER(0),
+    RIGHT_TRIGGER(42),
     LEFT_TRIGGER(1),
     RIGHT_BUMPER(2),
     LEFT_BUMPER(3),

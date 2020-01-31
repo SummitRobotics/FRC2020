@@ -40,7 +40,7 @@ public class SyncLogger implements Subsystem, Command {
      */
     public SyncLogger() {
         this.elements = new ArrayList<>();
-        values = new double[LoggerRelations.values().length];
+        values = new double[LoggerRelations.values().length - 1];
 
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
         fileFormatter = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
@@ -123,7 +123,7 @@ public class SyncLogger implements Subsystem, Command {
     private String getFormatedLogData() {
         getLogData();
         String data = Arrays.toString(values);
-        return data.substring(1, data.length() - 1);
+        return data.substring(1, data.length());
     }
 
     @Override
