@@ -49,8 +49,6 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
 
-    drivetrain.setShotPower(controller.rightStickY());
-
     double power = controller.rightTrigger() - controller.leftTrigger();
 
     double turn = controller.leftStickX();

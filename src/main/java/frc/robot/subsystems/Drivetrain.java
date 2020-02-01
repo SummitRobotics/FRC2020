@@ -5,7 +5,6 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
-import frc.robot.utilities.powerlimiting.LimitedSubsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -16,7 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
+public class Drivetrain implements Subsystem, Logger {
 
     private static final double
     P = .2,
@@ -59,9 +58,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
-
-    private CANSparkMax shot = new CANSparkMax(60, MotorType.kBrushless);
-
     // pid config
     private double 
     FEED_FWD = 0, 
@@ -74,24 +70,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
      */
     public double getPriority(){
         return 1;
-    }
-
-    /**
-     * limits the current each motor can draw
-     */
-    public void limitPower(double amount){
-        //finds current limit by multiplying the max current by the amount and adding the min current
-        int cl = (int)((60*amount)+1);
-
-        //System.out.println(cl);
-        //sets all limits on the motors
-        left.setSmartCurrentLimit(cl);
-        leftBack.setSmartCurrentLimit(cl);
-        leftMiddle.setSmartCurrentLimit(cl);
-
-        right.setSmartCurrentLimit(cl);
-        rightBack.setSmartCurrentLimit(cl);
-        rightMiddle.setSmartCurrentLimit(cl);
     }
 
     public Drivetrain() {
@@ -120,9 +98,6 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
     }
 
-    public void setShotPower(double power){
-        shot.set(power);
-    }
     /**
      * Sets the power of the left side of the drivetrain
      * 
