@@ -6,6 +6,9 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import edu.wpi.first.hal.HAL;
 
+/**
+ * Wrappper class for the TI Launchpad in mode 1
+ */
 public class LaunchpadDriver implements Logger {
 
     private DriverStation driverStation;
@@ -30,6 +33,7 @@ public class LaunchpadDriver implements Logger {
         driverStation = DriverStation.getInstance();
         this.port = port;
 
+        //TODO - create actual logger values
         buttonA = new LoggerButton(() -> getRawButton(1), LoggerRelations.PLACEHOLDER);
         buttonB = new LoggerButton(() -> getRawButton(2), LoggerRelations.PLACEHOLDER);
         buttonC = new LoggerButton(() -> getRawButton(3), LoggerRelations.PLACEHOLDER);
@@ -58,16 +62,24 @@ public class LaunchpadDriver implements Logger {
         );
     }
 
+    /**
+     * Gets analog axis
+     * @param axis the axis number
+     * @return the axis value
+     */
     private double getRawAxis(int axis) {
         return driverStation.getStickAxis(port, axis);
     }
 
-    //buttons
+    /**
+     * Gets digital output
+     * @param button the button number
+     * @return whether the output is on or off
+     */
     private boolean getRawButton(int button) {
         return driverStation.getStickButton(port, button);
     }
 
-    //analog inputs
     public double getAxisA() {
         return getRawAxis(1);
     }
@@ -145,6 +157,7 @@ public class LaunchpadDriver implements Logger {
         setOutput(11, state);
     }
 
+    //TODO - make actual logger values
     @Override
     public double[] getValues(double[] values) {
         values[LoggerRelations.PLACEHOLDER.value] = getAxisA();
@@ -158,7 +171,11 @@ public class LaunchpadDriver implements Logger {
         return values;
     }
 
-    //coppyed from genericHID
+    /**
+     * Black box to set outputs
+     * @param outputNumber the output number
+     * @param value the state of the output
+     */
     public void setOutput(int outputNumber, boolean value) {
         outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
         HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
