@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
@@ -58,13 +59,7 @@ public class RobotContainer {
     logger.addElements(drivetrain, gyro, shifter);
     scheduler.setDefaultCommand(logger, logger);
 
-    configureRunCommands();
     configureButtonBindings();
-  }
-
-  private void configureRunCommands() {
-    System.out.println("things");
-    scheduler.schedule(new RunCommand(() -> System.out.println("yes " + limelight.hasTarget())));
   }
 
   /**
@@ -83,6 +78,10 @@ public class RobotContainer {
       () -> limelight.setLEDMode(Lemonlight.LEDModes.FORCE_ON),
       () -> limelight.setLEDMode(Lemonlight.LEDModes.FORCE_OFF)
     ));
+  }
+
+  public void teleopInit() {
+    scheduler.schedule(new RunCommand(() -> System.out.println(limelight.getHorizontalOffset())));
   }
 
   /**
