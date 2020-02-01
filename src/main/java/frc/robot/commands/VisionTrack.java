@@ -31,6 +31,7 @@ public class VisionTrack extends CommandBase {
   @Override
   public void initialize() {
     pidController.setSetpoint(0);
+    lemonlight.setPipeline(0);
     lemonlight.setLEDMode(LEDModes.FORCE_ON);
     pidController.reset();
   }
