@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
@@ -29,11 +30,11 @@ public class RobotContainer {
 
   private Drivetrain drivetrain;
   private Shifter shifter;
+  private Turret turret;
 
   private PigeonGyro gyro;
   private Lemonlight limelight;
 
-  private Turret turret;
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -41,14 +42,16 @@ public class RobotContainer {
     scheduler = CommandScheduler.getInstance();
     logger = new SyncLogger();
 
+    // OI Devices
     controller1 = new ControllerDriver(logger, Ports.XBOX_PORT.port);
 
+    // Sensors
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-    drivetrain = new Drivetrain();
-    shifter = new Shifter();
-
     limelight = new Lemonlight();
 
+    // Subsystems
+    drivetrain = new Drivetrain();
+    shifter = new Shifter();
     turret = new Turret();
 
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));

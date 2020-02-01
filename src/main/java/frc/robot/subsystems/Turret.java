@@ -4,8 +4,10 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
@@ -18,33 +20,52 @@ import frc.robot.utilities.Ports;
  */
 public class Turret extends SubsystemBase implements Logger {
 
-    double oldPower = 0;
+    private double oldPower = 0;
 
-    CANSparkMax turret;
-    CANEncoder encoder;
-    CANPIDController pidController;
+    private CANSparkMax turret;
+    private CANEncoder encoder;
+    private CANPIDController pidController;
 
-    //TODO - Fix PID and FF values
-    private static final double
-    P = 0,
-    I = 0,
-    D = 0,
-    FF = 0;
+    private DigitalInput limitOne;
+    private DigitalInput limitTwo;
 
     public Turret() {
         turret = new CANSparkMax(Ports.TURRET.port, MotorType.kBrushless);
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
 
-        turret.setClosedLoopRampRate(0);
+        limitOne = new DigitalInput(Ports.TURRET_LIMIT_ONE.port);
+        limitTwo = new DigitalInput(Ports.TURRET_LIMIT_TWO.port);
 
-        pidController.setP(P);
-        pidController.setI(I);
-        pidController.setD(D);
-        pidController.setFF(FF);
+        turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
 
         turret.setInverted(true);
+    }
+
+    /**
+     * Sets the encoder position to 0
+     */
+    public void resetEncoder() {
+        encoder.setPosition(0);
+    }
+
+    /**
+     * Gets the value of limit switch one
+     * 
+     * @return whether the button is pressed
+     */
+    public boolean getLimitOne() {
+        return limitOne.get();
+    }
+
+    /**
+     * Gets the value of limit switch two
+     * 
+     * @return whether the button is pressed
+     */
+    public boolean getLimitTwo() {
+        return limitTwo.get();
     }
 
     /**
