@@ -71,7 +71,6 @@ public class Lemonlight implements Logger{
         pipeline.setDouble(pipe);
     }
 
-
     public boolean hasTarget() {
         return tv.getDouble(0) == 1;
     }
