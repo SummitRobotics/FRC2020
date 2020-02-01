@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.Ports;
 import edu.wpi.first.hal.HAL;
 
 /**
@@ -29,9 +30,9 @@ public class LaunchpadDriver implements Logger {
     buttonK;
 
 
-    public LaunchpadDriver(int port, SyncLogger logger) {
+    public LaunchpadDriver(SyncLogger logger) {
         driverStation = DriverStation.getInstance();
-        this.port = port;
+        this.port = Ports.LAUNCHPAD_PORT.port;
 
         //TODO - create actual logger values
         buttonA = new LoggerButton(() -> getRawButton(1), LoggerRelations.PLACEHOLDER);
