@@ -3,14 +3,18 @@ package frc.robot.devices;
 import java.nio.ByteBuffer;
 
 import edu.wpi.first.hal.I2CJNI;
-import edu.wpi.first.wpilibj.I2C.Port;;
+import edu.wpi.first.wpilibj.I2C.Port;
+import frc.robot.utilities.RollingAverage;;
 
 public class LidarV3{
 
+	private RollingAverage rollingAverage;
 
     public LidarV3(){
         m_port = (byte) Port.kOnboard.value;
 		I2CJNI.i2CInitialize(m_port);
+
+		rollingAverage = new RollingAverage(50);
     }
     
     private static final byte k_deviceAddress = 0x62;
@@ -30,7 +34,15 @@ public class LidarV3{
 	}
 
 	public int getDistance() {
-		return readShort(0x8f);
+		short value = readShort(0x8f);
+		rollingAverage.update(value);
+
+		return value;
+	}
+
+	public int getRollingAverage() {
+		getDistance();
+		return (int) rollingAverage.getAverage();
 	}
 
 	private int writeRegister(int address, int value) {

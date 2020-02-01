@@ -3,17 +3,23 @@ package frc.robot.devices;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
+import frc.robot.utilities.RollingAverage;
 
 public class LidarV4{
 
 	private I2C i2c = new I2C(Port.kOnboard, 0x62);
 	private int value;
 
+	private RollingAverage rollingAverage;
+
     public LidarV4(){
-       value = 0;
+		i2c = new I2C(Port.kOnboard, 0x62);
+		value = 0;
+
+		rollingAverage = new RollingAverage(50);
 	}
 
-	public int getDistance() {
+	private void readDistance() {
 		byte[] status = new byte[1];
 
 		//checks if there is a valid mesurment
@@ -43,10 +49,21 @@ public class LidarV4{
 			i2c.write(0x00, 0x04);
 
 			//prevent bad values
-			if(out < 1000){
+			if (out < 1000){
 				value = out;
 			}
 		}
+
+		rollingAverage.update(value);
+	}
+
+	public int getDistance() {
+		readDistance();
 		return value;
+	}
+
+	public int getRollingAverage() {
+		readDistance();
+		return (int) rollingAverage.getAverage();
 	}
 }
