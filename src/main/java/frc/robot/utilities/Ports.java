@@ -4,6 +4,8 @@ package frc.robot.utilities;
 public enum Ports {
 
     XBOX_PORT(0), //xbox controller
+
+    BUTTONBOX_PORT(1),
     
     //drivetrain
     LEFT_DRIVE_0(20),
@@ -23,7 +25,7 @@ public enum Ports {
     PIGEON_IMU(10),
 
     //turret
-    TURRET(0),
+    TURRET(40),
 
     //conveyor
     CONVEYOR_RIGHT(33),

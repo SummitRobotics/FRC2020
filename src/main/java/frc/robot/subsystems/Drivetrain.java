@@ -65,6 +65,13 @@ public class Drivetrain implements Subsystem, Logger {
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
 
+    /**
+     * returns priority
+     */
+    public double getPriority(){
+        return 1;
+    }
+
     public Drivetrain() {
         // tells other two motors to follow the first
         leftMiddle.follow(left);
