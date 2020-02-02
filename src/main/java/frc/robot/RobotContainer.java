@@ -11,7 +11,6 @@ import frc.robot.utilities.Ports;
 import frc.robot.subsystems.Turret;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
-import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
 
 /**
@@ -30,10 +29,8 @@ public class RobotContainer {
 
   private Drivetrain drivetrain;
   private Shifter shifter;
-  private Turret turret;
 
   private PigeonGyro gyro;
-  private Lemonlight limelight;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -47,12 +44,10 @@ public class RobotContainer {
 
     // Sensors
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-    limelight = new Lemonlight();
 
     // Subsystems
     drivetrain = new Drivetrain();
     shifter = new Shifter();
-    turret = new Turret();
 
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
