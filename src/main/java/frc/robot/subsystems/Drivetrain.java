@@ -6,6 +6,7 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -52,8 +53,8 @@ public class Drivetrain implements Subsystem, Logger {
     private CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getEncoder();
-    private CANEncoder rightEncoder = right.getEncoder();
+    private CANEncoder leftEncoder = left.getAlternateEncoder();
+    private CANEncoder rightEncoder = right.getAlternateEncoder();
 
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
