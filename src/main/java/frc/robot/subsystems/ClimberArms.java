@@ -29,14 +29,16 @@ public class ClimberArms extends SubsystemBase implements Logger {
     private CANPIDController rightPIDController;
 
     // pneumatic piston control classes
-    private DoubleSolenoid leftPiston;
-    private DoubleSolenoid rightPiston;
+    private DoubleSolenoid 
+    leftPiston,
+    rightPiston,
+    breakPiston;
 
-    //TODO - Tune PID values
-    private static final double
-    P = 0,
-    I = 0,
-    D = 0;
+    //TODO - Tune default pid values
+    public static final double
+    defaultP = 0,
+    defaultI = 0,
+    defaultD = 0;
 
     //TODO - Fix setpoints
     /**
@@ -55,26 +57,69 @@ public class ClimberArms extends SubsystemBase implements Logger {
 
     public ClimberArms() {
         leftArmMotor = new CANSparkMax(Ports.LEFT_ARM_MOTOR.port, MotorType.kBrushless);
-        leftEncoder = leftArmMotor.getEncoder();
-        leftPIDController = leftArmMotor.getPIDController();
-
         rightArmMotor = new CANSparkMax(Ports.RIGHT_ARM_MOTOR.port, MotorType.kBrushless);
+
         leftEncoder = leftArmMotor.getEncoder();
+        rightEncoder = rightArmMotor.getEncoder();
+
         leftPIDController = leftArmMotor.getPIDController();
+        rightPIDController = rightArmMotor.getPIDController();
 
         leftPiston = new DoubleSolenoid(Ports.LEFT_PISTON_OPEN.port, Ports.LEFT_PISTON_CLOSE.port);
         rightPiston = new DoubleSolenoid(Ports.RIGHT_PISTON_OPEN.port, Ports.RIGHT_PISTON_CLOSE.port);
 
+        breakPiston = new DoubleSolenoid(Ports.BREAK_PISTON_OPEN.port, Ports.BREAK_PISTON_CLOSE.port);
+
         leftArmMotor.setClosedLoopRampRate(0);
         rightArmMotor.setClosedLoopRampRate(0);
 
+        resetPID();
+    }
+
+    /**
+     * Sets both motor's PID values simultaneously
+     * 
+     * @param P the new P value
+     * @param I the new I value
+     * @param D the new D value
+     */
+    public void setPID(double P, double I, double D) {
+        setLeftPID(P, I, D);
+        setRightPID(P, I, D);
+    }
+
+    /**
+     * Sets the left motor's PID value
+     * 
+     * @param P the new P value
+     * @param I the new I value
+     * @param D the new D value
+     */
+    public void setLeftPID(double P, double I, double D) {
         leftPIDController.setP(P);
         leftPIDController.setI(I);
         leftPIDController.setD(D);
+    }
 
+    /**
+     * Sets the right motor's PID value
+     * 
+     * @param P the new P value
+     * @param I the new I value
+     * @param D the new D value
+     */
+    public void setRightPID(double P, double I, double D) {
         rightPIDController.setP(P);
         rightPIDController.setI(I);
         rightPIDController.setD(D);
+    }
+
+    /**
+     * Resets both motor's PID values to default constants
+     */
+    public void resetPID() {
+        setLeftPID(defaultP, defaultI, defaultD);
+        setRightPID(defaultP, defaultI, defaultD);
     }
 
     /**
@@ -91,6 +136,20 @@ public class ClimberArms extends SubsystemBase implements Logger {
     public void closePistons() {
         leftPiston.set(Value.kReverse);
         rightPiston.set(Value.kReverse);
+    }
+
+    /**
+     * Opens the break piston
+     */
+    public void openBreak() {
+        breakPiston.set(Value.kForward);
+    }
+
+    /**
+     * Closes the break piston
+     */
+    public void closeBreak() {
+        breakPiston.set(Value.kReverse);
     }
     
     /**

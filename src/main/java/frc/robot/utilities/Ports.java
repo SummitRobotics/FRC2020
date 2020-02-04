@@ -41,7 +41,9 @@ public enum Ports {
     LEFT_PISTON_OPEN(0),
     LEFT_PISTON_CLOSE(0),
     RIGHT_PISTON_OPEN(0),
-    RIGHT_PISTON_CLOSE(0);
+    RIGHT_PISTON_CLOSE(0),
+    BREAK_PISTON_OPEN(0),
+    BREAK_PISTON_CLOSE(0);
 
     public int port;
     private Ports(int port) {
