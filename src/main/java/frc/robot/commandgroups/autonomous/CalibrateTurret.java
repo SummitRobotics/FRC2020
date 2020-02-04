@@ -10,7 +10,7 @@ public class CalibrateTurret extends SequentialCommandGroup {
     public CalibrateTurret(Turret turret) {
         addCommands(
             new RunToLimitSwitch(turret),
-            new InstantCommand(turret::resetEncoder)
+            new InstantCommand(turret::calibrateEncoder)
         );
     }
 }

@@ -1,9 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
@@ -12,8 +10,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Ports;
-import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
+import frc.robot.commands.drivetrain.GyroTurn;
+import frc.robot.commands.shifter.Shift;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
 
@@ -94,6 +93,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AppeaseDuane(drivetrain, gyro);
+    return null;
   }
 }

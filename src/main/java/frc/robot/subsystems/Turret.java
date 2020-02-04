@@ -51,6 +51,17 @@ public class Turret extends SubsystemBase implements Logger {
     }
 
     /**
+     * Sets the soft limits based on limit switch
+     */
+    public void calibrateEncoder() {
+        resetEncoder();
+
+        //TODO - Make sure directions are correct and make values correct based on gear ratios
+        turret.setSoftLimit(SoftLimitDirection.kForward, 0);
+        turret.setSoftLimit(SoftLimitDirection.kReverse, 0);
+    }
+
+    /**
      * Gets the value of limit switch one
      * 
      * @return whether the button is pressed
