@@ -53,8 +53,8 @@ public class Drivetrain implements Subsystem, Logger {
     private CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getAlternateEncoder();
-    private CANEncoder rightEncoder = right.getAlternateEncoder();
+    private CANEncoder leftEncoder = left.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
+    private CANEncoder rightEncoder = right.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
 
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
