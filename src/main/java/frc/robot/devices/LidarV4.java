@@ -21,9 +21,12 @@ public class LidarV4{
 		rollingAverage = new RollingAverage(50);
 	}
 
+	public I2C getPort(){
+		return i2c;
+	}
+
 	private void readDistance() {
 		byte[] status = new byte[1];
-
 		//checks if there is a valid mesurment
 		i2c.read(0x01, 1, status);
 		if ((status[0] & 0x01) == 0) {
@@ -70,12 +73,14 @@ public class LidarV4{
 		//reads device id and saves it
 		byte[] idBuffer = new byte[5];
 		i2c.read(0x16, 4, idBuffer);
+
+
 		idBuffer[4] = (byte) id;
 		System.out.println(Arrays.toString(idBuffer));
 		byte[] writeBuffer = new byte[6];
-		writeBuffer[0] = 0x62;
+		writeBuffer[0] = 0x16;
 		for (int i  = 1; i < 6; i++) {
-			writeBuffer[i] = idBuffer[i-1];
+			writeBuffer[i] = idBuffer[(i-1)];
 		}
 		//unlocks adress writing
 		i2c.writeBulk(writeBuffer);

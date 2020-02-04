@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.devices.LidarV3;
 import frc.robot.devices.LidarV4;
 
 /**
@@ -14,7 +15,8 @@ import frc.robot.devices.LidarV4;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  LidarV4 l = new LidarV4(0x62);
+  LidarV4 lidarV4 = new LidarV4(0x63);
+  LidarV3 lidarV3 = new LidarV3();
 
   private RobotContainer m_robotContainer;
 
@@ -86,7 +88,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    l.changeId(0x63);
+    //l.changeId(0x63);
+    lidarV3.startMeasuring();
   }
 
   /**
@@ -94,7 +97,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    System.out.println(l.getDistance());
+    System.out.println("Laser "+lidarV3.getDistance()+" | IR "+lidarV4.getDistance()+" | Laser - IR "+(lidarV3.getDistance() - lidarV4.getDistance()));
   }
 
   @Override
