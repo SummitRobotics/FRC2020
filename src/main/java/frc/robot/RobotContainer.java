@@ -24,8 +24,8 @@ public class RobotContainer {
 
 	private SyncLogger logger;
 
-  private ControllerDriver controller1;
-  private LaunchpadDriver launchpad;
+	private ControllerDriver controller1;
+	private LaunchpadDriver launchpad;
 
 	// public just to make things work
 	private PigeonGyro gyro;
