@@ -20,7 +20,7 @@ import frc.robot.utilities.Ports;
  */
 public class Turret extends SubsystemBase implements Logger {
 
-    private double oldPower = 0;
+    private double oldPower;
 
     private CANSparkMax turret;
     private CANEncoder encoder;
@@ -30,6 +30,8 @@ public class Turret extends SubsystemBase implements Logger {
     private DigitalInput limitTwo;
 
     public Turret() {
+        oldPower = 0;
+
         turret = new CANSparkMax(Ports.TURRET.port, MotorType.kBrushless);
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
