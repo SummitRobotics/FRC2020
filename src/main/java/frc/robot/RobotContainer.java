@@ -7,7 +7,6 @@ import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
-import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
 import frc.robot.devices.PigeonGyro;
 
@@ -58,9 +57,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    controller1.leftBumper.whenPressed(new Shift(shifter));
-    controller1.dPadRight.whenPressed(new GyroTurn(gyro, drivetrain, 90));
-    controller1.dPadLeft.whenPressed(new GyroTurn(gyro, drivetrain, -90));
+
   }
 
   /**
@@ -69,6 +66,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AppeaseDuane(drivetrain, gyro);
+    return null;
   }
 }
