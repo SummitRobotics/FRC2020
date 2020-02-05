@@ -3,11 +3,11 @@ package frc.robot.oi;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.functionalinterfaces.AxisGetter;
 
-interface AxisGetter {
-	double get();
-}
-
+/**
+ * Wrapper for axes that allows them to be both logged and passed as variables
+ */
 public class LoggerAxis implements Logger {
 
 	private LoggerRelations logReference;
@@ -25,6 +25,9 @@ public class LoggerAxis implements Logger {
 		logger.addElements(this);
 	}
 
+	/**
+	 * Gets the position of the axis
+	 */
 	public double get() {
 		return getter.get();
 	}

@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
-interface ButtonGetter {
-    boolean get();
-}
-
+/**
+ * Wrapper class for WPI's button that adds logging functionality
+ */
 public class LoggerButton extends Button implements Logger {
 
     private LoggerRelations logReference;
@@ -30,11 +30,10 @@ public class LoggerButton extends Button implements Logger {
         logger.addElements(this);
     }
 
-    public LoggerButton assignToLogger(SyncLogger logger) {
-        logger.addElements(this);
-        return this;
-    }
-
+    /**
+     * Gets the button value
+     * @return the button value
+     */
     @Override
     public boolean get() {
         return getter.get();

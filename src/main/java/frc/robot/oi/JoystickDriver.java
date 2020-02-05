@@ -1,13 +1,13 @@
 package frc.robot.oi;
 
-import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.Ports;
 
 /**
  * Wrapper class for basic joystick functionality
  */
-public class JoystickDriver extends GenericDriver implements Logger {
+public class JoystickDriver extends GenericDriver {
 
 	public LoggerButton
 	button1,
@@ -20,22 +20,18 @@ public class JoystickDriver extends GenericDriver implements Logger {
 	axisX,
 	axisY;
 
-	public JoystickDriver(SyncLogger logger) {
-		button1 = new LoggerButton(getButtonGetter(1), LoggerRelations.PLACEHOLDER, logger);
-		button2 = new LoggerButton(getButtonGetter(2), LoggerRelations.PLACEHOLDER, logger);
-		button3 = new LoggerButton(getButtonGetter(3), LoggerRelations.PLACEHOLDER, logger);
-		button4 = new LoggerButton(getButtonGetter(4), LoggerRelations.PLACEHOLDER, logger);
-		button5 = new LoggerButton(getButtonGetter(5), LoggerRelations.PLACEHOLDER, logger);
+	public JoystickDriver(Ports port, SyncLogger logger) {
+		this.port = port.port;
+		this.logger = logger;
+
+		button1 = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
+		button2 = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
+		button3 = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
+		button4 = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
+		button5 = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
 
 		//TODO - make sure axes ports are correct
-		axisX = new LoggerAxis(getAxisGetter(1), LoggerRelations.PLACEHOLDER, logger);
-		axisY = new LoggerAxis(getAxisGetter(2), LoggerRelations.PLACEHOLDER, logger);
-	}
-
-
-	@Override
-	public double[] getValues(double[] values) {
-		// TODO Auto-generated method stub
-		return null;
+		axisX = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
+		axisY = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
 	}
 }

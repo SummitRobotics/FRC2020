@@ -1,16 +1,14 @@
 package frc.robot.oi;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.logging.Logger;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Ports;
+import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
+public class ControllerDriver extends GenericDriver {
 
-public class ControllerDriver implements Logger {
-
-    public enum DPadValues {
+	public enum DPadValues {
         UP(0, 45, 315),
         DOWN(180, 135, 225),
         LEFT(90, 45, 135),
@@ -31,96 +29,58 @@ public class ControllerDriver implements Logger {
         }
     }
 
-    XboxController controller;
-
-    public LoggerButton
+	public LoggerButton
     buttonA,
     buttonB,
     buttonX,
     buttonY,
     buttonStart,
     buttonBack,
+    rightBumper,
+    leftBumper,
 
     dPadUp,
     dPadDown,
     dPadLeft,
-    dPadRight,
+    dPadRight;
 
-    rightBumper,
-    leftBumper;
+    public LoggerAxis
+    leftX,
+    leftY,
+    leftTrigger,
+    rightX,
+    rightY,
+    rightTrigger;
 
-    public ControllerDriver(SyncLogger logger) {
+	public ControllerDriver(Ports port, SyncLogger logger) {
+        this.port = port.port;
+        this.logger = logger;
 
-        controller = new XboxController(Ports.XBOX_PORT.port);
+        buttonA = generateLoggerButton(Button.kA.value, LoggerRelations.BTN_A);
 
-        buttonA = new LoggerButton(controller::getAButton, LoggerRelations.BTN_A);
-        buttonB = new LoggerButton(controller::getBButton, LoggerRelations.BTN_B);
-        buttonX = new LoggerButton(controller::getXButton, LoggerRelations.BTN_X);
-        buttonY = new LoggerButton(controller::getYButton, LoggerRelations.BTN_Y);
+		buttonA = generateLoggerButton(Button.kA.value, LoggerRelations.BTN_A);
+		buttonB = generateLoggerButton(Button.kB.value, LoggerRelations.BTN_B);
+		buttonX = generateLoggerButton(Button.kX.value, LoggerRelations.BTN_X);
+		buttonY = generateLoggerButton(Button.kY.value, LoggerRelations.BTN_Y);
+		buttonStart = generateLoggerButton(Button.kStart.value, LoggerRelations.BTN_START);
+		buttonBack = generateLoggerButton(Button.kBack.value, LoggerRelations.BTN_BACK);
+		rightBumper = generateLoggerButton(Button.kBumperRight.value, LoggerRelations.RIGHT_BUMPER);
+		leftBumper = generateLoggerButton(Button.kBumperLeft.value, LoggerRelations.LEFT_BUMPER);
 
-        buttonStart = new LoggerButton(controller::getStartButton, LoggerRelations.BTN_START);
-        buttonBack = new LoggerButton(controller::getBackButton, LoggerRelations.BTN_BACK);
+		dPadUp = generateLoggerButton(getDPadValue(DPadValues.UP), LoggerRelations.DPAD_UP);
+		dPadDown = generateLoggerButton(getDPadValue(DPadValues.DOWN), LoggerRelations.DPAD_DOWN);
+		dPadLeft = generateLoggerButton(getDPadValue(DPadValues.LEFT), LoggerRelations.DPAD_LEFT);
+        dPadRight = generateLoggerButton(getDPadValue(DPadValues.RIGHT), LoggerRelations.DPAD_RIGHT);
+        
+        leftX = generateLoggerAxis(0, LoggerRelations.LEFT_STICK_X);
+        leftY = generateLoggerAxis(1, LoggerRelations.LEFT_STICK_Y);
+        leftTrigger = generateLoggerAxis(2, LoggerRelations.LEFT_TRIGGER);
+        rightX = generateLoggerAxis(3, LoggerRelations.RIGHT_STICK_X);
+        rightY = generateLoggerAxis(4, LoggerRelations.RIGHT_STICK_Y);
+        rightTrigger = generateLoggerAxis(5, LoggerRelations.RIGHT_TRIGGER);
+	}
 
-        dPadUp = new LoggerButton(() -> DPadValues.UP.isEqual(controller.getPOV()), LoggerRelations.DPAD_UP);
-        dPadDown = new LoggerButton(() -> DPadValues.DOWN.isEqual(controller.getPOV()), LoggerRelations.DPAD_DOWN);
-        dPadLeft = new LoggerButton(() -> DPadValues.LEFT.isEqual(controller.getPOV()), LoggerRelations.DPAD_LEFT);
-        dPadRight = new LoggerButton(() -> DPadValues.RIGHT.isEqual(controller.getPOV()), LoggerRelations.DPAD_RIGHT);
-
-        rightBumper = new LoggerButton(() -> controller.getBumper(Hand.kRight), LoggerRelations.RIGHT_BUMPER);
-        leftBumper = new LoggerButton(() -> controller.getBumper(Hand.kLeft), LoggerRelations.LEFT_BUMPER);
-
-        logger.addElements(
-            this,
-            buttonA,
-            buttonB,
-            buttonX,
-            buttonY,
-            buttonStart,
-            buttonBack,
-            dPadUp,
-            dPadDown,
-            dPadLeft,
-            dPadRight,
-            rightBumper,
-            leftBumper
-        );
-    }
-
-    //trigers
-    public double rightTrigger(){
-        return controller.getTriggerAxis(Hand.kRight);
-    }
-
-    public double leftTrigger(){
-        return controller.getTriggerAxis(Hand.kLeft);
-    }
-
-    //sticks - x is left and right and y is up and down
-    public double leftStickX(){
-        return controller.getX(Hand.kLeft);
-    }
-
-    public double leftStickY(){
-        return controller.getY(Hand.kLeft);
-    }
-
-    public double rightStickX(){
-        return controller.getX(Hand.kRight);
-    }
-
-    public double rightStickY(){
-        return controller.getY(Hand.kRight);
-    }
-
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.RIGHT_TRIGGER.value] = rightTrigger();
-        values[LoggerRelations.LEFT_TRIGGER.value] = leftTrigger();
-        values[LoggerRelations.LEFT_STICK_X.value] = leftStickX();
-        values[LoggerRelations.LEFT_STICK_Y.value] = leftStickY();
-        values[LoggerRelations.RIGHT_STICK_X.value] = rightStickX();
-        values[LoggerRelations.RIGHT_STICK_Y.value] = rightStickY();
-
-        return values;
-    }
+	private ButtonGetter getDPadValue(DPadValues value) {
+		return () -> value.isEqual(getPOV());
+	}
 }

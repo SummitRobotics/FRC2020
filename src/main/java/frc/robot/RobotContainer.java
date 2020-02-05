@@ -38,14 +38,14 @@ public class RobotContainer {
     scheduler = CommandScheduler.getInstance();
     logger = new SyncLogger();
 
-    controller1 = new ControllerDriver(logger);
-    launchpad = new LaunchpadDriver(logger);
+    controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
+    launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
 
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
     drivetrain = new Drivetrain();
     shifter = new Shifter();
 
-    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
+    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
 
     logger.addElements(drivetrain, gyro, shifter);
     scheduler.setDefaultCommand(logger, logger);

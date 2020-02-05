@@ -1,11 +1,17 @@
 package frc.robot.oi;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.logging.LoggerRelations;
+import frc.robot.logging.SyncLogger;
+import frc.robot.utilities.functionalinterfaces.AxisGetter;
+import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 public abstract class GenericDriver {
 
 	private DriverStation driverStation = DriverStation.getInstance();
+
 	protected int port = 0;
+	protected SyncLogger logger = null;
 
 	/**
      * Gets analog axis
@@ -23,8 +29,16 @@ public abstract class GenericDriver {
      */
     protected boolean getRawButton(int button) {
         return driverStation.getStickButton(port, button);
-    }
+	}
 
+	/**
+	 * Gets POV for an XBox controller (In this class because it requires DriverStation)
+	 * @return the POV
+	 */
+	protected int getPOV() {
+		return driverStation.getStickPOV(port, 0);
+	}
+	
 	/**
 	 * Gets a getter function for a digital output
 	 * @param button the button number
@@ -41,5 +55,37 @@ public abstract class GenericDriver {
 	 */
 	protected AxisGetter getAxisGetter(int axis) {
 		return () -> getRawAxis(axis);
+	}
+
+	protected LoggerButton generateLoggerButton(ButtonGetter getter, LoggerRelations logReference) {
+		if (logger != null) {
+			return new LoggerButton(getter, logReference, logger);
+		}
+
+		return new LoggerButton(getter, logReference);
+	}
+
+	protected LoggerButton generateLoggerButton(int port, LoggerRelations logReference) {
+		if (logger != null) {
+			return new LoggerButton(getButtonGetter(port), logReference, logger);
+		}
+
+		return new LoggerButton(getButtonGetter(port), logReference);
+	}
+
+	protected LoggerAxis generateLoggerAxis(AxisGetter getter, LoggerRelations logReference) {
+		if (logger != null) {
+			return new LoggerAxis(getter, logReference, logger);
+		}
+
+		return new LoggerAxis(getter, logReference);
+	}
+
+	protected LoggerAxis generateLoggerAxis(int port, LoggerRelations logReference) {
+		if (logger != null) {
+			return new LoggerAxis(getAxisGetter(port), logReference, logger);
+		}
+
+		return new LoggerAxis(getAxisGetter(port), logReference, logger);
 	}
 }
