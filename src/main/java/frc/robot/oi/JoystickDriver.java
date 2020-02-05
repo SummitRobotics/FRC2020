@@ -29,7 +29,7 @@ public class JoystickDriver extends GenericDriver implements Logger {
 
 		//TODO - make sure axes ports are correct
 		axisX = new LoggerAxis(getAxisGetter(1), LoggerRelations.PLACEHOLDER, logger);
-		axisY = new LoggerAxis(getAxisGetter(2), LoggerRelations.PLACEHOLDER, logger)
+		axisY = new LoggerAxis(getAxisGetter(2), LoggerRelations.PLACEHOLDER, logger);
 	}
 
 
