@@ -1,6 +1,5 @@
 package frc.robot.oi;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
@@ -28,6 +27,16 @@ public class LaunchpadDriver extends GenericDriver implements Logger {
     buttonJ,
     buttonK;
 
+    public LoggerAxis
+    axisA,
+    axisB,
+    axisC,
+    axisD,
+    axisE,
+    axisF,
+    axisG,
+    axisH;
+
 
     public LaunchpadDriver(SyncLogger logger) {
         this.port = Ports.LAUNCHPAD_PORT.port;
@@ -45,39 +54,16 @@ public class LaunchpadDriver extends GenericDriver implements Logger {
         buttonJ = new LoggerButton(getButtonGetter(10), LoggerRelations.PLACEHOLDER, logger);
         buttonK = new LoggerButton(getButtonGetter(11), LoggerRelations.PLACEHOLDER, logger);
 
+        axisA = new LoggerAxis(getAxisGetter(1), LoggerRelations.PLACEHOLDER, logger);
+        axisB = new LoggerAxis(getAxisGetter(2), LoggerRelations.PLACEHOLDER, logger);
+        axisC = new LoggerAxis(getAxisGetter(3), LoggerRelations.PLACEHOLDER, logger);
+        axisD = new LoggerAxis(getAxisGetter(4), LoggerRelations.PLACEHOLDER, logger);
+        axisE = new LoggerAxis(getAxisGetter(5), LoggerRelations.PLACEHOLDER, logger);
+        axisF = new LoggerAxis(getAxisGetter(6), LoggerRelations.PLACEHOLDER, logger);
+        axisG = new LoggerAxis(getAxisGetter(7), LoggerRelations.PLACEHOLDER, logger);
+        axisH = new LoggerAxis(getAxisGetter(8), LoggerRelations.PLACEHOLDER, logger);
+
         logger.addElements(this);
-    }
-
-    public double getAxisA() {
-        return getRawAxis(1);
-    }
-
-    public double getAxisB() {
-        return getRawAxis(2);
-    }
-
-    public double getAxisC() {
-        return getRawAxis(3);
-    }
-
-    public double getAxisD() {
-        return getRawAxis(4);
-    }
-
-    public double getAxisE() {
-        return getRawAxis(5);
-    }
-
-    public double getAxisF() {
-        return getRawAxis(6);
-    }
-
-    public double getAxisG() {
-        return getRawAxis(7);
-    }
-
-    public double getAxisH() {
-        return getRawAxis(8);
     }
 
     //outputs
@@ -138,14 +124,14 @@ public class LaunchpadDriver extends GenericDriver implements Logger {
     //TODO - make actual logger values
     @Override
     public double[] getValues(double[] values) {
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisA();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisB();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisC();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisD();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisE();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisF();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisG();
-        values[LoggerRelations.PLACEHOLDER.value] = getAxisH();
+        values[LoggerRelations.PLACEHOLDER.value] = axisA.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisB.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisC.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisD.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisE.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisF.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisG.get();
+        values[LoggerRelations.PLACEHOLDER.value] = axisH.get();
         return values;
     }    
 }
