@@ -5,23 +5,23 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 
-interface Getter {
+interface ButtonGetter {
     boolean get();
 }
 
 public class LoggerButton extends Button implements Logger {
 
     private LoggerRelations logReference;
-    private Getter getter;
+    private ButtonGetter getter;
 
-    public LoggerButton(Getter getter, LoggerRelations logReference) {
+    public LoggerButton(ButtonGetter getter, LoggerRelations logReference) {
         super();
 
         this.logReference = logReference;
         this.getter = getter;
     }
 
-    public LoggerButton(Getter getter, LoggerRelations logReference, SyncLogger logger) {
+    public LoggerButton(ButtonGetter getter, LoggerRelations logReference, SyncLogger logger) {
         super();
 
         this.logReference = logReference;

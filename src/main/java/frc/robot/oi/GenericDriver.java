@@ -30,7 +30,16 @@ public abstract class GenericDriver {
 	 * @param button the button number
 	 * @return the getter function
 	 */
-	protected Getter getButtonGetter(int button) {
+	protected ButtonGetter getButtonGetter(int button) {
 		return () -> getRawButton(button);
+	}
+
+	/**
+	 * Gets a getter function for an analog output
+	 * @param axis the axis number
+	 * @return the getter function
+	 */
+	protected AxisGetter getAxisGetter(int axis) {
+		return () -> getRawAxis(axis);
 	}
 }
