@@ -18,53 +18,99 @@ import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
 /**
- * Add your docs here.
+ * Subsystem to control the internal conveyor mechanism of the robot
  */
-public class Conveyor extends SubsystemBase implements Logger{
+public class Conveyor extends SubsystemBase implements Logger {
 
-  private double leftConveyorMotorPower = 0, rightConveyorMotorPower = 0;
+	// powers saved for faster logging
+	private double 
+	leftMotorPower, 
+	rightMotorPower;
 
-  private CANSparkMax leftConveyor = new CANSparkMax(Ports.CONVEYOR_LEFT.port, MotorType.kBrushless);
-  private CANSparkMax rightConveyor = new CANSparkMax(Ports.CONVEYOR_RIGHT.port, MotorType.kBrushless);
+	// conveyor motors
+	private CANSparkMax leftConveyor;
+	private CANSparkMax rightConveyor;
 
-  private DigitalInput breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER.port);
-  private DigitalInput breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT.port);
+	// breakbeam sensors
+	private DigitalInput breakbeamEnter;
+	private DigitalInput breakbeamExit;
 
-  public Conveyor(){
-  }
+	public Conveyor() {
+		leftConveyor = new CANSparkMax(Ports.CONVEYOR_LEFT.port, MotorType.kBrushless);
+		rightConveyor = new CANSparkMax(Ports.CONVEYOR_RIGHT.port, MotorType.kBrushless);
 
-  @Override
-  public double[] getValues(double[] values) {
-    values[LoggerRelations.CONVEYOR_LEFT.value] = leftConveyorMotorPower;
-    values[LoggerRelations.CONVEYOR_RIGHT.value] = rightConveyorMotorPower;
-    values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
-    values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
-    return values;
-  }
+		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER.port);
+		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT.port);
 
-  public void setLeftConveyor(double power){
-    power = Functions.clampDouble(power, 1, -1);
-    leftConveyorMotorPower = power;
-    leftConveyor.set(power);
-  }
+		leftMotorPower = 0;
+		rightMotorPower = 0;
+	}
 
-  public void setRightConveyor(double power){
-    power = Functions.clampDouble(power, 1, -1);
-    rightConveyorMotorPower = power;
-    rightConveyor.set(power);
-  }
+	/**
+	 * Sets the power of the left conveyor motor
+	 * 
+	 * @param power the new power
+	 */
+	public void setLeftConveyor(double power) {
+		power = Functions.clampDouble(power, 1, -1);
+		leftMotorPower = power;
+		leftConveyor.set(power);
+	}
 
-  public boolean getBreakBeamEnter(){
-    return breakbeamEnter.get();
-  }
+	/**
+	 * Sets the power of the left conveyor motor
+	 * 
+	 * @param power the new power
+	 */
+	public void setRightConveyor(double power) {
+		power = Functions.clampDouble(power, 1, -1);
+		rightMotorPower = power;
+		rightConveyor.set(power);
+	}
 
-  public boolean getBreakBeamExit(){
-    return breakbeamExit.get();
-  }
+	/**
+	 * Sets the power of both conveyor motors
+	 * 
+	 * @param power the new power
+	 */
+	public void setConveyor(double power) {
+		setRightConveyor(power);
+		setLeftConveyor(power);
+	}
 
-  public void stop(){
-    leftConveyor.set(0);
-    rightConveyor.set(0);
-  }
+	//TODO - Make sure that the docs are correct on the nature of breakbeam returns
+	/**
+	 * Gets the state of the entry breakbeam sensor
+	 * 
+	 * @return the breakbeam state where true is unbroken and false is broken
+	 */
+	public boolean getBreakBeamEnter() {
+		return breakbeamEnter.get();
+	}
 
+	/**
+	 * Gets the state of the entry breakbeam sensor
+	 * 
+	 * @return the breakbeam state where true is unbroken and false is broken
+	 */
+	public boolean getBreakBeamExit() {
+		return breakbeamExit.get();
+	}
+
+	/**
+	 * Stops both conveyor motors
+	 */
+	public void stop() {
+		leftConveyor.set(0);
+		rightConveyor.set(0);
+	}
+
+	@Override
+	public double[] getValues(double[] values) {
+		values[LoggerRelations.CONVEYOR_LEFT.value] = leftMotorPower;
+		values[LoggerRelations.CONVEYOR_RIGHT.value] = rightMotorPower;
+		values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
+		values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
+		return values;
+	}
 }
