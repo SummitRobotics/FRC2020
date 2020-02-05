@@ -3,6 +3,7 @@ package frc.robot.oi;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
+import frc.robot.logging.SyncLogger;
 
 interface Getter {
     boolean get();
@@ -18,6 +19,20 @@ public class LoggerButton extends Button implements Logger {
 
         this.logReference = logReference;
         this.getter = getter;
+    }
+
+    public LoggerButton(Getter getter, LoggerRelations logReference, SyncLogger logger) {
+        super();
+
+        this.logReference = logReference;
+        this.getter = getter;
+
+        logger.addElements(this);
+    }
+
+    public LoggerButton assignToLogger(SyncLogger logger) {
+        logger.addElements(this);
+        return this;
     }
 
     @Override

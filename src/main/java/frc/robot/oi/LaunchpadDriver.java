@@ -10,9 +10,8 @@ import edu.wpi.first.hal.HAL;
 /**
  * Wrappper class for the TI Launchpad in mode 1
  */
-public class LaunchpadDriver implements Logger {
+public class LaunchpadDriver extends GenericDriver implements Logger {
 
-    private DriverStation driverStation;
     private int port;
     private int outputs;
 
@@ -31,54 +30,22 @@ public class LaunchpadDriver implements Logger {
 
 
     public LaunchpadDriver(SyncLogger logger) {
-        driverStation = DriverStation.getInstance();
         this.port = Ports.LAUNCHPAD_PORT.port;
 
         //TODO - create actual logger values
-        buttonA = new LoggerButton(() -> getRawButton(1), LoggerRelations.PLACEHOLDER);
-        buttonB = new LoggerButton(() -> getRawButton(2), LoggerRelations.PLACEHOLDER);
-        buttonC = new LoggerButton(() -> getRawButton(3), LoggerRelations.PLACEHOLDER);
-        buttonD = new LoggerButton(() -> getRawButton(4), LoggerRelations.PLACEHOLDER);
-        buttonE = new LoggerButton(() -> getRawButton(5), LoggerRelations.PLACEHOLDER);
-        buttonF = new LoggerButton(() -> getRawButton(6), LoggerRelations.PLACEHOLDER);
-        buttonG = new LoggerButton(() -> getRawButton(7), LoggerRelations.PLACEHOLDER);
-        buttonH = new LoggerButton(() -> getRawButton(8), LoggerRelations.PLACEHOLDER);
-        buttonI = new LoggerButton(() -> getRawButton(9), LoggerRelations.PLACEHOLDER);
-        buttonJ = new LoggerButton(() -> getRawButton(10), LoggerRelations.PLACEHOLDER);
-        buttonK = new LoggerButton(() -> getRawButton(11), LoggerRelations.PLACEHOLDER);
+        buttonA = new LoggerButton(getButtonGetter(1), LoggerRelations.PLACEHOLDER, logger);
+        buttonB = new LoggerButton(getButtonGetter(2), LoggerRelations.PLACEHOLDER, logger);
+        buttonC = new LoggerButton(getButtonGetter(3), LoggerRelations.PLACEHOLDER, logger);
+        buttonD = new LoggerButton(getButtonGetter(4), LoggerRelations.PLACEHOLDER, logger);
+        buttonE = new LoggerButton(getButtonGetter(5), LoggerRelations.PLACEHOLDER, logger);
+        buttonF = new LoggerButton(getButtonGetter(6), LoggerRelations.PLACEHOLDER, logger);
+        buttonG = new LoggerButton(getButtonGetter(7), LoggerRelations.PLACEHOLDER, logger);
+        buttonH = new LoggerButton(getButtonGetter(8), LoggerRelations.PLACEHOLDER, logger);
+        buttonI = new LoggerButton(getButtonGetter(9), LoggerRelations.PLACEHOLDER, logger);
+        buttonJ = new LoggerButton(getButtonGetter(10), LoggerRelations.PLACEHOLDER, logger);
+        buttonK = new LoggerButton(getButtonGetter(11), LoggerRelations.PLACEHOLDER, logger);
 
-        logger.addElements(
-            this,
-            buttonA,
-            buttonB,
-            buttonC,
-            buttonD,
-            buttonE,
-            buttonF,
-            buttonG,
-            buttonH,
-            buttonI,
-            buttonJ,
-            buttonK  
-        );
-    }
-
-    /**
-     * Gets analog axis
-     * @param axis the axis number
-     * @return the axis value
-     */
-    private double getRawAxis(int axis) {
-        return driverStation.getStickAxis(port, axis);
-    }
-
-    /**
-     * Gets digital output
-     * @param button the button number
-     * @return whether the output is on or off
-     */
-    private boolean getRawButton(int button) {
-        return driverStation.getStickButton(port, button);
+        logger.addElements(this);
     }
 
     public double getAxisA() {
@@ -158,6 +125,16 @@ public class LaunchpadDriver implements Logger {
         setOutput(11, state);
     }
 
+    /**
+     * Black box to set outputs
+     * @param outputNumber the output number
+     * @param value the state of the output
+     */
+    public void setOutput(int outputNumber, boolean value) {
+        outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
+        HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
+    }
+
     //TODO - make actual logger values
     @Override
     public double[] getValues(double[] values) {
@@ -170,15 +147,5 @@ public class LaunchpadDriver implements Logger {
         values[LoggerRelations.PLACEHOLDER.value] = getAxisG();
         values[LoggerRelations.PLACEHOLDER.value] = getAxisH();
         return values;
-    }
-
-    /**
-     * Black box to set outputs
-     * @param outputNumber the output number
-     * @param value the state of the output
-     */
-    public void setOutput(int outputNumber, boolean value) {
-        outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
-        HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
-    }
+    }    
 }
