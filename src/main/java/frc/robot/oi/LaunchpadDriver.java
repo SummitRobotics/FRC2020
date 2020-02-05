@@ -1,6 +1,5 @@
 package frc.robot.oi;
 
-import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Ports;
@@ -9,7 +8,7 @@ import edu.wpi.first.hal.HAL;
 /**
  * Wrappper class for the TI Launchpad in mode 1
  */
-public class LaunchpadDriver extends GenericDriver implements Logger {
+public class LaunchpadDriver extends GenericDriver {
 
     private int port;
     private int outputs;
@@ -38,32 +37,31 @@ public class LaunchpadDriver extends GenericDriver implements Logger {
     axisH;
 
 
-    public LaunchpadDriver(SyncLogger logger) {
-        this.port = Ports.LAUNCHPAD_PORT.port;
+    public LaunchpadDriver(Ports port, SyncLogger logger) {
+        this.port = port.port;
+        this.logger = logger;
 
         //TODO - create actual logger values
-        buttonA = new LoggerButton(getButtonGetter(1), LoggerRelations.PLACEHOLDER, logger);
-        buttonB = new LoggerButton(getButtonGetter(2), LoggerRelations.PLACEHOLDER, logger);
-        buttonC = new LoggerButton(getButtonGetter(3), LoggerRelations.PLACEHOLDER, logger);
-        buttonD = new LoggerButton(getButtonGetter(4), LoggerRelations.PLACEHOLDER, logger);
-        buttonE = new LoggerButton(getButtonGetter(5), LoggerRelations.PLACEHOLDER, logger);
-        buttonF = new LoggerButton(getButtonGetter(6), LoggerRelations.PLACEHOLDER, logger);
-        buttonG = new LoggerButton(getButtonGetter(7), LoggerRelations.PLACEHOLDER, logger);
-        buttonH = new LoggerButton(getButtonGetter(8), LoggerRelations.PLACEHOLDER, logger);
-        buttonI = new LoggerButton(getButtonGetter(9), LoggerRelations.PLACEHOLDER, logger);
-        buttonJ = new LoggerButton(getButtonGetter(10), LoggerRelations.PLACEHOLDER, logger);
-        buttonK = new LoggerButton(getButtonGetter(11), LoggerRelations.PLACEHOLDER, logger);
+        buttonA = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
+        buttonB = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
+        buttonC = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
+        buttonD = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
+        buttonE = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
+        buttonF = generateLoggerButton(6, LoggerRelations.PLACEHOLDER);
+        buttonG = generateLoggerButton(7, LoggerRelations.PLACEHOLDER);
+        buttonH = generateLoggerButton(8, LoggerRelations.PLACEHOLDER);
+        buttonI = generateLoggerButton(9, LoggerRelations.PLACEHOLDER);
+        buttonJ = generateLoggerButton(10, LoggerRelations.PLACEHOLDER);
+        buttonK = generateLoggerButton(11, LoggerRelations.PLACEHOLDER);
 
-        axisA = new LoggerAxis(getAxisGetter(1), LoggerRelations.PLACEHOLDER, logger);
-        axisB = new LoggerAxis(getAxisGetter(2), LoggerRelations.PLACEHOLDER, logger);
-        axisC = new LoggerAxis(getAxisGetter(3), LoggerRelations.PLACEHOLDER, logger);
-        axisD = new LoggerAxis(getAxisGetter(4), LoggerRelations.PLACEHOLDER, logger);
-        axisE = new LoggerAxis(getAxisGetter(5), LoggerRelations.PLACEHOLDER, logger);
-        axisF = new LoggerAxis(getAxisGetter(6), LoggerRelations.PLACEHOLDER, logger);
-        axisG = new LoggerAxis(getAxisGetter(7), LoggerRelations.PLACEHOLDER, logger);
-        axisH = new LoggerAxis(getAxisGetter(8), LoggerRelations.PLACEHOLDER, logger);
-
-        logger.addElements(this);
+        axisA = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
+        axisB = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
+        axisC = generateLoggerAxis(3, LoggerRelations.PLACEHOLDER);
+        axisD = generateLoggerAxis(4, LoggerRelations.PLACEHOLDER);
+        axisE = generateLoggerAxis(5, LoggerRelations.PLACEHOLDER);
+        axisF = generateLoggerAxis(6, LoggerRelations.PLACEHOLDER);
+        axisG = generateLoggerAxis(7, LoggerRelations.PLACEHOLDER);
+        axisH = generateLoggerAxis(8, LoggerRelations.PLACEHOLDER);
     }
 
     //outputs
@@ -120,18 +118,4 @@ public class LaunchpadDriver extends GenericDriver implements Logger {
         outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
         HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
     }
-
-    //TODO - make actual logger values
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.PLACEHOLDER.value] = axisA.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisB.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisC.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisD.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisE.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisF.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisG.get();
-        values[LoggerRelations.PLACEHOLDER.value] = axisH.get();
-        return values;
-    }    
 }

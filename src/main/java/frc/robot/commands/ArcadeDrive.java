@@ -10,30 +10,43 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
-import frc.robot.oi.ControllerDriver;
+import frc.robot.oi.LoggerAxis;
 
 public class ArcadeDrive extends CommandBase {
 
     private Drivetrain drivetrain;
-    private ControllerDriver controller;
     private Shifter shift;
+
+    private LoggerAxis forwardPowerAxis;
+    private LoggerAxis reversePowerAxis;
+    private LoggerAxis turnAxis;
+
     private final double deadzone = .1;
 
     private double old = 0;
-    // max amount motors can change per 20 ms
-    private final double max_change_rate = .15;
+    private final double max_change_rate = .15; // max amount motors can change per 20 ms
 
     /**
      * teleop driver control
-     * 
      * @param drivetrain drivetrain instance
-     * @param controller controller instance
-     * @param shift      shifter instance
+     * @param shift shifter instance
+     * @param powerAxis control axis for the drivetrain power
+     * @param turnAxis control axis for the drivetrain turn
      */
-    public ArcadeDrive(Drivetrain drivetrain, ControllerDriver controller, Shifter shift) {
+    public ArcadeDrive(
+        Drivetrain drivetrain, 
+        Shifter shift, 
+        LoggerAxis forwardPowerAxis, 
+        LoggerAxis reversePowerAxis, 
+        LoggerAxis turnAxis)
+    {
+
         this.drivetrain = drivetrain;
-        this.controller = controller;
         this.shift = shift;
+
+        this.forwardPowerAxis = forwardPowerAxis;
+        this.reversePowerAxis = reversePowerAxis;
+        this.turnAxis = turnAxis;
 
         addRequirements(drivetrain);
     }
@@ -49,9 +62,9 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double power = controller.rightTrigger() - controller.leftTrigger();
+        double power = forwardPowerAxis.get() - reversePowerAxis.get();
 
-        double turn = controller.leftStickX();
+        double turn = turnAxis.get();
 
         // turn deadzone
         if (Math.abs(turn) < deadzone) {

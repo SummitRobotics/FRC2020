@@ -20,55 +20,55 @@ import frc.robot.devices.PigeonGyro;
  */
 public class RobotContainer {
 
-	private CommandScheduler scheduler;
+    private CommandScheduler scheduler;
 
-	private SyncLogger logger;
+    private SyncLogger logger;
 
-	private ControllerDriver controller1;
-	private LaunchpadDriver launchpad;
+    private ControllerDriver controller1;
+    private LaunchpadDriver launchpad;
 
-	private Drivetrain drivetrain;
-	private Shifter shifter;
+    private Drivetrain drivetrain;
+    private Shifter shifter;
 
-	private PigeonGyro gyro;
+    private PigeonGyro gyro;
 
-	/**
-	 * The container for the robot. Contains subsystems, OI devices, and commands.
-	 */
-	public RobotContainer() {
-		scheduler = CommandScheduler.getInstance();
-		logger = new SyncLogger();
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
+        scheduler = CommandScheduler.getInstance();
+        logger = new SyncLogger();
 
-		controller1 = new ControllerDriver(logger);
-		launchpad = new LaunchpadDriver(logger);
+        controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
+        launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
 
-		gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-		drivetrain = new Drivetrain();
-		shifter = new Shifter();
+        gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
+        drivetrain = new Drivetrain();
+        shifter = new Shifter();
 
-		scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
+        scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
 
-		logger.addElements(drivetrain, gyro, shifter);
-		scheduler.setDefaultCommand(logger, logger);
+        logger.addElements(drivetrain, gyro, shifter);
+        scheduler.setDefaultCommand(logger, logger);
 
-		configureButtonBindings();
-	}
+        configureButtonBindings();
+    }
 
-	/**
-	 * Use this method to define your button->command mappings. Buttons can be
-	 * created by instantiating a {@link GenericHID} or one of its subclasses
-	 * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-	 * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-	 */
-	private void configureButtonBindings() {
-	}
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+    }
 
-	/**
-	 * Use this to pass the autonomous command to the main {@link Robot} class.
-	 *
-	 * @return the command to run in autonomous
-	 */
-	public Command getAutonomousCommand() {
-		return null;
-	}
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return null;
+    }
 }
