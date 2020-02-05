@@ -1,6 +1,5 @@
 package frc.robot.oi;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;

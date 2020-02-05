@@ -27,10 +27,10 @@ public class RobotContainer {
 	private ControllerDriver controller1;
 	private LaunchpadDriver launchpad;
 
-	// public just to make things work
-	private PigeonGyro gyro;
 	private Drivetrain drivetrain;
 	private Shifter shifter;
+
+	private PigeonGyro gyro;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
