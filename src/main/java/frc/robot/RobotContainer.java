@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
+import frc.robot.oi.LaunchpadDriver;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
@@ -23,7 +24,8 @@ public class RobotContainer {
 
 	private SyncLogger logger;
 
-	private ControllerDriver controller1;
+  private ControllerDriver controller1;
+  private LaunchpadDriver launchpad;
 
 	// public just to make things work
 	private PigeonGyro gyro;
@@ -38,6 +40,7 @@ public class RobotContainer {
 		logger = new SyncLogger();
 
 		controller1 = new ControllerDriver(logger);
+		launchpad = new LaunchpadDriver(logger);
 
 		gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
 		drivetrain = new Drivetrain();
