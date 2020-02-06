@@ -6,6 +6,9 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Ports;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
+/**
+ * Wrapper class for XBox controllers
+ */
 public class ControllerDriver extends GenericDriver {
 
 	public enum DPadValues {
