@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    System.out.println(m_robotContainer.drivetrain.getRightEncoderPosition());
   }
 
   @Override

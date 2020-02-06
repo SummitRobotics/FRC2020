@@ -27,7 +27,7 @@ public class RobotContainer {
 
   // public just to make things work
   private PigeonGyro gyro;
-  private Drivetrain drivetrain;
+  public Drivetrain drivetrain;
   private Shifter shifter;
 
   /**

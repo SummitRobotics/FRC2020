@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
@@ -53,8 +55,9 @@ public class Drivetrain implements Subsystem, Logger {
     private CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
-    private CANEncoder rightEncoder = right.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
+    //private CANEncoder leftEncoder = left.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
+    //private CANEncoder rightEncoder = right.getAlternateEncoder(AlternateEncoderType.kQuadrature, 4096);
+    private Encoder testEncoder = new Encoder(8, 9);
 
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
@@ -85,8 +88,8 @@ public class Drivetrain implements Subsystem, Logger {
         left.setInverted(true);
 
         // sets pid values
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
+        //leftEncoder.setPosition(0);
+        //rightEncoder.setPosition(0);
         leftPID.setP(P);
         leftPID.setI(I);
         leftPID.setD(D);
@@ -149,9 +152,9 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setLeftEncoder(int position) {
-        leftEncoder.setPosition(position);
-    }
+   // public void setLeftEncoder(int position) {
+    //    leftEncoder.setPosition(position);
+   // }
 
     /**
      * The position you want the right side to register when it is in the position
@@ -159,9 +162,9 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setRightEncoder(int position) {
-        rightEncoder.setPosition(position);
-    }
+ //   public void setRightEncoder(int position) {
+  //      rightEncoder.setPosition(position);
+  //  }
 
     /**
      * Returns the current position of right side of the drivetrain
@@ -169,7 +172,8 @@ public class Drivetrain implements Subsystem, Logger {
      * @return position of motor in rotations
      */
     public double getRightEncoderPosition() {
-        return rightEncoder.getPosition();
+     //   return rightEncoder.getPosition();
+     return testEncoder.getRaw();
     }
 
     /**
@@ -178,7 +182,8 @@ public class Drivetrain implements Subsystem, Logger {
      * @return position of motor in rotations
      */
     public double getLeftEncoderPosition() {
-        return leftEncoder.getPosition();
+       // return leftEncoder.getPosition();
+       return testEncoder.getRaw();
     }
 
     /**
