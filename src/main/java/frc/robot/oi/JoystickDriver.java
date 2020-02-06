@@ -14,7 +14,7 @@ public class JoystickDriver extends GenericDriver {
 	button2,
 	button3,
 	button4,
-	button5;
+	trigger;
 
 	public LoggerAxis
 	axisX,
@@ -24,13 +24,13 @@ public class JoystickDriver extends GenericDriver {
 		this.port = port.port;
 		this.logger = logger;
 
+		//TODO - make sure ports are correct
 		button1 = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
 		button2 = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
 		button3 = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
 		button4 = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
-		button5 = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
+		trigger = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
 
-		//TODO - make sure axes ports are correct
 		axisX = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
 		axisY = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
 	}
