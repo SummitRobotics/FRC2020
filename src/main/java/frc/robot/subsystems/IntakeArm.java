@@ -59,7 +59,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Sets the intake arm's PID values
-	 * 
 	 * @param P the new P value
 	 * @param I the new I value
 	 * @param D the new D value
@@ -79,7 +78,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Sets the power of the intake arm motor
-	 * 
 	 * @param power the new power for the motor
 	 */
 	public void setPivotPower(double power) {
@@ -90,7 +88,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Sets the power of the intake roller motor
-	 * 
 	 * @param power the new power for the motor
 	 */
 	public void setIntakePower(double power) {
@@ -101,7 +98,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Sets the encoder position of the intake arm
-	 * 
 	 * @param position the new position for the encoder
 	 */
 	public void setPivotEndoderPosition(double position) {
@@ -110,7 +106,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Gets the current position of the encoder
-	 * 
 	 * @return the encoder position
 	 */
 	public double getPivotEncoderPosition() {
@@ -119,7 +114,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	/**
 	 * Sets the position of the intake arm based on encoder values
-	 * 
 	 * @param position the position for the arm to go to
 	 */
 	public void setPivotMotorPosition(double position) {
