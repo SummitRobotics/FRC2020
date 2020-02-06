@@ -4,11 +4,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
+import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
+import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.devices.PigeonGyro;
 
 /**
@@ -26,9 +29,11 @@ public class RobotContainer {
 
     private ControllerDriver controller1;
     private LaunchpadDriver launchpad;
+    private JoystickDriver joystick;
 
     private Drivetrain drivetrain;
     private Shifter shifter;
+    private Conveyor conveyor;
 
     private PigeonGyro gyro;
 
@@ -41,10 +46,13 @@ public class RobotContainer {
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
+        joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
 
-        gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         drivetrain = new Drivetrain();
         shifter = new Shifter();
+        conveyor = new Conveyor();
+
+        gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
 
         scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
 
@@ -61,6 +69,7 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        launchpad.buttonG.whenHeld(new ConveyorMO(conveyor, joystick.axisY), false);
     }
 
     /**

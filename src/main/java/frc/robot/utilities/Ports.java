@@ -3,8 +3,10 @@ package frc.robot.utilities;
 //TODO - Make ports right
 public enum Ports {
 
-    XBOX_PORT(0), //xbox controller
-    LAUNCHPAD_PORT(1), //Launchpad Button controller
+    //OI
+    XBOX_PORT(0),
+    LAUNCHPAD_PORT(1),
+    JOYSTICK_PORT(2),
 
     BUTTONBOX_PORT(1),
     
