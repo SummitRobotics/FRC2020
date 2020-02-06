@@ -10,6 +10,7 @@ import frc.robot.utilities.Ports;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
 import frc.robot.devices.PigeonGyro;
+import frc.robot.devices.leds;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -29,6 +30,7 @@ public class RobotContainer {
   private PigeonGyro gyro;
   private Drivetrain drivetrain;
   private Shifter shifter;
+  public leds leds;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -42,6 +44,7 @@ public class RobotContainer {
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
     drivetrain = new Drivetrain();
     shifter = new Shifter();
+    leds = new leds();
     
     scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
