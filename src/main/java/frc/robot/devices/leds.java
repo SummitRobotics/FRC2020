@@ -43,6 +43,16 @@ public class leds{
     }
 
     /**
+     * changes all leds
+     * @param r red 0-255
+     * @param g green 0-255
+     * @param b blue 0-255
+     */
+    public void changeAllLeds(int r, int g, int b){
+        changeLedRange(r, g, b, 0, length-1);
+    }
+
+    /**
      * gets a controler to controle a range of leds
      * @param start led to start at
      * @param end led to end at

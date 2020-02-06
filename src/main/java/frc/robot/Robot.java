@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.leds.makeledscolor(1, 10, 1);
+    m_robotContainer.leds.changeAllLeds(0, 255, 0);
   }
 
   /**
