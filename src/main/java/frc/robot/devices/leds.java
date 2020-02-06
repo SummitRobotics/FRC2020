@@ -85,7 +85,7 @@ public class leds extends SubsystemBase{
      * @param b blue 0-255
      * @param ranges the ranges to be set
      */
-    private void setMultipulRanges(int r, int g, int b, ledRange... ranges){
+    private void setMultipulRanges(int r, int g, int b, ledRange... ranges) {
         for(ledRange x : ranges){
             x.setColor(r, g, b);
         }
@@ -128,22 +128,17 @@ public class leds extends SubsystemBase{
     @Override
     public void periodic(){
         loops++;
-        try{
-            for (ledBlinker x : blinkers){
-                if(x.period % loops == 0){
-                    if(x.state){
-                        x.leds.setColor(x.r1, x.g1, x.b1);
-                        x.state  = !x.state;
-                    }
-                    else{
-                        x.leds.setColor(x.r2, x.g2, x.b2);
-                        x.state  = !x.state;
-                    }
+        for (ledBlinker x : blinkers){
+            if(x.period % loops == 0){
+                if(x.state){
+                    x.leds.setColor(x.r1, x.g1, x.b1);
+                    x.state  = !x.state;
+                }
+                else{
+                    x.leds.setColor(x.r2, x.g2, x.b2);
+                    x.state  = !x.state;
                 }
             }
-        }
-        catch(Exception e){
-
         }
     }
 
