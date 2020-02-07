@@ -8,10 +8,12 @@ import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
 import frc.robot.commands.conveyor.ConveyorMO;
+import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.devices.PigeonGyro;
 
 /**
@@ -34,6 +36,7 @@ public class RobotContainer {
     private Drivetrain drivetrain;
     private Shifter shifter;
     private Conveyor conveyor;
+    private IntakeArm intakeArm;
 
     private PigeonGyro gyro;
 
@@ -51,6 +54,7 @@ public class RobotContainer {
         drivetrain = new Drivetrain();
         shifter = new Shifter();
         conveyor = new Conveyor();
+        intakeArm = new IntakeArm();
 
         gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
 
@@ -70,6 +74,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         launchpad.buttonG.whenHeld(new ConveyorMO(conveyor, joystick.axisY), false);
+        launchpad.buttonG.whenHeld(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger), false);
     }
 
     /**
