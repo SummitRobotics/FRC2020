@@ -38,7 +38,11 @@ public enum Ports {
     
     //intake arm
     INTAKE_ARM_INTAKE(0),
-    INTAKE_ARM_PIVOT(0);
+    INTAKE_ARM_PIVOT(0),
+
+    //DIO
+    TURRET_LIMIT_ONE(0),
+    TURRET_LIMIT_TWO(1);
 
     public int port;
     private Ports(int port) {
