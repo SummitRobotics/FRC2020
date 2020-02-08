@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.devices.leds.ledRange;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -84,6 +85,10 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.leds.changeAllLeds(0, 255, 0);
+    ledRange ledR = m_robotContainer.leds.getRangeControler(1, 20);
+    ledR.setColor(255, 0, 0);
+    ledRange ledR2 = m_robotContainer.leds.getRangeControler(5, 10);
+    m_robotContainer.leds.addBlinker(ledR2, 10, "one", 255, 255, 255, 0, 0, 255);
   }
 
   /**

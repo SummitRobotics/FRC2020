@@ -20,7 +20,7 @@ public class leds extends SubsystemBase{
     //pwm port the strip is pluged into
     private final int port = 9;
     //the length of the
-    private final int length = 58;
+    private final int length = 29;
     private AddressableLED ledStrip;
     private AddressableLEDBuffer buffer;
     private int loops = 0;
@@ -129,7 +129,7 @@ public class leds extends SubsystemBase{
     public void periodic(){
         loops++;
         for (ledBlinker x : blinkers){
-            if(x.period % loops == 0){
+            if(loops % x.period == 0){
                 if(x.state){
                     x.leds.setColor(x.r1, x.g1, x.b1);
                     x.state  = !x.state;
