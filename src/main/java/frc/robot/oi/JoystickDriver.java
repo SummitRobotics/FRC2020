@@ -1,5 +1,6 @@
 package frc.robot.oi;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Ports;
@@ -7,7 +8,7 @@ import frc.robot.utilities.Ports;
 /**
  * Wrapper class for basic joystick functionality
  */
-public class JoystickDriver extends GenericDriver {
+public class JoystickDriver extends GenericDriver implements Subsystem {
 
 	public LoggerButton
 	button1,

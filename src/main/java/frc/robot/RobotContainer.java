@@ -59,6 +59,7 @@ public class RobotContainer {
         gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
 
         scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
+        scheduler.setDefaultCommand(launchpad, defaultCommand);
 
         logger.addElements(drivetrain, gyro, shifter);
         scheduler.setDefaultCommand(logger, logger);
