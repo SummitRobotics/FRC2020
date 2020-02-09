@@ -8,28 +8,32 @@
 package frc.robot.devices;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  * Add your docs here.
  */
-public class leds extends SubsystemBase{
-    //pwm port the strip is pluged into
-    private final int port = 9;
-    //the length of the
-    private final int length = 29;
+public class LEDs extends SubsystemBase {
+
+    private final int port = 9; //pwm port the strip is pluged into
+    private final int length = 29; //the length of the strip
+
     private AddressableLED ledStrip;
     private AddressableLEDBuffer buffer;
-    private int loops = 0;
-    private ArrayList<ledBlinker> blinkers = new ArrayList<>();
 
-    public leds(){
-        CommandScheduler.getInstance().registerSubsystem(this);
+    private HashMap<String, LEDBlinker> blinkers;
+
+    public LEDs(){
         ledStrip = new AddressableLED(port);
         buffer = new AddressableLEDBuffer(length);
+        blinkers = new HashMap<>();
+
         ledStrip.setLength(length);
         ledStrip.start();
     }
@@ -42,7 +46,7 @@ public class leds extends SubsystemBase{
      * @param start led to start change at
      * @param end led to end change at
      */
-    public void changeLedRange(int r, int g, int b, int start, int end){
+    public void changeLEDRange(int r, int g, int b, int start, int end){
         for(int i = start; i<=end; i++){
             buffer.setRGB(i, r, g, b);
         }
@@ -55,8 +59,8 @@ public class leds extends SubsystemBase{
      * @param g green 0-255
      * @param b blue 0-255
      */
-    public void changeAllLeds(int r, int g, int b){
-        changeLedRange(r, g, b, 0, length-1);
+    public void changeAllLEDs(int r, int g, int b){
+        changeLEDRange(r, g, b, 0, length-1);
     }
 
     /**
@@ -65,8 +69,8 @@ public class leds extends SubsystemBase{
      * @param end led to end at
      * @return usable led range controler
      */
-    public ledRange getRangeControler(int start, int end){
-        return (int r, int g, int b) -> changeLedRange(r, g, b, start, end);
+    public LEDRange getRangeController(int start, int end){
+        return (Color8Bit color) -> changeLEDRange(color.red, color.green, color.blue, start, end);
     }
 
     /**
@@ -74,8 +78,8 @@ public class leds extends SubsystemBase{
      * @param ranges the ranges to be grouped
      * @return the new grouped controler
      */
-    public ledRange groupRangeControlers(ledRange... ranges){
-        return (int r, int g, int b) -> setMultipulRanges(r, g, b, ranges);
+    public LEDRange groupRangeControllers(LEDRange... ranges){
+        return (Color8Bit color) -> setMultipleRanges(color, ranges);
     }
 
     /**
@@ -85,9 +89,9 @@ public class leds extends SubsystemBase{
      * @param b blue 0-255
      * @param ranges the ranges to be set
      */
-    private void setMultipulRanges(int r, int g, int b, ledRange... ranges) {
-        for(ledRange x : ranges){
-            x.setColor(r, g, b);
+    private void setMultipleRanges(Color8Bit color, LEDRange... ranges) {
+        for(LEDRange x : ranges){
+            x.setColor(color);
         }
     }
 
@@ -103,66 +107,55 @@ public class leds extends SubsystemBase{
      * @param g2 green in state 2 0-255
      * @param b2 blue in state 2 0-255
      */
-    public void addBlinker(ledRange range, int period, String name, int r1, int g1, int b1, int r2, int g2, int b2){
-        ledBlinker led = new ledBlinker();
-        led.name = name;
-        led.period = period;
-        led.leds = range;
-        led.r1 = r1;
-        led.g1 = g1;
-        led.b1 = b1;
-        led.r2 = r2;
-        led.g2 = g2;
-        led.b2 = b2;
-        blinkers.add(led);
+    public void addBlinker(String name, LEDRange range, int period, Color8Bit... colors){
+        blinkers.put(name, new LEDBlinker(range, period, colors));
     }
 
     public void removeBlinker(String name){
-        blinkers.removeIf(x -> (x.name.equals(name)));
+        blinkers.remove(name);
     }
-
 
     /**
      * used to make leds blink
      */
     @Override
     public void periodic(){
-        loops++;
-        for (ledBlinker x : blinkers){
-            if(loops % x.period == 0){
-                if(x.state){
-                    x.leds.setColor(x.r1, x.g1, x.b1);
-                    x.state  = !x.state;
-                }
-                else{
-                    x.leds.setColor(x.r2, x.g2, x.b2);
-                    x.state  = !x.state;
-                }
-            }
-        }
+        blinkers.forEach((k, v) -> v.increment());
     }
-
 
     /**
      * interface of a led range controler
      */
-    public interface ledRange {
-        public void setColor(int r, int g, int b);
+    public interface LEDRange {
+        public void setColor(Color8Bit color);
     }
 
     /**
      * blinker class to store all data for a blinker
      */
-    public class ledBlinker{
-        public boolean state = false;
-        public int period;
-        public ledRange leds;
-        public String name; 
-        public int r1;
-        public int g1;
-        public int b1;
-        public int r2;
-        public int g2;
-        public int b2;
+    public class LEDBlinker {
+        private LEDRange range;
+        private int period;
+        private Color8Bit[] colors;
+
+        private int count, position;
+
+        public LEDBlinker(LEDRange range, int period, Color8Bit[] colors) {
+            this.range = range;
+            this.period = period;
+            this.colors = colors;
+
+            count = 0;
+            position = 0;
+        }
+
+        public void increment() {
+            count = (count + 1) % period;
+
+            if (count == 0) {
+                position = (position + 1) % colors.length;
+                range.setColor(colors[position]);
+            }
+        }
     }
 }

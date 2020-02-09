@@ -1,7 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.subsystems.Drivetrain;
@@ -9,8 +12,9 @@ import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.Ports;
 import frc.robot.commandgroups.AppeaseDuane;
 import frc.robot.commands.*;
+import frc.robot.devices.LEDs;
 import frc.robot.devices.PigeonGyro;
-import frc.robot.devices.leds;
+import frc.robot.devices.LEDs.LEDRange;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -30,7 +34,7 @@ public class RobotContainer {
   private PigeonGyro gyro;
   private Drivetrain drivetrain;
   private Shifter shifter;
-  public leds leds;
+  private LEDs leds;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -44,12 +48,21 @@ public class RobotContainer {
     gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
     drivetrain = new Drivetrain();
     shifter = new Shifter();
-    leds = new leds();
+    leds = new LEDs();
     
-    scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
+    //scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, controller1, shifter));
 
     logger.addElements(drivetrain, gyro, shifter);
     scheduler.setDefaultCommand(logger, logger);
+
+    LEDRange range = leds.getRangeController(0, 28);
+
+    leds.setDefaultCommand(new RunCommand(
+      () -> range.setColor(new Color8Bit(
+        (int) (controller1.leftTrigger() * 255), 
+        (int) (controller1.rightTrigger() * 255), 
+        (int) (controller1.leftStickX() *255)
+    )), leds));
 
     configureButtonBindings();
   }
