@@ -26,6 +26,7 @@ public class Lemonlight implements Logger{
         pipeline = limelight.getEntry("pipeline");
     }
 
+    //logging
     @Override
     public double[] getValues(double[] values) {
         values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
