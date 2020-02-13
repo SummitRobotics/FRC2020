@@ -7,17 +7,25 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
+import frc.robot.utilities.RollingAverage;
 
 public class Shooter extends SubsystemBase {
 
+    //TODO - tune spooled velocity
+    private final static double SPOOLED_VELOCITY = 0.9;
+
     private CANSparkMax shooterMotor;
     private CANEncoder shooterEncoder;
+
+    private RollingAverage average;
 
     public Shooter() {
         shooterMotor = new CANSparkMax(Ports.SHOOTER.port, MotorType.kBrushless);
         shooterEncoder = shooterMotor.getEncoder();
 
         shooterMotor.setClosedLoopRampRate(0);
+
+        average = new RollingAverage(10);
     }
 
     public void setPower(double power) {
@@ -31,5 +39,14 @@ public class Shooter extends SubsystemBase {
 
     public double getRPM() {
         return shooterEncoder.getVelocity();
+    }
+
+    public boolean spooled() {
+        return average.getAverage() >= SPOOLED_VELOCITY; 
+    }
+
+    @Override
+    public void periodic() {
+        average.update(getRPM());
     }
 }

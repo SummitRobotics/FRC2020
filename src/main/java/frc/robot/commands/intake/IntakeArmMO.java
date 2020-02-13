@@ -1,26 +1,29 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
+import frc.robot.utilities.MOCommand;
 
-public class IntakeArmMO extends CommandBase {
+public class IntakeArmMO extends MOCommand {
 
     private IntakeArm intakeArm;
     private LoggerAxis controlAxis;
-    private LoggerButton controlButton;
-
-    private boolean toggle;
 
     private static final double INTAKE_DEFAULT_POWER = .75;
 
     public IntakeArmMO(IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButton) {
+        super();
+
         this.intakeArm = intakeArm;
         this.controlAxis = controlAxis;
-        this.controlButton = controlButton;
 
-        toggle = false;
+        bindCommand(controlButton, Trigger::whileActiveOnce, new StartEndCommand(
+            () -> intakeArm.setIntakePower(INTAKE_DEFAULT_POWER), 
+            () -> intakeArm.setIntakePower(0)
+        ));
 
         addRequirements(intakeArm);
     }
@@ -33,15 +36,6 @@ public class IntakeArmMO extends CommandBase {
     @Override
     public void execute() {
         intakeArm.setPivotPower(controlAxis.get());
-
-        if (!toggle && controlButton.get()) {
-            intakeArm.setIntakePower(INTAKE_DEFAULT_POWER);
-            toggle = !toggle;
-
-        } else if (toggle && !controlButton.get() ) {
-            intakeArm.setIntakePower(0);
-            toggle = !toggle;
-        }
     }
 
     @Override

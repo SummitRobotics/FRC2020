@@ -4,12 +4,11 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Ports;
 import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Wrappper class for the TI Launchpad in mode 1
  */
-public class LaunchpadDriver extends GenericDriver implements Subsystem {
+public class LaunchpadDriver extends GenericDriver {
 
     private int port;
     private int outputs;

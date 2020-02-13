@@ -1,18 +1,20 @@
 package frc.robot.commands.conveyor;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.utilities.MOCommand;
 
 /**
  * Command to give manual control of the conveyor to a HI axis
  */
-public class ConveyorMO extends CommandBase {
+public class ConveyorMO extends MOCommand {
 
 	Conveyor conveyor;
 	LoggerAxis controlAxis;
 
 	public ConveyorMO(Conveyor conveyor, LoggerAxis controlAxis) {
+		super();
+
 		this.conveyor = conveyor;
 		this.controlAxis = controlAxis;
 
