@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 import frc.robot.utilities.RollingAverage;
 
+/**
+ * Class for using the lidar v4
+ */
 public class LidarV4{
 
 	private I2C i2c;
@@ -14,6 +17,10 @@ public class LidarV4{
 
 	private RollingAverage rollingAverage;
 
+	/**
+	 * constructor
+	 * @param id the i2c id of the lidarv4
+	 */
     public LidarV4(int id){
 		i2c = new I2C(Port.kOnboard, id);
 		value = 0;
@@ -21,10 +28,9 @@ public class LidarV4{
 		rollingAverage = new RollingAverage(50);
 	}
 
-	public I2C getPort(){
-		return i2c;
-	}
-
+	/**
+	 * reads the current distance from the lidar if one is avalible
+	 */
 	private void readDistance() {
 		byte[] status = new byte[1];
 		//checks if there is a valid mesurment
@@ -62,11 +68,21 @@ public class LidarV4{
 		rollingAverage.update(value);
 	}
 
+	/**
+	 * Gets the most recent distance
+	 * 
+	 * @return the distance in cm
+	 */
 	public int getDistance() {
 		readDistance();
 		return value;
 	}
 
+	/**
+	 * Changes the i2c id of the v4
+	 * 
+	 * @param id the id to change to
+	 */
 	public void changeId(int id){
 		//enables flash
 		i2c.write(0xEA, 0x11);
@@ -89,6 +105,11 @@ public class LidarV4{
 		System.out.println("worked!");
 	}
 
+	/**
+	 * Gets the average distance
+	 * 
+	 * @return average distance in cm
+	 */
 	public int getRollingAverage() {
 		readDistance();
 		return (int) rollingAverage.getAverage();
