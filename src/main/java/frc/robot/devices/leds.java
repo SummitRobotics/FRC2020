@@ -7,17 +7,15 @@
 
 package frc.robot.devices;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 /**
- * Add your docs here.
+ * Device to manage LEDs
  */
 public class LEDs extends SubsystemBase {
 
@@ -29,7 +27,7 @@ public class LEDs extends SubsystemBase {
 
     private HashMap<String, LEDBlinker> blinkers;
 
-    public LEDs(){
+    public LEDs() {
         ledStrip = new AddressableLED(port);
         buffer = new AddressableLEDBuffer(length);
         blinkers = new HashMap<>();
@@ -64,17 +62,17 @@ public class LEDs extends SubsystemBase {
     }
 
     /**
-     * gets a controler to controle a range of leds
+     * gets a controller to control a range of leds
      * @param start led to start at
      * @param end led to end at
-     * @return usable led range controler
+     * @return usable led range controller
      */
     public LEDRange getRangeController(int start, int end){
         return (Color8Bit color) -> changeLEDRange(color.red, color.green, color.blue, start, end);
     }
 
     /**
-     * used to group multipul led ranges into a single range
+     * used to group multiple led ranges into a single range
      * @param ranges the ranges to be grouped
      * @return the new grouped controler
      */
@@ -83,7 +81,7 @@ public class LEDs extends SubsystemBase {
     }
 
     /**
-     * used to set multipul ranges at a time
+     * used to set multiple ranges at a time
      * @param r red 0-255
      * @param g green 0-255
      * @param b blue 0-255
@@ -111,12 +109,15 @@ public class LEDs extends SubsystemBase {
         blinkers.put(name, new LEDBlinker(range, period, colors));
     }
 
+    /**
+     * Removes a led blinker
+     */
     public void removeBlinker(String name){
         blinkers.remove(name);
     }
 
     /**
-     * used to make leds blink
+     * Used to make leds blink
      */
     @Override
     public void periodic(){
@@ -124,14 +125,14 @@ public class LEDs extends SubsystemBase {
     }
 
     /**
-     * interface of a led range controler
+     * Interface of a led range controler
      */
     public interface LEDRange {
         public void setColor(Color8Bit color);
     }
 
     /**
-     * blinker class to store all data for a blinker
+     * Blinker class to store all data for a blinker
      */
     public class LEDBlinker {
         private LEDRange range;
@@ -149,6 +150,9 @@ public class LEDs extends SubsystemBase {
             position = 0;
         }
 
+        /**
+         * Increments through a range of colors
+         */
         public void increment() {
             count = (count + 1) % period;
 
