@@ -27,6 +27,7 @@ public class LoggerAxis implements Logger {
 
 	/**
 	 * Gets the position of the axis
+	 * 
 	 * @return the position
 	 */
 	public double get() {

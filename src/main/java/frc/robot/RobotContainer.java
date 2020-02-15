@@ -74,7 +74,6 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        //.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
         drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor, shooter, limelight));
     }

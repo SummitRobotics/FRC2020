@@ -5,6 +5,9 @@ import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 
+/**
+ * Default command for the conveyor to manage its state
+ */
 public class ConveyorAutomation extends CommandBase {
 
 	private Conveyor conveyor;
@@ -17,11 +20,6 @@ public class ConveyorAutomation extends CommandBase {
 		this.limelight = limelight;
 	
 		addRequirements(conveyor);
-	}
-
-	@Override
-	public void initialize() {
-
 	}
 
 	@Override

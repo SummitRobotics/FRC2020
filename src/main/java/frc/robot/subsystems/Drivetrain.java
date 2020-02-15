@@ -25,18 +25,6 @@ public class Drivetrain implements Subsystem, Logger {
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
-        
-        return values;
-    }
-
     // left motors
     private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN.port, MotorType.kBrushless);
     private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0.port, MotorType.kBrushless);
@@ -64,13 +52,6 @@ public class Drivetrain implements Subsystem, Logger {
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -.25, 
     OUTPUT_MAX = .25;
-
-    /**
-     * returns priority
-     */
-    public double getPriority(){
-        return 1;
-    }
 
     public Drivetrain() {
         // tells other two motors to follow the first
@@ -227,5 +208,17 @@ public class Drivetrain implements Subsystem, Logger {
     public void turn(double power) {
         setLeftMotorPower(-power);
         setRightMotorPower(power);
+    }
+
+    @Override
+    public double[] getValues(double[] values) {
+        values[LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
+        values[LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
+        values[LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
+        values[LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
+        values[LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
+        values[LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
+        
+        return values;
     }
 }

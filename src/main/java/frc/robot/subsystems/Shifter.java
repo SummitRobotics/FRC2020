@@ -9,6 +9,8 @@ import frc.robot.utilities.Ports;
 
 public class Shifter implements Subsystem, Logger{
 
+    //TODO - make double solenoid
+
     private Compressor compressor = new Compressor(Ports.PCM_1.port);
     private Solenoid shiftHigh = new Solenoid(Ports.PCM_1.port, Ports.DRIVE_SOLENOID_OPEN.port);
     private Solenoid shiftLow = new Solenoid(Ports.PCM_1.port, Ports.DRIVE_SOLENOID_CLOSE.port);
@@ -21,7 +23,8 @@ public class Shifter implements Subsystem, Logger{
 
     /**
      * controls the shifting of the drivetrain on the robot
-     * @param state true is low gear, flase is high grear
+     * 
+     * @param state true is low gear, false is high grear
      */
     public void Shift(boolean state){
         if(state != oldShift){
@@ -37,6 +40,11 @@ public class Shifter implements Subsystem, Logger{
         }
     }
 
+    /**
+     * Getes the shift state
+     * 
+     * @return the shift state
+     */
     public boolean getShiftState(){
         return oldShift;
     }

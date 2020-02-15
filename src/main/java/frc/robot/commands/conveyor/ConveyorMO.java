@@ -5,7 +5,7 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.utilities.MOCommand;
 
 /**
- * Command to give manual control of the conveyor to a HI axis
+ * Manual override for the conveyor
  */
 public class ConveyorMO extends MOCommand {
 

@@ -2,6 +2,9 @@ package frc.robot.utilities;
 
 import java.util.Arrays;
 
+/**
+ * Gets a running average of a value
+ */
 public class RollingAverage {
 
     private Double[] rollingAverageArray;
@@ -11,6 +14,11 @@ public class RollingAverage {
         rollingAverageArray = new Double[size];
     }
 
+    /**
+     * Adds a new value to the average
+     * 
+     * @param value the new value
+     */
     public void update(double value) {
         if (rollingAverageArray[rollingTarget] == null) {
             Arrays.fill(rollingAverageArray, value);
@@ -21,6 +29,11 @@ public class RollingAverage {
         rollingTarget = (rollingTarget + 1) % rollingAverageArray.length;
     }
 
+    /**
+     * Gets the running average
+     * 
+     * @return the average
+     */
     public double getAverage() {
         double value = 0;
         for (Double d : rollingAverageArray) {

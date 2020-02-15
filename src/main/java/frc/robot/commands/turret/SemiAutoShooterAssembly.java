@@ -10,6 +10,9 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.MOCommand;
 
+/**
+ * Command for running the semi auto mode
+ */
 public class SemiAutoShooterAssembly extends ParallelRaceGroup {
 
 	private MOCommand expel;

@@ -111,6 +111,7 @@ public class LaunchpadDriver extends GenericDriver {
 
     /**
      * Black box to set outputs
+     * 
      * @param outputNumber the output number
      * @param value the state of the output
      */

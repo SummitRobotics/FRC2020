@@ -6,6 +6,9 @@ import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.subsystems.Turret;
 
+/**
+ * Command to vision align the turret
+ */
 public class VisionTarget extends CommandBase {
 
 	private Turret turret;

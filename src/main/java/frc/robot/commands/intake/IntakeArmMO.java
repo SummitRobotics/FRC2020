@@ -7,6 +7,9 @@ import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.utilities.MOCommand;
 
+/**
+ * Manual override for the intake arm
+ */
 public class IntakeArmMO extends MOCommand {
 
     private IntakeArm intakeArm;

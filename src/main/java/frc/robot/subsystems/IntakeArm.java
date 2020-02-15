@@ -19,6 +19,8 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
+//TODO - gut entire subsystem
+
 /**
  * Subsystem to control the intake and its arm
  */

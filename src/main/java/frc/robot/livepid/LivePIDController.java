@@ -55,9 +55,6 @@ public class LivePIDController extends PIDController {
         double p = PID[0].getDouble(defaultP);
         double i = PID[1].getDouble(defaultI);
         double d = PID[2].getDouble(defaultD);
-        System.out.println(p);
-        setPID(
-            p,i,d
-        );
+        setPID(p, i, d);
     }
 }

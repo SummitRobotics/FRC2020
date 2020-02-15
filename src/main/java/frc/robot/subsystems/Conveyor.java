@@ -19,6 +19,8 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
+//TODO - gut entire subsystem
+
 /**
  * Subsystem to control the internal conveyor mechanism of the robot
  */
@@ -49,8 +51,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	private DigitalInput breakbeamEnter;
 	private DigitalInput breakbeamExit;
 
-	public States state;
-
 	private boolean 
 	safeShootMode,
 	shootMode,
@@ -72,8 +72,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 		leftMotorPower = 0;
 		rightMotorPower = 0;
 
-		state = States.OFF;
-
+		// Internal commands for toggling shooter flags
 		toggleSafeShootMode = new StartEndCommand(
 			this::enableSafeShootMode, 
 			this::disableSafeShootMode
@@ -149,12 +148,17 @@ public class Conveyor extends SubsystemBase implements Logger {
 		rightConveyor.set(0);
 	}
 
+	/**
+	 * Gets the run state of the conveyor based on mode flags
+	 * 
+	 * @return the acntive state
+	 */
 	public States getState() {
-		if (safeShootMode) {
+		if (shootMode) {
 			return States.SAFE_SHOOT;
 		}
 
-		if (shootMode) {
+		if (safeShootMode) {
 			return States.SHOOT;
 		}
 
@@ -165,26 +169,44 @@ public class Conveyor extends SubsystemBase implements Logger {
 		return States.OFF;
 	}
 
+	/**
+	 * Sets the safe shoot mode flag to true
+	 */
 	public void enableSafeShootMode() {
 		safeShootMode = true;
 	}
 
+	/**
+	 * Sets the safe shoot mode flag to false
+	 */
 	public void disableSafeShootMode() {
 		safeShootMode = false;
 	}
 
+	/**
+	 * Sets the shoot mode flag to true
+	 */
 	public void enableShootMode() {
 		shootMode = true;
 	}
 
+	/**
+	 * Sets the shoot mode flag to false
+	 */
 	public void disableShootMode() {
 		shootMode = false;
 	}
 
+	/**
+	 * Sets the intake mode flag to true
+	 */
 	public void enableIntakeMode() {
 		intakeMode = true;
 	}
 
+	/**
+	 * Sets the intake mode flag to true
+	 */
 	public void disableIntakeMode() {
 		intakeMode = false;
 	}

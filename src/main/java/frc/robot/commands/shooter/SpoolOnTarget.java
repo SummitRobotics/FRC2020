@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Shooter;
 
+/**
+ * Command to spool when the turret is on target
+ */
 public class SpoolOnTarget extends CommandBase {
 
 	//TODO - make right

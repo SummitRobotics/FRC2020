@@ -9,13 +9,16 @@ import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 import frc.robot.utilities.RollingAverage;
 
+/**
+ * Subsystem to control the shooter
+ */
 public class Shooter extends SubsystemBase {
 
     //TODO - make good
     public static final double SPOOL_POWER = 1;
 
     //TODO - tune spooled velocity
-    private final static double SPOOLED_VELOCITY = 0.9;
+    private final static double SPOOLED_VELOCITY = 12;
 
     private CANSparkMax shooterMotor;
     private CANEncoder shooterEncoder;
@@ -31,19 +34,37 @@ public class Shooter extends SubsystemBase {
         average = new RollingAverage(10);
     }
 
+    /**
+     * Sets the shooter power
+     * 
+     * @param power the new power
+     */
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
         shooterMotor.set(power);
     }
 
+    /**
+     * Stops the motor
+     */
     public void stop() {
         shooterMotor.set(0);
     }
 
+    /**
+     * Gets the velocity of the shooter
+     * 
+     * @return the velocity
+     */
     public double getRPM() {
         return shooterEncoder.getVelocity();
     }
 
+    /**
+     * Checks if the shooter is it at its spooled point
+     * 
+     * @return if it's spooled
+     */
     public boolean spooled() {
         return average.getAverage() >= SPOOLED_VELOCITY; 
     }

@@ -7,6 +7,9 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
+/**
+ * Command for running the full auto mode
+ */
 public class FullAutoShooterAssembly extends ParallelRaceGroup {
 
 	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Conveyor conveyor, Lemonlight limelight) {

@@ -6,7 +6,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 
-public class Lemonlight implements Logger{
+/**
+ * Device driver for the limelight
+ */
+public class Lemonlight implements Logger {
 
     NetworkTable limelight;
 
@@ -26,15 +29,6 @@ public class Lemonlight implements Logger{
         pipeline = limelight.getEntry("pipeline");
     }
 
-    //logging
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
-        values[LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
-        values[LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
-        return values;
-    }
-
     /**
      * Enum to describe the state of the LED
      */
@@ -50,6 +44,9 @@ public class Lemonlight implements Logger{
         }
     }
 
+    /**
+     * Enum to describe the state of the limelight camera
+     */
     public enum CamModes {
         VISION_PROCESSOR(0),
         DRIVER_CAMERA(1);
@@ -61,35 +58,74 @@ public class Lemonlight implements Logger{
     }
 
     //TODO - make right
+    /**
+     * @return if the limelight is at target
+     */
     public boolean atTarget() {
         return false;
     }
 
+    /**
+     * Sets the LED mode
+     * 
+     * @return the new mode
+     */
     public void setLEDMode(LEDModes mode) {
         ledMode.setDouble(mode.value);
     }
 
+    /**
+     * Sets the camera mode
+     * 
+     * @param mode the new mode
+     */
     public void setCamMode(CamModes mode) {
         camMode.setDouble(mode.value);
     }
 
+    /**
+     * Sets the pipeline
+     * 
+     * @param pipe sets the pipeline to a int between 0 and 9
+     */
     public void setPipeline(int pipe) {
         pipeline.setDouble(pipe);
     }
 
+    /**
+     * @return if limelight has a target
+     */
     public boolean hasTarget() {
         return tv.getDouble(0) == 1;
     }
 
+    /**
+     * @return the horizontal offset
+     */
     public double getHorizontalOffset() {
         return tx.getDouble(0);
     }
 
+    /**
+     * @return the vertical offset
+     */
     public double getVerticalOffset() {
         return ty.getDouble(0);
     }
 
+    /**
+     * @return the percentage of area
+     */
     public double getAreaPercentage() {
         return ta.getDouble(0);
+    }
+
+    //logging
+    @Override
+    public double[] getValues(double[] values) {
+        values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
+        values[LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
+        values[LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
+        return values;
     }
 }

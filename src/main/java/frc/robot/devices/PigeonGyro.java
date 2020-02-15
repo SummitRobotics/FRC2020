@@ -4,22 +4,17 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 
+//TODO - gut it
+
+/**
+ * Device to run gyro
+ */
 public class PigeonGyro implements Logger {
 
     private PigeonIMU gyro;
 
     public PigeonGyro(int port) {
         gyro = new PigeonIMU(port);
-    }
-
-    @Override
-    public double[] getValues(double[] values) {
-
-        values[LoggerRelations.IMU_X_GFORCE.value] = getXGForce();
-        values[LoggerRelations.IMU_Y_ANGLE.value] = getYAngle();
-        values[LoggerRelations.IMU_HEADING.value] = getHeading();
-
-        return values;
     }
 
     /**
@@ -58,5 +53,14 @@ public class PigeonGyro implements Logger {
      */
     public void setHeading(double setpoint) {
         gyro.setFusedHeading(setpoint);
+    }
+
+    @Override
+    public double[] getValues(double[] values) {
+
+        values[LoggerRelations.IMU_X_GFORCE.value] = getXGForce();
+        values[LoggerRelations.IMU_Y_ANGLE.value] = getYAngle();
+        values[LoggerRelations.IMU_HEADING.value] = getHeading();
+        return values;
     }
 }

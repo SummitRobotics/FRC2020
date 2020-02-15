@@ -10,6 +10,9 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.MOCommand;
 
+/**
+ * Command for running the full manual mode
+ */
 public class FullManualShootingAssembly extends MOCommand {
 
 	private Turret turret;
