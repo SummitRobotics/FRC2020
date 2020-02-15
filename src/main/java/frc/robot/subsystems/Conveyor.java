@@ -11,6 +11,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
@@ -21,6 +23,18 @@ import frc.robot.utilities.Ports;
  * Subsystem to control the internal conveyor mechanism of the robot
  */
 public class Conveyor extends SubsystemBase implements Logger {
+
+	public enum States {
+		SHOOT,
+		SAFE_SHOOT,
+		INTAKE,
+		OFF
+	}
+
+	//TODO - make good
+	public static final double
+	SHOOT_POWER = 1,
+	SUBSUME_POWER = 0.75;
 
 	// powers saved for faster logging
 	private double 
@@ -35,6 +49,19 @@ public class Conveyor extends SubsystemBase implements Logger {
 	private DigitalInput breakbeamEnter;
 	private DigitalInput breakbeamExit;
 
+	public States state;
+
+	private boolean 
+	safeShootMode,
+	shootMode,
+	intakeMode;
+
+	public Command
+	toggleSafeShootMode,
+	toggleShootMode,
+	toggleIntakeMode;
+	
+
 	public Conveyor() {
 		leftConveyor = new CANSparkMax(Ports.CONVEYOR_LEFT.port, MotorType.kBrushless);
 		rightConveyor = new CANSparkMax(Ports.CONVEYOR_RIGHT.port, MotorType.kBrushless);
@@ -44,6 +71,23 @@ public class Conveyor extends SubsystemBase implements Logger {
 
 		leftMotorPower = 0;
 		rightMotorPower = 0;
+
+		state = States.OFF;
+
+		toggleSafeShootMode = new StartEndCommand(
+			this::enableSafeShootMode, 
+			this::disableSafeShootMode
+		);
+
+		toggleShootMode = new StartEndCommand(
+			this::enableShootMode, 
+			this::disableShootMode
+		);
+
+		toggleIntakeMode = new StartEndCommand(
+			this::enableIntakeMode, 
+			this::disableIntakeMode
+		);
 	}
 
 	/**
@@ -103,6 +147,46 @@ public class Conveyor extends SubsystemBase implements Logger {
 	public void stop() {
 		leftConveyor.set(0);
 		rightConveyor.set(0);
+	}
+
+	public States getState() {
+		if (safeShootMode) {
+			return States.SAFE_SHOOT;
+		}
+
+		if (shootMode) {
+			return States.SHOOT;
+		}
+
+		if (intakeMode) {
+			return States.INTAKE;
+		}
+
+		return States.OFF;
+	}
+
+	public void enableSafeShootMode() {
+		safeShootMode = true;
+	}
+
+	public void disableSafeShootMode() {
+		safeShootMode = false;
+	}
+
+	public void enableShootMode() {
+		shootMode = true;
+	}
+
+	public void disableShootMode() {
+		shootMode = false;
+	}
+
+	public void enableIntakeMode() {
+		intakeMode = true;
+	}
+
+	public void disableIntakeMode() {
+		intakeMode = false;
 	}
 
 	@Override

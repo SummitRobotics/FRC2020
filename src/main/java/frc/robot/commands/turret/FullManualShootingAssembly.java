@@ -1,8 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.conveyor.Expel;
 import frc.robot.commands.shooter.Spool;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
@@ -15,12 +14,14 @@ public class FullManualShootingAssembly extends MOCommand {
 
 	private Turret turret;
 
-	private Command expel;
-	private Command spool;
+	private Command 
+	expel,
+	spool;
 
 	private LoggerAxis turretRotationPower;
 
-	public FullManualShootingAssembly(
+	public FullManualShootingAssembly 
+		(
 			Turret turret, 
 			Shooter shooter, 
 			Conveyor conveyor, 
@@ -33,7 +34,7 @@ public class FullManualShootingAssembly extends MOCommand {
 
 		this.turret = turret;
 
-		expel = bindCommand(trigger, Trigger::whileActiveContinuous, new Expel(conveyor));
+		expel = bindCommand(trigger, Trigger::whileActiveOnce, conveyor.toggleShootMode);
 		spool = bindCommand(upper, Trigger::whileActiveOnce, new Spool(shooter));
 
 		this.turretRotationPower = turretRotationPower;
@@ -55,7 +56,6 @@ public class FullManualShootingAssembly extends MOCommand {
 	public void end(boolean interupted) {
 		expel.cancel();
 		spool.cancel();
-		turret.stop();
 	}
 
 	@Override

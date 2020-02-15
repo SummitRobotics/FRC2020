@@ -10,10 +10,13 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.Shifter;
+import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
+import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.intake.IntakeArmMO;
+import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
 
 /**
@@ -37,8 +40,10 @@ public class RobotContainer {
     private Shifter shifter;
     private Conveyor conveyor;
     private IntakeArm intakeArm;
+    private Shooter shooter;
 
     private PigeonGyro gyro;
+    private Lemonlight limelight;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,15 +60,23 @@ public class RobotContainer {
         shifter = new Shifter();
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
+        shooter = new Shooter();
 
         gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
+        limelight = new Lemonlight();
 
-        scheduler.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
+        setDefaultCommands();
 
         logger.addElements(drivetrain, gyro, shifter);
         scheduler.setDefaultCommand(logger, logger);
 
         configureButtonBindings();
+    }
+
+    private void setDefaultCommands() {
+        //.setDefaultCommand(drivetrain, new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
+        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
+        conveyor.setDefaultCommand(new ConveyorAutomation(conveyor, shooter, limelight));
     }
 
     /**

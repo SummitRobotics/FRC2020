@@ -60,6 +60,11 @@ public class Lemonlight implements Logger{
         }
     }
 
+    //TODO - make right
+    public boolean atTarget() {
+        return false;
+    }
+
     public void setLEDMode(LEDModes mode) {
         ledMode.setDouble(mode.value);
     }

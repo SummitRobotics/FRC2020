@@ -11,6 +11,9 @@ import frc.robot.utilities.RollingAverage;
 
 public class Shooter extends SubsystemBase {
 
+    //TODO - make good
+    public static final double SPOOL_POWER = 1;
+
     //TODO - tune spooled velocity
     private final static double SPOOLED_VELOCITY = 0.9;
 

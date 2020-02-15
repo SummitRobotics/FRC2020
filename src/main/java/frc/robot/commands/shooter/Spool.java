@@ -14,18 +14,13 @@ public class Spool extends CommandBase {
 	}
 
 	@Override
-	public void initialize() {
-
-	}
-
-	@Override
 	public void execute() {
-
+		shooter.setPower(Shooter.SPOOL_POWER);
 	}
 
 	@Override
 	public void end(boolean interupted) {
-
+		shooter.stop();
 	}
 
 	@Override
