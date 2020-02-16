@@ -34,8 +34,7 @@ public enum Ports {
     SHOOTER(60),
 
     // conveyor
-    CONVEYOR_RIGHT(33),
-    CONVEYOR_LEFT(34),
+    CONVEYOR(33),
     BREAKBEAM_ENTER(0),
     BREAKBEAM_EXIT(1),
     

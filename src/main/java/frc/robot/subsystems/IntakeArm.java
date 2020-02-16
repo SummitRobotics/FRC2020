@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -32,7 +34,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	defaultI = 0, 
 	defaultD = 0;
 
-	private CANSparkMax intake;
+	private VictorSPX intake;
 
 	private CANSparkMax pivot;
 	private CANEncoder pivotEncoder;
@@ -48,7 +50,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	PID_OUTPUT_MIN = -1, PID_OUTPUT_MAX = 1;
 
 	public IntakeArm() {
-		intake = new CANSparkMax(Ports.INTAKE_ARM_INTAKE.port, MotorType.kBrushless);
+		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE.port);
 
 		pivot = new CANSparkMax(Ports.INTAKE_ARM_PIVOT.port, MotorType.kBrushless);
 		pivotEncoder = pivot.getEncoder();
@@ -95,7 +97,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	public void setIntakePower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
 		intakePower = power;
-		intake.set(power);
+		intake.set(ControlMode.PercentOutput, power);
 	}
 
 	/**
@@ -126,7 +128,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	 * Stops the intake arm and intake roller motors
 	 */
 	public void stop() {
-		intake.set(0);
+		intake.set(ControlMode.PercentOutput, 0);
 		pivot.set(0);
 	}
 

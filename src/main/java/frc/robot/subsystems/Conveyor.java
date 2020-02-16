@@ -7,8 +7,8 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
-import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
 //TODO - gut entire subsystem
@@ -39,13 +38,10 @@ public class Conveyor extends SubsystemBase implements Logger {
 	SUBSUME_POWER = 0.75;
 
 	// powers saved for faster logging
-	private double 
-	leftMotorPower, 
-	rightMotorPower;
+	private double power;
 
 	// conveyor motors
-	private CANSparkMax leftConveyor;
-	private CANSparkMax rightConveyor;
+	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors
 	private DigitalInput breakbeamEnter;
@@ -63,14 +59,12 @@ public class Conveyor extends SubsystemBase implements Logger {
 	
 
 	public Conveyor() {
-		leftConveyor = new CANSparkMax(Ports.CONVEYOR_LEFT.port, MotorType.kBrushless);
-		rightConveyor = new CANSparkMax(Ports.CONVEYOR_RIGHT.port, MotorType.kBrushless);
+		conveyorMotor = new VictorSPX(Ports.CONVEYOR.port);
 
 		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER.port);
 		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT.port);
 
-		leftMotorPower = 0;
-		rightMotorPower = 0;
+		power = 0;
 
 		// Internal commands for toggling shooter flags
 		toggleSafeShootMode = new StartEndCommand(
@@ -90,35 +84,12 @@ public class Conveyor extends SubsystemBase implements Logger {
 	}
 
 	/**
-	 * Sets the power of the left conveyor motor
-	 * 
-	 * @param power the new power
-	 */
-	public void setLeftConveyor(double power) {
-		power = Functions.clampDouble(power, 1, -1);
-		leftMotorPower = power;
-		leftConveyor.set(power);
-	}
-
-	/**
-	 * Sets the power of the left conveyor motor
-	 * 
-	 * @param power the new power
-	 */
-	public void setRightConveyor(double power) {
-		power = Functions.clampDouble(power, 1, -1);
-		rightMotorPower = power;
-		rightConveyor.set(power);
-	}
-
-	/**
-	 * Sets the power of both conveyor motors
+	 * Sets the power of the conveyor
 	 * 
 	 * @param power the new power
 	 */
 	public void setConveyor(double power) {
-		setRightConveyor(power);
-		setLeftConveyor(power);
+		conveyorMotor.set(ControlMode.PercentOutput, power);
 	}
 
 	//TODO - Make sure that the docs are correct on the nature of breakbeam returns
@@ -144,8 +115,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 * Stops both conveyor motors
 	 */
 	public void stop() {
-		leftConveyor.set(0);
-		rightConveyor.set(0);
+		conveyorMotor.set(ControlMode.PercentOutput, 0);
 	}
 
 	/**
@@ -213,8 +183,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 
 	@Override
 	public double[] getValues(double[] values) {
-		values[LoggerRelations.CONVEYOR_LEFT.value] = leftMotorPower;
-		values[LoggerRelations.CONVEYOR_RIGHT.value] = rightMotorPower;
+		values[LoggerRelations.CONVEYOR.value] = power;
 		values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
 		values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
 		return values;

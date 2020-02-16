@@ -1,5 +1,6 @@
 package frc.robot.logging;
 
+//TODO - add logging values
 public enum LoggerRelations {
     //placeholder for testing
     PLACEHOLDER(0),
@@ -49,8 +50,7 @@ public enum LoggerRelations {
     TURRET(31),
 
     //Conveyor
-    CONVEYOR_RIGHT(32),
-    CONVEYOR_LEFT(33),
+    CONVEYOR(33),
     CONVEYOR_BREAKBEAM_ENTER(34),
     CONVEYOR_BREAKBEAM_EXIT(35),
 

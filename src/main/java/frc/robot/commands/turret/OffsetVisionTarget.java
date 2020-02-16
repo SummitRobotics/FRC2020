@@ -3,44 +3,48 @@ package frc.robot.commands.turret;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.Lidar;
 import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.subsystems.Turret;
 
-/**
- * Command to vision align the turret
- */
-public class VisionTarget extends CommandBase {
+public class OffsetVisionTarget extends CommandBase {
 
 	private Turret turret;
 	private Lemonlight limelight;
+	private Lidar lidar;
 
 	private PIDController pidController;
 
-	//TODO - Make right
-	private final static double
+	//TODO - make right
+	private static final double
 	P = 0,
 	I = 0,
 	D = 0;
 
-	public VisionTarget(Turret turret, Lemonlight limelight) {
+	public OffsetVisionTarget(Turret turret, Lemonlight limelight, Lidar lidar) {
 		this.turret = turret;
 		this.limelight = limelight;
+		this.lidar = lidar;
 
 		pidController = new PIDController(P, I, D);
 
 		addRequirements(turret);
 	}
 
+	@Override
 	public void initialize() {
-		pidController.setSetpoint(0);
+		pidController.setSetpoint(getSetpoint());
+		pidController.reset();
+
 		limelight.setPipeline(0);
 		limelight.setLEDMode(LEDModes.FORCE_ON);
-		pidController.reset();
 	}
 
+	@Override
 	public void execute() {
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
+			pidController.setSetpoint(getSetpoint());
 
 			double power = pidController.calculate(offset);
 			turret.setPower(power);
@@ -51,11 +55,22 @@ public class VisionTarget extends CommandBase {
 		}
 	}
 
+	@Override
 	public void end(boolean interrupted) {
-		limelight.setLEDMode(LEDModes.FORCE_OFF);
+
 	}
 
+	@Override
 	public boolean isFinished() {
 		return false;
+	}
+
+	private double getSetpoint() {
+		double setpoint;
+
+		setpoint = - ( (double) Lemonlight.X_OFFSET / lidar.getAverageDistance());
+		setpoint = Math.atan(setpoint);
+
+		return setpoint;
 	}
 }

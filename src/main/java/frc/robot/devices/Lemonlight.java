@@ -11,6 +11,9 @@ import frc.robot.logging.LoggerRelations;
  */
 public class Lemonlight implements Logger {
 
+    //TODO - make right
+    public static final int X_OFFSET = 0;
+
     NetworkTable limelight;
 
     NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;

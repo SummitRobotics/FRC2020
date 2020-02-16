@@ -9,11 +9,12 @@ import frc.robot.utilities.RollingAverage;;
 /**
  * Device to manage the Lidar3
  */
-public class LidarV3{
+public class LidarV3 implements Lidar {
 
 	private RollingAverage rollingAverage;
 
-    public LidarV3(){
+    public LidarV3() {
+
         m_port = (byte) Port.kOnboard.value;
 		I2CJNI.i2CInitialize(m_port);
 
@@ -48,6 +49,7 @@ public class LidarV3{
 	 * 
 	 * @return the distance in cm
 	 */
+	@Override
 	public int getDistance() {
 		short value = readShort(0x8f);
 		rollingAverage.update(value);
@@ -60,7 +62,8 @@ public class LidarV3{
 	 * 
 	 * @return the average distance in cm
 	 */
-	public int getRollingAverage() {
+	@Override
+	public int getAverageDistance() {
 		getDistance();
 		return (int) rollingAverage.getAverage();
 	}
