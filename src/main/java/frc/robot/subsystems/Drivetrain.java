@@ -23,6 +23,8 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     I = 0,
     D = 0.01;
 
+    private final int maxCurrent = 60;
+
     private int oldCurrentLimit = 0;
 
     //data for logger
@@ -77,12 +79,14 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
     /**
      * limits the current each motor can draw
+     * 
+     * @param amount the amoutn to limit the current by 0-100
      */
     public void limitPower(double amount){
-        //finds current limit by multiplying the max current by the amount and adding the min current
-        int currentLimit = (int)((60*amount)+1);
+        amount = Functions.clampDouble(amount, 100, 0);
+        int currentLimit = ((int) (maxCurrent-(amount*(maxCurrent/100))))+1;
 
-        if ((currentLimit > (oldCurrentLimit+5))||(currentLimit < (oldCurrentLimit-5))){
+        if ((currentLimit > (oldCurrentLimit+2))||(currentLimit < (oldCurrentLimit-2))){
             oldCurrentLimit = currentLimit;
         //System.out.println(cl);
         //sets all limits on the motors
