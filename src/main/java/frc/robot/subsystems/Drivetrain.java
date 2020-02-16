@@ -80,7 +80,7 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
     /**
      * limits the current each motor can draw
      * 
-     * @param amount the amoutn to limit the current by 0-100
+     * @param amount the amount to limit the current by 0-100 100% being fully limited
      */
     public void limitPower(double amount){
         amount = Functions.clampDouble(amount, 100, 0);
@@ -88,15 +88,14 @@ public class Drivetrain implements Subsystem, Logger, LimitedSubsystem {
 
         if ((currentLimit > (oldCurrentLimit+2))||(currentLimit < (oldCurrentLimit-2))){
             oldCurrentLimit = currentLimit;
-        //System.out.println(cl);
-        //sets all limits on the motors
-        left.setSmartCurrentLimit(currentLimit);
-        leftBack.setSmartCurrentLimit(currentLimit);
-        leftMiddle.setSmartCurrentLimit(currentLimit);
 
-        right.setSmartCurrentLimit(currentLimit);
-        rightBack.setSmartCurrentLimit(currentLimit);
-        rightMiddle.setSmartCurrentLimit(currentLimit);
+            left.setSmartCurrentLimit(currentLimit);
+            leftBack.setSmartCurrentLimit(currentLimit);
+            leftMiddle.setSmartCurrentLimit(currentLimit);
+
+            right.setSmartCurrentLimit(currentLimit);
+            rightBack.setSmartCurrentLimit(currentLimit);
+            rightMiddle.setSmartCurrentLimit(currentLimit);
         }
     }
 
