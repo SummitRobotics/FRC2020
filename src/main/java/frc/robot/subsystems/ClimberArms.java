@@ -7,6 +7,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
@@ -29,10 +30,9 @@ public class ClimberArms extends SubsystemBase implements Logger {
     private CANPIDController rightPIDController;
 
     // pneumatic piston control classes
-    private DoubleSolenoid 
-    leftPiston,
-    rightPiston,
-    breakPiston;
+    private Solenoid
+    armLift,
+    armBreak; 
 
     //TODO - Tune default pid values
     public static final double
@@ -65,10 +65,8 @@ public class ClimberArms extends SubsystemBase implements Logger {
         leftPIDController = leftArmMotor.getPIDController();
         rightPIDController = rightArmMotor.getPIDController();
 
-        leftPiston = new DoubleSolenoid(Ports.LEFT_PISTON_OPEN.port, Ports.LEFT_PISTON_CLOSE.port);
-        rightPiston = new DoubleSolenoid(Ports.RIGHT_PISTON_OPEN.port, Ports.RIGHT_PISTON_CLOSE.port);
-
-        breakPiston = new DoubleSolenoid(Ports.BREAK_PISTON_OPEN.port, Ports.BREAK_PISTON_CLOSE.port);
+        armLift = new Solenoid(Ports.ARM_LIFT.port);
+        armBreak = new Solenoid(Ports.ARM_BREAK.port);
 
         leftArmMotor.setClosedLoopRampRate(0);
         rightArmMotor.setClosedLoopRampRate(0);
@@ -126,30 +124,18 @@ public class ClimberArms extends SubsystemBase implements Logger {
      * Sets the pistons to expand away from the robot
      */
     public void openPistons() {
-        leftPiston.set(Value.kForward);
-        rightPiston.set(Value.kForward);
+        armLift.set(true);
     }
 
     /**
-     * Sets the pistons to retract towards the robot
-     */
-    public void closePistons() {
-        leftPiston.set(Value.kReverse);
-        rightPiston.set(Value.kReverse);
-    }
-
-    /**
-     * Opens the break piston
+     * Fires the break
      */
     public void openBreak() {
-        breakPiston.set(Value.kForward);
+        armBreak.set(true);
     }
 
-    /**
-     * Closes the break piston
-     */
-    public void closeBreak() {
-        breakPiston.set(Value.kReverse);
+    public void release_pressure() {
+        armLift.set(false);
     }
     
     /**

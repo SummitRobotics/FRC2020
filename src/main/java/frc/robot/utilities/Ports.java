@@ -38,12 +38,8 @@ public enum Ports {
     //climber
     LEFT_ARM_MOTOR(0),
     RIGHT_ARM_MOTOR(0),
-    LEFT_PISTON_OPEN(0),
-    LEFT_PISTON_CLOSE(0),
-    RIGHT_PISTON_OPEN(0),
-    RIGHT_PISTON_CLOSE(0),
-    BREAK_PISTON_OPEN(0),
-    BREAK_PISTON_CLOSE(0);
+    ARM_LIFT(0),
+    ARM_BREAK(0);
 
     public int port;
     private Ports(int port) {
