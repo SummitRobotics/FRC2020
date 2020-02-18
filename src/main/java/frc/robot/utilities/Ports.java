@@ -19,8 +19,8 @@ public enum Ports {
     RIGHT_DRIVE_MAIN(31),
     RIGHT_DRIVE_1(32),
 
-    // pneumatics
-    PCM_1(1),
+    //pneumatics
+    PCM_1(16),
     DRIVE_SOLENOID_OPEN(1),
     DRIVE_SOLENOID_CLOSE(0),
 
@@ -44,7 +44,12 @@ public enum Ports {
 
     // DIO
     TURRET_LIMIT_ONE(0),
-    TURRET_LIMIT_TWO(1);
+    TURRET_LIMIT_TWO(1),
+
+    //climber
+    LEFT_ARM_MOTOR(0),
+    RIGHT_ARM_MOTOR(0),
+    EXTEND_CLIMB(0);
 
     public int port;
     private Ports(int port) {

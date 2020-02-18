@@ -61,7 +61,11 @@ public enum LoggerRelations {
     PDP_CURRENT(39),
     PDP_VOLTAGE(40),
 
-    BUTTON1(41);
+    BUTTON1(41),
+
+    //climber
+    CLIMB_LEFT_MOTOR(39),
+    CLIMB_RIGHT_MOTOR(40);
 
     public int value;
     private LoggerRelations(int value) {
