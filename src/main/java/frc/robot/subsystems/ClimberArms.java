@@ -30,9 +30,7 @@ public class ClimberArms extends SubsystemBase implements Logger {
     private CANPIDController rightPIDController;
 
     // pneumatic piston control classes
-    private Solenoid
-    armLift,
-    armBreak; 
+    private Solenoid extendClimb;
 
     //TODO - Tune default pid values
     public static final double
@@ -65,11 +63,7 @@ public class ClimberArms extends SubsystemBase implements Logger {
         leftPIDController = leftArmMotor.getPIDController();
         rightPIDController = rightArmMotor.getPIDController();
 
-        armLift = new Solenoid(Ports.ARM_LIFT.port);
-        armBreak = new Solenoid(Ports.ARM_BREAK.port);
-
-        leftArmMotor.setClosedLoopRampRate(0);
-        rightArmMotor.setClosedLoopRampRate(0);
+        extendClimb = new Solenoid(Ports.PCM_1.port, Ports.EXTEND_CLIMB.port);
 
         resetPID();
     }
@@ -123,21 +117,27 @@ public class ClimberArms extends SubsystemBase implements Logger {
     /**
      * Sets the pistons to expand away from the robot
      */
-    public void openPistons() {
-        armLift.set(true);
+    public void extendClimb() {
+        extendClimb.set(true);
     }
 
-    /**
-     * Fires the break
-     */
-    public void openBreak() {
-        armBreak.set(true);
+    public void releaseClimb() {
+        extendClimb.set(false);
     }
 
-    public void release_pressure() {
-        armLift.set(false);
+    public void setLeftMotorPower(double power) {
+        leftArmMotor.set(power);
     }
-    
+
+    public void setRightMotorPower(double power) {
+        rightArmMotor.set(power);
+    }
+
+    public void setPower(double power) {
+        setLeftMotorPower(power);
+        setRightMotorPower(power);
+    }
+
     /**
      * Sets the target position of the left climber motor
      * 
