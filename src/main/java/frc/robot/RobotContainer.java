@@ -69,9 +69,10 @@ public class RobotContainer {
         //joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
 
         launchpad.buttonA.toggleBind();
-        
-        //compressor = new Compressor(Ports.PCM_1);
-        //compressor.setClosedLoopControl(true);
+        launchpad.buttonB.pressBind();
+
+        compressor = new Compressor(Ports.PCM_1);
+        compressor.setClosedLoopControl(true);
 
         //drivetrain = new Drivetrain();
         //shifter = new Shifter();

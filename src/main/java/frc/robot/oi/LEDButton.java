@@ -37,7 +37,7 @@ public class LEDButton extends LoggerButton {
 		this.toggleWhenPressed(controller);
 	}
 
-	public void pressBid() {
+	public void pressBind() {
 		triggerBind(this);
 	}
 
