@@ -3,7 +3,6 @@ package frc.robot.oi;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-import frc.robot.utilities.Ports;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 /**
@@ -55,9 +54,8 @@ public class ControllerDriver extends GenericDriver {
     rightY,
     rightTrigger;
 
-	public ControllerDriver(Ports port, SyncLogger logger) {
-        this.port = port.port;
-        this.logger = logger;
+	public ControllerDriver(int port, SyncLogger logger) {
+		super(port, logger);
 
         buttonA = generateLoggerButton(Button.kA.value, LoggerRelations.BTN_A);
 
@@ -78,9 +76,9 @@ public class ControllerDriver extends GenericDriver {
         leftX = generateLoggerAxis(0, LoggerRelations.LEFT_STICK_X);
         leftY = generateLoggerAxis(1, LoggerRelations.LEFT_STICK_Y);
         leftTrigger = generateLoggerAxis(2, LoggerRelations.LEFT_TRIGGER);
-        rightX = generateLoggerAxis(3, LoggerRelations.RIGHT_STICK_X);
-        rightY = generateLoggerAxis(4, LoggerRelations.RIGHT_STICK_Y);
-        rightTrigger = generateLoggerAxis(5, LoggerRelations.RIGHT_TRIGGER);
+        rightTrigger = generateLoggerAxis(3, LoggerRelations.RIGHT_TRIGGER);
+        rightX = generateLoggerAxis(4, LoggerRelations.RIGHT_STICK_X);
+        rightY = generateLoggerAxis(5, LoggerRelations.RIGHT_STICK_Y);
 	}
 
 	private ButtonGetter getDPadValue(DPadValues value) {

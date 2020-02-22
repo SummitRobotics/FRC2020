@@ -17,9 +17,8 @@ public class LivePIDController extends PIDController {
     private double defaultP, defaultI, defaultD;
     private NetworkTableEntry[] PID;
 
-
     /**
-     * loive pid controler
+     * Live pid controler
      * @param name name to display
      * @param defaultP
      * @param defaultI

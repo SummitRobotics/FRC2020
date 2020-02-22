@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
     private RollingAverage average;
 
     public Shooter() {
-        shooterMotor = new CANSparkMax(Ports.SHOOTER.port, MotorType.kBrushless);
+        shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushless);
         shooterEncoder = shooterMotor.getEncoder();
 
         shooterMotor.setClosedLoopRampRate(0);

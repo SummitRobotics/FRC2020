@@ -2,15 +2,19 @@ package frc.robot.oi;
 
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-import frc.robot.utilities.Ports;
+
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * Wrappper class for the TI Launchpad in mode 1
  */
 public class LaunchpadDriver extends GenericDriver {
 
-    private int port;
     private int outputs;
 
     public LoggerButton
@@ -23,8 +27,9 @@ public class LaunchpadDriver extends GenericDriver {
     buttonG,
     buttonH,
     buttonI,
-    buttonJ,
-    buttonK;
+
+    missileA,
+    missileB;
 
     public LoggerAxis
     axisA,
@@ -37,22 +42,22 @@ public class LaunchpadDriver extends GenericDriver {
     axisH;
 
 
-    public LaunchpadDriver(Ports port, SyncLogger logger) {
-        this.port = port.port;
-        this.logger = logger;
+    public LaunchpadDriver(int port, SyncLogger logger) {
+		super(port, logger);
 
         //TODO - create actual logger values
-        buttonA = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
-        buttonB = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
-        buttonC = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
-        buttonD = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
-        buttonE = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
-        buttonF = generateLoggerButton(6, LoggerRelations.PLACEHOLDER);
-        buttonG = generateLoggerButton(7, LoggerRelations.PLACEHOLDER);
-        buttonH = generateLoggerButton(8, LoggerRelations.PLACEHOLDER);
-        buttonI = generateLoggerButton(9, LoggerRelations.PLACEHOLDER);
-        buttonJ = generateLoggerButton(10, LoggerRelations.PLACEHOLDER);
-        buttonK = generateLoggerButton(11, LoggerRelations.PLACEHOLDER);
+        buttonA = generateLEDButton(1, LoggerRelations.PLACEHOLDER);
+        buttonB = generateLEDButton(2, LoggerRelations.PLACEHOLDER);
+        buttonC = generateLEDButton(3, LoggerRelations.PLACEHOLDER);
+        buttonD = generateLEDButton(4, LoggerRelations.PLACEHOLDER);
+        buttonE = generateLEDButton(5, LoggerRelations.PLACEHOLDER);
+        buttonF = generateLEDButton(6, LoggerRelations.PLACEHOLDER);
+        buttonG = generateLEDButton(7, LoggerRelations.PLACEHOLDER);
+        buttonH = generateLEDButton(8, LoggerRelations.PLACEHOLDER);
+        buttonI = generateLEDButton(9, LoggerRelations.PLACEHOLDER);
+
+        missileA = generateLoggerButton(10, LoggerRelations.PLACEHOLDER);
+        missileB = generateLoggerButton(11, LoggerRelations.PLACEHOLDER);
 
         axisA = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
         axisB = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
@@ -64,50 +69,22 @@ public class LaunchpadDriver extends GenericDriver {
         axisH = generateLoggerAxis(8, LoggerRelations.PLACEHOLDER);
     }
 
-    //outputs
-    public void setOutput1(boolean state){
-        setOutput(1, state);
-    }
+    protected LEDButton generateLEDButton(int output, LoggerRelations logReference) {
+		if (logger != null) {
+			return new LEDButton(
+                getButtonGetter(output), 
+                logReference, 
+                logger, 
+                (boolean state) -> setOutput(output, state)
+            );
+		}
 
-    public void setOutput2(boolean state){
-        setOutput(2, state);
-    }
-
-    public void setOutput3(boolean state){
-        setOutput(3, state);
-    }
-
-    public void setOutput4(boolean state){
-        setOutput(4, state);
-    }
-
-    public void setOutput5(boolean state){
-        setOutput(5, state);
-    }
-
-    public void setOutput6(boolean state){
-        setOutput(6, state);
-    }
-
-    public void setOutput7(boolean state){
-        setOutput(7, state);
-    }
-
-    public void setOutput8(boolean state){
-        setOutput(8, state);
-    }
-
-    public void setOutput9(boolean state){
-        setOutput(9, state);
-    }
-
-    public void setOutput10(boolean state){
-        setOutput(10, state);
-    }
-
-    public void setOutput11(boolean state){
-        setOutput(11, state);
-    }
+		return new LEDButton(
+            getButtonGetter(output), 
+            logReference, 
+            (boolean state) -> setOutput(output, state)
+        );
+	}
 
     /**
      * Black box to set outputs

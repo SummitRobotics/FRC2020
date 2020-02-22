@@ -32,12 +32,12 @@ public class Turret extends SubsystemBase implements Logger {
     public Turret() {
         oldPower = 0;
 
-        turret = new CANSparkMax(Ports.TURRET.port, MotorType.kBrushless);
+        turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
 
-        limitOne = new DigitalInput(Ports.TURRET_LIMIT_ONE.port);
-        limitTwo = new DigitalInput(Ports.TURRET_LIMIT_TWO.port);
+        //limitOne = new DigitalInput(Ports.TURRET_LIMIT_ONE.port);
+        //limitTwo = new DigitalInput(Ports.TURRET_LIMIT_TWO.port);
 
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);

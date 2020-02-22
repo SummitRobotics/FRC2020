@@ -68,7 +68,7 @@ public class OffsetVisionTarget extends CommandBase {
 	private double getSetpoint() {
 		double setpoint;
 
-		setpoint = - ( (double) Lemonlight.X_OFFSET / lidar.getAverageDistance());
+		setpoint = - ((double) Lemonlight.X_OFFSET / lidar.getAverageDistance());
 		setpoint = Math.atan(setpoint);
 
 		return setpoint;

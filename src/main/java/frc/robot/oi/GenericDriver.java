@@ -13,6 +13,11 @@ public abstract class GenericDriver {
 	protected int port = 0;
 	protected SyncLogger logger = null;
 
+	protected GenericDriver(int port, SyncLogger logger) {
+		this.port = port;
+		this.logger = logger;
+	}
+
 	/**
      * Gets analog axis
 	 * 

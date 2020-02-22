@@ -17,7 +17,9 @@ public class MOCommand extends CommandBase {
 	public MOCommand(Subsystem... requirements) {
 		this.activator = new Trigger(() -> CommandScheduler.getInstance().isScheduled(this));
 
-		addRequirements(requirements);
+		if (requirements != null) {
+			addRequirements(requirements);
+		}
 	}
 
 	/**

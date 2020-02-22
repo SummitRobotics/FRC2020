@@ -3,7 +3,6 @@ package frc.robot.oi;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-import frc.robot.utilities.Ports;
 
 /**
  * Wrapper class for basic joystick functionality
@@ -21,9 +20,8 @@ public class JoystickDriver extends GenericDriver implements Subsystem {
 	axisX,
 	axisY;
 
-	public JoystickDriver(Ports port, SyncLogger logger) {
-		this.port = port.port;
-		this.logger = logger;
+	public JoystickDriver(int port, SyncLogger logger) {
+		super(port, logger);
 
 		//TODO - make sure ports are correct
 		button1 = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);

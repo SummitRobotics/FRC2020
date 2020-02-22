@@ -18,8 +18,6 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Ports;
 
-//TODO - gut entire subsystem
-
 /**
  * Subsystem to control the internal conveyor mechanism of the robot
  */
@@ -59,10 +57,10 @@ public class Conveyor extends SubsystemBase implements Logger {
 	
 
 	public Conveyor() {
-		conveyorMotor = new VictorSPX(Ports.CONVEYOR.port);
+		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
-		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER.port);
-		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT.port);
+		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER);
+		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT);
 
 		power = 0;
 

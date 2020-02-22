@@ -53,9 +53,14 @@ public class ClimberArms extends SubsystemBase implements Logger {
         }
     }
 
+    public ClimbDefaults state;
+
     public ClimberArms() {
-        leftArmMotor = new CANSparkMax(Ports.LEFT_ARM_MOTOR.port, MotorType.kBrushless);
-        rightArmMotor = new CANSparkMax(Ports.RIGHT_ARM_MOTOR.port, MotorType.kBrushless);
+        leftArmMotor = new CANSparkMax(Ports.LEFT_ARM_MOTOR, MotorType.kBrushless);
+        rightArmMotor = new CANSparkMax(Ports.RIGHT_ARM_MOTOR, MotorType.kBrushless);
+
+        leftArmMotor.setInverted(true);
+        rightArmMotor.setInverted(false);
 
         leftEncoder = leftArmMotor.getEncoder();
         rightEncoder = rightArmMotor.getEncoder();
@@ -63,9 +68,11 @@ public class ClimberArms extends SubsystemBase implements Logger {
         leftPIDController = leftArmMotor.getPIDController();
         rightPIDController = rightArmMotor.getPIDController();
 
-        extendClimb = new Solenoid(Ports.PCM_1.port, Ports.EXTEND_CLIMB.port);
+        extendClimb = new Solenoid(Ports.PCM_1, Ports.EXTEND_CLIMB);
 
         resetPID();
+
+        state = ClimbDefaults.STORED;
     }
 
     /**
@@ -164,6 +171,8 @@ public class ClimberArms extends SubsystemBase implements Logger {
     public void setSpool(ClimbDefaults value) {
         setLeftMotorSpool(value.setpoint);
         setRightMotorSpool(value.setpoint);
+
+        state = value;
     }
 
     /**

@@ -26,14 +26,14 @@ public class Drivetrain implements Subsystem, Logger {
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
     // left motors
-    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN.port, MotorType.kBrushless);
-    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0.port, MotorType.kBrushless);
-    private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1.port, MotorType.kBrushless);
+    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
+    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
+    private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
 
     // right motors
-    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN.port, MotorType.kBrushless);
-    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0.port, MotorType.kBrushless);
-    private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1.port, MotorType.kBrushless);
+    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
+    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
+    private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers
     private CANPIDController leftPID = left.getPIDController();
