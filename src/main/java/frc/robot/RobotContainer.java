@@ -68,14 +68,8 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
         //joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
 
-        for (int i = 0; i < 12; i++) {
-            launchpad.setOutput(i, false);
-        }
-
-        launchpad.setOutput(9, false);
-        launchpad.setOutput(10, true);
-        launchpad.setOutput(11, false);
-
+        launchpad.buttonA.toggleBind();
+        
         //compressor = new Compressor(Ports.PCM_1);
         //compressor.setClosedLoopControl(true);
 
@@ -167,7 +161,7 @@ public class RobotContainer {
 
         //controller1.buttonY.whenPressed(new InstantCommand(buddyClimb::clamp));
 
-        
+
     }
 
     /**

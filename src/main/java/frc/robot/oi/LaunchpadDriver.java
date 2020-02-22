@@ -4,11 +4,6 @@ import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 
 import edu.wpi.first.hal.HAL;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * Wrappper class for the TI Launchpad in mode 1
@@ -17,7 +12,7 @@ public class LaunchpadDriver extends GenericDriver {
 
     private int outputs;
 
-    public LoggerButton
+    public LEDButton
     buttonA,
     buttonB,
     buttonC,
@@ -26,8 +21,9 @@ public class LaunchpadDriver extends GenericDriver {
     buttonF,
     buttonG,
     buttonH,
-    buttonI,
+    buttonI;
 
+    public LoggerButton
     missileA,
     missileB;
 
