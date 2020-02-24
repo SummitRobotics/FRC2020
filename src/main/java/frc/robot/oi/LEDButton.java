@@ -42,7 +42,7 @@ public class LEDButton extends LoggerButton {
 	}
 
 	public void commandBind(Command command) {
-		triggerBind(new Trigger(command::isFinished));
+		triggerBind(new Trigger(command::isFinished).negate());
 	}
 
 	private void triggerBind(Trigger trigger) {

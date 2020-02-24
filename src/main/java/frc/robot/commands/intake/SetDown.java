@@ -6,51 +6,38 @@ import frc.robot.subsystems.IntakeArm;
 
 public class SetDown extends CommandBase {
 
-    IntakeArm intake;
+    private final static double targetTime = 0.25;
+    protected IntakeArm intake;
 
-    Timer timer;
-    double startTime;
+    protected Timer timer;
+    protected boolean end;
 
-    boolean end;
-    double targetTime;
+    protected double startTime;
 
     public SetDown(IntakeArm intake) {
         this.intake = intake;
 
         timer = new Timer();
+        timer.start();
         startTime = 0;
 
         end = false;
-        targetTime = 0;
 
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
+        if (!intake.isUp) {
+            end = true;
+            return;
+        }
+
+        intake.isUp = false;
         startTime = timer.get();
 
-        //TODO - tune target times to be right
-        switch (intake.state) {
-            case UP:
-                targetTime = 0;
-                break;
-            case DOWN:
-                end = true;
-                break;
-            case LOADING:
-                targetTime = 0;
-                break;
-        }
-    }
-
-    @Override
-    public void execute() {
-        if (timer.get() - startTime < targetTime) {
-            intake.setPivotPower(0.5);
-        } else {
-            intake.setPivotPower(0.1);
-        }
+        intake.brake();
+        intake.setPivotPower(0.2);
     }
 
     @Override
@@ -60,6 +47,8 @@ public class SetDown extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return end;
+        System.out.println(timer.get() - startTime);
+        System.out.println(end || timer.get() - startTime > targetTime);
+        return end || timer.get() - startTime > targetTime;
     }
 }

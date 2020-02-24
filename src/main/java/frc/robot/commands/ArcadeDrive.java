@@ -22,6 +22,9 @@ public class ArcadeDrive extends CommandBase {
     private LoggerAxis turnAxis;
 
     private final double deadzone = .1;
+
+    private double old = 0;
+    private double max_change_rate = 0.05;
     
     /**
      * teleop driver control
@@ -53,27 +56,36 @@ public class ArcadeDrive extends CommandBase {
     public void initialize() {
         drivetrain.setOpenRampRate(0);
         shift.lowGear();
+
+        drivetrain.setLeftEncoder(0);
+        drivetrain.setRightEncoder(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
 
-        double power = forwardPowerAxis.get() - reversePowerAxis.get();
+        double forwardPower = forwardPowerAxis.get();
+        double reversePower = reversePowerAxis.get();
 
-        if (Math.abs(power) < deadzone) {
-            power = 0;
-        }
+        forwardPower = forwardPower < deadzone ? 0 : forwardPower;
+        reversePower = reversePower < deadzone ? 0 : reversePower;
+
+        forwardPower = Math.pow(forwardPower, 2);
+        reversePower = Math.pow(reversePower, 2);
+
+        double power = forwardPower - reversePower;
 
         double turn = turnAxis.get();
 
-        // turn deadzone
-        if (Math.abs(turn) < deadzone) {
-            turn = 0;
-        }
+        turn = Math.abs(turn) < deadzone ? 0 : turn;
+
+        System.out.println(drivetrain.getLeftEncoderPosition());
+        System.out.println(drivetrain.getRightEncoderPosition());
+        System.out.println("-------------");
 
         // power rate of change
-        /*
+        
         if (power > old + max_change_rate) {
             power = old + max_change_rate;
             old = power;
@@ -83,7 +95,12 @@ public class ArcadeDrive extends CommandBase {
         } else {
             old = power;
         }
-        */
+
+
+
+        
+        
+        
 
         // calculates power to the motors
         double leftPower = power + turn;

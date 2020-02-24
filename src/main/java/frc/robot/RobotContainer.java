@@ -1,6 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,7 +25,10 @@ import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
+import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.intake.IntakeArmMO;
+import frc.robot.commands.intake.SetDown;
+import frc.robot.commands.intake.SetUp;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
 
@@ -57,6 +63,9 @@ public class RobotContainer {
     private PigeonGyro gyro;
     private Lemonlight limelight;
 
+    private DoubleSolenoid buddySolenoid;
+    private Solenoid lock;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -64,9 +73,9 @@ public class RobotContainer {
         scheduler = CommandScheduler.getInstance();
         logger = new SyncLogger();
 
-        //controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
+        controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
-        //joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
+        joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
 
         launchpad.buttonA.toggleBind();
         launchpad.buttonB.pressBind();
@@ -77,11 +86,14 @@ public class RobotContainer {
         //drivetrain = new Drivetrain();
         //shifter = new Shifter();
         //conveyor = new Conveyor();
-        //intakeArm = new IntakeArm();
+        intakeArm = new IntakeArm();
         //shooter = new Shooter();
         //climber = new ClimberArms();
         //turret = new Turret();
         //buddyClimb = new BuddyClimb(climber);
+
+        //buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP, Ports.CLOSE_CLAMP);
+        //lock = new Solenoid(Ports.PCM_1, 5);
 
         //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         //limelight = new Lemonlight();
@@ -95,74 +107,87 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        //drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger, controller1.leftTrigger, controller1.leftX));
-        //conveyor.setDefaultCommand(new ConveyorAutomation(conveyor, shooter, limelight));
-        
+        launchpad.buttonC.whenPressed(new RunCommand(
+            () -> System.out.println(intakeArm.getUpperLimit())
+        ));
         /*
         climber.setDefaultCommand(new RunCommand(
             () -> {
-                double power = controller1.leftY.get();
-                if (Math.abs(power) < 0.1) {
-                    climber.setPower(0);
-                } else {
-                    climber.setPower(power);
-                }
-            }, climber));
+                double power = controller1.rightY.get();
+                power = Math.abs(power) < .07 ? 0 : power;
+
+                climber.setPower(power);
+            },
+            climber
+        ));
         */
+        
+        /*
+        shooter.setDefaultCommand(new RunCommand(
+            () -> shooter.setPower(controller1.rightTrigger.get()),
+            shooter
+        ));
+        */
+
+        /*
+        drivetrain.setDefaultCommand(new ArcadeDrive(
+            drivetrain, 
+            shifter, 
+            controller1.rightTrigger, 
+            controller1.leftTrigger, 
+            controller1.leftX
+        ));
+        */
+
+        //launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm, controller1.leftY, controller1.rightBumper));
+        //launchpad.buttonE.pressBind();
     }
 
     private void configureButtonBindings() {
-        //launchpad.buttonG.whenHeld(new ConveyorMO(conveyor, joystick.axisY), false);
-        //launchpad.buttonG.whenHeld(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger), false);
+        launchpad.buttonE.whileActiveContinuous(new IntakeArmMO(
+            intakeArm, joystick.axisY, joystick.trigger));
+        launchpad.buttonE.pressBind();
+
+        launchpad.buttonC.whenPressed(new SetUp(intakeArm));
+        launchpad.buttonB.whenPressed(new SetDown(intakeArm));
+
+        launchpad.buttonC.pressBind();
+        launchpad.buttonB.pressBind();
 
         /*
-        controller1.leftBumper.whenHeld(new StartEndCommand(
-            shifter::lowGear,
-            shifter::highGear,
-            shifter
-        ));
-        */
-
-        /*
-        controller1.buttonA.toggleWhenPressed(new StartEndCommand(
+        launchpad.buttonE.toggleWhenPressed(new StartEndCommand(
             climber::extendClimb,
             climber::releaseClimb
         ));
-        */
+        launchpad.buttonE.toggleBind();
 
-        //controller1.buttonA.whenHeld(new ConveyorMO(conveyor, controller1.rightY));
-        //controller1.buttonB.whenHeld(new IntakeArmMO(intakeArm, controller1.rightY, controller1.rightBumper));
-        /*
-        controll  er1.buttonX.whenHeld(new RunCommand(
-            () -> {
-                double power = controller1.rightY.get();
-                if (-0.05 < power && power < 0.05) {
-                    turret.setPower(0);
-                } else {
-                    turret.setPower(power);
-                }
-                System.out.println(power);
-            }, turret)); 
-        */
-
-        /*
-        controller1.buttonX.whenHeld(new RunCommand(
-            () -> {
-                double power = controller1.rightY.get();
-
-                if (-0.05 < power && power < 0.05) {
-                    power = 0;
-                }
-
-                shooter.setPower(power);
-                System.out.println(power);
-            }
+        launchpad.buttonB.toggleWhenPressed(new StartEndCommand(
+            () -> buddySolenoid.set(Value.kForward),
+            () -> buddySolenoid.set(Value.kReverse)
         ));
+        launchpad.buttonB.toggleBind();
         */
 
-        //controller1.buttonY.whenPressed(new InstantCommand(buddyClimb::clamp));
+        /*
+        launchpad.buttonC.toggleWhenPressed(new StartEndCommand(
+            () -> lock.set(true),
+            () -> lock.set(false)
+        ));
+        launchpad.buttonC.toggleBind();
+        */
 
+        /*
+        launchpad.buttonD.toggleWhenPressed(new StartEndCommand(
+            shifter::highGear,
+            shifter::lowGear
+        ));
+        launchpad.buttonD.toggleBind();
+        */
 
+        /*
+        launchpad.buttonE.whenPressed(new EncoderDrive(drivetrain, 500));
+        launchpad.buttonE.whenReleased(new EncoderDrive(drivetrain, -500));
+        */
     }
 
     /**

@@ -42,11 +42,11 @@ public class Ports {
     // intake
     INTAKE_ARM_INTAKE = 62,
     INTAKE_ARM_PIVOT = 61,
-    UPPER_LIMIT = 6, //TODO - fix
+    UPPER_LIMIT = 0, //TODO - fix
 
     // DIO
-    TURRET_LIMIT_ONE = 0,
-    TURRET_LIMIT_TWO = 1,
+    TURRET_LIMIT_ONE = 2,
+    TURRET_LIMIT_TWO = 3,
 
     // climber
     LEFT_ARM_MOTOR = 41,

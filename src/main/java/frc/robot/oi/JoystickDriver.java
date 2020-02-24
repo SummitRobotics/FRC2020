@@ -24,13 +24,14 @@ public class JoystickDriver extends GenericDriver implements Subsystem {
 		super(port, logger);
 
 		//TODO - make sure ports are correct
-		button1 = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
-		button2 = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
-		button3 = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
-		button4 = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
-		trigger = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
+		trigger = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
 
-		axisX = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
-		axisY = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
+		button1 = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
+		button2 = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
+		button3 = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
+		button4 = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
+
+		axisX = generateLoggerAxis(0, LoggerRelations.PLACEHOLDER);
+		axisY = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
 	}
 }

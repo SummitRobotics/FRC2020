@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.livepid.LivePIDSpark;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
@@ -46,6 +47,9 @@ public class Drivetrain implements Subsystem, Logger {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
+    private LivePIDSpark livePIDRight;
+    private LivePIDSpark livePIDLeft;
+
     // pid config
     private double 
     FEED_FWD = 0, 
@@ -70,13 +74,23 @@ public class Drivetrain implements Subsystem, Logger {
         leftPID.setP(P);
         leftPID.setI(I);
         leftPID.setD(D);
-        leftPID.setFF(FEED_FWD);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
         rightPID.setP(P);
         rightPID.setI(I);
         rightPID.setD(D);
-        rightPID.setFF(FEED_FWD);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
+
+        left.enableVoltageCompensation(12);
+        right.enableVoltageCompensation(12);
+        
+        leftMiddle.enableVoltageCompensation(12);
+        rightMiddle.enableVoltageCompensation(12);
+
+        leftBack.enableVoltageCompensation(12);
+        rightBack.enableVoltageCompensation(12);
+
+        livePIDRight = new LivePIDSpark("Drivetrain Right", rightPID, P, I, D, 1, 1, 1);
+        livePIDLeft = new LivePIDSpark("Drivetrain Left", leftPID, P, I, D, 1, 1, 1);
     }
 
     /**
@@ -208,6 +222,12 @@ public class Drivetrain implements Subsystem, Logger {
     public void turn(double power) {
         setLeftMotorPower(-power);
         setRightMotorPower(power);
+    }
+
+    @Override
+    public void periodic() {
+        livePIDLeft.update();
+        livePIDRight.update();
     }
 
     @Override

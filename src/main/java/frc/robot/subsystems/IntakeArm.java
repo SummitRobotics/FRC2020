@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,13 +23,7 @@ import frc.robot.utilities.Ports;
  */
 public class IntakeArm extends SubsystemBase implements Logger {
 
-	public enum Positions {
-		UP,
-		DOWN,
-		LOADING
-	}
-
-	public Positions state;
+	public boolean isUp;
 
 	private VictorSPX 
 	intake,
@@ -45,7 +40,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
 
-		state = Positions.UP;
+		isUp = true;
 
 		upperLimit = new DigitalInput(Ports.UPPER_LIMIT);
 	}
@@ -79,7 +74,15 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	}
 
 	public boolean getUpperLimit() {
-		return upperLimit.get();
+		return !upperLimit.get();
+	}
+
+	public void coast() {
+		pivot.setNeutralMode(NeutralMode.Coast);
+	}
+
+	public void brake() {
+		pivot.setNeutralMode(NeutralMode.Brake);
 	}
 
 	@Override

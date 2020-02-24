@@ -2,32 +2,39 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeArm;
-import frc.robot.subsystems.IntakeArm.Positions;
 
 public class SetUp extends CommandBase {
 
     IntakeArm intake;
+    boolean end;
 
     public SetUp(IntakeArm intake) {
         this.intake = intake;
+        end = false;
 
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-        intake.state = Positions.UP;
+        if (intake.isUp) {
+            end = true;
+            return;
+        }
+
+        intake.isUp = true;
+        intake.brake();
     }
 
     @Override
     public void execute() {
         //TODO - tune power
-        intake.setPivotPower(-0.5);
+        intake.setPivotPower(-0.3);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setPivotPower(0);
+        intake.setPivotPower(-0.1);
     }
 
     @Override
