@@ -7,14 +7,11 @@
 
 package frc.robot.devices;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  * Add your docs here.
@@ -71,6 +68,14 @@ public class LEDs extends SubsystemBase {
      */
     public LEDRange getRangeController(int start, int end){
         return (Color8Bit color) -> changeLEDRange(color.red, color.green, color.blue, start, end);
+    }
+
+        /**
+     * gets a controler to controle all leds
+     * @return usable led range controler
+     */
+    public LEDRange getAllLedsRangeController(){
+        return (Color8Bit color) -> changeLEDRange(color.red, color.green, color.blue, 0, length-1);
     }
 
     /**

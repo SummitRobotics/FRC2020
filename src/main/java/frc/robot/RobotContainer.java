@@ -26,9 +26,14 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
+import frc.robot.commands.intake.IntakeArmMO;
+import frc.robot.commands.intake.SetDown;
+import frc.robot.commands.intake.SetLoad;
+import frc.robot.commands.intake.SetUp;
 import frc.robot.devices.LEDs;
 import frc.robot.devices.PigeonGyro;
 import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.Lemonlight;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -47,7 +52,7 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
-  private LEDs leds;
+    private LEDs leds;
     private Compressor compressor;
 
     private Drivetrain drivetrain;
@@ -59,10 +64,8 @@ public class RobotContainer {
     private Turret turret;
     private BuddyClimb buddyClimb;
 
-    private PigeonGyro gyro;
     private Lemonlight limelight;
 
-    leds = new LEDs();
     private DoubleSolenoid buddySolenoid;
     private Solenoid lock;
 
@@ -73,18 +76,12 @@ public class RobotContainer {
         scheduler = CommandScheduler.getInstance();
         logger = new SyncLogger();
 
+        leds = new LEDs();
+        LEDRange shifterRange = leds.getAllLedsRangeController();
+
         controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
-    LEDRange range = leds.getRangeController(0, 28);
-
-    leds.setDefaultCommand(new RunCommand(
-      () -> range.setColor(new Color8Bit(
-        (int) (controller1.leftTrigger() * 255), 
-        (int) (controller1.rightTrigger() * 255), 
-        (int) (controller1.leftStickX() *255)
-    )), leds));
-
 
         launchpad.buttonA.toggleBind();
         launchpad.buttonB.pressBind();
@@ -92,8 +89,8 @@ public class RobotContainer {
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
-        //drivetrain = new Drivetrain();
-        //shifter = new Shifter();
+        drivetrain = new Drivetrain();
+        shifter = new Shifter(shifterRange);
         //conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         //shooter = new Shooter();
@@ -109,7 +106,7 @@ public class RobotContainer {
 
         setDefaultCommands();
 
-        logger.addElements(drivetrain, gyro, shifter);
+        logger.addElements(drivetrain, shifter);
         //scheduler.setDefaultCommand(logger, logger);
 
         configureButtonBindings();
@@ -138,7 +135,7 @@ public class RobotContainer {
         ));
         */
 
-        /*
+        
         drivetrain.setDefaultCommand(new ArcadeDrive(
             drivetrain, 
             shifter, 
@@ -146,7 +143,7 @@ public class RobotContainer {
             controller1.leftTrigger, 
             controller1.leftX
         ));
-        */
+        
 
         //launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm, controller1.leftY, controller1.rightBumper));
         //launchpad.buttonE.pressBind();
@@ -159,9 +156,11 @@ public class RobotContainer {
 
         launchpad.buttonC.whenPressed(new SetUp(intakeArm));
         launchpad.buttonB.whenPressed(new SetDown(intakeArm));
+        launchpad.buttonA.whenPressed(new SetLoad(intakeArm));
 
         launchpad.buttonC.pressBind();
         launchpad.buttonB.pressBind();
+        launchpad.buttonA.pressBind();
 
         /*
         launchpad.buttonE.toggleWhenPressed(new StartEndCommand(

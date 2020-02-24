@@ -1,6 +1,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IntakeArm.States;
 import frc.robot.subsystems.IntakeArm;
 
 public class SetUp extends CommandBase {
@@ -17,28 +18,23 @@ public class SetUp extends CommandBase {
 
     @Override
     public void initialize() {
-        if (intake.isUp) {
+        if (intake.getState() == States.UP) {
             end = true;
-            return;
         }
-
-        intake.isUp = true;
-        intake.brake();
-    }
-
-    @Override
-    public void execute() {
-        //TODO - tune power
+        else{
+        intake.setState(States.UP);
         intake.setPivotPower(-0.3);
+        intake.setIntakePower(0);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setPivotPower(-0.1);
+        intake.setPivotPower(0);
     }
 
     @Override
     public boolean isFinished() {
-        return intake.getUpperLimit();
+        return intake.getUpperLimit() || end;
     }
 }
