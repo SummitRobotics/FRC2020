@@ -4,9 +4,12 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
@@ -23,14 +26,9 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
-import frc.robot.commands.conveyor.ConveyorAutomation;
-import frc.robot.commands.conveyor.ConveyorMO;
-import frc.robot.commands.drivetrain.EncoderDrive;
-import frc.robot.commands.intake.IntakeArmMO;
-import frc.robot.commands.intake.SetDown;
-import frc.robot.commands.intake.SetUp;
-import frc.robot.devices.Lemonlight;
+import frc.robot.devices.LEDs;
 import frc.robot.devices.PigeonGyro;
+import frc.robot.devices.LEDs.LEDRange;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,6 +47,7 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
+  private LEDs leds;
     private Compressor compressor;
 
     private Drivetrain drivetrain;
@@ -63,6 +62,7 @@ public class RobotContainer {
     private PigeonGyro gyro;
     private Lemonlight limelight;
 
+    leds = new LEDs();
     private DoubleSolenoid buddySolenoid;
     private Solenoid lock;
 
@@ -76,6 +76,15 @@ public class RobotContainer {
         controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
+    LEDRange range = leds.getRangeController(0, 28);
+
+    leds.setDefaultCommand(new RunCommand(
+      () -> range.setColor(new Color8Bit(
+        (int) (controller1.leftTrigger() * 255), 
+        (int) (controller1.rightTrigger() * 255), 
+        (int) (controller1.leftStickX() *255)
+    )), leds));
+
 
         launchpad.buttonA.toggleBind();
         launchpad.buttonB.pressBind();
