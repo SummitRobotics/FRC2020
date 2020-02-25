@@ -14,48 +14,48 @@ import frc.robot.subsystems.IntakeArm.States;
 
 public class SetLoad extends CommandBase {
 
+    private final static double targetTime = 0.25;
+    protected IntakeArm intake;
 
-  private final static double targetTime = 0.25;
-  protected IntakeArm intake;
+    protected Timer timer = new Timer();
+    protected boolean end;
 
-  protected Timer timer = new Timer();
-  protected boolean end;
+    protected double startTime;
 
-  protected double startTime;
+    public SetLoad(IntakeArm intake) {
+        this.intake = intake;
 
-  public SetLoad(IntakeArm intake) {
-      this.intake = intake;
+        end = false;
 
-      timer.reset();
-      timer.start();
+        addRequirements(intake);
+    }
 
-      end = false;
+    @Override
+    public void initialize() {
+        timer.reset();
+        timer.start();
 
-      addRequirements(intake);
-  }
+        if (intake.getState() != States.UP) {
+            end = true;
 
-  @Override
-  public void initialize() {
-      if (intake.getState() == States.DOWN_NO_INTAKE || intake.getState() == States.DOWN_YES_INTAKE) {
-          end = true;
-      }
-      else{
-      intake.setState(States.DOWN_NO_INTAKE);
-      intake.setPivotPower(0.2);
-      intake.setIntakePower(0);
-      }
+        } else {
+            intake.setState(States.DOWN_NO_INTAKE);
 
-  }
+            intake.setPivotPower(0.2);
+            intake.setIntakePower(0);
+        }
+    }
 
-  @Override
-  public void end(boolean interrupted) {
-      intake.setPivotPower(0);
-  }
+    @Override
+    public void end(boolean interrupted) {
+        intake.setPivotPower(0);
 
-  @Override
-  public boolean isFinished() {
-      return end || timer.get() > targetTime;
-  }
+        timer.stop();
+        timer.reset();
+    }
 
-  
+    @Override
+    public boolean isFinished() {
+        return end || timer.get() > targetTime;
+    }
 }

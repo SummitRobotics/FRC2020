@@ -120,7 +120,7 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setLeftMotorPosition(double position) {
+    public void setLeftMotorTarget(double position) {
         leftMotorPower = 2;
         leftMotorTarget = position;
         leftPID.setReference(position, ControlType.kPosition);
@@ -131,7 +131,7 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setRightMotorPosition(double position) {
+    public void setRightMotorTarget(double position) {
         rightMotorPower = 2;
         rightMotorTarget = position;
         rightPID.setReference(position, ControlType.kPosition);
@@ -228,6 +228,15 @@ public class Drivetrain implements Subsystem, Logger {
     public void periodic() {
         livePIDLeft.update();
         livePIDRight.update();
+
+        /*
+        System.out.println(left.getBusVoltage());
+        System.out.println(left.getAppliedOutput());
+        System.out.println("------------------------");
+        System.out.println(right.getBusVoltage());
+        System.out.println(right.getAppliedOutput());
+        System.out.println("+++++++++++++++++++++++++++++++");
+        */
     }
 
     @Override

@@ -19,6 +19,10 @@ import frc.robot.utilities.Ports;
  */
 public class ClimberArms extends SubsystemBase implements Logger {
 
+    public static final int 
+    LEFT_CONTROL_PANEL_POSITION = 205,
+    CLIMB_POSITION = 615;
+
     // left NEO control classes
     private CANSparkMax leftArmMotor;
     private CANEncoder leftEncoder;
@@ -173,6 +177,27 @@ public class ClimberArms extends SubsystemBase implements Logger {
         setRightMotorSpool(value.setpoint);
 
         state = value;
+    }
+
+    public double getLeftEncoderPosition() {
+        return leftEncoder.getPosition();
+    }
+
+    public double getRightEncoderPosition() {
+        return rightEncoder.getPosition();
+    }
+
+    public void setLeftEncoder(double position) {
+        leftEncoder.setPosition(position);
+    }
+
+    public void setRightEncoder(double position) {
+        rightEncoder.setPosition(position);
+    }
+
+    public void stop() {
+        setLeftMotorPower(0);
+        setRightMotorPower(0);
     }
 
     /**

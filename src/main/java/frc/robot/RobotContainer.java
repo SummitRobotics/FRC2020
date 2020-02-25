@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -26,6 +27,11 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
+import frc.robot.commands.climb.LeftClimberArmMO;
+import frc.robot.commands.climb.RaiseArmsSync;
+import frc.robot.commands.climb.RaiseLeftArm;
+import frc.robot.commands.climb.RightClimberArmMO;
+import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;
@@ -83,9 +89,6 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
 
-        launchpad.buttonA.toggleBind();
-        launchpad.buttonB.pressBind();
-
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
@@ -94,12 +97,11 @@ public class RobotContainer {
         //conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         //shooter = new Shooter();
-        //climber = new ClimberArms();
+        climber = new ClimberArms();
         //turret = new Turret();
         //buddyClimb = new BuddyClimb(climber);
 
         //buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP, Ports.CLOSE_CLAMP);
-        //lock = new Solenoid(Ports.PCM_1, 5);
 
         //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         //limelight = new Lemonlight();
@@ -113,9 +115,6 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
-        launchpad.buttonC.whenPressed(new RunCommand(
-            () -> System.out.println(intakeArm.getUpperLimit())
-        ));
         /*
         climber.setDefaultCommand(new RunCommand(
             () -> {
@@ -134,7 +133,6 @@ public class RobotContainer {
             shooter
         ));
         */
-
         
         drivetrain.setDefaultCommand(new ArcadeDrive(
             drivetrain, 
@@ -144,6 +142,7 @@ public class RobotContainer {
             controller1.leftX
         ));
         
+        intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
         //launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm, controller1.leftY, controller1.rightBumper));
         //launchpad.buttonE.pressBind();
@@ -154,13 +153,31 @@ public class RobotContainer {
             intakeArm, joystick.axisY, joystick.trigger));
         launchpad.buttonE.pressBind();
 
-        launchpad.buttonC.whenPressed(new SetUp(intakeArm));
-        launchpad.buttonB.whenPressed(new SetDown(intakeArm));
-        launchpad.buttonA.whenPressed(new SetLoad(intakeArm));
+        controller1.buttonX.whenPressed(new SetUp(intakeArm));
+        controller1.buttonA.whenPressed(new SetDown(intakeArm));
+        controller1.buttonB.whenPressed(new SetLoad(intakeArm));
 
-        launchpad.buttonC.pressBind();
-        launchpad.buttonB.pressBind();
-        launchpad.buttonA.pressBind();
+        Command hatemyself = new ParallelCommandGroup(
+            new InstantCommand(climber::extendClimb),
+            new RaiseLeftArm(climber, ClimberArms.LEFT_CONTROL_PANEL_POSITION)
+        );
+
+        launchpad.buttonH.whenPressed(hatemyself);
+        launchpad.buttonH.commandBind(hatemyself);
+
+        Command wanttodie = new ParallelCommandGroup(
+            new InstantCommand(climber::extendClimb),
+            new RaiseArmsSync(climber, ClimberArms.CLIMB_POSITION)
+        );
+
+        launchpad.buttonG.whenPressed(wanttodie);
+        launchpad.buttonG.commandBind(wanttodie);
+
+        launchpad.buttonI.whileActiveContinuous(new LeftClimberArmMO(climber, joystick.axisY));
+        launchpad.buttonI.pressBind();
+
+        launchpad.buttonF.whileActiveContinuous(new RightClimberArmMO(climber, joystick.axisY));
+        launchpad.buttonF.pressBind();
 
         /*
         launchpad.buttonE.toggleWhenPressed(new StartEndCommand(
@@ -196,6 +213,10 @@ public class RobotContainer {
         launchpad.buttonE.whenPressed(new EncoderDrive(drivetrain, 500));
         launchpad.buttonE.whenReleased(new EncoderDrive(drivetrain, -500));
         */
+    }
+
+    public void teleopInit() {
+        scheduler.schedule(new SetUp(intakeArm));
     }
 
     /**

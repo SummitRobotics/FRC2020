@@ -20,11 +20,12 @@ public class SetUp extends CommandBase {
     public void initialize() {
         if (intake.getState() == States.UP) {
             end = true;
-        }
-        else{
-        intake.setState(States.UP);
-        intake.setPivotPower(-0.3);
-        intake.setIntakePower(0);
+            
+        } else {
+            intake.setState(States.UP);
+
+            intake.setPivotPower(-0.3);
+            intake.setIntakePower(0);
         }
     }
 

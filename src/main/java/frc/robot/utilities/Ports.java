@@ -11,13 +11,13 @@ public class Ports {
     JOYSTICK_PORT = 2,
     
     // drivetrain
-    LEFT_DRIVE_0 = 20,
-    LEFT_DRIVE_MAIN = 21,
-    LEFT_DRIVE_1 = 22,
+    LEFT_DRIVE_0 = 21,
+    LEFT_DRIVE_MAIN = 22,
+    LEFT_DRIVE_1 = 20,
     
-    RIGHT_DRIVE_0 = 30,
-    RIGHT_DRIVE_MAIN = 31,
-    RIGHT_DRIVE_1 = 32,
+    RIGHT_DRIVE_0 = 31,
+    RIGHT_DRIVE_MAIN = 32,
+    RIGHT_DRIVE_1 = 30,
         
     SHIFT_SOLENOID_UP = 1,
     SHIFT_SOLENOID_DOWN = 0,

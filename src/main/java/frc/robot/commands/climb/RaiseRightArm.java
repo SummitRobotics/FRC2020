@@ -5,41 +5,44 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ClimberArms;
 
-public class EncoderDrive extends CommandBase {
+public class RaiseRightArm extends CommandBase {
 
-    private Drivetrain drivetrain;
-    private int ticks;
+    private ClimberArms arms;
+    private int distance;
 
-    public EncoderDrive(Drivetrain drivetrain, int ticks) {
-        this.drivetrain = drivetrain;
-        this.ticks = ticks;
+    public RaiseRightArm(ClimberArms arms, int distance) {
+        this.arms = arms;
+        this.distance = distance;
 
-        addRequirements(drivetrain);
+        addRequirements(arms);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        drivetrain.stop();
-        drivetrain.setLeftMotorTarget(ticks);
-        drivetrain.setRightMotorTarget(ticks);
+        arms.setRightMotorPower(1);
+        arms.setRightEncoder(0);
+    }
+
+    @Override
+    public void execute() {
+        System.out.println(arms.getRightEncoderPosition());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        drivetrain.stop();
+        arms.setRightMotorPower(0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(drivetrain.getLeftEncoderPosition() - ticks) < 10 ||
-            Math.abs(drivetrain.getRightEncoderPosition() - ticks) < 10;
+        return arms.getRightEncoderPosition() > distance;
     }
 }

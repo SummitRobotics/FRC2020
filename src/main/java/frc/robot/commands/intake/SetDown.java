@@ -20,9 +20,6 @@ public class SetDown extends CommandBase {
     public SetDown(IntakeArm intake) {
         this.intake = intake;
 
-        timer.reset();
-        timer.start();
-
         end = false;
 
         addRequirements(intake);
@@ -30,20 +27,26 @@ public class SetDown extends CommandBase {
 
     @Override
     public void initialize() {
-        if (intake.getState() == States.DOWN_YES_INTAKE || intake.getState() == States.DOWN_NO_INTAKE) {
-            end = true;
-        }
-        else{
-        intake.setState(States.DOWN_YES_INTAKE);
-        intake.setPivotPower(0.2);
-        intake.setIntakePower(intakePower);
+        timer.reset();
+        timer.start();
 
+        if (intake.getState() != States.UP) {
+            end = true;
+
+        } else {
+            intake.setState(States.DOWN_YES_INTAKE);
+
+            intake.setPivotPower(0.2);
+            intake.setIntakePower(intakePower);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         intake.setPivotPower(0);
+        
+        timer.stop();
+        timer.reset();
     }
 
     @Override

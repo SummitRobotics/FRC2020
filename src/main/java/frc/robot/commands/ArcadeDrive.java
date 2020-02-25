@@ -80,10 +80,12 @@ public class ArcadeDrive extends CommandBase {
 
         turn = Math.abs(turn) < deadzone ? 0 : turn;
 
+        /*
         System.out.println(drivetrain.getLeftEncoderPosition());
         System.out.println(drivetrain.getRightEncoderPosition());
         System.out.println("-------------");
-
+        */
+        
         // power rate of change
         
         if (power > old + max_change_rate) {
