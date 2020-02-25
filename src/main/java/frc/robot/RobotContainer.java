@@ -31,6 +31,7 @@ import frc.robot.commands.climb.LeftClimberArmMO;
 import frc.robot.commands.climb.RaiseArmsSync;
 import frc.robot.commands.climb.RaiseLeftArm;
 import frc.robot.commands.climb.RightClimberArmMO;
+import frc.robot.commands.climb.TrimArms;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -179,35 +180,9 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new RightClimberArmMO(climber, joystick.axisY));
         launchpad.buttonF.pressBind();
 
-        /*
-        launchpad.buttonE.toggleWhenPressed(new StartEndCommand(
-            climber::extendClimb,
-            climber::releaseClimb
-        ));
-        launchpad.buttonE.toggleBind();
-
-        launchpad.buttonB.toggleWhenPressed(new StartEndCommand(
-            () -> buddySolenoid.set(Value.kForward),
-            () -> buddySolenoid.set(Value.kReverse)
-        ));
-        launchpad.buttonB.toggleBind();
-        */
-
-        /*
-        launchpad.buttonC.toggleWhenPressed(new StartEndCommand(
-            () -> lock.set(true),
-            () -> lock.set(false)
-        ));
-        launchpad.buttonC.toggleBind();
-        */
-
-        /*
-        launchpad.buttonD.toggleWhenPressed(new StartEndCommand(
-            shifter::highGear,
-            shifter::lowGear
-        ));
-        launchpad.buttonD.toggleBind();
-        */
+        Command trim = new TrimArms(launchpad.axisA, launchpad.axisB, climber);
+        launchpad.buttonD.whenPressed(trim, true);
+        launchpad.buttonD.commandBind(trim);
 
         /*
         launchpad.buttonE.whenPressed(new EncoderDrive(drivetrain, 500));
