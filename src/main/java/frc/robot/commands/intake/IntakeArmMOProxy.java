@@ -2,16 +2,18 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.MOCommand;
 
 /**
  * Manual override for the intake arm
  */
-public class IntakeArmMOProxy extends CommandBase {
+public class IntakeArmMOProxy extends MOCommand {
 
     private IntakeArm intakeArm;
     private LoggerAxis controlAxis;
@@ -20,8 +22,8 @@ public class IntakeArmMOProxy extends CommandBase {
 
     private static final double INTAKE_DEFAULT_POWER = .7;
 
-    public IntakeArmMOProxy(IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButton) {
-        super();
+    public IntakeArmMOProxy(Subsystem controlSystem, IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButton) {
+        super(controlSystem, intakeArm);
 
         this.intakeArm = intakeArm;
         this.controlAxis = controlAxis;
@@ -50,8 +52,6 @@ public class IntakeArmMOProxy extends CommandBase {
                 () -> intakeArm.setIntakePower(0)
             )
         );
-
-        addRequirements(intakeArm);
     }
 
     @Override

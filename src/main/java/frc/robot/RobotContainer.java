@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
@@ -22,9 +23,10 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Ports;
-import frc.robot.commands.*;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
+import frc.robot.commands.drivetrain.ArcadeDrive;
+import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -68,6 +70,8 @@ public class RobotContainer {
     private DoubleSolenoid buddySolenoid;
     private Solenoid lock;
 
+    private Command initialization;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -87,54 +91,55 @@ public class RobotContainer {
 
         drivetrain = new Drivetrain();
         shifter = new Shifter(shifterRange);
-        //conveyor = new Conveyor();
+        // conveyor = new Conveyor();
         intakeArm = new IntakeArm();
-        //shooter = new Shooter();
+        // shooter = new Shooter();
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
-        //turret = new Turret();
+        // turret = new Turret();
         climberPneumatics = new ClimberPneumatics();
 
-        //buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP, Ports.CLOSE_CLAMP);
+        // buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP,
+        // Ports.CLOSE_CLAMP);
 
-        //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-        //limelight = new Lemonlight();
+        // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
+        // limelight = new Lemonlight();
 
         setDefaultCommands();
+        configureButtonBindings();
 
         logger.addElements(drivetrain, shifter);
-        //scheduler.setDefaultCommand(logger, logger);
+        // scheduler.setDefaultCommand(logger, logger);
 
-        configureButtonBindings();
+        initialization = new ParallelCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
+                new InstantCommand(shifter::lowGear), new SetUp(intakeArm));
     }
 
-    private void setDefaultCommands() {        
-        drivetrain.setDefaultCommand(new ArcadeDrive(
-            drivetrain, 
-            shifter, 
-            controller1.rightTrigger, 
-            controller1.leftTrigger, 
-            controller1.leftX
-        ));
-        
+    private void setDefaultCommands() {
+        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger,
+                controller1.leftTrigger, controller1.leftX));
+
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
-        //launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm, controller1.leftY, controller1.rightBumper));
-        //launchpad.buttonE.pressBind();
+        // launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm,
+        // controller1.leftY, controller1.rightBumper));
+        // launchpad.buttonE.pressBind();
     }
 
     private void configureButtonBindings() {
         // Launchpad bindings
-        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
+        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(joystick, rightArm, joystick.axisY), false);
         launchpad.buttonB.pressBind();
 
-        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
+        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(joystick, leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        // launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
+        // launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor,
+        // joystick.axisY), false);
         // launchpad.buttonE.pressBind();
 
-        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger), false);
+        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(joystick, intakeArm, joystick.axisY, joystick.trigger),
+                false);
         launchpad.buttonF.pressBind();
 
         launchpad.buttonG.whenPressed(new SetLoad(intakeArm), false);
@@ -142,39 +147,25 @@ public class RobotContainer {
 
         launchpad.buttonH.whenPressed(new SetDown(intakeArm), false);
         launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
-        
+
         launchpad.buttonI.whenPressed(new SetUp(intakeArm), false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        launchpad.missileA.whenPressed(new ClimbSequence(
-            leftArm, 
-            rightArm, 
-            climberPneumatics,
-            launchpad.axisA, 
-            launchpad.axisB, 
-            launchpad.missileA,
-            launchpad.bigLEDGreen,
-            launchpad.bigLEDRed
-        ));
+        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
+                launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+
+        launchpad.missileB.whenPressed(new InstantCommand(climberPneumatics::extendBuddyClimb));
 
         // Controller bindings
         controller1.buttonX.whenPressed(new SetUp(intakeArm), false);
         controller1.buttonA.whenPressed(new SetDown(intakeArm), false);
         controller1.buttonB.whenPressed(new SetLoad(intakeArm), false);
 
-        controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
-            shifter::highGear, 
-            shifter::lowGear, 
-            shifter
-        ));
+        controller1.leftBumper.toggleWhenPressed(new StartEndCommand(shifter::highGear, shifter::lowGear, shifter));
     }
 
     public void teleopInit() {
-        scheduler.schedule(new ParallelCommandGroup(
-            new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(shifter::lowGear),
-            new SetUp(intakeArm)
-        ));
+        scheduler.schedule(initialization);
     }
 
     /**
@@ -183,6 +174,9 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return new SequentialCommandGroup(
+            initialization,
+            new EncoderDrive(drivetrain, 500)
+        );
     }
 }
