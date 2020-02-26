@@ -24,6 +24,8 @@ public class IntakeArm extends SubsystemBase implements Logger {
 		DOWN_YES_INTAKE;
 	}
 
+	public final static double intakePower = 0.7;
+
 	public States state;
 
 	private VictorSPX 
@@ -34,8 +36,8 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	// data for logger
 	private double 
-	pivotPower = 0, 
-	intakePower = 0;
+	loggerPivotPower = 0, 
+	loggerIntakePower = 0;
 
 	public IntakeArm() {
 		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE);
@@ -61,7 +63,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	 */
 	public void setPivotPower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
-		pivotPower = power;
+		loggerPivotPower = power;
 		pivot.set(ControlMode.PercentOutput, power);
 	}
 
@@ -71,7 +73,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	 */
 	public void setIntakePower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
-		intakePower = power;
+		loggerIntakePower = power;
 		intake.set(ControlMode.PercentOutput, power);
 	}
 
@@ -109,8 +111,8 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	@Override
 	public double[] getValues(double[] values) {
-		values[LoggerRelations.INTAKE_ARM_INTAKE_POWER.value] = intakePower;
-		values[LoggerRelations.INTAKE_ARM_PIVOT_POWER.value] = pivotPower;
+		values[LoggerRelations.INTAKE_ARM_INTAKE_POWER.value] = loggerIntakePower;
+		values[LoggerRelations.INTAKE_ARM_PIVOT_POWER.value] = loggerPivotPower;
 		return values;
 	}
 }

@@ -22,20 +22,28 @@ public class SetUp extends CommandBase {
             end = true;
             
         } else {
+
+            if (intake.getState() == States.DOWN_YES_INTAKE) {
+                intake.setIntakePower(IntakeArm.intakePower);
+            }
+
             intake.setState(States.UP);
 
             intake.setPivotPower(-0.3);
-            intake.setIntakePower(0);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         intake.setPivotPower(0);
+        intake.setIntakePower(0);
+
+        end = false;
     }
 
     @Override
     public boolean isFinished() {
+        System.out.println(intake.getUpperLimit());
         return intake.getUpperLimit() || end;
     }
 }

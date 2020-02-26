@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
+import frc.robot.utilities.Functions;
 
 /**
  * Manual override for the intake arm
@@ -36,6 +37,19 @@ public class IntakeArmMOProxy extends CommandBase {
             () -> intakeArm.setIntakePower(0)
         ));
         */
+
+        Functions.bindCommand(
+            this, 
+            controlButton, 
+            Trigger::whileActiveContinuous, 
+            new StartEndCommand(
+                () -> {
+                    intakeArm.setIntakePower(INTAKE_DEFAULT_POWER);
+                    System.out.println(INTAKE_DEFAULT_POWER);
+                }, 
+                () -> intakeArm.setIntakePower(0)
+            )
+        );
 
         addRequirements(intakeArm);
     }

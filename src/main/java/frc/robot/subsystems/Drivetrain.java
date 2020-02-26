@@ -67,6 +67,7 @@ public class Drivetrain implements Subsystem, Logger {
 
         // inverts right side
         left.setInverted(true);
+        right.setInverted(false);
 
         // sets pid values
         leftEncoder.setPosition(0);

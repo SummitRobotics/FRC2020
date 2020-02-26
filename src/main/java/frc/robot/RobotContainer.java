@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -102,7 +103,7 @@ public class RobotContainer {
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
         //turret = new Turret();
-        //buddyClimb = new BuddyClimb(climber);
+        climberPneumatics = new ClimberPneumatics();
 
         //buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP, Ports.CLOSE_CLAMP);
 
@@ -146,18 +147,19 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger), false);
         launchpad.buttonF.pressBind();
 
-        launchpad.buttonG.whenPressed(new SetUp(intakeArm), false);
-        launchpad.buttonG.booleanSupplierBind(intakeArm::isUp);
+        launchpad.buttonG.whenPressed(new SetLoad(intakeArm), false);
+        launchpad.buttonG.booleanSupplierBind(intakeArm::isLoading);
 
-        launchpad.buttonE.whenPressed(new SetDown(intakeArm), false);
-        launchpad.buttonE.booleanSupplierBind(intakeArm::isDown);
+        launchpad.buttonH.whenPressed(new SetDown(intakeArm), false);
+        launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
+        
+        launchpad.buttonI.whenPressed(new SetUp(intakeArm), false);
+        launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        launchpad.buttonH.whenPressed(new SetLoad(intakeArm), false);
-        launchpad.buttonH.booleanSupplierBind(intakeArm::isLoading);
-
-        launchpad.missileB.whenActive(new ClimbSequence(
+        launchpad.missileA.whenPressed(new ClimbSequence(
             leftArm, 
             rightArm, 
+            climberPneumatics,
             launchpad.axisA, 
             launchpad.axisB, 
             launchpad.missileA,
@@ -178,12 +180,11 @@ public class RobotContainer {
     }
 
     public void teleopInit() {
-        scheduler.schedule(new SequentialCommandGroup(
-            new SetUp(intakeArm),
+        scheduler.schedule(new ParallelCommandGroup(
             new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(shifter::lowGear)
+            new InstantCommand(shifter::lowGear),
+            new SetUp(intakeArm)
         ));
-            
     }
 
     /**

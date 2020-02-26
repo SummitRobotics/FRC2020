@@ -37,7 +37,7 @@ public class TrimArm extends CommandBase {
 		average.update(slider.get() - sliderOffset);
 
 		double target = average.getAverage();
-		target = (350 * target) + startingPosition;
+		target = (150 * target) + startingPosition;
 
 		double currentPosition = arm.getEncoderPosition();
 

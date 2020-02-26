@@ -3,12 +3,12 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberArm;
 
-public class RaiseArm extends CommandBase {
+public class LowerArm extends CommandBase {
 
 	private ClimberArm arm;
 	private int distance;
 
-	public RaiseArm(ClimberArm arm, int distance) {
+	public LowerArm(ClimberArm arm, int distance) {
 		this.arm = arm;
 		this.distance = distance;
 
@@ -18,7 +18,7 @@ public class RaiseArm extends CommandBase {
 	@Override
 	public void initialize() {
 		arm.setEncoderPosition(0);
-		arm.setPower(1);
+		arm.setPower(-1);
 	}
 
 	@Override
@@ -28,6 +28,6 @@ public class RaiseArm extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return arm.getEncoderPosition() >= distance;
+		return arm.getEncoderPosition() <= distance;
 	}
 }

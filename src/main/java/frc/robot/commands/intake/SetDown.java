@@ -15,8 +15,6 @@ public class SetDown extends CommandBase {
 
     protected double startTime;
 
-    private final double intakePower = 0.7;
-
     public SetDown(IntakeArm intake) {
         this.intake = intake;
 
@@ -32,13 +30,12 @@ public class SetDown extends CommandBase {
 
         if (intake.getState() == States.UP) {
             intake.setPivotPower(0.2);
-            intake.setIntakePower(intakePower);
 
         } else {
             end = true;
         }
 
-        intake.setIntakePower(intakePower);
+        intake.setIntakePower(IntakeArm.intakePower);
         intake.setState(States.DOWN_YES_INTAKE);
     }
 
@@ -48,6 +45,8 @@ public class SetDown extends CommandBase {
         
         timer.stop();
         timer.reset();
+
+        end = false;
     }
 
     @Override

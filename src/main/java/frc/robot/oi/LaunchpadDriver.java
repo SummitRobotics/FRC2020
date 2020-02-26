@@ -61,8 +61,8 @@ public class LaunchpadDriver extends GenericDriver {
         bigLEDGreen = getLEDLambda(10);
         bigLEDRed = getLEDLambda(11);
 
-        axisA = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
-        axisB = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
+        axisA = generateLoggerAxis(0, LoggerRelations.PLACEHOLDER);
+        axisB = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
 
         axisA.setDeadzone(0);
         axisB.setDeadzone(0);

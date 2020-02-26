@@ -48,7 +48,7 @@ public class LEDButton extends LoggerButton {
 	}
 
 	public void booleanSupplierBind(BooleanSupplier supplier) {
-		new Trigger(supplier).whileActiveOnce(controller);
+		new Trigger(supplier).whileActiveContinuous(controller);
 	}
 
 	private void triggerBind(Trigger trigger) {
