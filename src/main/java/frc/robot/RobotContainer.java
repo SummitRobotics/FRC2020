@@ -25,6 +25,7 @@ import frc.robot.utilities.Ports;
 import frc.robot.commands.*;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
+import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -87,7 +88,7 @@ public class RobotContainer {
 
         drivetrain = new Drivetrain();
         shifter = new Shifter(shifterRange);
-        //conveyor = new Conveyor();
+        conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         //shooter = new Shooter();
         leftArm = new ClimberArm(Sides.LEFT);
@@ -131,8 +132,8 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        // launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
-        // launchpad.buttonE.pressBind();
+        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
+        launchpad.buttonE.pressBind();
 
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger), false);
         launchpad.buttonF.pressBind();

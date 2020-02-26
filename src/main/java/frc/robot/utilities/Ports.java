@@ -36,8 +36,8 @@ public class Ports {
 
     // conveyor
     CONVEYOR = 60,
-    BREAKBEAM_ENTER = 0,
-    BREAKBEAM_EXIT = 1,
+    BREAKBEAM_ENTER = 4,
+    BREAKBEAM_EXIT = 5,
     
     // intake
     INTAKE_ARM_INTAKE = 62,
