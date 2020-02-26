@@ -1,5 +1,12 @@
 package frc.robot.utilities;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.utilities.functionalinterfaces.Binder;
+
 /**
  * Contains various static utility functions for use throughout the program
  */
@@ -34,4 +41,27 @@ public class Functions {
     public static boolean isWithin(double toCompare, double target, double error){
         return Math.abs(toCompare - target) <= (error / 2);
     }
+
+    public static Command bindCommand(
+		Command bindable, 
+		Trigger trigger, 
+		Binder binding, 
+		Command command
+	) {
+		
+		return bindCommand(bindable, trigger, binding, command, true);
+	}
+
+	public static Command bindCommand(
+		Command bindable, 
+		Trigger trigger, 
+		Binder binding, 
+		Command command, 
+		boolean interruptable
+	) {
+		Trigger activator = new Trigger(() -> CommandScheduler.getInstance().isScheduled(bindable));
+
+		binding.bind(activator.and(trigger), command, interruptable);
+		return command;
+	}
 }

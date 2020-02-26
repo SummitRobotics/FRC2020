@@ -8,30 +8,34 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.ClimberArms.ClimbDefaults;
 import frc.robot.utilities.Ports;
 
-public class BuddyClimb extends SubsystemBase {
+public class ClimberPneumatics extends SubsystemBase {
 
-    private ClimberArms climber;
-    private DoubleSolenoid clamp;
+    private Solenoid climb;
+    private DoubleSolenoid buddyClimb;
 
-    private boolean clamped;
-
-    public BuddyClimb(ClimberArms climber) {
-        this.climber = climber;
-
-        clamp = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP, Ports.CLOSE_CLAMP);
-        clamped = false;
-
-        clamp.set(Value.kReverse);
+    public ClimberPneumatics() {
+        climb = new Solenoid(Ports.PCM_1, Ports.EXTEND_CLIMB);
+        buddyClimb = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_BUDDY_CLIMB, Ports.CLOSE_BUDDY_CLIMB);
     }
 
-    public void clamp() {
-        if (!clamped /* && climber.state == ClimbDefaults.RAISED*/) {
-            clamp.set(Value.kReverse);
-        }
+    public void extendClimb() {
+        climb.set(true);
+    }
+
+    public void retractClimb() {
+        climb.set(false);
+    }
+
+    public void extendBuddyClimb() {
+        buddyClimb.set(Value.kForward);
+    }
+
+    public void retractBuddyClimb() {
+        buddyClimb.set(Value.kReverse);
     }
 }

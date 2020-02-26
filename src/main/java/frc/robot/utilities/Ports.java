@@ -11,14 +11,14 @@ public class Ports {
     JOYSTICK_PORT = 2,
     
     // drivetrain
-    LEFT_DRIVE_0 = 21,
-    LEFT_DRIVE_MAIN = 22,
-    LEFT_DRIVE_1 = 20,
+    LEFT_DRIVE_0 = 31,
+    LEFT_DRIVE_MAIN = 32,
+    LEFT_DRIVE_1 = 30,
     
-    RIGHT_DRIVE_0 = 31,
-    RIGHT_DRIVE_MAIN = 32,
-    RIGHT_DRIVE_1 = 30,
-        
+    RIGHT_DRIVE_0 = 21,
+    RIGHT_DRIVE_MAIN = 22,
+    RIGHT_DRIVE_1 = 20,
+
     SHIFT_SOLENOID_UP = 1,
     SHIFT_SOLENOID_DOWN = 0,
 
@@ -52,9 +52,8 @@ public class Ports {
     LEFT_ARM_MOTOR = 41,
     RIGHT_ARM_MOTOR = 40,
     EXTEND_CLIMB = 4,
-    CLOSE_BREAK = 5,
 
     // buddy climb
-    OPEN_CLAMP = 2,
-    CLOSE_CLAMP = 3;
+    OPEN_BUDDY_CLIMB = 2,
+    CLOSE_BUDDY_CLIMB = 3;
 }

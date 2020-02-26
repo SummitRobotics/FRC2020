@@ -24,7 +24,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 		DOWN_YES_INTAKE;
 	}
 
-	public States state = States.DOWN_NO_INTAKE;
+	public States state;
 
 	private VictorSPX 
 	intake,
@@ -93,6 +93,18 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	public void brake() {
 		pivot.setNeutralMode(NeutralMode.Brake);
+	}
+
+	public boolean isUp() {
+		return state == States.UP;
+	}
+
+	public boolean isDown() {
+		return state == States.DOWN_YES_INTAKE;
+	}
+
+	public boolean isLoading() {
+		return state == States.DOWN_NO_INTAKE;
 	}
 
 	@Override

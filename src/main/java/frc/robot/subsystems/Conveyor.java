@@ -54,7 +54,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	toggleSafeShootMode,
 	toggleShootMode,
 	toggleIntakeMode;
-	
 
 	public Conveyor() {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);

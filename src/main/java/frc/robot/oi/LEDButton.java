@@ -1,5 +1,7 @@
 package frc.robot.oi;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,6 +45,10 @@ public class LEDButton extends LoggerButton {
 
 	public void commandBind(Command command) {
 		triggerBind(new Trigger(command::isFinished).negate());
+	}
+
+	public void booleanSupplierBind(BooleanSupplier supplier) {
+		new Trigger(supplier).whileActiveOnce(controller);
 	}
 
 	private void triggerBind(Trigger trigger) {

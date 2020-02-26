@@ -1,16 +1,16 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
-import frc.robot.utilities.MOCommand;
 
 /**
  * Manual override for the intake arm
  */
-public class IntakeArmMOProxy extends MOCommand {
+public class IntakeArmMOProxy extends CommandBase {
 
     private IntakeArm intakeArm;
     private LoggerAxis controlAxis;

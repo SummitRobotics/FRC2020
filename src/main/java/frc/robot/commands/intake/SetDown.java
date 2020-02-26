@@ -30,15 +30,16 @@ public class SetDown extends CommandBase {
         timer.reset();
         timer.start();
 
-        if (intake.getState() != States.UP) {
-            end = true;
-
-        } else {
-            intake.setState(States.DOWN_YES_INTAKE);
-
+        if (intake.getState() == States.UP) {
             intake.setPivotPower(0.2);
             intake.setIntakePower(intakePower);
+
+        } else {
+            end = true;
         }
+
+        intake.setIntakePower(intakePower);
+        intake.setState(States.DOWN_YES_INTAKE);
     }
 
     @Override

@@ -2,7 +2,7 @@ package frc.robot.oi;
 
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-
+import frc.robot.oi.LEDButton.LED;
 import edu.wpi.first.hal.HAL;
 
 /**
@@ -37,6 +37,9 @@ public class LaunchpadDriver extends GenericDriver {
     axisG,
     axisH;
 
+    public LED
+    bigLEDGreen,
+    bigLEDRed;
 
     public LaunchpadDriver(int port, SyncLogger logger) {
 		super(port, logger);
@@ -55,8 +58,15 @@ public class LaunchpadDriver extends GenericDriver {
         missileA = generateLoggerButton(10, LoggerRelations.PLACEHOLDER);
         missileB = generateLoggerButton(11, LoggerRelations.PLACEHOLDER);
 
+        bigLEDGreen = getLEDLambda(10);
+        bigLEDRed = getLEDLambda(11);
+
         axisA = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
         axisB = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
+
+        axisA.setDeadzone(0);
+        axisB.setDeadzone(0);
+
         axisC = generateLoggerAxis(3, LoggerRelations.PLACEHOLDER);
         axisD = generateLoggerAxis(4, LoggerRelations.PLACEHOLDER);
         axisE = generateLoggerAxis(5, LoggerRelations.PLACEHOLDER);
@@ -80,7 +90,11 @@ public class LaunchpadDriver extends GenericDriver {
             logReference, 
             (boolean state) -> setOutput(output, state)
         );
-	}
+    }
+    
+    private LED getLEDLambda(int output) {
+        return (boolean state) -> setOutput(output, state);
+    }
 
     /**
      * Black box to set outputs

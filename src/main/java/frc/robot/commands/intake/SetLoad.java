@@ -35,15 +35,16 @@ public class SetLoad extends CommandBase {
         timer.reset();
         timer.start();
 
-        if (intake.getState() != States.UP) {
-            end = true;
-
-        } else {
-            intake.setState(States.DOWN_NO_INTAKE);
-
+        if (intake.getState() == States.UP) {
             intake.setPivotPower(0.2);
             intake.setIntakePower(0);
+
+        } else {
+            end = true;
         }
+
+        intake.setIntakePower(0);
+        intake.setState(States.DOWN_YES_INTAKE);
     }
 
     @Override
