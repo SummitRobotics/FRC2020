@@ -2,9 +2,7 @@ package frc.robot.livepid;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 
 import edu.wpi.first.networktables.NetworkTableEntry;

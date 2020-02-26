@@ -72,10 +72,12 @@ public class Drivetrain implements Subsystem, Logger {
         // sets pid values
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
+
         leftPID.setP(P);
         leftPID.setI(I);
         leftPID.setD(D);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
+        
         rightPID.setP(P);
         rightPID.setI(I);
         rightPID.setD(D);

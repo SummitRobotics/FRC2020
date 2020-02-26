@@ -1,13 +1,9 @@
 package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
@@ -45,7 +41,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 					ledB.set(false);
 				}),
 				new InstantCommand(pneumatics::retractClimb),
-				new LowerArmSync(leftArm, rightArm, ClimberArm.LIFT_POSITION)
+				new MoveArmsSync(leftArm, rightArm, ClimberArm.LIFT_POSITION)
 			)
 		);
 
@@ -54,7 +50,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 				ledA.set(false);
 				ledB.set(true);
 			}),
-			new RaiseArmsSync(leftArm, rightArm, ClimberArm.CLIMB_POSITION),
+			new MoveArmsSync(leftArm, rightArm, ClimberArm.CLIMB_POSITION),
 			new ProxyScheduleCommand(trim)
 			/*
 			new ParallelCommandGroup(
