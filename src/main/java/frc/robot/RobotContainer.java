@@ -112,13 +112,22 @@ public class RobotContainer {
         logger.addElements(drivetrain, shifter);
         // scheduler.setDefaultCommand(logger, logger);
 
-        initialization = new ParallelCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(shifter::lowGear), new SetUp(intakeArm));
+        initialization = new ParallelCommandGroup(
+            new InstantCommand(climberPneumatics::extendClimb),
+            new InstantCommand(climberPneumatics::retractBuddyClimb),
+            new InstantCommand(shifter::lowGear), 
+            new SetUp(intakeArm)
+        );
     }
 
     private void setDefaultCommands() {
-        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger,
-                controller1.leftTrigger, controller1.leftX));
+        drivetrain.setDefaultCommand(new ArcadeDrive(
+            drivetrain, 
+            shifter, 
+            controller1.rightTrigger,
+            controller1.leftTrigger, 
+            controller1.leftX
+            ));
 
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
@@ -135,7 +144,7 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(joystick, leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
+        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
 
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(joystick, intakeArm, joystick.axisY, joystick.trigger),
@@ -162,6 +171,11 @@ public class RobotContainer {
         controller1.buttonB.whenPressed(new SetLoad(intakeArm), false);
 
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(shifter::highGear, shifter::lowGear, shifter));
+
+        EncoderDrive bwd = new EncoderDrive(drivetrain, -50);
+        
+        launchpad.buttonD.whenPressed(bwd);
+        launchpad.buttonD.commandBind(bwd);
     }
 
     public void teleopInit() {
@@ -175,8 +189,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
-            initialization,
-            new EncoderDrive(drivetrain, 500)
+            initialization
         );
     }
 }

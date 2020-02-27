@@ -56,9 +56,6 @@ public class ArcadeDrive extends CommandBase {
     public void initialize() {
         drivetrain.setOpenRampRate(0);
         shift.lowGear();
-
-        drivetrain.setLeftEncoder(0);
-        drivetrain.setRightEncoder(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

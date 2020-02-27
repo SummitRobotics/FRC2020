@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.livepid.LivePIDSpark;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
@@ -19,9 +18,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Drivetrain implements Subsystem, Logger {
 
     private static final double
-    P = .2,
-    I = 0,
-    D = 0.01;
+    P = .05,
+    I = 0,//.00004,
+    D = 0;//.00001;
 
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
@@ -47,15 +46,12 @@ public class Drivetrain implements Subsystem, Logger {
     private double oldOpenRampRate; // the previous ramp rate sent to the motors
     private double oldClosedRampRate; // the previous ramp rate sent to the motors
 
-    private LivePIDSpark livePIDRight;
-    private LivePIDSpark livePIDLeft;
-
     // pid config
     private double 
     FEED_FWD = 0, 
     // change later, just so a problem doesn't break my walls
-    OUTPUT_MIN = -.25, 
-    OUTPUT_MAX = .25;
+    OUTPUT_MIN = -1, 
+    OUTPUT_MAX = 1;
 
     public Drivetrain() {
         // tells other two motors to follow the first
@@ -83,17 +79,19 @@ public class Drivetrain implements Subsystem, Logger {
         rightPID.setD(D);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
 
-        left.enableVoltageCompensation(12);
-        right.enableVoltageCompensation(12);
+        leftPID.setOutputRange(-0.5, 0.5);
+        rightPID.setOutputRange(-0.5, 0.5);
+
+        left.disableVoltageCompensation();
+        right.disableVoltageCompensation();
         
-        leftMiddle.enableVoltageCompensation(12);
-        rightMiddle.enableVoltageCompensation(12);
+        leftMiddle.disableVoltageCompensation();
+        rightMiddle.disableVoltageCompensation();
 
-        leftBack.enableVoltageCompensation(12);
-        rightBack.enableVoltageCompensation(12);
+        leftBack.disableVoltageCompensation();
+        rightBack.disableVoltageCompensation();
 
-        livePIDRight = new LivePIDSpark("Drivetrain Right", rightPID, P, I, D, 1, 1, 1);
-        livePIDLeft = new LivePIDSpark("Drivetrain Left", leftPID, P, I, D, 1, 1, 1);
+        setClosedRampRate(0);
     }
 
     /**
@@ -156,7 +154,7 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setRightEncoder(int position) {
+    public void setRightEncoder(double position) {
         rightEncoder.setPosition(position);
     }
 
@@ -229,8 +227,6 @@ public class Drivetrain implements Subsystem, Logger {
 
     @Override
     public void periodic() {
-        livePIDLeft.update();
-        livePIDRight.update();
 
         /*
         System.out.println(left.getBusVoltage());
