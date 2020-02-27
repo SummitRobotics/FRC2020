@@ -3,6 +3,7 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.subsystems.ClimberArm;
+import frc.robot.subsystems.ClimberPneumatics;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.RollingAverage;
 

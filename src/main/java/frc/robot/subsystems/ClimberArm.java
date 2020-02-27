@@ -27,7 +27,7 @@ public class ClimberArm extends SubsystemBase {
     public static final int 
     LEFT_CONTROL_PANEL_POSITION = 205,
     CLIMB_POSITION = 615,
-    LIFT_POSITION = -400;
+    LIFT_POSITION = -400; //TODO - fix
 
     private CANSparkMax motor;
     private CANEncoder encoder;
