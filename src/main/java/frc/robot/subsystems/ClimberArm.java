@@ -26,8 +26,7 @@ public class ClimberArm extends SubsystemBase {
 
     public static final int 
     LEFT_CONTROL_PANEL_POSITION = 205,
-    CLIMB_POSITION = 615,
-    LIFT_POSITION = -400; //TODO - fix
+    CLIMB_POSITION = 615;
 
     private CANSparkMax motor;
     private CANEncoder encoder;
@@ -43,7 +42,6 @@ public class ClimberArm extends SubsystemBase {
         motor.setInverted(side.inverted);
 
         encoder = motor.getEncoder();
-
         pidController = motor.getPIDController();
         resetPID();
     }

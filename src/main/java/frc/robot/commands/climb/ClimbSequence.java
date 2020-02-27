@@ -44,8 +44,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 					ledA.set(true);
 					ledB.set(false);
 				}),
-				new InstantCommand(pneumatics::retractClimb),
-				new LowerArmSync(leftArm, rightArm, ClimberArm.LIFT_POSITION)
+				new InstantCommand(pneumatics::retractClimb)
 			)
 		);
 
@@ -56,12 +55,6 @@ public class ClimbSequence extends SequentialCommandGroup {
 			}),
 			new RaiseArmsSync(leftArm, rightArm, ClimberArm.CLIMB_POSITION),
 			new ProxyScheduleCommand(trim)
-			/*
-			new ParallelCommandGroup(
-				trim, 
-				new RunCommand(() -> System.out.println(CommandScheduler.getInstance().isScheduled(trim)))
-			)
-			*/
 		);
 	}
 }

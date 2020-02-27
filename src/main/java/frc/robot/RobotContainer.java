@@ -138,10 +138,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Launchpad bindings
-        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(joystick, rightArm, joystick.axisY), false);
+        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
         launchpad.buttonB.pressBind();
 
-        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(joystick, leftArm, joystick.axisY), false);
+        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor, joystick.axisY), false);
