@@ -40,18 +40,18 @@ public class IntakeArmMOProxy extends MOCommand {
         ));
         */
 
-        Functions.bindCommand(
-            this, 
-            controlButton, 
-            Trigger::whileActiveContinuous, 
-            new StartEndCommand(
-                () -> {
-                    intakeArm.setIntakePower(INTAKE_DEFAULT_POWER);
-                    System.out.println(INTAKE_DEFAULT_POWER);
-                }, 
-                () -> intakeArm.setIntakePower(0)
-            )
-        );
+        // Functions.bindCommand(
+        //     this, 
+        //     controlButton, 
+        //     Trigger::whileActiveContinuous, 
+        //     new StartEndCommand(
+        //         () -> {
+        //             intakeArm.setIntakePower(INTAKE_DEFAULT_POWER);
+        //             System.out.println(INTAKE_DEFAULT_POWER);
+        //         }, 
+        //         () -> intakeArm.setIntakePower(0)
+        //     )
+        // );
     }
 
     @Override

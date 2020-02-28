@@ -61,15 +61,15 @@ public class RobotContainer {
     private Shifter shifter;
     private Conveyor conveyor;
     private IntakeArm intakeArm;
-    private Shooter shooter;
+    //private Shooter shooter;
     private ClimberArm leftArm, rightArm;
-    private Turret turret;
+    //private Turret turret;
     private ClimberPneumatics climberPneumatics;
 
-    private Lemonlight limelight;
+    //private Lemonlight limelight;
 
-    private DoubleSolenoid buddySolenoid;
-    private Solenoid lock;
+    //private DoubleSolenoid buddySolenoid;
+    //private Solenoid lock;
 
     private Command initialization;
 
@@ -94,7 +94,7 @@ public class RobotContainer {
         shifter = new Shifter(shifterRange);
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
-        // shooter = new Shooter();
+        //shooter = new Shooter();
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
         // turret = new Turret();
@@ -112,6 +112,7 @@ public class RobotContainer {
         logger.addElements(drivetrain, shifter);
         // scheduler.setDefaultCommand(logger, logger);
 
+        //things that happen when the robot is inishlided
         initialization = new ParallelCommandGroup(
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(climberPneumatics::retractBuddyClimb),
@@ -121,6 +122,7 @@ public class RobotContainer {
     }
 
     private void setDefaultCommands() {
+        //drive by controler
         drivetrain.setDefaultCommand(new ArcadeDrive(
             drivetrain, 
             shifter, 
@@ -129,15 +131,21 @@ public class RobotContainer {
             controller1.leftX
             ));
 
+            //makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
-        // launchpad.buttonE.whileActiveOnce(new IntakeArmMO(intakeArm,
-        // controller1.leftY, controller1.rightBumper));
-        // launchpad.buttonE.pressBind();
     }
 
     private void configureButtonBindings() {
         // Launchpad bindings
+
+        //climb
+        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+
+        launchpad.missileB.whenPressed(new InstantCommand(climberPneumatics::extendBuddyClimb));
+
+        //moes
         launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
         launchpad.buttonB.pressBind();
 
@@ -151,6 +159,7 @@ public class RobotContainer {
                 false);
         launchpad.buttonF.pressBind();
 
+        //intake arm
         launchpad.buttonG.whenPressed(new SetLoad(intakeArm), false);
         launchpad.buttonG.booleanSupplierBind(intakeArm::isLoading);
 
@@ -160,25 +169,21 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(new SetUp(intakeArm), false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-                launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
-
-        launchpad.missileB.whenPressed(new InstantCommand(climberPneumatics::extendBuddyClimb));
-
-        // Controller bindings
+        // Controller bindings for intake
         controller1.buttonX.whenPressed(new SetUp(intakeArm), false);
         controller1.buttonA.whenPressed(new SetDown(intakeArm), false);
         controller1.buttonB.whenPressed(new SetLoad(intakeArm), false);
 
+        //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(shifter::highGear, shifter::lowGear, shifter));
 
-        EncoderDrive bwd = new EncoderDrive(drivetrain, -50);
-        
-        launchpad.buttonD.whenPressed(bwd);
-        launchpad.buttonD.commandBind(bwd);
     }
 
+    /**
+     * runs when robot is inited to telyop
+     */
     public void teleopInit() {
+        //inishlises robot
         scheduler.schedule(initialization);
     }
 

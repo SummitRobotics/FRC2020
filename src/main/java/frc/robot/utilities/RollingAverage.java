@@ -10,6 +10,10 @@ public class RollingAverage {
     private Double[] rollingAverageArray;
     private int rollingTarget;
 
+    /**
+     * creates new rollingavrage
+     * @param size the number of values you want to avrage
+     */
     public RollingAverage(int size) {
         rollingAverageArray = new Double[size];
     }

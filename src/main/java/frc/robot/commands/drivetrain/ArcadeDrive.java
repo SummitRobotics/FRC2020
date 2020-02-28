@@ -73,7 +73,7 @@ public class ArcadeDrive extends CommandBase {
 
         double power = forwardPower - reversePower;
 
-        double turn = turnAxis.get();
+        double turn = Math.pow(turnAxis.get(), 3);
 
         turn = Math.abs(turn) < deadzone ? 0 : turn;
 

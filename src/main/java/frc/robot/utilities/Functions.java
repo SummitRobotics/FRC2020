@@ -50,6 +50,7 @@ public class Functions {
 		return bindCommand(bindable, trigger, binding, command, true);
 	}
 
+
 	public static Command bindCommand(
 		Command bindable, 
 		Trigger trigger, 
