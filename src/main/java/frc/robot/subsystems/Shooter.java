@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -20,16 +19,15 @@ public class Shooter extends SubsystemBase {
     //TODO - tune spooled velocity
     private final static double SPOOLED_VELOCITY = 12;
 
-    private CANSparkMax shooterMotor;
-    private CANEncoder shooterEncoder;
+    private CANSparkMax shooterMotorA, shooterMotorB;
 
     private RollingAverage average;
 
     public Shooter() {
-        shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushed);
-        shooterEncoder = shooterMotor.getEncoder();
+        shooterMotorA = new CANSparkMax(Ports.SHOOTER_A, MotorType.kBrushed);
+        shooterMotorB = new CANSparkMax(Ports.SHOOTER_B, MotorType.kBrushed);
 
-        shooterMotor.setClosedLoopRampRate(0);
+        shooterMotorB.follow(shooterMotorA);
 
         average = new RollingAverage(10);
     }
@@ -41,23 +39,14 @@ public class Shooter extends SubsystemBase {
      */
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
-        shooterMotor.set(power);
+        shooterMotorA.set(power);
     }
 
     /**
      * Stops the motor
      */
     public void stop() {
-        shooterMotor.set(0);
-    }
-
-    /**
-     * Gets the velocity of the shooter
-     * 
-     * @return the velocity
-     */
-    public double getRPM() {
-        return shooterEncoder.getVelocity();
+        shooterMotorA.set(0);
     }
 
     /**
@@ -67,10 +56,5 @@ public class Shooter extends SubsystemBase {
      */
     public boolean spooled() {
         return average.getAverage() >= SPOOLED_VELOCITY; 
-    }
-
-    @Override
-    public void periodic() {
-        average.update(getRPM());
     }
 }

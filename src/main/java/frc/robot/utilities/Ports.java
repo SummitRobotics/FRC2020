@@ -32,7 +32,8 @@ public class Ports {
     TURRET = 50,
 
     // shooter
-    SHOOTER = 52,
+    SHOOTER_A = 52,
+    SHOOTER_B = 51,
 
     // conveyor
     CONVEYOR = 60,
