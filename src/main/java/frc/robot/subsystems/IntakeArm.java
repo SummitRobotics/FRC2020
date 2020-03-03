@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
@@ -30,6 +31,8 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	intake,
 	pivot;
 
+	private Solenoid lock;
+
 	private DigitalInput upperLimit;
 
 	// data for logger
@@ -40,6 +43,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	public IntakeArm() {
 		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
+		lock = new Solenoid(Ports.PCM_1, Ports.INTAKE_LOCK);
 
 		upperLimit = new DigitalInput(Ports.UPPER_LIMIT);
 		
@@ -105,6 +109,18 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	public boolean isLoading() {
 		return state == States.DOWN_NO_INTAKE;
+	}
+
+	public void setLock(boolean on) {
+		lock.set(on);
+	}
+
+	public void openLock() {
+		setLock(true);
+	}
+
+	public void closeLock() {
+		setLock(false);
 	}
 
 	@Override

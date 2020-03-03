@@ -42,6 +42,7 @@ public class Ports {
     // intake
     INTAKE_ARM_INTAKE = 62,
     INTAKE_ARM_PIVOT = 61,
+    INTAKE_LOCK = 5,
     UPPER_LIMIT = 0, //TODO - fix
 
     // DIO

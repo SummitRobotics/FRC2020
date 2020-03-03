@@ -1,8 +1,11 @@
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,6 +28,7 @@ import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
+import frc.robot.commands.climb.RaiseArm;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
@@ -67,11 +71,13 @@ public class RobotContainer {
     private ClimberPneumatics climberPneumatics;
 
     //private Lemonlight limelight;
+    private ColorSensorV3 colorSensor;
 
     //private DoubleSolenoid buddySolenoid;
     //private Solenoid lock;
 
-    private Command initialization;
+    private Command autoInit;
+    private Command teleInit;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -105,6 +111,7 @@ public class RobotContainer {
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         // limelight = new Lemonlight();
+        colorSensor = new ColorSensorV3(Port.kOnboard);
 
         setDefaultCommands();
         configureButtonBindings();
@@ -112,12 +119,17 @@ public class RobotContainer {
         logger.addElements(drivetrain, shifter);
         // scheduler.setDefaultCommand(logger, logger);
 
-        //things that happen when the robot is inishlided
-        initialization = new ParallelCommandGroup(
+        autoInit = new ParallelCommandGroup(
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(climberPneumatics::retractBuddyClimb),
-            new InstantCommand(shifter::lowGear), 
-            new SetUp(intakeArm)
+            new InstantCommand(shifter::lowGear)
+        );
+
+        //things that happen when the robot is inishlided
+        teleInit = new ParallelCommandGroup(
+            new InstantCommand(climberPneumatics::extendClimb),
+            new InstantCommand(climberPneumatics::retractBuddyClimb),
+            new InstantCommand(shifter::highGear)
         );
     }
 
@@ -141,9 +153,16 @@ public class RobotContainer {
 
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+        launchpad.axisB, joystick.axisY, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
 
         launchpad.missileB.whenPressed(new InstantCommand(climberPneumatics::extendBuddyClimb));
+
+        launchpad.buttonA.whenPressed(
+            new InstantCommand(
+                climberPneumatics::toggleClimb
+            )
+        );
+        launchpad.buttonA.booleanSupplierBind(climberPneumatics::getClimbState);
 
         //moes
         launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
@@ -152,11 +171,12 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
+        launchpad.buttonD.pressBind();
+
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
 
-        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(joystick, intakeArm, joystick.axisY, joystick.trigger),
-                false);
+        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(joystick, intakeArm, joystick.axisY, joystick.trigger, joystick.button3), false);
         launchpad.buttonF.pressBind();
 
         //intake arm
@@ -169,13 +189,30 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(new SetUp(intakeArm), false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
+        launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
+          intakeArm::closeLock,
+          intakeArm::openLock,
+          intakeArm
+        ), true);
+        launchpad.buttonA.toggleBind(); 
+
         // Controller bindings for intake
         controller1.buttonX.whenPressed(new SetUp(intakeArm), false);
         controller1.buttonA.whenPressed(new SetDown(intakeArm), false);
         controller1.buttonB.whenPressed(new SetLoad(intakeArm), false);
 
         //shifting
-        controller1.leftBumper.toggleWhenPressed(new StartEndCommand(shifter::highGear, shifter::lowGear, shifter));
+        controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
+            () -> {
+                shifter.lowGear();
+                launchpad.bigLEDRed.set(true);
+                launchpad.bigLEDGreen.set(false);
+            }, () -> {
+                shifter.highGear();
+                launchpad.bigLEDRed.set(false);
+                launchpad.bigLEDGreen.set(true);
+            }, shifter
+        ));
 
     }
 
@@ -184,7 +221,7 @@ public class RobotContainer {
      */
     public void teleopInit() {
         //inishlises robot
-        scheduler.schedule(initialization);
+        scheduler.schedule(teleInit);
     }
 
     /**
@@ -194,7 +231,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
-            initialization
+            autoInit,
+            new EncoderDrive(drivetrain, 50)
         );
     }
 }

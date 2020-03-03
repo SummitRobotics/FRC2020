@@ -13,12 +13,12 @@ public class IntakeArmMO extends SequentialCommandGroup {
 
 	private IntakeArm intakeArm;
 
-	public IntakeArmMO(Subsystem controlSystem, IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButton) {
+	public IntakeArmMO(Subsystem controlSystem, IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButtonA, LoggerButton controlButtonB) {
 		this.intakeArm = intakeArm;
 
 		addCommands(
 			new InstantCommand(this::cancelIntakeCommand),
-			new IntakeArmMOProxy(controlSystem, intakeArm, controlAxis, controlButton)
+			new IntakeArmMOProxy(controlSystem, intakeArm, controlAxis, controlButtonA, controlButtonB)
 		);
 	}
 

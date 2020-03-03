@@ -35,6 +35,8 @@ public class SetLoad extends CommandBase {
         timer.reset();
         timer.start();
 
+        intake.openLock();
+
         if (intake.getState() == States.UP) {
             intake.setPivotPower(0.2);
 

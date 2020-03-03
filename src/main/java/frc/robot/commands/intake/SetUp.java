@@ -18,6 +18,8 @@ public class SetUp extends CommandBase {
 
     @Override
     public void initialize() {
+        intake.openLock();
+
         if (intake.getState() == States.UP) {
             end = true;
             
@@ -35,6 +37,8 @@ public class SetUp extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        intake.closeLock();
+
         intake.setPivotPower(0);
         intake.setIntakePower(0);
 

@@ -18,6 +18,7 @@ public class ClimberArm extends SubsystemBase {
 
         public int motorPort;
         public boolean inverted;
+
         private Sides(int motorPort, boolean inverted) {
             this.motorPort = motorPort;
             this.inverted = inverted;
@@ -26,7 +27,7 @@ public class ClimberArm extends SubsystemBase {
 
     public static final int 
     LEFT_CONTROL_PANEL_POSITION = 205,
-    CLIMB_POSITION = 615;
+    CLIMB_POSITION = 600;
 
     private CANSparkMax motor;
     private CANEncoder encoder;

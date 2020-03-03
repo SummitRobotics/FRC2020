@@ -73,9 +73,9 @@ public class ArcadeDrive extends CommandBase {
 
         double power = forwardPower - reversePower;
 
-        double turn = Math.pow(turnAxis.get(), 3);
-
-        turn = Math.abs(turn) < deadzone ? 0 : turn;
+        double turn = turnAxis.get();
+        turn = (turn / deadzone) - Math.copySign(1, turn);
+        turn = Math.pow(turnAxis.get(), 3);
 
         /*
         System.out.println(drivetrain.getLeftEncoderPosition());
@@ -94,12 +94,6 @@ public class ArcadeDrive extends CommandBase {
         } else {
             old = power;
         }
-
-
-
-        
-        
-        
 
         // calculates power to the motors
         double leftPower = power + turn;

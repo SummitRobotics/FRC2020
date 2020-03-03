@@ -3,6 +3,7 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -25,6 +26,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		ClimberPneumatics pneumatics,
 		LoggerAxis leftSlider, 
 		LoggerAxis rightSlider,
+		LoggerAxis controlAxis,
 		LoggerButton nextPhase,
 		LED ledA,
 		LED ledB
