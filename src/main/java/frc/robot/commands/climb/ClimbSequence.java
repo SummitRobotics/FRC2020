@@ -51,6 +51,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		);
 
 		addCommands(
+			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);
 				ledB.set(true);

@@ -38,7 +38,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	// powers saved for faster logging
 	private double power;
 
-	// conveyor motors
+	// conveyor motor
 	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors

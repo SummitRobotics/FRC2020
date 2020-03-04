@@ -73,9 +73,6 @@ public class RobotContainer {
     //private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
 
-    //private DoubleSolenoid buddySolenoid;
-    //private Solenoid lock;
-
     private Command autoInit;
     private Command teleInit;
 
@@ -119,16 +116,14 @@ public class RobotContainer {
         logger.addElements(drivetrain, shifter);
         // scheduler.setDefaultCommand(logger, logger);
 
-        autoInit = new ParallelCommandGroup(
+        autoInit = new SequentialCommandGroup(
             new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(climberPneumatics::retractBuddyClimb),
             new InstantCommand(shifter::lowGear)
         );
 
         //things that happen when the robot is inishlided
-        teleInit = new ParallelCommandGroup(
+        teleInit = new SequentialCommandGroup(
             new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(climberPneumatics::retractBuddyClimb),
             new InstantCommand(shifter::highGear)
         );
     }
@@ -154,8 +149,6 @@ public class RobotContainer {
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
         launchpad.axisB, joystick.axisY, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
-
-        launchpad.missileB.whenPressed(new InstantCommand(climberPneumatics::extendBuddyClimb));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
