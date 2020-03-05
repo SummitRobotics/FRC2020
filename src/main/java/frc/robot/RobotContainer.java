@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.logging.SyncLogger;
@@ -37,6 +38,7 @@ import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
+import frc.robot.commands.shooter.Spool;
 import frc.robot.devices.LEDs;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -65,12 +67,12 @@ public class RobotContainer {
     private Shifter shifter;
     private Conveyor conveyor;
     private IntakeArm intakeArm;
-    //private Shooter shooter;
+    private Shooter shooter;
     private ClimberArm leftArm, rightArm;
-    //private Turret turret;
+    // private Turret turret;
     private ClimberPneumatics climberPneumatics;
 
-    //private Lemonlight limelight;
+    // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
 
     private Command autoInit;
@@ -97,7 +99,7 @@ public class RobotContainer {
         shifter = new Shifter(shifterRange);
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
-        //shooter = new Shooter();
+        shooter = new Shooter();
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
         // turret = new Turret();
@@ -116,35 +118,36 @@ public class RobotContainer {
         logger.addElements(drivetrain, shifter);
         // scheduler.setDefaultCommand(logger, logger);
 
-        autoInit = new SequentialCommandGroup(
-            new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(shifter::lowGear)
-        );
+        autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
+                new InstantCommand(shifter::lowGear));
 
-        //things that happen when the robot is inishlided
-        teleInit = new SequentialCommandGroup(
-            new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(shifter::highGear)
-        );
+        // things that happen when the robot is inishlided
+        teleInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
+                new InstantCommand(shifter::highGear));
     }
 
     private void setDefaultCommands() {
-        //drive by controler
-        drivetrain.setDefaultCommand(new ArcadeDrive(
-            drivetrain, 
-            shifter, 
-            controller1.rightTrigger,
-            controller1.leftTrigger, 
-            controller1.leftX
-            ));
+        // drive by controler
+        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger,
+                controller1.leftTrigger, controller1.leftX));
 
-            //makes intake arm go back to limit when not on limit
+        // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
     }
 
     private void configureButtonBindings() {
         // Launchpad bindings
+
+        // shooter
+        launchpad.missileB.whenPressed(new InstantCommand( () -> {
+            System.out.println("spin");
+            shooter.setPower(-1);
+        }));
+
+        launchpad.missileB.whenReleased(new InstantCommand( () -> {
+            shooter.setPower(0);
+        }));
 
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,

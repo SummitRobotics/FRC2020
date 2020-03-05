@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,14 +22,17 @@ public class Shooter extends SubsystemBase {
     private final static double SPOOLED_VELOCITY = 12;
 
     private CANSparkMax shooterMotor;
-    private CANEncoder shooterEncoder;
+    private CANSparkMax shooterMotor2;
+    //private CANEncoder shooterEncoder;
 
     private RollingAverage average;
 
     public Shooter() {
         shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushed);
-        shooterEncoder = shooterMotor.getEncoder();
+        shooterMotor2 = new CANSparkMax(Ports.SHOOTER1, MotorType.kBrushed);
+        //shooterEncoder = shooterMotor.getEncoder();
 
+        shooterMotor2.follow(shooterMotor);
         shooterMotor.setClosedLoopRampRate(0);
 
         average = new RollingAverage(10);
@@ -42,6 +46,7 @@ public class Shooter extends SubsystemBase {
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
         shooterMotor.set(power);
+        System.out.println(power);
     }
 
     /**
@@ -49,6 +54,7 @@ public class Shooter extends SubsystemBase {
      */
     public void stop() {
         shooterMotor.set(0);
+        System.out.println("stoped");
     }
 
     /**
@@ -57,7 +63,7 @@ public class Shooter extends SubsystemBase {
      * @return the velocity
      */
     public double getRPM() {
-        return shooterEncoder.getVelocity();
+        return 0;//shooterEncoder.getVelocity();
     }
 
     /**
@@ -66,11 +72,11 @@ public class Shooter extends SubsystemBase {
      * @return if it's spooled
      */
     public boolean spooled() {
-        return average.getAverage() >= SPOOLED_VELOCITY; 
+        return false;//average.getAverage() >= SPOOLED_VELOCITY; 
     }
 
     @Override
     public void periodic() {
-        average.update(getRPM());
+        //average.update(getRPM());
     }
 }
