@@ -11,11 +11,21 @@ import frc.robot.utilities.functionalinterfaces.Binder;
  */
 public abstract class MOCommand extends CommandBase {
 
-	protected MOCommand(Subsystem controlSystem, Subsystem... additionalRequirements) {
-		addRequirements(controlSystem);
-		addRequirements(additionalRequirements);
+	private static int using = 0;
+
+	public static void setDefaultCommand(Command command) {
+		new Trigger(() -> (using == 0)).whenActive(command);
 	}
 
+	@Override
+	public void initialize() {
+		using++;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		using--;
+	}
 
     public Command bindCommand(
 		Trigger trigger, 

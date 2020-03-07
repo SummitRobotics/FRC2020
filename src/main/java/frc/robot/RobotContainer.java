@@ -26,6 +26,7 @@ import frc.robot.subsystems.Shifter;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.MOCommand;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
@@ -39,6 +40,7 @@ import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.shooter.Spool;
+import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -69,7 +71,7 @@ public class RobotContainer {
     private IntakeArm intakeArm;
     private Shooter shooter;
     private ClimberArm leftArm, rightArm;
-    // private Turret turret;
+    private Turret turret;
     private ClimberPneumatics climberPneumatics;
 
     // private Lemonlight limelight;
@@ -102,7 +104,7 @@ public class RobotContainer {
         shooter = new Shooter();
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
-        // turret = new Turret();
+        turret = new Turret();
         climberPneumatics = new ClimberPneumatics();
 
         // buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP,
@@ -210,6 +212,7 @@ public class RobotContainer {
             }, shifter
         ));
 
+        MOCommand.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
     }
 
     /**

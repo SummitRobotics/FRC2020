@@ -11,7 +11,7 @@ import frc.robot.subsystems.Turret;
  */
 public class VisionTarget extends CommandBase {
 
-	private Turret turret;
+	protected Turret turret;
 	private Lemonlight limelight;
 
 	private PIDController pidController;
@@ -27,6 +27,7 @@ public class VisionTarget extends CommandBase {
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
+		pidController.setTolerance(0.1);
 
 		addRequirements(turret);
 	}
@@ -46,9 +47,13 @@ public class VisionTarget extends CommandBase {
 			turret.setPower(power);
 
 		} else {
-			turret.setPower(0);
-			pidController.reset();
+			noTarget();
 		}
+	}
+
+	protected void noTarget() {
+		turret.setPower(0);
+		pidController.reset();
 	}
 
 	public void end(boolean interrupted) {

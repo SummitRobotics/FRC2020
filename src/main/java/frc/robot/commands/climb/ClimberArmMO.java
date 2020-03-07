@@ -1,11 +1,10 @@
 package frc.robot.commands.climb;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.subsystems.ClimberArm;
-import frc.robot.subsystems.ClimberPneumatics;
+import frc.robot.utilities.MOCommand;
 
-public class ClimberArmMO extends CommandBase {
+public class ClimberArmMO extends MOCommand {
 
 	private ClimberArm arm;
 	private LoggerAxis controlAxis;
@@ -19,6 +18,7 @@ public class ClimberArmMO extends CommandBase {
 
 	@Override
 	public void initialize() {
+		super.initialize();
 		arm.stop();
 	}
 
@@ -29,6 +29,7 @@ public class ClimberArmMO extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		super.end(interrupted);
 		arm.stop();
 	}
 

@@ -1,9 +1,7 @@
 package frc.robot.commands.conveyor;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Shooter;
 
 /**
  * Default command for the conveyor to manage its state
@@ -11,13 +9,9 @@ import frc.robot.subsystems.Shooter;
 public class ConveyorAutomation extends CommandBase {
 
 	private Conveyor conveyor;
-	private Shooter shooter;
-	private Lemonlight limelight; 
 
-	public ConveyorAutomation(Conveyor conveyor, Shooter shooter, Lemonlight limelight) {
+	public ConveyorAutomation(Conveyor conveyor) {
 		this.conveyor = conveyor;
-		this.shooter = shooter;
-		this.limelight = limelight;
 	
 		addRequirements(conveyor);
 	}
@@ -29,8 +23,6 @@ public class ConveyorAutomation extends CommandBase {
 		switch (conveyor.getState()) {
 			case SHOOT: 
 				power = Conveyor.SHOOT_POWER;
-			case SAFE_SHOOT: 
-				power = safeShoot();
 			case INTAKE: 
 				power = intake();
 			case OFF: 
@@ -43,14 +35,6 @@ public class ConveyorAutomation extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		return false;
-	}
-
-	private double safeShoot() {
-		if (limelight.atTarget() && shooter.spooled()) {
-			return Conveyor.SHOOT_POWER;
-		}
-
-		return 0;
 	}
 
 	private double intake() {

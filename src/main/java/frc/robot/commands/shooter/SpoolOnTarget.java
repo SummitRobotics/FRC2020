@@ -25,10 +25,15 @@ public class SpoolOnTarget extends CommandBase {
 	@Override
 	public void execute() {
 		if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
-			shooter.setPower(Shooter.SPOOL_POWER);
+			shooter.setPower(getSpoolPower());
 		} else {
 			shooter.setPower(0);
 		}
+	}
+
+	//TODO - make actually functional
+	private double getSpoolPower() {
+		return 1;
 	}
 
 	@Override

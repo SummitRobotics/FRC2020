@@ -18,7 +18,8 @@ public class JoystickDriver extends GenericDriver implements Subsystem {
 
 	public LoggerAxis
 	axisX,
-	axisY;
+	axisY,
+	axisZ;
 
 	public JoystickDriver(int port, SyncLogger logger) {
 		super(port, logger);
@@ -33,5 +34,6 @@ public class JoystickDriver extends GenericDriver implements Subsystem {
 
 		axisX = generateLoggerAxis(0, LoggerRelations.PLACEHOLDER);
 		axisY = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
+		axisZ = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
 	}
 }

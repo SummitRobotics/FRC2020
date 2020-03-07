@@ -3,7 +3,6 @@ package frc.robot.commands.turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.shooter.Spool;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Conveyor;
@@ -17,12 +16,14 @@ import frc.robot.utilities.Functions;
 public class FullManualShootingAssembly extends CommandBase {
 
 	private Turret turret;
+	private Shooter shooter;
 
-	private Command 
-	expel,
-	spool;
+	private Command expel;
 
-	private LoggerAxis turretRotationPower;
+	private LoggerAxis 
+	turretRotationPower,
+	shooterSpoolPower,
+	shooterHoodPower;
 
 	public FullManualShootingAssembly 
 		(
@@ -30,18 +31,21 @@ public class FullManualShootingAssembly extends CommandBase {
 			Shooter shooter, 
 			Conveyor conveyor, 
 			LoggerAxis turretRotationPower, 
-			LoggerButton trigger,
-			LoggerButton upper
+			LoggerAxis shooterSpoolPower,
+			LoggerAxis shooterHoodPower,
+			LoggerButton trigger
 		) {
 
 		super();
 
 		this.turret = turret;
+		this.shooter = shooter;
 
 		expel = Functions.bindCommand(this, trigger, Trigger::whileActiveOnce, conveyor.toggleShootMode);
-		spool = Functions.bindCommand(this, upper, Trigger::whileActiveOnce, new Spool(shooter));
 
 		this.turretRotationPower = turretRotationPower;
+		this.shooterSpoolPower = shooterSpoolPower;
+		this.shooterHoodPower = shooterHoodPower;
 
 		addRequirements(turret);
 	}
@@ -54,12 +58,16 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void execute() {
 		turret.setPower(turretRotationPower.get());
+		shooter.setPower(shooterSpoolPower.get());
+		shooter.setHoodPower(shooterHoodPower.get());
 	}
 
 	@Override
 	public void end(boolean interupted) {
 		expel.cancel();
-		spool.cancel();
+
+		turret.stop();
+		shooter.stop();
 	}
 
 	@Override

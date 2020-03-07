@@ -15,7 +15,7 @@ public class ConveyorMO extends MOCommand {
 	LoggerAxis controlAxis;
 
 	public ConveyorMO(Subsystem controlSystem, Conveyor conveyor, LoggerAxis controlAxis) {
-		super(controlSystem, conveyor);
+		addRequirements(conveyor);
 
 		this.conveyor = conveyor;
 		this.controlAxis = controlAxis;
@@ -23,6 +23,7 @@ public class ConveyorMO extends MOCommand {
 
 	@Override
 	public void initialize() {
+		super.initialize();
 		conveyor.stop();
 	}
 
@@ -33,6 +34,7 @@ public class ConveyorMO extends MOCommand {
 
 	@Override
 	public void end(final boolean interrupted) {
+		super.end(interrupted);
 		conveyor.stop();
 	}
 

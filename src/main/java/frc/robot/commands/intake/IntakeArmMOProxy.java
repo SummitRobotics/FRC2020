@@ -23,7 +23,7 @@ public class IntakeArmMOProxy extends MOCommand {
     private static final double INTAKE_DEFAULT_POWER = .7;
 
     public IntakeArmMOProxy(Subsystem controlSystem, IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButtonA, LoggerButton controlButtonB) {
-        super(controlSystem, intakeArm);
+        addRequirements(intakeArm);
 
         this.intakeArm = intakeArm;
         this.controlAxis = controlAxis;
@@ -57,6 +57,7 @@ public class IntakeArmMOProxy extends MOCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         intakeArm.stop();
     }
 
@@ -77,6 +78,7 @@ public class IntakeArmMOProxy extends MOCommand {
 
     @Override
     public void end(final boolean interrupted) {
+        super.end(interrupted);
         intakeArm.stop();
     }
 

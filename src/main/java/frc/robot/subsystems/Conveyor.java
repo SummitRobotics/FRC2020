@@ -25,7 +25,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 
 	public enum States {
 		SHOOT,
-		SAFE_SHOOT,
 		INTAKE,
 		OFF
 	}
@@ -46,7 +45,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	private DigitalInput breakbeamExit;
 
 	private boolean 
-	safeShootMode,
 	shootMode,
 	intakeMode;
 
@@ -62,12 +60,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT);
 
 		power = 0;
-
-		// Internal commands for toggling shooter flags
-		toggleSafeShootMode = new StartEndCommand(
-			this::enableSafeShootMode, 
-			this::disableSafeShootMode
-		);
 
 		toggleShootMode = new StartEndCommand(
 			this::enableShootMode, 
@@ -108,6 +100,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 		return breakbeamExit.get();
 	}
 
+
 	/**
 	 * Stops both conveyor motors
 	 */
@@ -122,10 +115,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 */
 	public States getState() {
 		if (shootMode) {
-			return States.SAFE_SHOOT;
-		}
-
-		if (safeShootMode) {
 			return States.SHOOT;
 		}
 
@@ -134,20 +123,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 		}
 
 		return States.OFF;
-	}
-
-	/**
-	 * Sets the safe shoot mode flag to true
-	 */
-	public void enableSafeShootMode() {
-		safeShootMode = true;
-	}
-
-	/**
-	 * Sets the safe shoot mode flag to false
-	 */
-	public void disableSafeShootMode() {
-		safeShootMode = false;
 	}
 
 	/**
