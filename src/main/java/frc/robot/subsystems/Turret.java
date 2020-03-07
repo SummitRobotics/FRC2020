@@ -26,8 +26,7 @@ public class Turret extends SubsystemBase implements Logger {
     private CANEncoder encoder;
     private CANPIDController pidController;
 
-    private DigitalInput limitOne;
-    private DigitalInput limitTwo;
+    private DigitalInput limit;
 
     public Turret() {
         oldPower = 0;
@@ -36,8 +35,7 @@ public class Turret extends SubsystemBase implements Logger {
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
 
-        //limitOne = new DigitalInput(Ports.TURRET_LIMIT_ONE.port);
-        //limitTwo = new DigitalInput(Ports.TURRET_LIMIT_TWO.port);
+        limit = new DigitalInput(Ports.TURRET_LIMIT);
 
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
@@ -68,17 +66,8 @@ public class Turret extends SubsystemBase implements Logger {
      * 
      * @return whether the button is pressed
      */
-    public boolean getLimitOne() {
-        return limitOne.get();
-    }
-
-    /**
-     * Gets the value of limit switch two
-     * 
-     * @return whether the button is pressed
-     */
-    public boolean getLimitTwo() {
-        return limitTwo.get();
+    public boolean getLimit() {
+        return limit.get();
     }
 
     /**
@@ -106,6 +95,11 @@ public class Turret extends SubsystemBase implements Logger {
      */
     public void stop() {
         turret.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println(getLimit());
     }
 
     /**

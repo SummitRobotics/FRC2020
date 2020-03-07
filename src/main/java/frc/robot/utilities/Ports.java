@@ -30,6 +30,7 @@ public class Ports {
 
     // turret
     TURRET = 50,
+    TURRET_LIMIT = 0,
 
     // shooter
     SHOOTER = 51,
@@ -54,9 +55,5 @@ public class Ports {
     // climber
     LEFT_ARM_MOTOR = 41,
     RIGHT_ARM_MOTOR = 40,
-    EXTEND_CLIMB = 4,
-
-    // buddy climb
-    OPEN_BUDDY_CLIMB = 2,
-    CLOSE_BUDDY_CLIMB = 3;
+    EXTEND_CLIMB = 4;
 }
