@@ -44,9 +44,9 @@ public class VisionTarget extends CommandBase {
 		System.out.println("vision");
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
-
 			double power = pidController.calculate(offset);
 			turret.setPower(Functions.clampDouble(power, .25, -.25));
+			shootControl();
 
 		} else {
 			noTarget();
@@ -56,6 +56,10 @@ public class VisionTarget extends CommandBase {
 	protected void noTarget() {
 		turret.setPower(0);
 		pidController.reset();
+	}
+
+	protected void shootControl(){
+		
 	}
 
 	public void end(boolean interrupted) {

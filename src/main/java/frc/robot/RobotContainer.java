@@ -45,6 +45,7 @@ import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.shooter.Spool;
 import frc.robot.commands.turret.FullManualShootingAssembly;
+import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.VisionTarget;
 import frc.robot.devices.LEDs;
 import frc.robot.devices.LEDs.LEDRange;
@@ -153,10 +154,9 @@ public class RobotContainer {
         // Launchpad bindings
 
         // shooter
-        launchpad.missileB.whenPressed(new VisionTarget(turret, limelight));
+        launchpad.missileB.whenPressed(new SemiAutoShooterAssembly(turret, shooter, conveyor, limelight, joystick.axisX, joystick.trigger));
 
         
-
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
         launchpad.axisB, joystick.axisY, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));

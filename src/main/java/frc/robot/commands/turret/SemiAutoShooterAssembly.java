@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,9 +35,18 @@ public class SemiAutoShooterAssembly extends ParallelCommandGroup {
 				@Override
 				protected void noTarget() {
 					turret.setPower(controlAxis.get());
+					conveyor.disableShootMode();
 				}
+
+				@Override
+				protected void shootControl(){
+					if(trigger.get()) {conveyor.enableShootMode();}
+					else{conveyor.disableShootMode();}
+				}
+
 			},
 			new SpoolOnTarget(shooter, limelight)
 		);
+
 	}
 }
