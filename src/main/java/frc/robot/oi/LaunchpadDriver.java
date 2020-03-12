@@ -3,6 +3,7 @@ package frc.robot.oi;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
 import frc.robot.oi.LEDButton.LED;
+import frc.robot.utilities.functionalinterfaces.AxisGetter;
 import edu.wpi.first.hal.HAL;
 
 /**
@@ -25,7 +26,11 @@ public class LaunchpadDriver extends GenericDriver {
 
     public LoggerButton
     missileA,
-    missileB;
+    missileB,
+
+    funLeft,
+    funMiddle,
+    funRight;
 
     public LoggerAxis
     axisA,
@@ -36,6 +41,8 @@ public class LaunchpadDriver extends GenericDriver {
     axisF,
     axisG,
     axisH;
+
+    public AxisGetter reee;
 
     public LED
     bigLEDGreen,
@@ -67,6 +74,12 @@ public class LaunchpadDriver extends GenericDriver {
         axisA.setDeadzone(0);
         axisB.setDeadzone(0);
 
+        reee = getAxisGetter(2);
+
+        funLeft = generateATDButton(2, -1, -1/3, LoggerRelations.PLACEHOLDER);
+        funMiddle = generateATDButton(2, -1/3, 1/3, LoggerRelations.PLACEHOLDER);
+        funRight = generateATDButton(2, 1/3, 1, LoggerRelations.PLACEHOLDER);
+
         axisC = generateLoggerAxis(3, LoggerRelations.PLACEHOLDER);
         axisD = generateLoggerAxis(4, LoggerRelations.PLACEHOLDER);
         axisE = generateLoggerAxis(5, LoggerRelations.PLACEHOLDER);
@@ -94,6 +107,14 @@ public class LaunchpadDriver extends GenericDriver {
     
     private LED getLEDLambda(int output) {
         return (boolean state) -> setOutput(output, state);
+    }
+
+    private LoggerButton generateATDButton(int output, int min, int max, LoggerRelations logReference) {
+        AxisGetter axis = getAxisGetter(output);
+        return generateLoggerButton(() -> {
+            double value = axis.get();
+            return value >= min && max >= value;
+        }, logReference);
     }
 
     /**

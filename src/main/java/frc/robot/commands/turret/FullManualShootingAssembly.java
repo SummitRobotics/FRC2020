@@ -57,9 +57,11 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-		turret.setPower(turretRotationPower.get());
-		shooter.setPower(shooterSpoolPower.get());
-		shooter.setHoodPower(shooterHoodPower.get());
+		turret.setPower(turretRotationPower.get() / 5); // Scaled by five for sanity
+		shooter.setHoodPower(-(shooterHoodPower.get() / 3)); // Scaled by three for proper motor control
+
+		double spoolPower = (shooterSpoolPower.get() - 1) / 2;
+		shooter.setPower(spoolPower);
 	}
 
 	@Override

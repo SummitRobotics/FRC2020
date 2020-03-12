@@ -2,12 +2,13 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeArm.States;
 
 public class SetDown extends CommandBase {
 
-    private final static double targetTime = 0.25;
+    private final static double targetTime = 0.5;
     protected IntakeArm intake;
 
     protected Timer timer = new Timer();

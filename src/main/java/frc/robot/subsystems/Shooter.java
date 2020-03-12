@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,7 +31,10 @@ public class Shooter extends SubsystemBase {
         new VictorSPX(Ports.SHOOTER_FOLLOWER).follow(shooterMotor);
 
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
-        hoodEncoder = adjustableHood.getEncoder();
+
+        hoodEncoder = adjustableHood.getAlternateEncoder();
+        hoodEncoder.setPosition(0);
+        adjustableHood.setSoftLimit(SoftLimitDirection.kForward, (float)11.5);
     }
 
     /**

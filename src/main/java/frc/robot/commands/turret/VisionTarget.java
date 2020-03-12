@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.Functions;
 
 /**
  * Command to vision align the turret
@@ -18,7 +19,7 @@ public class VisionTarget extends CommandBase {
 
 	//TODO - Make right
 	private final static double
-	P = 0,
+	P = 0.01,
 	I = 0,
 	D = 0;
 
@@ -40,11 +41,12 @@ public class VisionTarget extends CommandBase {
 	}
 
 	public void execute() {
+		System.out.println("vision");
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 
 			double power = pidController.calculate(offset);
-			turret.setPower(power);
+			turret.setPower(Functions.clampDouble(power, .25, -.25));
 
 		} else {
 			noTarget();

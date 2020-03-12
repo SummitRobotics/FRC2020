@@ -46,7 +46,12 @@ public class LoggerAxis implements Logger {
 	 */
 	public double get() {
 		double position = getter.get();
-		return Functions.isWithin(position, 0, deadzone) ? 0 : position;
+
+		if (Functions.isWithin(position, 0, deadzone)) {
+			return 0;
+		}
+
+		return (1 + deadzone) * position - Math.copySign(deadzone, position);
 	}
 
 	/**

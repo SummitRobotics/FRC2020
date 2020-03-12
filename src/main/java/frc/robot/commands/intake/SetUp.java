@@ -1,10 +1,14 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.IntakeArm.States;
 import frc.robot.subsystems.IntakeArm;
 
-public class SetUp extends CommandBase {
+public class SetUp extends SequentialCommandGroup {
 
     IntakeArm intake;
     boolean end;
@@ -13,41 +17,48 @@ public class SetUp extends CommandBase {
         this.intake = intake;
         end = false;
 
-        addRequirements(intake);
+        addCommands(
+            new SetUpProxy(),
+            new WaitCommand(0.25),
+            new InstantCommand(() -> {
+                intake.setPivotPower(0);
+                intake.closeLock();
+            }, intake)
+        );
     }
 
-    @Override
-    public void initialize() {
-        intake.openLock();
+    private class SetUpProxy extends CommandBase {
 
-        if (intake.getState() == States.UP) {
-            end = true;
-            
-        } else {
-
-            if (intake.getState() == States.DOWN_YES_INTAKE) {
-                intake.setIntakePower(IntakeArm.intakePower);
+        @Override
+        public void initialize() {
+            intake.openLock();
+    
+            if (intake.getState() == States.UP) {
+                end = true;
+                
+            } else {
+    
+                if (intake.getState() == States.DOWN_YES_INTAKE) {
+                    intake.setIntakePower(IntakeArm.intakePower);
+                }
+    
+                intake.setState(States.UP);
+    
+                intake.setPivotPower(-0.38);
             }
-
-            intake.setState(States.UP);
-
-            intake.setPivotPower(-0.3);
         }
+    
+        @Override
+        public void end(boolean interrupted) {    
+            intake.setIntakePower(0);
+    
+            end = false;
+        }
+    
+        @Override
+        public boolean isFinished() {
+            return intake.getUpperLimit() || end;
+        }    
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        intake.closeLock();
-
-        intake.setPivotPower(0);
-        intake.setIntakePower(0);
-
-        end = false;
-    }
-
-    @Override
-    public boolean isFinished() {
-        System.out.println(intake.getUpperLimit());
-        return intake.getUpperLimit() || end;
-    }
 }

@@ -7,9 +7,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -31,6 +34,7 @@ import frc.robot.utilities.Ports;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.climb.RaiseArm;
+import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
@@ -41,6 +45,7 @@ import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.shooter.Spool;
 import frc.robot.commands.turret.FullManualShootingAssembly;
+import frc.robot.commands.turret.VisionTarget;
 import frc.robot.devices.LEDs;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -76,6 +81,7 @@ public class RobotContainer {
 
     // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
+    private Lemonlight limelight;
 
     private Command autoInit;
     private Command teleInit;
@@ -111,7 +117,7 @@ public class RobotContainer {
         // Ports.CLOSE_CLAMP);
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-        // limelight = new Lemonlight();
+        limelight = new Lemonlight();
         colorSensor = new ColorSensorV3(Port.kOnboard);
 
         setDefaultCommands();
@@ -125,7 +131,10 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(shifter::highGear));
+                new InstantCommand(shifter::highGear),
+                new InstantCommand(() -> conveyor.disableIntakeMode()),
+                new InstantCommand(() -> conveyor.disableShootMode())
+                );
     }
 
     private void setDefaultCommands() {
@@ -136,20 +145,17 @@ public class RobotContainer {
         // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
+        conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
+
     }
 
     private void configureButtonBindings() {
         // Launchpad bindings
 
         // shooter
-        launchpad.missileB.whenPressed(new InstantCommand( () -> {
-            System.out.println("spin");
-            shooter.setPower(-1);
-        }));
+        launchpad.missileB.whenPressed(new VisionTarget(turret, limelight));
 
-        launchpad.missileB.whenReleased(new InstantCommand( () -> {
-            shooter.setPower(0);
-        }));
+        
 
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
@@ -169,7 +175,8 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        launchpad.buttonD.pressBind();
+        launchpad.buttonD.toggleWhenPressed(conveyor.toggleIntakeMode);
+        launchpad.buttonD.toggleBind();
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -178,13 +185,22 @@ public class RobotContainer {
         launchpad.buttonF.pressBind();
 
         //intake arm
-        launchpad.buttonG.whenPressed(new SetLoad(intakeArm), false);
-        launchpad.buttonG.booleanSupplierBind(intakeArm::isLoading);
 
-        launchpad.buttonH.whenPressed(new SetDown(intakeArm), false);
+        Command intake = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.enableIntakeMode()),
+            new SetDown(intakeArm)
+            );
+
+        Command up = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new SetUp(intakeArm)
+            );
+
+        
+        launchpad.buttonH.whenPressed(intake, false);
         launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
 
-        launchpad.buttonI.whenPressed(new SetUp(intakeArm), false);
+        launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
@@ -194,10 +210,13 @@ public class RobotContainer {
         ), true);
         launchpad.buttonA.toggleBind(); 
 
+        // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
+        // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));
+        // launchpad.funLeft.whenPressed(new PrintCommand("no fun T^T"));
+
         // Controller bindings for intake
-        controller1.buttonX.whenPressed(new SetUp(intakeArm), false);
-        controller1.buttonA.whenPressed(new SetDown(intakeArm), false);
-        controller1.buttonB.whenPressed(new SetLoad(intakeArm), false);
+        controller1.buttonX.whenPressed(up, false);
+        controller1.buttonA.whenPressed(intake, false);
 
         //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
@@ -212,7 +231,8 @@ public class RobotContainer {
             }, shifter
         ));
 
-        MOCommand.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        MOCommand.setDefaultCommand(new FullManualShootingAssembly(
+            turret, shooter, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
     }
 
     /**
@@ -221,6 +241,7 @@ public class RobotContainer {
     public void teleopInit() {
         //inishlises robot
         scheduler.schedule(teleInit);
+
     }
 
     /**

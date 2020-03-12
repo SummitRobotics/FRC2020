@@ -14,7 +14,6 @@ public class FullAutoShooterAssembly extends ParallelRaceGroup {
 
 	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Conveyor conveyor, Lemonlight limelight) {
 		addCommands(
-			conveyor.toggleSafeShootMode,
 			new VisionTarget(turret, limelight),
 			new SpoolOnTarget(shooter, limelight)
 		);

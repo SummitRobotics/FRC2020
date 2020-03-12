@@ -32,7 +32,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	//TODO - make good
 	public static final double
 	SHOOT_POWER = 1,
-	SUBSUME_POWER = 0.75;
+	SUBSUME_POWER = 1;
 
 	// powers saved for faster logging
 	private double power;
@@ -41,25 +41,25 @@ public class Conveyor extends SubsystemBase implements Logger {
 	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors
-	private DigitalInput breakbeamEnter;
-	private DigitalInput breakbeamExit;
+	private DigitalInput breakbeam;
 
 	private boolean 
 	shootMode,
 	intakeMode;
 
 	public Command
-	toggleSafeShootMode,
 	toggleShootMode,
 	toggleIntakeMode;
 
 	public Conveyor() {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
-		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER);
-		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT);
+		breakbeam = new DigitalInput(Ports.BREAKBEAM);
 
 		power = 0;
+
+		shootMode = false;
+		intakeMode = false;
 
 		toggleShootMode = new StartEndCommand(
 			this::enableShootMode, 
@@ -78,7 +78,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 * @param power the new power
 	 */
 	public void setConveyor(double power) {
-		conveyorMotor.set(ControlMode.PercentOutput, power);
+		conveyorMotor.set(ControlMode.PercentOutput, -power);
 	}
 
 	//TODO - Make sure that the docs are correct on the nature of breakbeam returns
@@ -87,19 +87,9 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 * 
 	 * @return the breakbeam state where true is unbroken and false is broken
 	 */
-	public boolean getBreakBeamEnter() {
-		return breakbeamEnter.get();
+	public boolean getBreakBeam() {
+		return breakbeam.get();
 	}
-
-	/**
-	 * Gets the state of the entry breakbeam sensor
-	 * 
-	 * @return the breakbeam state where true is unbroken and false is broken
-	 */
-	public boolean getBreakBeamExit() {
-		return breakbeamExit.get();
-	}
-
 
 	/**
 	 * Stops both conveyor motors
@@ -156,8 +146,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	@Override
 	public double[] getValues(double[] values) {
 		values[LoggerRelations.CONVEYOR.value] = power;
-		values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
-		values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
+		values[LoggerRelations.CONVEYOR_BREAKBEAM.value] = getBreakBeam() ? 1 : 0;
 		return values;
 	}
 }

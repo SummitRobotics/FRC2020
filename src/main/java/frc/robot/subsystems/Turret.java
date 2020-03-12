@@ -97,11 +97,6 @@ public class Turret extends SubsystemBase implements Logger {
         turret.set(0);
     }
 
-    @Override
-    public void periodic() {
-        System.out.println(getLimit());
-    }
-
     /**
      * Logs the power of the turret
      */

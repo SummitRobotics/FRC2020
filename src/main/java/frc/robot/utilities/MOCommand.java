@@ -14,7 +14,7 @@ public abstract class MOCommand extends CommandBase {
 	private static int using = 0;
 
 	public static void setDefaultCommand(Command command) {
-		new Trigger(() -> (using == 0)).whenActive(command);
+		new Trigger(() -> (using == 0)).whileActiveContinuous(command);
 	}
 
 	@Override

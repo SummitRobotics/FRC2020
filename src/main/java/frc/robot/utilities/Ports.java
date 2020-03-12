@@ -35,18 +35,17 @@ public class Ports {
     // shooter
     SHOOTER = 51,
     SHOOTER_FOLLOWER = 52,
-    ADJUSTABLE_HOOD = 50,
+    ADJUSTABLE_HOOD = 53,
 
     // conveyor
     CONVEYOR = 60,
-    BREAKBEAM_ENTER = 4,
-    BREAKBEAM_EXIT = 5,
+    BREAKBEAM = 9,
     
     // intake
     INTAKE_ARM_INTAKE = 62,
     INTAKE_ARM_PIVOT = 61,
     INTAKE_LOCK = 5,
-    UPPER_LIMIT = 0, //TODO - fix
+    UPPER_LIMIT = 1,
 
     // DIO
     TURRET_LIMIT_ONE = 2,
