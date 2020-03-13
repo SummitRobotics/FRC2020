@@ -9,15 +9,26 @@ package frc.robot.oi;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableEntry;
 /**
  * Add your docs here.
  */
 public class Midi {
 
-    public NetworkTable midiNetTable;
+    private NetworkTable midiNetTable;
+    private NetworkTableEntry a;
 
     public Midi(){
         NetworkTableInstance netTableInstance = NetworkTableInstance.getDefault();
-        midiNetTable = netTableInstance.getTable("midi");
+        this.midiNetTable = netTableInstance.getTable("midi");
+        setUpNetworkTableInstances();
     }
+
+    private void setUpNetworkTableInstances(){
+        this.a = midiNetTable.getEntry("a");
+    }
+
+    public NetworkTableEntry getNetworkTableEntryA(){return this.a;}
+
+
 }
