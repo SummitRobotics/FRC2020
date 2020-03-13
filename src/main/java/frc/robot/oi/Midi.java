@@ -8,15 +8,16 @@
 package frc.robot.oi;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTables;
+import edu.wpi.first.networktables.NetworkTableInstance;
 /**
  * Add your docs here.
  */
 public class Midi {
 
-    public NetworkTable nTable;
-    public Midi(){
-        nTable = new NetworkTables();
-    }
+    public NetworkTable midiNetTable;
 
+    public Midi(){
+        NetworkTableInstance netTableInstance = NetworkTableInstance.getDefault();
+        midiNetTable = netTableInstance.getTable("midi");
+    }
 }
