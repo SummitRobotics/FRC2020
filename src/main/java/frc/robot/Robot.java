@@ -19,16 +19,12 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer m_robotContainer;
 
-	private Midi m = new Midi();
-
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		m.setCcAction((EntryNotification x) -> System.out.println("cc1"), 1);
-		m.setNoteAction((EntryNotification x) -> System.out.println("note1"), 1);
 		// Instantiate our RobotContainer. This will perform all our button bindings,
 		// and put our
 		// autonomous chooser on the dashboard.
@@ -61,7 +57,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		m.sendCC(1, 0);
 	}
 
 	@Override
@@ -92,7 +87,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		m.sendCC(1, 124);
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
