@@ -2,7 +2,7 @@ package frc.robot.oi;
 
 import frc.robot.logging.LoggerRelations;
 import frc.robot.logging.SyncLogger;
-import frc.robot.oi.LEDButton.LED;
+import frc.robot.oi.LED;
 import frc.robot.utilities.functionalinterfaces.AxisGetter;
 import edu.wpi.first.hal.HAL;
 
@@ -42,8 +42,6 @@ public class LaunchpadDriver extends GenericDriver {
     axisG,
     axisH;
 
-    public AxisGetter reee;
-
     public LED
     bigLEDGreen,
     bigLEDRed;
@@ -73,8 +71,6 @@ public class LaunchpadDriver extends GenericDriver {
 
         axisA.setDeadzone(0);
         axisB.setDeadzone(0);
-
-        reee = getAxisGetter(2);
 
         funLeft = generateATDButton(2, -1, -1/3, LoggerRelations.PLACEHOLDER);
         funMiddle = generateATDButton(2, -1/3, 1/3, LoggerRelations.PLACEHOLDER);

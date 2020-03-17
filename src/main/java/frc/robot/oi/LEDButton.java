@@ -11,10 +11,6 @@ import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 public class LEDButton extends LoggerButton {
 
-	public interface LED {
-		public void set(boolean state);
-	}
-
 	private Command controller;
 
 	public LEDButton(ButtonGetter getter, LoggerRelations logReference, SyncLogger logger, LED led) {

@@ -7,12 +7,11 @@
 
 package frc.robot.oi;
 
-import edu.wpi.first.networktables.EntryNotification;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.utilities.functionalinterfaces.MidiAction;
+import frc.robot.utilities.Functions;
 
 /**
  * Add your docs here.
@@ -21,7 +20,8 @@ public class Midi {
 
     private NetworkTable ccTable;
     private NetworkTable noteTable;
-    private NetworkTable Return;
+    private NetworkTable CCReturn;
+    private NetworkTable NoteReturn;
 
     private Timer t;
 
@@ -31,28 +31,41 @@ public class Midi {
         NetworkTableInstance netTableInstance = NetworkTableInstance.getDefault();
         ccTable = netTableInstance.getTable("ccTable");
         noteTable = netTableInstance.getTable("noteTable");
-        Return = netTableInstance.getTable("Return");
+        CCReturn = netTableInstance.getTable("CCReturn");
+        NoteReturn = netTableInstance.getTable("NoteReturn");
         netTableInstance.setUpdateRate(0.01);
     }
 
     /**
-     * sends a cc to the contoler
+     * sends a raw cc to the contoler
      * @param id id of the cc to send
-     * @param value the cc value
+     * @param value the cc value (0-127)
      */
     public void sendCC(int id, int value){
-        NetworkTableEntry x = Return.getEntry(Integer.toString(id));
+        value = (int)Functions.clampDouble(value, 127, 0);
+        NetworkTableEntry x = CCReturn.getEntry(Integer.toString(id));
         x.setNumber(value);
     }
 
     /**
-     * gets a cc value
-     * @param id the id of the cc you want to get
-     * @return the value or 0 if nothing is curently stored
+     * sends a raw note on to the contoler
+     * @param id id of the note to send
+     * @param value the note value (0-127)
      */
-    public int getCC(int id){
+    public void sendNote(int id, int value){
+        value = (int)Functions.clampDouble(value, 127, 0);
+        NetworkTableEntry x = NoteReturn.getEntry(Integer.toString(id));
+        x.setNumber(value);
+    }
+
+    /**
+     * gets the raw value
+     * @param id the id of the cc you want to get
+     * @return 0-127
+     */
+    public int getCC(int id, int deafult){
         NetworkTableEntry x = ccTable.getEntry(Integer.toString(id));
-        return (int)x.getNumber(0);
+        return (int)x.getNumber(deafult);
     }
 
     /**
@@ -64,25 +77,4 @@ public class Midi {
         NetworkTableEntry x = noteTable.getEntry(Integer.toString(id));
         return x.getBoolean(false);
     }
-
-    /**
-     * sets the action to occure on a spisfic cc changing
-     * @param action the midiaction to occure
-     * @param id the id of the cc to act upon
-     */
-    public void setCcAction(MidiAction action, int id){
-        NetworkTableEntry x = ccTable.getEntry(Integer.toString(id));
-        x.addListener((EntryNotification n) -> {action.act(n);}, 20);
-    }
-
-    /**
-     * sets the action to occure on a spisfic note changing
-     * @param action the midiaction to occure
-     * @param id the id of the note to act upon
-     */
-    public void setNoteAction(MidiAction action, int id){
-        NetworkTableEntry x = noteTable.getEntry(Integer.toString(id));
-        x.addListener((EntryNotification n) -> {action.act(n);}, 20);
-    }
-
 }
