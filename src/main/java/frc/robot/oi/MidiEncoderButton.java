@@ -20,4 +20,5 @@ public class MidiEncoderButton extends Button{
     public boolean get() {
         return midi.getNote(getId);
     }
+
 }

@@ -10,7 +10,6 @@ package frc.robot.oi;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.utilities.Functions;
 
 /**
@@ -23,11 +22,7 @@ public class Midi {
     private NetworkTable CCReturn;
     private NetworkTable NoteReturn;
 
-    private Timer t;
-
     public Midi(){
-        t = new Timer();
-        t.start();
         NetworkTableInstance netTableInstance = NetworkTableInstance.getDefault();
         ccTable = netTableInstance.getTable("ccTable");
         noteTable = netTableInstance.getTable("noteTable");
@@ -48,7 +43,7 @@ public class Midi {
     }
 
     /**
-     * sends a raw note on to the contoler
+     * sends a raw note-on to the contoler
      * @param id id of the note to send
      * @param value the note value (0-127)
      */
@@ -61,6 +56,7 @@ public class Midi {
     /**
      * gets the raw value
      * @param id the id of the cc you want to get
+     * @param deafult the deafult value if none is present
      * @return 0-127
      */
     public int getCC(int id, int deafult){
@@ -71,7 +67,7 @@ public class Midi {
     /**
      * gets a note state
      * @param id the id of the note you want to get
-     * @return true of false, deafult to false if onthing is stored
+     * @return true of false, deafults to false if nothing is stored
      */
     public boolean getNote(int id){
         NetworkTableEntry x = noteTable.getEntry(Integer.toString(id));

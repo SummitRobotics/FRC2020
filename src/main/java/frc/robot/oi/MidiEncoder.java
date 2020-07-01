@@ -43,4 +43,16 @@ public class MidiEncoder {
         midi.sendCC(setId, ringmode);
     }
 
+    //TODO make good and usable if it works
+    /**
+     * sets the ring led of the encoder
+     * @param ringmode 0 = all LEDs off
+     * 1-13 = LEDs 1 (left) – 13 (right) on
+     * 14-26 = LEDs 1 (left) – 13 (right) blinking
+     * 27 = all LEDs on
+     * 28 = all LEDs blinking
+     */
+    public void setRingLED(int ringLED){
+        midi.sendCC((setId+16), ringLED);
+    }
 }
