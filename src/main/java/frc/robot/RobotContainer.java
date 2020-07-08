@@ -152,14 +152,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Launchpad bindings
-
-        // shooter
-        launchpad.missileB.whenPressed(new SemiAutoShooterAssembly(turret, shooter, conveyor, limelight, joystick.axisX, joystick.trigger));
-
         
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, joystick.axisY, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
