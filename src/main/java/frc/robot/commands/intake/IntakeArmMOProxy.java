@@ -18,11 +18,11 @@ public class IntakeArmMOProxy extends MOCommand {
     private IntakeArm intakeArm;
     private LoggerAxis controlAxis;
 
-    private LoggerButton controlButtonA, controlButtonB;
+    private LoggerButton controlButtonA, controlButtonB, controlButtonC;
 
     private static final double INTAKE_DEFAULT_POWER = .7;
 
-    public IntakeArmMOProxy(Subsystem controlSystem, IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButtonA, LoggerButton controlButtonB) {
+    public IntakeArmMOProxy(IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButtonA, LoggerButton controlButtonB, LoggerButton controlButtonC) {
         addRequirements(intakeArm);
 
         this.intakeArm = intakeArm;
@@ -30,6 +30,7 @@ public class IntakeArmMOProxy extends MOCommand {
 
         this.controlButtonA = controlButtonA;
         this.controlButtonB = controlButtonB;
+        this.controlButtonC = controlButtonC;
 
         /*
         bindCommand(controlButton, Trigger::whileActiveOnce, new StartEndCommand(
@@ -66,7 +67,7 @@ public class IntakeArmMOProxy extends MOCommand {
         if (controlButtonB.get()) {
             intakeArm.setIntakePower(controlAxis.get());
         } else {
-            if (controlButtonB.get()) {
+            if (controlButtonA.get()) {
                 intakeArm.setIntakePower(IntakeArm.intakePower);
             } else {
                 intakeArm.setIntakePower(0);
@@ -74,6 +75,8 @@ public class IntakeArmMOProxy extends MOCommand {
 
             intakeArm.setPivotPower(controlAxis.get());
         }
+
+        intakeArm.setLock(controlButtonC.get());
     }
 
     @Override

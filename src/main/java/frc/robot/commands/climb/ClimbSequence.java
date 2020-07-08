@@ -32,6 +32,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 		LED ledB
 	) {
 
+		
+
 		Command trim = new ParallelCommandGroup(
 			new TrimArm(leftArm, leftSlider),
 			new TrimArm(rightArm, rightSlider)

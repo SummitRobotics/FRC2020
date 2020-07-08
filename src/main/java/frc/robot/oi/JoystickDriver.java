@@ -7,7 +7,7 @@ import frc.robot.logging.SyncLogger;
 /**
  * Wrapper class for basic joystick functionality
  */
-public class JoystickDriver extends GenericDriver implements Subsystem {
+public class JoystickDriver extends GenericDriver {
 
 	public LoggerButton
 	button5,

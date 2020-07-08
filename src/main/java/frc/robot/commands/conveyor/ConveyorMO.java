@@ -14,7 +14,7 @@ public class ConveyorMO extends MOCommand {
 	Conveyor conveyor;
 	LoggerAxis controlAxis;
 
-	public ConveyorMO(Subsystem controlSystem, Conveyor conveyor, LoggerAxis controlAxis) {
+	public ConveyorMO(Conveyor conveyor, LoggerAxis controlAxis) {
 		addRequirements(conveyor);
 
 		this.conveyor = conveyor;

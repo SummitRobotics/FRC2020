@@ -178,10 +178,10 @@ public class RobotContainer {
         launchpad.buttonD.toggleWhenPressed(conveyor.toggleIntakeMode);
         launchpad.buttonD.toggleBind();
 
-        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(joystick, conveyor, joystick.axisY), false);
+        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
 
-        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(joystick, intakeArm, joystick.axisY, joystick.trigger, joystick.button3), false);
+        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
         //intake arm
