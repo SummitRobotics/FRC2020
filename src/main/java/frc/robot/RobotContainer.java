@@ -171,8 +171,10 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        launchpad.buttonD.toggleWhenPressed(conveyor.toggleIntakeMode);
-        launchpad.buttonD.toggleBind();
+        launchpad.buttonD.whenPressed(
+            new InstantCommand(conveyor::toggleIntakeMode)
+        );
+        launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -227,8 +229,15 @@ public class RobotContainer {
             }, shifter
         ));
 
-        MOCommand.setDefaultCommand(new FullManualShootingAssembly(
-            turret, shooter, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        turret.setDefaultCommand(new FullManualShootingAssembly(
+            turret,
+            shooter,
+            conveyor,
+            joystick.axisX,
+            joystick.axisZ,
+            joystick.axisY,
+            joystick.trigger
+        ));
     }
 
     /**

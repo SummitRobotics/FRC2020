@@ -72,10 +72,7 @@ public class ArcadeDrive extends CommandBase {
         reversePower = Math.pow(reversePower, 2);
 
         double power = forwardPower - reversePower;
-
-        double turn = turnAxis.get();
-        turn = (turn / deadzone) - Math.copySign(1, turn);
-        turn = Math.pow(turnAxis.get(), 3);
+        double turn = Math.pow(turnAxis.get(), 3);
 
         /*
         System.out.println(drivetrain.getLeftEncoderPosition());

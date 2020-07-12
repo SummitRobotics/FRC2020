@@ -47,10 +47,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	shootMode,
 	intakeMode;
 
-	public Command
-	toggleShootMode,
-	toggleIntakeMode;
-
 	public Conveyor() {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
@@ -60,16 +56,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 
 		shootMode = false;
 		intakeMode = false;
-
-		toggleShootMode = new StartEndCommand(
-			this::enableShootMode, 
-			this::disableShootMode
-		);
-
-		toggleIntakeMode = new StartEndCommand(
-			this::enableIntakeMode, 
-			this::disableIntakeMode
-		);
 	}
 
 	/**
@@ -81,7 +67,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 		conveyorMotor.set(ControlMode.PercentOutput, -power);
 	}
 
-	//TODO - Make sure that the docs are correct on the nature of breakbeam returns
 	/**
 	 * Gets the state of the entry breakbeam sensor
 	 * 
@@ -129,6 +114,14 @@ public class Conveyor extends SubsystemBase implements Logger {
 		shootMode = false;
 	}
 
+	public void toggleShootMode() {
+		shootMode = !shootMode;
+	}
+
+	public void setShootMode(boolean newMode) {
+		shootMode = newMode;
+	}
+
 	/**
 	 * Sets the intake mode flag to true
 	 */
@@ -141,6 +134,18 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 */
 	public void disableIntakeMode() {
 		intakeMode = false;
+	}
+
+	public void toggleIntakeMode() {
+		intakeMode = !intakeMode;
+	}
+
+	public void setIntakeMode(boolean newMode) {
+		intakeMode = newMode;
+	}
+
+	public boolean getIntakeMode() {
+		return intakeMode;
 	}
 
 	@Override

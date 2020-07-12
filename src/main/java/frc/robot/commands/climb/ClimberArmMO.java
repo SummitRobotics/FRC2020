@@ -11,6 +11,7 @@ public class ClimberArmMO extends MOCommand {
 
 	public ClimberArmMO(ClimberArm arm, LoggerAxis controlAxis) {
 		addRequirements(arm);
+		addUsed(controlAxis);
 
 		this.arm = arm;
 		this.controlAxis = controlAxis;

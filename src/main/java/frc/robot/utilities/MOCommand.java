@@ -1,5 +1,8 @@
 package frc.robot.utilities;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -11,37 +14,27 @@ import frc.robot.utilities.functionalinterfaces.Binder;
  */
 public abstract class MOCommand extends CommandBase {
 
-	private static int using = 0;
+	private ArrayList<Usable> used = new ArrayList<>();
 
-	public static void setDefaultCommand(Command command) {
-		new Trigger(() -> (using == 0)).whileActiveContinuous(command);
+	public void addUsed(Usable... users) {
+		used = new ArrayList<Usable>(Arrays.asList(users));
 	}
 
 	@Override
 	public void initialize() {
-		using++;
+		super.initialize();
+
+		for (Usable u : used) {
+			u.using(this);
+		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		using--;
-	}
+		super.end(interrupted);
 
-    public Command bindCommand(
-		Trigger trigger, 
-		Binder binding, 
-		Command command
-	) {
-		return bindCommand(trigger, binding, command, true);
-	}
-
-
-	public Command bindCommand(
-		Trigger trigger, 
-		Binder binding, 
-		Command command, 
-		boolean interruptable
-	) {
-		return Functions.bindCommand(this, trigger, binding, command, interruptable);
+		for (Usable u : used) {
+			u.release(this);
+		}
 	}
 }

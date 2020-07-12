@@ -1,32 +1,76 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
+import frc.robot.utilities.Functions;
+import frc.robot.utilities.MOCommand;
 
-public class IntakeArmMO extends SequentialCommandGroup {
+/**
+ * Manual override for the intake arm
+ */
+public class IntakeArmMO extends MOCommand {
 
-	private IntakeArm intakeArm;
+    private IntakeArm intakeArm;
+    private LoggerAxis controlAxis;
 
-	public IntakeArmMO(IntakeArm intakeArm, LoggerAxis controlAxis, LoggerButton controlButtonA, LoggerButton controlButtonB, LoggerButton controlButtonC) {
-		this.intakeArm = intakeArm;
+    private LoggerButton controlButtonA, controlButtonB, controlButtonC;
 
-		addCommands(
-			new InstantCommand(this::cancelIntakeCommand),
-			new IntakeArmMOProxy(intakeArm, controlAxis, controlButtonA, controlButtonB, controlButtonC)
-		);
-	}
+    private static final double INTAKE_DEFAULT_POWER = .7;
 
-	private void cancelIntakeCommand() {
-		Command potentialProblem = CommandScheduler.getInstance().requiring(intakeArm);
+    public IntakeArmMO(
+        IntakeArm intakeArm, 
+        LoggerAxis controlAxis, 
+        LoggerButton controlButtonA, 
+        LoggerButton controlButtonB, 
+        LoggerButton controlButtonC
+    ) {
+        addRequirements(intakeArm);
+        addUsed(controlAxis, controlButtonA, controlButtonB, controlButtonC);
 
-		if (potentialProblem != null) {
-			potentialProblem.cancel();
-		}
-	}
+        this.intakeArm = intakeArm;
+        this.controlAxis = controlAxis;
+
+        this.controlButtonA = controlButtonA;
+        this.controlButtonB = controlButtonB;
+        this.controlButtonC = controlButtonC;
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        intakeArm.stop();
+    }
+
+    @Override
+    public void execute() {
+        if (controlButtonB.get()) {
+            intakeArm.setIntakePower(controlAxis.get());
+        } else {
+            if (controlButtonA.get()) {
+                intakeArm.setIntakePower(IntakeArm.intakePower);
+            } else {
+                intakeArm.setIntakePower(0);
+            }
+
+            intakeArm.setPivotPower(controlAxis.get());
+        }
+
+        intakeArm.setLock(controlButtonC.get());
+    }
+
+    @Override
+    public void end(final boolean interrupted) {
+        super.end(interrupted);
+        intakeArm.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

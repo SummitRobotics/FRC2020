@@ -17,13 +17,14 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	private Turret turret;
 	private Shooter shooter;
-
-	private Command expel;
+	private Conveyor conveyor;
 
 	private LoggerAxis 
 	turretRotationPower,
 	shooterSpoolPower,
 	shooterHoodPower;
+
+	private LoggerButton trigger;
 
 	public FullManualShootingAssembly 
 		(
@@ -40,12 +41,13 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		this.turret = turret;
 		this.shooter = shooter;
-
-		expel = Functions.bindCommand(this, trigger, Trigger::whileActiveOnce, conveyor.toggleShootMode);
+		this.conveyor = conveyor;
 
 		this.turretRotationPower = turretRotationPower;
 		this.shooterSpoolPower = shooterSpoolPower;
 		this.shooterHoodPower = shooterHoodPower;
+
+		this.trigger = trigger;
 
 		addRequirements(turret);
 	}
@@ -57,16 +59,24 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-		turret.setPower(turretRotationPower.get() / 5); // Scaled by five for sanity
-		shooter.setHoodPower(-(shooterHoodPower.get() / 3)); // Scaled by three for proper motor control
 
-		double spoolPower = (shooterSpoolPower.get() - 1) / 2;
-		shooter.setPower(spoolPower);
+		if (!(turretRotationPower.inUse() || shooterHoodPower.inUse())) {
+			turret.setPower(turretRotationPower.get() / 5); // Scaled by five for sanity
+			shooter.setHoodPower(-(shooterHoodPower.get() / 3)); // Scaled by three for proper motor control
+		}
+
+		if (!shooterSpoolPower.inUse()) {
+			shooter.setPower((shooterSpoolPower.get() - 1) / 2);
+		}
+
+		if (!trigger.inUse()) {
+			conveyor.setShootMode(trigger.get());
+		}
 	}
 
 	@Override
 	public void end(boolean interupted) {
-		expel.cancel();
+		conveyor.setShootMode(false);
 
 		turret.stop();
 		shooter.stop();

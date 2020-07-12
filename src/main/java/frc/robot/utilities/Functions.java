@@ -29,6 +29,11 @@ public class Functions {
         }
     }
 
+    public static double deadzone(double value, double range) {
+        value = value - (Math.copySign(range, value));
+        return value;
+    }
+
     /**
      * Tells if value is within a target range
      * @param toCompare the value to compare
@@ -39,28 +44,4 @@ public class Functions {
     public static boolean isWithin(double toCompare, double target, double error){
         return Math.abs(toCompare - target) <= (error / 2);
     }
-
-    public static Command bindCommand(
-		Command bindable, 
-		Trigger trigger, 
-		Binder binding, 
-		Command command
-	) {
-		
-		return bindCommand(bindable, trigger, binding, command, true);
-	}
-
-
-	public static Command bindCommand(
-		Command bindable, 
-		Trigger trigger, 
-		Binder binding, 
-		Command command, 
-		boolean interruptable
-	) {
-		Trigger activator = new Trigger(() -> CommandScheduler.getInstance().isScheduled(bindable));
-
-		binding.bind(activator.and(trigger), command, interruptable);
-		return command;
-	}
 }
