@@ -24,11 +24,7 @@ public class ClimberArm extends SubsystemBase {
             this.inverted = inverted;
         }
     }
-
-    public static final int 
-    LEFT_CONTROL_PANEL_POSITION = 103,
-    CLIMB_POSITION = 315;
-
+ 
     private CANSparkMax motor;
     private CANEncoder encoder;
     private CANPIDController pidController;
