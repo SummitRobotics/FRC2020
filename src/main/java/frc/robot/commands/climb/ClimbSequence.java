@@ -76,7 +76,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 				ledA.set(false);
 				ledB.set(true);
 			}),
-			new RaiseArmsSync(leftArm, rightArm, ClimberArm.CLIMB_POSITION),
+			new RaiseArmsSync(leftArm, rightArm),
 			trim
 		);
 	}
