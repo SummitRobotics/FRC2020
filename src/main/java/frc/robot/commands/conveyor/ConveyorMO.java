@@ -6,14 +6,16 @@ import frc.robot.oi.LoggerAxis;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.utilities.MOCommand;
 
-/**
- * Manual override for the conveyor
- */
 public class ConveyorMO extends MOCommand {
 
 	Conveyor conveyor;
 	LoggerAxis controlAxis;
 
+	/**
+	 * Manual override for the conveyor
+	 * @param conveyor the conveyor
+	 * @param controlAxis the axis to control the conveyor
+	 */
 	public ConveyorMO(Conveyor conveyor, LoggerAxis controlAxis) {
 		addRequirements(conveyor);
 		addUsed(controlAxis);

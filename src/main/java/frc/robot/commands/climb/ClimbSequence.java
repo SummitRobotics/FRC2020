@@ -18,13 +18,13 @@ import frc.robot.subsystems.ClimberArm;
 import frc.robot.subsystems.ClimberPneumatics;
 import frc.robot.utilities.Functions;
 
-//TODO - test on robot
 public class ClimbSequence extends SequentialCommandGroup {
 
 	/**
 	 * Robot's climbing sequence
 	 * 
-	 * First, arms are pressurized and raised to a target setpoint. Then, trim sliders are activated and the driver moves the robot into position.
+	 * First, arms are pressurized and raised to a target setpoint. Then, trim 
+	 * sliders are activated and the driver moves the robot into position.
 	 * Finally, the missile switch is flipped off, and the arms depressurize.
 	 * 
 	 * @param leftArm the left climber arm
@@ -47,15 +47,27 @@ public class ClimbSequence extends SequentialCommandGroup {
 		LED ledB
 	) {
 
+
+		/**
+		 * A command to allow for both climber arms to be manually trimmed using the trimming sliders
+		 * on the launchpad.
+		 */
 		Command trim = new ParallelCommandGroup(
 			new TrimArm(leftArm, leftSlider),
 			new TrimArm(rightArm, rightSlider)
 		) {
+
+			/**
+			 * Ends the command when the missile latch is pushed down
+			 */
 			@Override
 			public boolean isFinished() {
 				return super.isFinished() || !nextPhase.get();
 			}
 
+			/**
+			 * Depressurizes the arms if the trim ended properly, otherwise it leaves them up
+			 */
 			@Override
 			public void end(boolean interrupted) {
 				super.end(interrupted);

@@ -8,6 +8,11 @@ public class LowerArm extends CommandBase {
 	private ClimberArm arm;
 	private int distance;
 
+	/**
+	 * Command to lower a single climber arm a specific distance
+	 * @param arm the climber arm
+	 * @param distance the distance to travel
+	 */
 	public LowerArm(ClimberArm arm, int distance) {
 		this.arm = arm;
 		this.distance = distance;

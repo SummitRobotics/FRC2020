@@ -17,11 +17,16 @@ public class TrimArm extends CommandBase {
 
 	private RollingAverage average;
 
+	/**
+	 * Trims a specific climber arm based on a launchpad trim slider
+	 * @param arm the climber arm
+	 * @param slider the launchpad trim slider
+	 */
 	public TrimArm(ClimberArm arm, LoggerAxis slider) {
 		this.arm = arm;
 		this.slider = slider;
 
-		average = new RollingAverage(8);
+		average = new RollingAverage(8); //Rolling average to increase slider precision
 
 		addRequirements(arm);
 	}
@@ -34,14 +39,14 @@ public class TrimArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		average.update(slider.get() - sliderOffset);
+		average.update(slider.get() - sliderOffset); //Sliders starting position is treated as 0
 
 		double target = average.getAverage();
 		target = (150 * target) + startingPosition;
 
 		double currentPosition = arm.getEncoderPosition();
 
-		if (Functions.isWithin(currentPosition, target, 10)) {
+		if (Functions.isWithin(currentPosition, target, 10)) { //deadzone
 			arm.setPower(0);
 		} else {
 			arm.setPower(Math.copySign(0.5, target - currentPosition));

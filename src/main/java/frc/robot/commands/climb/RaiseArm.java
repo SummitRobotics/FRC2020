@@ -3,11 +3,19 @@ package frc.robot.commands.climb;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberArm;
 
+/**
+ * Raises the climber
+ */
 public class RaiseArm extends CommandBase {
 
 	private ClimberArm arm;
 	private int distance;
 
+	/**
+	 * Raises a single climber arm a specific distance
+	 * @param arm the climber arm
+	 * @param distance the distance
+	 */
 	public RaiseArm(ClimberArm arm, int distance) {
 		this.arm = arm;
 		this.distance = distance;

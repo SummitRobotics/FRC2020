@@ -9,6 +9,9 @@ public class ClimberArmMO extends MOCommand {
 	private ClimberArm arm;
 	private LoggerAxis controlAxis;
 
+	/**
+	 * Command for manually controlling a single climber arm
+	 */
 	public ClimberArmMO(ClimberArm arm, LoggerAxis controlAxis) {
 		addRequirements(arm);
 		addUsed(controlAxis);
