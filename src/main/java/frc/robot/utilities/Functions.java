@@ -49,4 +49,8 @@ public class Functions {
     public static boolean isWithin(double toCompare, double target, double error){
         return Math.abs(toCompare - target) <= (error / 2);
     }
+
+    public static boolean absoluteGreater(double a, double b) {
+        return Math.abs(a) > Math.abs(b);
+    }
 }

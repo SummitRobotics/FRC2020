@@ -58,14 +58,14 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void execute() {
 
-		if (!(turretRotationPower.inUse() || shooterHoodPower.inUse())) {
-			//makes it so only one can run at a time to eliminate drift
-			if(Math.abs(turretRotationPower.get()) > Math.abs(shooterHoodPower.get())){
-				turret.setPower(Functions.deadzone(.05, turretRotationPower.get()) / 5); // Scaled by five for sanity
-			}
-			else{
-				shooter.setHoodPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by three for proper motor control
-			}
+		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
+
+			turret.setPower(Functions.deadzone(.05, turretRotationPower.get()) / 5); // Scaled by 5 for sanity
+
+		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
+
+			shooter.setHoodPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
+
 		}
 
 		if (!shooterSpoolPower.inUse()) {
