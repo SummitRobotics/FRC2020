@@ -1,8 +1,6 @@
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Conveyor;
@@ -61,8 +59,13 @@ public class FullManualShootingAssembly extends CommandBase {
 	public void execute() {
 
 		if (!(turretRotationPower.inUse() || shooterHoodPower.inUse())) {
-			turret.setPower(turretRotationPower.get() / 5); // Scaled by five for sanity
-			shooter.setHoodPower(-(shooterHoodPower.get() / 3)); // Scaled by three for proper motor control
+			//makes it so only one can run at a time to eliminate drift
+			if(Math.abs(turretRotationPower.get()) > Math.abs(shooterHoodPower.get())){
+				turret.setPower(Functions.deadzone(.05, turretRotationPower.get()) / 5); // Scaled by five for sanity
+			}
+			else{
+				shooter.setHoodPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by three for proper motor control
+			}
 		}
 
 		if (!shooterSpoolPower.inUse()) {

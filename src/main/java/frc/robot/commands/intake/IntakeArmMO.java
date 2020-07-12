@@ -1,13 +1,9 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.IntakeArm;
-import frc.robot.utilities.Functions;
 import frc.robot.utilities.MOCommand;
 
 /**
@@ -19,8 +15,6 @@ public class IntakeArmMO extends MOCommand {
     private LoggerAxis controlAxis;
 
     private LoggerButton controlButtonA, controlButtonB, controlButtonC;
-
-    private static final double INTAKE_DEFAULT_POWER = .7;
 
     public IntakeArmMO(
         IntakeArm intakeArm, 

@@ -1,22 +1,14 @@
 package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.oi.LEDButton.LED;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.subsystems.ClimberPneumatics;
-import frc.robot.utilities.Functions;
 
 //TODO - test on robot
 public class ClimbSequence extends SequentialCommandGroup {

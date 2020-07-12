@@ -1,10 +1,5 @@
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.utilities.functionalinterfaces.Binder;
-
 /**
  * Contains various static utility functions for use throughout the program
  */
@@ -29,9 +24,19 @@ public class Functions {
         }
     }
 
-    public static double deadzone(double value, double range) {
-        value = value - (Math.copySign(range, value));
-        return value;
+    /**
+     * returns input value with deadzone applyed
+     * @param deadRange the range in both directions to be dead
+     * @param in the input value to kill
+     * @return the value to be used
+     */
+    public static double deadzone(double deadRange, double in) {
+        if(Math.abs(in) < deadRange){
+            return 0;
+        }
+        else{
+            return in;
+        }
     }
 
     /**

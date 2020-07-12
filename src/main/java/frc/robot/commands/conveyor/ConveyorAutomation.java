@@ -2,7 +2,6 @@ package frc.robot.commands.conveyor;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Conveyor.States;
 
 /**
  * Default command for the conveyor to manage its state

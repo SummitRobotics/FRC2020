@@ -48,7 +48,6 @@ public class Drivetrain implements Subsystem, Logger {
 
     // pid config
     private double 
-    FEED_FWD = 0, 
     // change later, just so a problem doesn't break my walls
     OUTPUT_MIN = -1, 
     OUTPUT_MAX = 1;
