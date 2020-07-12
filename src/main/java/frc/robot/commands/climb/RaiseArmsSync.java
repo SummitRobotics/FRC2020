@@ -8,6 +8,12 @@ public class RaiseArmsSync extends ParallelCommandGroup {
 
 	private ClimberArm leftArm, rightArm;
 
+	/**
+	 * Raises both climber arms a specific distance
+	 * @param leftArm the left climber arm
+	 * @param rightArm the right climber arm
+	 * @param distance the distance
+	 */
 	public RaiseArmsSync(ClimberArm leftArm, ClimberArm rightArm, int distance) {
 
 		this.leftArm = leftArm;
