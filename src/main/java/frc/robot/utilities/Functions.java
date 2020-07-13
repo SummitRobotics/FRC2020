@@ -50,6 +50,12 @@ public class Functions {
         return Math.abs(toCompare - target) <= (error / 2);
     }
 
+    /**
+     * returns true if the abs of a is bigger then b
+     * @param a refrence value
+     * @param b comparing value
+     * @return ture if abs of refrence is bigger
+     */
     public static boolean absoluteGreater(double a, double b) {
         return Math.abs(a) > Math.abs(b);
     }

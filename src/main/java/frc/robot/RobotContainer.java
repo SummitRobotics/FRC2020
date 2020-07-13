@@ -13,14 +13,7 @@ import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
-import frc.robot.subsystems.ClimberArm;
-import frc.robot.subsystems.ClimberPneumatics;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.IntakeArm;
-import frc.robot.subsystems.Shifter;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.climb.ClimbSequence;
@@ -100,9 +93,6 @@ public class RobotContainer {
         rightArm = new ClimberArm(Sides.RIGHT);
         turret = new Turret();
         climberPneumatics = new ClimberPneumatics();
-
-        // buddySolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.OPEN_CLAMP,
-        // Ports.CLOSE_CLAMP);
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
