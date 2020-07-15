@@ -68,10 +68,12 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		}
 
+		//System.out.println("shoot power: " + shooterSpoolPower.get());
+
 		if (!shooterSpoolPower.inUse()) {
 			shooter.setPower((shooterSpoolPower.get() - 1) / 2);
 		}
-
+		
 		if (!trigger.inUse()) {
 			conveyor.setShootMode(trigger.get());
 		}

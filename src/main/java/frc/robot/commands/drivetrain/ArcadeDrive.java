@@ -55,7 +55,6 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.setOpenRampRate(0);
-        shift.lowGear();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

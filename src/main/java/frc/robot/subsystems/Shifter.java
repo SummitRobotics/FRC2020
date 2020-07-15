@@ -26,12 +26,14 @@ public class Shifter implements Subsystem, Logger{
         ShiftLeds.setColor(green);
         oldShift = true;
         shift.set(Value.kForward);
+        System.out.println("high");
     }
 
     public void lowGear() {
         ShiftLeds.setColor(red);
         oldShift = false;
         shift.set(Value.kReverse);
+        System.out.println("low");
     }
 
     /**

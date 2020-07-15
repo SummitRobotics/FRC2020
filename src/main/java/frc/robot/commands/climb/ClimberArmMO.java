@@ -29,6 +29,7 @@ public class ClimberArmMO extends MOCommand {
 	@Override
 	public void execute() {
 		arm.setPower(controlAxis.get());
+		//System.out.println(arm.getside() + " arm encoder: " + arm.getEncoderPosition());
 	}
 
 	@Override

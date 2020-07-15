@@ -113,6 +113,7 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	public void setLock(boolean on) {
 		lock.set(on);
+		System.out.println("arm lock: " + on);
 	}
 
 	public void openLock() {

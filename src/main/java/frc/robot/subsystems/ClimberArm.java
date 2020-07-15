@@ -28,6 +28,7 @@ public class ClimberArm extends SubsystemBase {
     private CANSparkMax motor;
     private CANEncoder encoder;
     private CANPIDController pidController;
+    private Sides side;
 
     private static final double
     defaultP = 0,
@@ -35,6 +36,7 @@ public class ClimberArm extends SubsystemBase {
     defaultD = 0;
     
     public ClimberArm(Sides side) {
+        this.side = side;
         motor = new CANSparkMax(side.motorPort, MotorType.kBrushless);
         motor.setInverted(side.inverted);
 
@@ -71,5 +73,9 @@ public class ClimberArm extends SubsystemBase {
 
     public void setPosition(double setpoint) {
         pidController.setReference(setpoint, ControlType.kPosition);
+    }
+
+    public String getside(){
+        return side.toString();
     }
 }

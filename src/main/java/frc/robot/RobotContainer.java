@@ -108,8 +108,14 @@ public class RobotContainer {
                 new InstantCommand(shifter::lowGear));
 
         // things that happen when the robot is inishlided
-        teleInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
+        teleInit = new SequentialCommandGroup(
+                new InstantCommand(climberPneumatics::extendClimb),
                 new InstantCommand(shifter::highGear),
+                new InstantCommand(() -> System.out.println("InitHigh")),
+                new InstantCommand(() -> {
+                    launchpad.bigLEDRed.set(false);
+                    launchpad.bigLEDGreen.set(true);
+                }),
                 new InstantCommand(() -> conveyor.disableIntakeMode()),
                 new InstantCommand(() -> conveyor.disableShootMode())
                 );
@@ -199,10 +205,12 @@ public class RobotContainer {
                 shifter.lowGear();
                 launchpad.bigLEDRed.set(true);
                 launchpad.bigLEDGreen.set(false);
+                System.out.println("lowCall");
             }, () -> {
                 shifter.highGear();
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
+                System.out.println("highCall");
             }, shifter
         ));
 
