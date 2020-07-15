@@ -9,13 +9,11 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Shifter;
 import frc.robot.oi.LoggerAxis;
 
 public class ArcadeDrive extends CommandBase {
 
     private Drivetrain drivetrain;
-    private Shifter shift;
 
     private LoggerAxis forwardPowerAxis;
     private LoggerAxis reversePowerAxis;
@@ -35,14 +33,12 @@ public class ArcadeDrive extends CommandBase {
      */
     public ArcadeDrive(
         Drivetrain drivetrain, 
-        Shifter shift, 
         LoggerAxis forwardPowerAxis, 
         LoggerAxis reversePowerAxis, 
         LoggerAxis turnAxis)
     {
 
         this.drivetrain = drivetrain;
-        this.shift = shift;
 
         this.forwardPowerAxis = forwardPowerAxis;
         this.reversePowerAxis = reversePowerAxis;
@@ -79,8 +75,7 @@ public class ArcadeDrive extends CommandBase {
         System.out.println("-------------");
         */
         
-        // power rate of change
-        
+        // aceloration limiter
         if (power > old + max_change_rate) {
             power = old + max_change_rate;
             old = power;

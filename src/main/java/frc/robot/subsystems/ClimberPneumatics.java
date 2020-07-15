@@ -34,7 +34,7 @@ public class ClimberPneumatics extends SubsystemBase {
     }
 
     public boolean getClimbState() {
-        //System.out.println("clibmPneumatics: "+climbState);
-        return climbState;
+        System.out.println("clibmPneumatics: "+climbState);
+        return this.climbState;
     }
 }

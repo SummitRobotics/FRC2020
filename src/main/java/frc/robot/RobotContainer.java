@@ -96,7 +96,7 @@ public class RobotContainer {
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
-        colorSensor = new ColorSensorV3(Port.kOnboard);
+        //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         setDefaultCommands();
         configureButtonBindings();
@@ -110,8 +110,8 @@ public class RobotContainer {
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
                 new InstantCommand(climberPneumatics::extendClimb),
+                new InstantCommand(intakeArm::closeLock),
                 new InstantCommand(shifter::highGear),
-                new InstantCommand(() -> System.out.println("InitHigh")),
                 new InstantCommand(() -> {
                     launchpad.bigLEDRed.set(false);
                     launchpad.bigLEDGreen.set(true);
@@ -123,7 +123,7 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         // drive by controler
-        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, shifter, controller1.rightTrigger,
+        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
                 controller1.leftTrigger, controller1.leftX));
 
         // makes intake arm go back to limit when not on limit
@@ -205,12 +205,10 @@ public class RobotContainer {
                 shifter.lowGear();
                 launchpad.bigLEDRed.set(true);
                 launchpad.bigLEDGreen.set(false);
-                System.out.println("lowCall");
             }, () -> {
                 shifter.highGear();
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
-                System.out.println("highCall");
             }, shifter
         ));
 
