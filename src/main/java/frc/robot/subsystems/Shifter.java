@@ -4,9 +4,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
+import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
 
 public class Shifter implements Subsystem, Logger{
@@ -14,8 +16,6 @@ public class Shifter implements Subsystem, Logger{
     private DoubleSolenoid shift;
     private boolean oldShift;
     private LEDRange ShiftLeds;
-    private Color8Bit green = new Color8Bit(0, 255, 0);
-    private Color8Bit red = new Color8Bit(255, 0, 0);
 
     public Shifter(LEDRange leds) {
         ShiftLeds = leds;
@@ -23,13 +23,13 @@ public class Shifter implements Subsystem, Logger{
     }
 
     public void highGear() {
-        ShiftLeds.setColor(green);
+        ShiftLeds.removeLEDCall("lowShift");
         oldShift = true;
         shift.set(Value.kForward);
     }
 
     public void lowGear() {
-        ShiftLeds.setColor(red);
+        ShiftLeds.addLEDCall("lowShift", new LEDCall(5, LEDCall.solid(Colors.Red)));
         oldShift = false;
         shift.set(Value.kReverse);
     }

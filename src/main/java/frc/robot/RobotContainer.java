@@ -15,6 +15,7 @@ import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
@@ -27,7 +28,8 @@ import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.turret.FullManualShootingAssembly;
-import frc.robot.devices.LEDs;
+import frc.robot.devices.LEDs.LEDs;
+import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
 
@@ -75,7 +77,8 @@ public class RobotContainer {
         logger = new SyncLogger();
 
         leds = new LEDs();
-        LEDRange shifterRange = leds.getAllLedsRangeController();
+        int[] allRange = {0, 29};
+        LEDRange allLEDS = new LEDRange(leds, allRange);
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
@@ -85,7 +88,7 @@ public class RobotContainer {
         compressor.setClosedLoopControl(true);
 
         drivetrain = new Drivetrain();
-        shifter = new Shifter(shifterRange);
+        shifter = new Shifter(allLEDS);
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         shooter = new Shooter();
@@ -109,6 +112,7 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
+                new InstantCommand(()-> allLEDS.addLEDCall("default", new LEDCall(1, LEDCall.solid(Colors.Green)))),
                 new InstantCommand(climberPneumatics::extendClimb),
                 new InstantCommand(intakeArm::closeLock),
                 new InstantCommand(shifter::highGear),
