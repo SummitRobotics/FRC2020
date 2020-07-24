@@ -4,11 +4,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.devices.LEDs.LEDCall;
+import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
 import frc.robot.oi.LEDButton.LED;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.subsystems.ClimberPneumatics;
+import frc.robot.utilities.Colors;
 
 public class ClimbSequence extends SequentialCommandGroup {
 
@@ -26,7 +29,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 	 * @param rightSlider the slider on the lauchpad used to tune the right arm
 	 * @param nextPhase the button that starts the climb, and on release, ends it
 	 * @param ledA one half of the big LED on the launchpad
-	 * @param ledB the other half of the big LED on the launchpad
+	 * @param ledB the other half of the big LED on the 
+	 * @param leds the robot leds to control
 	 */
 	public ClimbSequence(
 		ClimberArm leftArm, 
@@ -36,7 +40,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 		LoggerAxis rightSlider,
 		LoggerButton nextPhase,
 		LED ledA,
-		LED ledB
+		LED ledB,
+		LEDRange leds
 	) {
 
 
@@ -64,6 +69,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
+				leds.removeLEDCall("ArmsUp");
+
 				if (!interrupted) {
 					pneumatics.retractClimb();
 				}
@@ -71,6 +78,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
+			new InstantCommand(() -> leds.addLEDCall("ArmsUp", new LEDCall(7, LEDCall.flashing(Colors.Red, Colors.Off)))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

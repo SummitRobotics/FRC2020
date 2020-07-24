@@ -42,6 +42,9 @@ public class LEDs {
             buffer.setRGB(led, r, g, b);
     }
 
+    /**
+     * applies the changes made by setLed to the strip
+     */
     public void applyChanges(){
         ledStrip.setData(buffer);
     }

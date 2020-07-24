@@ -16,6 +16,7 @@ public class Shifter implements Subsystem, Logger{
     private DoubleSolenoid shift;
     private boolean oldShift;
     private LEDRange ShiftLeds;
+    private int LEDpriority = 5;
 
     public Shifter(LEDRange leds) {
         ShiftLeds = leds;
@@ -29,7 +30,7 @@ public class Shifter implements Subsystem, Logger{
     }
 
     public void lowGear() {
-        ShiftLeds.addLEDCall("lowShift", new LEDCall(5, LEDCall.solid(Colors.Red)));
+        ShiftLeds.addLEDCall("lowShift", new LEDCall(LEDpriority, LEDCall.solid(Colors.Red)));
         oldShift = false;
         shift.set(Value.kReverse);
     }

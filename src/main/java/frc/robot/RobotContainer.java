@@ -69,6 +69,8 @@ public class RobotContainer {
     private Command autoInit;
     private Command teleInit;
 
+    private LEDRange allLEDS;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -78,7 +80,7 @@ public class RobotContainer {
 
         leds = new LEDs();
         int[] allRange = {0, 29};
-        LEDRange allLEDS = new LEDRange(leds, allRange);
+        allLEDS = new LEDRange(leds, allRange);
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
@@ -142,7 +144,7 @@ public class RobotContainer {
         
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, allLEDS));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
@@ -173,7 +175,7 @@ public class RobotContainer {
 
         Command intake = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
-            new SetDown(intakeArm)
+            new SetDown(intakeArm, allLEDS)
             );
 
         Command up = new SequentialCommandGroup(
