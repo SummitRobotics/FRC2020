@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -18,17 +14,15 @@ import frc.robot.utilities.Ports;
  */
 public class Shooter extends SubsystemBase {
 
-    private TalonSRX shooterMotor;
-    private SensorCollection shooterEncoder;
+    private CANSparkMax shooterMotor;
+    private CANEncoder shooterEncoder;
 
     private CANSparkMax adjustableHood;
     private CANEncoder hoodEncoder;
 
     public Shooter() {
-        shooterMotor = new TalonSRX(Ports.SHOOTER);
-        shooterEncoder = shooterMotor.getSensorCollection();
-
-        new VictorSPX(Ports.SHOOTER_FOLLOWER).follow(shooterMotor);
+        shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushless);
+        shooterEncoder = shooterMotor.getEncoder();
 
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
 
@@ -43,14 +37,14 @@ public class Shooter extends SubsystemBase {
      */
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
-        shooterMotor.set(ControlMode.PercentOutput, power);
+        shooterMotor.set(power);
     }
 
     /**
      * Stops the motor
      */
     public void stop() {
-        shooterMotor.set(ControlMode.PercentOutput, 0);
+        shooterMotor.set(0);
         adjustableHood.set(0);
     }
 
@@ -65,6 +59,6 @@ public class Shooter extends SubsystemBase {
      * @return the velocity
      */
     public double getRPM() {
-        return shooterEncoder.getQuadratureVelocity();
+        return shooterEncoder.getVelocity();
     }
 }

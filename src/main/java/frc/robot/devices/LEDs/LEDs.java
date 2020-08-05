@@ -9,7 +9,6 @@ package frc.robot.devices.LEDs;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
  * Device to manage LEDs

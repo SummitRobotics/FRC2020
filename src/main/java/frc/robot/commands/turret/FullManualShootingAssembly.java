@@ -24,6 +24,8 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	private LoggerButton trigger;
 
+	private boolean startupSpinPrevention;
+
 	public FullManualShootingAssembly 
 		(
 			Turret turret, 
@@ -46,6 +48,8 @@ public class FullManualShootingAssembly extends CommandBase {
 		this.shooterHoodPower = shooterHoodPower;
 
 		this.trigger = trigger;
+
+		startupSpinPrevention = true;
 
 		addRequirements(turret);
 	}
@@ -71,7 +75,18 @@ public class FullManualShootingAssembly extends CommandBase {
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
 		if (!shooterSpoolPower.inUse()) {
-			shooter.setPower((shooterSpoolPower.get() - 1) / 2);
+			double shooterPower  = (shooterSpoolPower.get() + 1) / 2;
+			if(startupSpinPrevention && shooterPower < 0.5){
+				startupSpinPrevention = false;
+			}
+			
+			if(!startupSpinPrevention){
+				shooter.setPower(shooterPower);
+			}
+			else{
+				shooter.setPower(0);
+			}
+			
 		}
 		
 		if (!trigger.inUse()) {
@@ -80,7 +95,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	}
 
 	@Override
-	public void end(boolean interupted) {
+	public void end(boolean interrupted) {
 		conveyor.setShootMode(false);
 
 		turret.stop();
