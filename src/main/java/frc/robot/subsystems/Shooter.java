@@ -24,6 +24,8 @@ public class Shooter extends SubsystemBase {
         shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushless);
         shooterEncoder = shooterMotor.getEncoder();
 
+        shooterMotor.setOpenLoopRampRate(0);
+
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
 
         hoodEncoder = adjustableHood.getAlternateEncoder();
@@ -60,5 +62,9 @@ public class Shooter extends SubsystemBase {
      */
     public double getRPM() {
         return shooterEncoder.getVelocity();
+    }
+
+    public double getTemperature() {
+        return shooterMotor.getMotorTemperature() * (9/5) + 32;
     }
 }

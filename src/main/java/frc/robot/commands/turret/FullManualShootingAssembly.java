@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerAxis;
 import frc.robot.oi.LoggerButton;
@@ -75,7 +76,9 @@ public class FullManualShootingAssembly extends CommandBase {
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
 		if (!shooterSpoolPower.inUse()) {
-			double shooterPower  = (shooterSpoolPower.get() + 1) / 2;
+			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
+
+			/*
 			if(startupSpinPrevention && shooterPower < 0.5){
 				startupSpinPrevention = false;
 			}
@@ -86,7 +89,12 @@ public class FullManualShootingAssembly extends CommandBase {
 			else{
 				shooter.setPower(0);
 			}
+			*/
+
+			shooter.setPower(shooterPower);
 			
+			SmartDashboard.putNumber("shooter speed", shooter.getRPM());
+			SmartDashboard.putNumber("shooter temp", shooter.getTemperature());
 		}
 		
 		if (!trigger.inUse()) {
