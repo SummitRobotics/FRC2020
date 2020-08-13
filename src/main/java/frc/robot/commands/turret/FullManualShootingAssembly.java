@@ -6,6 +6,7 @@ import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
 
 /**
@@ -25,6 +26,9 @@ public class FullManualShootingAssembly extends CommandBase {
 	private LoggerButton trigger;
 
 	private boolean startupSpinPrevention;
+
+	private ChangeRateLimiter limiter;
+    private final double max_turret_change_rate = 0.025;
 
 	public FullManualShootingAssembly 
 		(
@@ -49,6 +53,8 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		this.trigger = trigger;
 
+		limiter = new ChangeRateLimiter(max_turret_change_rate);
+
 		startupSpinPrevention = true;
 
 		addRequirements(turret);
@@ -63,13 +69,18 @@ public class FullManualShootingAssembly extends CommandBase {
 	public void execute() {
 
 		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-
-			turret.setPower(Functions.deadzone(.05, turretRotationPower.get()) / 5); // Scaled by 5 for sanity
+			double turretPower = limiter.getRateLimitedValue(turretRotationPower.get());
+			turret.setPower(Functions.deadzone(.05, turretPower) / 5); // Scaled by 5 for sanity
 
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
+			turret.setPower(limiter.getRateLimitedValue(0));
 
 			shooter.setHoodPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
 
+		}
+		else{
+			turret.setPower(limiter.getRateLimitedValue(0));
+			shooter.setHoodPower(0);
 		}
 
 		//System.out.println("shoot power: " + shooterSpoolPower.get());

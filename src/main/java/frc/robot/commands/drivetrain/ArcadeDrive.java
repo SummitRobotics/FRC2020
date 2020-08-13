@@ -9,6 +9,8 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utilities.ChangeRateLimiter;
+import frc.robot.utilities.Functions;
 import frc.robot.oi.LoggerAxis;
 
 public class ArcadeDrive extends CommandBase {
@@ -18,10 +20,10 @@ public class ArcadeDrive extends CommandBase {
     private LoggerAxis forwardPowerAxis;
     private LoggerAxis reversePowerAxis;
     private LoggerAxis turnAxis;
+    private ChangeRateLimiter limiter;
 
     private final double deadzone = .1;
 
-    private double old = 0;
     private double max_change_rate = 0.05;
     
     /**
@@ -44,6 +46,8 @@ public class ArcadeDrive extends CommandBase {
         this.reversePowerAxis = reversePowerAxis;
         this.turnAxis = turnAxis;
 
+        limiter = new ChangeRateLimiter(max_change_rate);
+
         addRequirements(drivetrain);
     }
 
@@ -60,8 +64,8 @@ public class ArcadeDrive extends CommandBase {
         double forwardPower = forwardPowerAxis.get();
         double reversePower = reversePowerAxis.get();
 
-        forwardPower = forwardPower < deadzone ? 0 : forwardPower;
-        reversePower = reversePower < deadzone ? 0 : reversePower;
+        forwardPower = Functions.deadzone(deadzone, forwardPower);
+        reversePower = Functions.deadzone(deadzone, reversePower);
 
         forwardPower = Math.pow(forwardPower, 2);
         reversePower = Math.pow(reversePower, 2);
@@ -69,22 +73,7 @@ public class ArcadeDrive extends CommandBase {
         double power = forwardPower - reversePower;
         double turn = Math.pow(turnAxis.get(), 3);
 
-        /*
-        System.out.println(drivetrain.getLeftEncoderPosition());
-        System.out.println(drivetrain.getRightEncoderPosition());
-        System.out.println("-------------");
-        */
-        
-        // aceloration limiter
-        if (power > old + max_change_rate) {
-            power = old + max_change_rate;
-            old = power;
-        } else if (power < old - max_change_rate) {
-            power = old - max_change_rate;
-            old = power;
-        } else {
-            old = power;
-        }
+        power = limiter.getRateLimitedValue(power);
 
         // calculates power to the motors
         double leftPower = power + turn;
