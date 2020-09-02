@@ -224,6 +224,11 @@ public class Drivetrain implements Subsystem, Logger {
         setRightMotorPower(power);
     }
 
+    public void zeroEncoders() {
+        setLeftEncoder(0);
+        setRightEncoder(0);
+    }
+
     @Override
     public void periodic() {
 

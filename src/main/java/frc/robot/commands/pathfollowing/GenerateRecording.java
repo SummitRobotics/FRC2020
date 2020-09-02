@@ -1,8 +1,7 @@
-package frc.robot.commands.drivetrain;
+package frc.robot.commands.pathfollowing;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOError;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -45,7 +44,6 @@ public class GenerateRecording extends CommandBase {
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
 
         aborted = false;
-
     }
 
     @Override
@@ -60,7 +58,6 @@ public class GenerateRecording extends CommandBase {
 
         } catch(IOException x) {
             aborted = true;
-
             System.out.println("CacheFile could not be accessed, aborting...");
         }
     }
@@ -76,16 +73,7 @@ public class GenerateRecording extends CommandBase {
         }
 
         if (!savePointPrior && savePointCurrent) {
-            double left = drivetrain.getLeftEncoderPosition();
-            double right = drivetrain.getRightEncoderPosition();
-
-            addPoint(left, right);
-            
-            System.out.println("Point added with positions");
-            System.out.println("Left: " + left);
-            System.out.println("Right: " + right);
-            System.out.println("at time: " + timeStampFormatter.format(System.currentTimeMillis()));
-
+            addPoint();
         }
 
         savePointPrior = savePointCurrent;
@@ -97,7 +85,26 @@ public class GenerateRecording extends CommandBase {
         return aborted;
     }
 
-    private void addPoint(double left, double right) {
+    @Override
+    public void end(boolean interrupted) {
+        try (FileWriter file = new FileWriter(cacheFile, true)) {
+            file.append("STOP");
 
+        } catch (IOException x) {
+            System.out.println("WARNING: End-Of-Sequence indicator has not been inputed");
+        }
+    }
+
+    private void addPoint() {
+        try (FileWriter file = new FileWriter(cacheFile, true)) {
+            double left = drivetrain.getLeftEncoderPosition();
+            double right = drivetrain.getRightEncoderPosition();
+
+            file.append(left + ", " + right + "\n");
+
+        } catch(IOException x) {
+            aborted = true;
+            System.out.println("CacheFile could not be accessed, aborting...");
+        }
     }
 }
