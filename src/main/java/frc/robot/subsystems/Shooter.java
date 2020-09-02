@@ -67,4 +67,12 @@ public class Shooter extends SubsystemBase {
     public double getTemperature() {
         return shooterMotor.getMotorTemperature() * (9/5) + 32;
     }
+
+    public double getCurrentDraw() {
+        return shooterMotor.getOutputCurrent();
+    }
+
+    public void setOpenLoopRampRate(double rampRate) {
+        shooterMotor.setOpenLoopRampRate(rampRate);
+    }
 }

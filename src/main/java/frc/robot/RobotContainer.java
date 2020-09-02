@@ -27,6 +27,7 @@ import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
+import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
@@ -160,10 +161,12 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        launchpad.buttonD.whenPressed(
-            new InstantCommand(conveyor::toggleIntakeMode)
-        );
-        launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
+        // launchpad.buttonD.whenPressed(
+        //     new InstantCommand(conveyor::toggleIntakeMode)
+        // );
+        // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
+
+        launchpad.buttonD.whenPressed(new ShooterTester(shooter));
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -190,12 +193,12 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
-          intakeArm::closeLock,
-          intakeArm::openLock,
-          intakeArm
-        ), true);
-        launchpad.buttonA.toggleBind(); 
+        // launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
+        //   intakeArm::closeLock,
+        //   intakeArm::openLock,
+        //   intakeArm
+        // ), true);
+        // launchpad.buttonA.toggleBind(); 
 
         // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
         // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));
