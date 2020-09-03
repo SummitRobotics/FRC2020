@@ -78,9 +78,6 @@ public class Drivetrain implements Subsystem, Logger {
         rightPID.setD(D);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
 
-        leftPID.setOutputRange(-0.25, 0.25);
-        rightPID.setOutputRange(-0.25, 0.25);
-
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
         

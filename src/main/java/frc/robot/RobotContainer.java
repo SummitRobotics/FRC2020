@@ -27,7 +27,8 @@ import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
-import frc.robot.commands.shooter.ShooterTester;
+import frc.robot.commands.pathfollowing.GenerateRecording;
+//import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
@@ -124,7 +125,8 @@ public class RobotContainer {
                     launchpad.bigLEDGreen.set(true);
                 }),
                 new InstantCommand(() -> conveyor.disableIntakeMode()),
-                new InstantCommand(() -> conveyor.disableShootMode())
+                new InstantCommand(() -> conveyor.disableShootMode()),
+                new GenerateRecording(drivetrain, launchpad.buttonA, launchpad.buttonB)
                 );
     }
 
@@ -166,7 +168,7 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        launchpad.buttonD.whenPressed(new ShooterTester(shooter));
+        //launchpad.buttonD.whenPressed(new ShooterTester(shooter));
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();

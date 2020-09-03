@@ -5,6 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Drivetrain;
@@ -24,6 +29,13 @@ public class GenerateRecording extends CommandBase {
     private SimpleDateFormat timeStampFormatter;
 
     private boolean aborted;
+
+    private FileWriter file;
+
+    private NetworkTableEntry recordOutput;
+    private NetworkTableEntry saveIntake;
+    private NetworkTableEntry saveShooterMode;
+    private NetworkTableEntry saveShift;
 
     /**
      * Generates a recording of an autonomous sequence, and stores it to a cache file.
@@ -48,36 +60,63 @@ public class GenerateRecording extends CommandBase {
 
     @Override
     public void initialize() {
-        try (FileWriter writer = new FileWriter(cacheFile)) {
+        //try {
+            //file = new FileWriter(cacheFile);
             long currentTime = System.currentTimeMillis();
             String formattedTime = timeStampFormatter.format(currentTime);
 
-            writer.append(timeStampFormatter.format(currentTime + "\n"));
+            initShuffleboard();
+
+            //file.append(timeStampFormatter.format(currentTime + "\n"));
+            //file.append("sequence: start" + "\n");
 
             System.out.println("Recording Started at: " + formattedTime);
 
-        } catch(IOException x) {
-            aborted = true;
-            System.out.println("CacheFile could not be accessed, aborting...");
-        }
+        //} catch(IOException x) {
+            //aborted = true;
+            //System.out.println("CacheFile could not be created, aborting...");
+        //}
+    }
+
+    private void initShuffleboard(){
+        //Shuffleboard.update();
+        ShuffleboardTab tab = Shuffleboard.getTab("record");
+        
+        recordOutput = tab.add("Record status", "recording started").getEntry();
+        
+        saveIntake = tab.add("intake", false).withWidget("Toggle Button").getEntry();
+        saveShooterMode = tab.add("ShootMode", false).withWidget("Toggle Button").getEntry();
+        saveShift = tab.add("shifter", false).withWidget("Toggle Button").getEntry();
+
     }
 
     @Override
     public void execute() {
-        boolean savePointCurrent = savePoint.get();
-        boolean saveSequenceCurrent = saveSequence.get();
+        Shuffleboard.update();
+        try {
+            boolean savePointCurrent = savePoint.get();
+            boolean saveSequenceCurrent = saveSequence.get();
 
-        if (!saveSequencePrior && savePointCurrent) {
-            aborted = true;
-            return;
+            if (saveSequencePrior && !saveSequenceCurrent) {
+                aborted = true;
+                return;
+            }
+
+            if (savePointPrior && !savePointCurrent) {
+                addDrivetrainPoint();
+                recordOutput.setString("saved drivetrain point");
+            }
+
+            savePointPrior = savePointCurrent;
+            saveSequencePrior = saveSequenceCurrent;
+
+            RecordOnShuffleboard();
+            
+            //file.flush();
+        }catch(IOException e){
+            recordOutput.setString("FILE WRIGHT ERROR");
+            System.out.println("error while writing file, aborting");
         }
-
-        if (!savePointPrior && savePointCurrent) {
-            addPoint();
-        }
-
-        savePointPrior = savePointCurrent;
-        saveSequencePrior = saveSequenceCurrent;
     }
 
     @Override
@@ -87,24 +126,53 @@ public class GenerateRecording extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        try (FileWriter file = new FileWriter(cacheFile, true)) {
-            file.append("STOP");
+        recordOutput.setString("recording stopped");
 
-        } catch (IOException x) {
-            System.out.println("WARNING: End-Of-Sequence indicator has not been inputed");
+            // try {
+            //     file.append("sequence: end" + "\n");
+            //     file.flush();
+            // }catch(IOException e){
+            //     System.out.println("error while writing file after recording end");
+            // }
+            return;
+    }
+
+    private void RecordOnShuffleboard() throws IOException{
+        if(saveIntake.getBoolean(false)){
+            saveIntake.setBoolean(false);
+            addIntakePoint();
+            recordOutput.setString("saved intake point");
+        }
+
+        if(saveShift.getBoolean(false)){
+            saveShift.setBoolean(false);
+            addShiftPoint();
+            recordOutput.setString("saved shift point");
+        }
+
+        if(saveShooterMode.getBoolean(false)){
+            saveShooterMode.setBoolean(false);
+            addShootPoint();
+            recordOutput.setString("saved shoot point");
         }
     }
 
-    private void addPoint() {
-        try (FileWriter file = new FileWriter(cacheFile, true)) {
-            double left = drivetrain.getLeftEncoderPosition();
-            double right = drivetrain.getRightEncoderPosition();
+    private void addShiftPoint() throws IOException{
+        return;
+    }
 
-            file.append(left + ", " + right + "\n");
+    private void addShootPoint() throws IOException{
+        return;
+    }
 
-        } catch(IOException x) {
-            aborted = true;
-            System.out.println("CacheFile could not be accessed, aborting...");
-        }
+    private void addIntakePoint() throws IOException{
+        return;
+    }
+    
+    private void addDrivetrainPoint() throws IOException{
+        double left = drivetrain.getLeftEncoderPosition();
+        double right = drivetrain.getRightEncoderPosition();
+
+        //file.append("drivetrain: " + left + ", " + right + "\n");
     }
 }
