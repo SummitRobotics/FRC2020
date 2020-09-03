@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
@@ -15,15 +13,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger {
+public class Drivetrain implements Subsystem {
 
     private static final double
     P = .05,
     I = 0,//.00004,
     D = 0;//.00001;
-
-    //data for logger
-    private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
     // left motors
     private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
@@ -100,7 +95,6 @@ public class Drivetrain implements Subsystem, Logger {
      */
     public void setLeftMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        leftMotorPower = power;
         left.set(power);
     }
 
@@ -111,7 +105,6 @@ public class Drivetrain implements Subsystem, Logger {
      */
     public void setRightMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        rightMotorPower = power;
         right.set(power);
     }
 
@@ -121,8 +114,6 @@ public class Drivetrain implements Subsystem, Logger {
      * @param position the target position in terms of motor rotations
      */
     public void setLeftMotorTarget(double position) {
-        leftMotorPower = 2;
-        leftMotorTarget = position;
         leftPID.setReference(position, ControlType.kPosition);
     }
 
@@ -132,8 +123,6 @@ public class Drivetrain implements Subsystem, Logger {
      * @param position the target position in terms of motor rotations
      */
     public void setRightMotorTarget(double position) {
-        rightMotorPower = 2;
-        rightMotorTarget = position;
         rightPID.setReference(position, ControlType.kPosition);
     }
 
@@ -235,17 +224,5 @@ public class Drivetrain implements Subsystem, Logger {
         System.out.println(right.getAppliedOutput());
         System.out.println("+++++++++++++++++++++++++++++++");
         */
-    }
-
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
-        
-        return values;
     }
 }

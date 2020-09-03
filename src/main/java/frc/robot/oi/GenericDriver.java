@@ -1,8 +1,6 @@
 package frc.robot.oi;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.functionalinterfaces.AxisGetter;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
@@ -11,11 +9,9 @@ public abstract class GenericDriver {
 	private DriverStation driverStation = DriverStation.getInstance();
 
 	protected int port = 0;
-	protected SyncLogger logger = null;
 
-	protected GenericDriver(int port, SyncLogger logger) {
+	protected GenericDriver(int port) {
 		this.port = port;
-		this.logger = logger;
 	}
 
 	/**
@@ -75,12 +71,8 @@ public abstract class GenericDriver {
 	 * @param logReference the desired log reference for the button
 	 * @return the generated LoggerButton
 	 */
-	protected LoggerButton generateLoggerButton(ButtonGetter getter, LoggerRelations logReference) {
-		if (logger != null) {
-			return new LoggerButton(getter, logReference, logger);
-		}
-
-		return new LoggerButton(getter, logReference);
+	protected LoggerButton generateLoggerButton(ButtonGetter getter) {
+		return new LoggerButton(getter);
 	}
 
 	/**
@@ -92,12 +84,8 @@ public abstract class GenericDriver {
 	 * @param logReference the desired log reference for the button
 	 * @return the generated LoggerButton
 	 */
-	protected LoggerButton generateLoggerButton(int port, LoggerRelations logReference) {
-		if (logger != null) {
-			return new LoggerButton(getButtonGetter(port), logReference, logger);
-		}
-
-		return new LoggerButton(getButtonGetter(port), logReference);
+	protected LoggerButton generateLoggerButton(int port) {
+		return new LoggerButton(getButtonGetter(port));
 	}
 
 	/**
@@ -108,12 +96,8 @@ public abstract class GenericDriver {
 	 * @param logReference the desired log reference for the button
 	 * @return the generated axis
 	 */
-	protected LoggerAxis generateLoggerAxis(AxisGetter getter, LoggerRelations logReference) {
-		if (logger != null) {
-			return new LoggerAxis(getter, logReference, logger);
-		}
-
-		return new LoggerAxis(getter, logReference);
+	protected LoggerAxis generateLoggerAxis(AxisGetter getter) {
+		return new LoggerAxis(getter);
 	}
 
 	/**
@@ -125,11 +109,7 @@ public abstract class GenericDriver {
 	 * @param logReference the desired log reference for the button
 	 * @return the generated axis
 	 */
-	protected LoggerAxis generateLoggerAxis(int port, LoggerRelations logReference) {
-		if (logger != null) {
-			return new LoggerAxis(getAxisGetter(port), logReference, logger);
-		}
-
-		return new LoggerAxis(getAxisGetter(port), logReference, logger);
+	protected LoggerAxis generateLoggerAxis(int port) {
+		return new LoggerAxis(getAxisGetter(port));
 	}
 }
