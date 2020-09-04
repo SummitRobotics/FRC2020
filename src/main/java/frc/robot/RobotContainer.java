@@ -32,6 +32,7 @@ import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since

@@ -54,8 +54,8 @@ public class MoveByDistance extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        drive.setLeftMotorTarget(leftRotations);
-        drive.setRightMotorTarget(rightRotations);
+        drive.setLeftMotorPositionTarget(leftRotations);
+        drive.setRightMotorPositionTarget(rightRotations);
     }
 
     // Called once the command ends or is interrupted.

@@ -28,8 +28,8 @@ public class EncoderDrive extends CommandBase {
         drivetrain.stop();
         drivetrain.setLeftEncoder(0);
         drivetrain.setRightEncoder(0);
-        drivetrain.setLeftMotorTarget(ticks);
-        drivetrain.setRightMotorTarget(ticks);
+        drivetrain.setLeftMotorPositionTarget(ticks);
+        drivetrain.setRightMotorPositionTarget(ticks);
     }
     
 

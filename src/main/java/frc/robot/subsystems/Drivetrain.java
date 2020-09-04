@@ -1,9 +1,15 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.devices.PigeonGyro;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -15,39 +21,30 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class Drivetrain implements Subsystem {
 
-    private static final double
-    P = .05,
-    I = 0,//.00004,
-    D = 0;//.00001;
+    public final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(0); //TODO - get correct track width
 
     // left motors
-    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
+    private final CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
+    private final CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
 
     // right motors
-    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
+    private final CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
+    private final CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers
-    private CANPIDController leftPID = left.getPIDController();
-    private CANPIDController rightPID = right.getPIDController();
+    private final CANPIDController leftPID = left.getPIDController();
+    private final CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getEncoder();
-    private CANEncoder rightEncoder = right.getEncoder();
+    private final CANEncoder leftEncoder = left.getEncoder();
+    private final CANEncoder rightEncoder = right.getEncoder();
 
-    private double oldOpenRampRate; // the previous ramp rate sent to the motors
-    private double oldClosedRampRate; // the previous ramp rate sent to the motors
+    private final PigeonGyro gyro;
+    private final DifferentialDriveOdometry odometry;
 
-    // pid config
-    private double 
-    // change later, just so a problem doesn't break my walls
-    OUTPUT_MIN = -1, 
-    OUTPUT_MAX = 1;
-
-    public Drivetrain() {
+    public Drivetrain(PigeonGyro gyro) {
         // tells other two motors to follow the first
         leftMiddle.follow(left);
         leftBack.follow(left);
@@ -62,20 +59,7 @@ public class Drivetrain implements Subsystem {
         // sets pid values
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
-
-        leftPID.setP(P);
-        leftPID.setI(I);
-        leftPID.setD(D);
-        leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
         
-        rightPID.setP(P);
-        rightPID.setI(I);
-        rightPID.setD(D);
-        rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
-
-        leftPID.setOutputRange(-0.25, 0.25);
-        rightPID.setOutputRange(-0.25, 0.25);
-
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
         
@@ -85,7 +69,8 @@ public class Drivetrain implements Subsystem {
         leftBack.disableVoltageCompensation();
         rightBack.disableVoltageCompensation();
 
-        setClosedRampRate(0);
+        this.gyro = gyro;
+        odometry = new DifferentialDriveOdometry(new Rotation2d(0));
     }
 
     /**
@@ -113,7 +98,7 @@ public class Drivetrain implements Subsystem {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setLeftMotorTarget(double position) {
+    public void setLeftMotorPositionTarget(double position) {
         leftPID.setReference(position, ControlType.kPosition);
     }
 
@@ -122,7 +107,7 @@ public class Drivetrain implements Subsystem {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setRightMotorTarget(double position) {
+    public void setRightMotorPositionTarget(double position) {
         rightPID.setReference(position, ControlType.kPosition);
     }
 
@@ -170,29 +155,8 @@ public class Drivetrain implements Subsystem {
      * @param rate time in seconds to go from 0 to full power
      */
     public void setOpenRampRate(double rate) {
-        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
-        // lots of cpu time
-        if (rate != oldOpenRampRate) {
-            left.setOpenLoopRampRate(rate);
-            right.setOpenLoopRampRate(rate);
-            oldOpenRampRate = rate;
-        }
-    }
-
-    /**
-     * Sets the rate at which the motors ramp up and down in closed loop control
-     * mode
-     * 
-     * @param rate time in seconds to go from 0 to full power
-     */
-    public void setClosedRampRate(double rate) {
-        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
-        // lots of cpu time
-        if (rate != oldClosedRampRate) {
-            left.setClosedLoopRampRate(rate);
-            right.setClosedLoopRampRate(rate);
-            oldClosedRampRate = rate;
-        }
+        left.setOpenLoopRampRate(rate);
+        right.setOpenLoopRampRate(rate);
     }
 
     /**
@@ -213,16 +177,17 @@ public class Drivetrain implements Subsystem {
         setRightMotorPower(power);
     }
 
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public void setMotorVelocityTargets(double left, double right) {
+        leftPID.setReference(left, ControlType.kVelocity);
+        rightPID.setReference(right, ControlType.kVelocity);
+    }
+
     @Override
     public void periodic() {
-
-        /*
-        System.out.println(left.getBusVoltage());
-        System.out.println(left.getAppliedOutput());
-        System.out.println("------------------------");
-        System.out.println(right.getBusVoltage());
-        System.out.println(right.getAppliedOutput());
-        System.out.println("+++++++++++++++++++++++++++++++");
-        */
+        odometry.update(new Rotation2d(gyro.getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 }
