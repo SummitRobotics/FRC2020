@@ -8,17 +8,19 @@ import java.text.SimpleDateFormat;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.IntakeArm;
+import frc.robot.subsystems.Shifter;
 
 public class GenerateRecording extends CommandBase {
 
-    public static File cacheFile = new File("/home/admin/recordings/cache");
+    public static File cacheFile = new File("/home/admin/recordings/cache.chs");
 
     private Drivetrain drivetrain;
+    private Shifter shifter;
+    private IntakeArm intake;
 
     private LoggerButton savePoint;
     private boolean savePointPrior;
@@ -32,10 +34,12 @@ public class GenerateRecording extends CommandBase {
 
     private FileWriter file;
 
-    private NetworkTableEntry recordOutput;
-    private NetworkTableEntry saveIntake;
-    private NetworkTableEntry saveShooterMode;
-    private NetworkTableEntry saveShift;
+    private static ShuffleboardTab tab = Shuffleboard.getTab("record");
+
+    private static NetworkTableEntry saveIntake = tab.add("intake", false).withWidget("Toggle Button").withPosition(0, 0).getEntry();
+    //private static NetworkTableEntry saveShooterMode = tab.add("shooter", false).withWidget("Toggle Button").withPosition(1, 0).getEntry();
+    private static NetworkTableEntry saveShift = tab.add("shifter", false).withWidget("Toggle Button").withPosition(1, 0).getEntry();
+    private static NetworkTableEntry recordOutput = tab.add("Record status", "recorder object made").withPosition(2, 0).withSize(2, 1).getEntry();
 
     /**
      * Generates a recording of an autonomous sequence, and stores it to a cache file.
@@ -48,10 +52,12 @@ public class GenerateRecording extends CommandBase {
      * @param savePoint button to control save value
      * @param saveSequence button to store sequence
      */
-    public GenerateRecording(Drivetrain drivetrain, LoggerButton savePoint, LoggerButton saveSequence) {
+    public GenerateRecording(Drivetrain drivetrain, Shifter shifter, IntakeArm intake, LoggerButton savePoint, LoggerButton saveSequence) {
         this.drivetrain = drivetrain;
         this.savePoint = savePoint;
         this.saveSequence = saveSequence;
+        this.intake = intake;
+        this.shifter = shifter;
 
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
 
@@ -60,34 +66,20 @@ public class GenerateRecording extends CommandBase {
 
     @Override
     public void initialize() {
-        //try {
-            //file = new FileWriter(cacheFile);
+        try {
+            file = new FileWriter(cacheFile);
             long currentTime = System.currentTimeMillis();
             String formattedTime = timeStampFormatter.format(currentTime);
 
-            initShuffleboard();
+            file.append(timeStampFormatter.format(currentTime + "\n"));
+            file.append("sequence: start" + "\n");
 
-            //file.append(timeStampFormatter.format(currentTime + "\n"));
-            //file.append("sequence: start" + "\n");
+            recordOutput.setString("Recording Started at: " + formattedTime);
 
-            System.out.println("Recording Started at: " + formattedTime);
-
-        //} catch(IOException x) {
-            //aborted = true;
-            //System.out.println("CacheFile could not be created, aborting...");
-        //}
-    }
-
-    private void initShuffleboard(){
-        //Shuffleboard.update();
-        ShuffleboardTab tab = Shuffleboard.getTab("record");
-        
-        recordOutput = tab.add("Record status", "recording started").getEntry();
-        
-        saveIntake = tab.add("intake", false).withWidget("Toggle Button").getEntry();
-        saveShooterMode = tab.add("ShootMode", false).withWidget("Toggle Button").getEntry();
-        saveShift = tab.add("shifter", false).withWidget("Toggle Button").getEntry();
-
+        } catch(IOException x) {
+            aborted = true;
+            System.out.println("CacheFile could not be created, aborting...");
+        }
     }
 
     @Override
@@ -112,7 +104,7 @@ public class GenerateRecording extends CommandBase {
 
             RecordOnShuffleboard();
             
-            //file.flush();
+            file.flush();
         }catch(IOException e){
             recordOutput.setString("FILE WRIGHT ERROR");
             System.out.println("error while writing file, aborting");
@@ -128,12 +120,12 @@ public class GenerateRecording extends CommandBase {
     public void end(boolean interrupted) {
         recordOutput.setString("recording stopped");
 
-            // try {
-            //     file.append("sequence: end" + "\n");
-            //     file.flush();
-            // }catch(IOException e){
-            //     System.out.println("error while writing file after recording end");
-            // }
+            try {
+                file.append("sequence: end" + "\n");
+                file.flush();
+            }catch(IOException e){
+                System.out.println("error while writing file after recording end");
+            }
             return;
     }
 
@@ -141,24 +133,24 @@ public class GenerateRecording extends CommandBase {
         if(saveIntake.getBoolean(false)){
             saveIntake.setBoolean(false);
             addIntakePoint();
-            recordOutput.setString("saved intake point");
         }
 
         if(saveShift.getBoolean(false)){
             saveShift.setBoolean(false);
             addShiftPoint();
-            recordOutput.setString("saved shift point");
         }
 
-        if(saveShooterMode.getBoolean(false)){
-            saveShooterMode.setBoolean(false);
-            addShootPoint();
-            recordOutput.setString("saved shoot point");
-        }
+        // if(saveShooterMode.getBoolean(false)){
+        //     saveShooterMode.setBoolean(false);
+        //     addShootPoint();
+        //     recordOutput.setString("saved shoot point");
+        // }
     }
 
     private void addShiftPoint() throws IOException{
-        return;
+        String state = shifter.getShiftState() ? "high" : "low";
+        file.append("shift: " + state + "\n");
+        recordOutput.setString("saved shift " + state);
     }
 
     private void addShootPoint() throws IOException{
@@ -166,13 +158,15 @@ public class GenerateRecording extends CommandBase {
     }
 
     private void addIntakePoint() throws IOException{
-        return;
+        String state = intake.getState().toString();
+        file.append("intake: " + state + "\n");
+        recordOutput.setString("saved intake " + state);
     }
     
     private void addDrivetrainPoint() throws IOException{
         double left = drivetrain.getLeftEncoderPosition();
         double right = drivetrain.getRightEncoderPosition();
 
-        //file.append("drivetrain: " + left + ", " + right + "\n");
+        file.append("drivetrain: " + left + "," + right + "\n");
     }
 }

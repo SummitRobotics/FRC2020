@@ -5,6 +5,7 @@ import frc.robot.logging.Logger;
 import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
+import frc.robot.utilities.functionalinterfaces.getShift;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -18,9 +19,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Drivetrain implements Subsystem, Logger {
 
     private static final double
-    P = .05,
-    I = 0,//.00004,
-    D = 0;//.00001;
+    highP = .05,
+    highI = 0,//.00004,
+    highD = 0;//.00001;
+
+    private static final double
+    lowP = .05,
+    lowI = 0,//.00004,
+    lowD = 0;//.00001;
 
     //data for logger
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
@@ -52,7 +58,12 @@ public class Drivetrain implements Subsystem, Logger {
     OUTPUT_MIN = -1, 
     OUTPUT_MAX = 1;
 
-    public Drivetrain() {
+    private getShift shift;
+    private boolean oldShift;
+
+    public Drivetrain(getShift shift) {
+        this.shift = shift;
+        oldShift = shift.getShift();
         // tells other two motors to follow the first
         leftMiddle.follow(left);
         leftBack.follow(left);
@@ -68,14 +79,14 @@ public class Drivetrain implements Subsystem, Logger {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
 
-        leftPID.setP(P);
-        leftPID.setI(I);
-        leftPID.setD(D);
+        leftPID.setP(highP);
+        leftPID.setI(highI);
+        leftPID.setD(highD);
         leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
         
-        rightPID.setP(P);
-        rightPID.setI(I);
-        rightPID.setD(D);
+        rightPID.setP(highP);
+        rightPID.setI(highI);
+        rightPID.setD(highD);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
 
         left.disableVoltageCompensation();
@@ -118,7 +129,6 @@ public class Drivetrain implements Subsystem, Logger {
      * @param position the target position in terms of motor rotations
      */
     public void setLeftMotorTarget(double position) {
-        leftMotorPower = 2;
         leftMotorTarget = position;
         leftPID.setReference(position, ControlType.kPosition);
     }
@@ -129,7 +139,6 @@ public class Drivetrain implements Subsystem, Logger {
      * @param position the target position in terms of motor rotations
      */
     public void setRightMotorTarget(double position) {
-        rightMotorPower = 2;
         rightMotorTarget = position;
         rightPID.setReference(position, ControlType.kPosition);
     }
@@ -228,15 +237,29 @@ public class Drivetrain implements Subsystem, Logger {
 
     @Override
     public void periodic() {
+        boolean curent = shift.getShift();
+        if(curent != oldShift){
+            if(curent = true){
+                leftPID.setP(highP);
+                leftPID.setI(highI);
+                leftPID.setD(highD);
+        
+                rightPID.setP(highP);
+                rightPID.setI(highI);
+                rightPID.setD(highD);
+            }
+            else{
+                leftPID.setP(lowP);
+                leftPID.setI(lowI);
+                leftPID.setD(lowD);
+        
+                rightPID.setP(lowP);
+                rightPID.setI(lowI);
+                rightPID.setD(lowD); 
+            }
+            oldShift = curent;
+        }
 
-        /*
-        System.out.println(left.getBusVoltage());
-        System.out.println(left.getAppliedOutput());
-        System.out.println("------------------------");
-        System.out.println(right.getBusVoltage());
-        System.out.println(right.getAppliedOutput());
-        System.out.println("+++++++++++++++++++++++++++++++");
-        */
     }
 
     @Override

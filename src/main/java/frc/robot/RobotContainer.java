@@ -91,8 +91,8 @@ public class RobotContainer {
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
-        drivetrain = new Drivetrain();
         shifter = new Shifter(allLEDS);
+        drivetrain = new Drivetrain(() -> shifter.getShiftState());
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         shooter = new Shooter();
@@ -126,7 +126,7 @@ public class RobotContainer {
                 }),
                 new InstantCommand(() -> conveyor.disableIntakeMode()),
                 new InstantCommand(() -> conveyor.disableShootMode()),
-                new GenerateRecording(drivetrain, launchpad.buttonA, launchpad.buttonB)
+                new GenerateRecording(drivetrain, shifter, intakeArm, launchpad.buttonA, launchpad.buttonB)
                 );
     }
 
@@ -251,7 +251,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
             autoInit,
-            new EncoderDrive(drivetrain, 50)
+            new EncoderDrive(drivetrain, 50, 50)
         );
     }
 }

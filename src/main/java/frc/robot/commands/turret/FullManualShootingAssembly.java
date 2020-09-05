@@ -84,8 +84,6 @@ public class FullManualShootingAssembly extends CommandBase {
 			shooter.setHoodPower(0);
 		}
 
-		//System.out.println("shoot power: " + shooterSpoolPower.get());
-
 		if (!shooterSpoolPower.inUse()) {
 			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
 
