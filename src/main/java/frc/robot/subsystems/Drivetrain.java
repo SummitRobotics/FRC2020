@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
+import frc.robot.devices.PigeonGyro;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 import frc.robot.utilities.functionalinterfaces.getShift;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -16,12 +20,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem, Logger {
+public class Drivetrain implements Subsystem {
 
     private static final double
     highP = .05,
     highI = 0,//.00004,
     highD = 0;//.00001;
+    public final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(0); //TODO - get correct track width
 
     private static final double
     lowP = .05,
@@ -32,26 +37,27 @@ public class Drivetrain implements Subsystem, Logger {
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
     // left motors
-    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
+    private final CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
+    private final CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
 
     // right motors
-    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
-    private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
+    private final CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
+    private final CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers
-    private CANPIDController leftPID = left.getPIDController();
-    private CANPIDController rightPID = right.getPIDController();
+    private final CANPIDController leftPID = left.getPIDController();
+    private final CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getEncoder();
-    private CANEncoder rightEncoder = right.getEncoder();
+    private final CANEncoder leftEncoder = left.getEncoder();
+    private final CANEncoder rightEncoder = right.getEncoder();
 
-    private double oldOpenRampRate; // the previous ramp rate sent to the motors
-    private double oldClosedRampRate; // the previous ramp rate sent to the motors
+    private final PigeonGyro gyro;
+    private final DifferentialDriveOdometry odometry;
 
+    public Drivetrain(PigeonGyro gyro) {
     // pid config
     private double 
     // change later, just so a problem doesn't break my walls
@@ -98,7 +104,8 @@ public class Drivetrain implements Subsystem, Logger {
         leftBack.disableVoltageCompensation();
         rightBack.disableVoltageCompensation();
 
-        setClosedRampRate(0);
+        this.gyro = gyro;
+        odometry = new DifferentialDriveOdometry(new Rotation2d(0));
     }
 
     /**
@@ -108,7 +115,6 @@ public class Drivetrain implements Subsystem, Logger {
      */
     public void setLeftMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        leftMotorPower = power;
         left.set(power);
     }
 
@@ -119,7 +125,6 @@ public class Drivetrain implements Subsystem, Logger {
      */
     public void setRightMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        rightMotorPower = power;
         right.set(power);
     }
 
@@ -128,8 +133,7 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setLeftMotorTarget(double position) {
-        leftMotorTarget = position;
+    public void setLeftMotorPositionTarget(double position) {
         leftPID.setReference(position, ControlType.kPosition);
     }
 
@@ -138,8 +142,7 @@ public class Drivetrain implements Subsystem, Logger {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setRightMotorTarget(double position) {
-        rightMotorTarget = position;
+    public void setRightMotorPositionTarget(double position) {
         rightPID.setReference(position, ControlType.kPosition);
     }
 
@@ -187,29 +190,8 @@ public class Drivetrain implements Subsystem, Logger {
      * @param rate time in seconds to go from 0 to full power
      */
     public void setOpenRampRate(double rate) {
-        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
-        // lots of cpu time
-        if (rate != oldOpenRampRate) {
-            left.setOpenLoopRampRate(rate);
-            right.setOpenLoopRampRate(rate);
-            oldOpenRampRate = rate;
-        }
-    }
-
-    /**
-     * Sets the rate at which the motors ramp up and down in closed loop control
-     * mode
-     * 
-     * @param rate time in seconds to go from 0 to full power
-     */
-    public void setClosedRampRate(double rate) {
-        // checks against old ramp rate to prevent unnecessary ramp-rate sets at they take
-        // lots of cpu time
-        if (rate != oldClosedRampRate) {
-            left.setClosedLoopRampRate(rate);
-            right.setClosedLoopRampRate(rate);
-            oldClosedRampRate = rate;
-        }
+        left.setOpenLoopRampRate(rate);
+        right.setOpenLoopRampRate(rate);
     }
 
     /**
@@ -230,6 +212,9 @@ public class Drivetrain implements Subsystem, Logger {
         setRightMotorPower(power);
     }
 
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
     public void zeroEncoders() {
         setLeftEncoder(0);
         setRightEncoder(0);
@@ -260,17 +245,13 @@ public class Drivetrain implements Subsystem, Logger {
             oldShift = curent;
         }
 
+    public void setMotorVelocityTargets(double left, double right) {
+        leftPID.setReference(left, ControlType.kVelocity);
+        rightPID.setReference(right, ControlType.kVelocity);
     }
 
     @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEFT_MOTOR_POWER.value] = leftMotorPower;
-        values[LoggerRelations.RIGHT_MOTOR_POWER.value] = rightMotorPower;
-        values[LoggerRelations.LEFT_MOTOR_TARGET.value] = leftMotorTarget;
-        values[LoggerRelations.RIGHT_MOTOR_TARGET.value] = rightMotorTarget;
-        values[LoggerRelations.LEFT_MOTOR_POSITION.value] = getLeftEncoderPosition();
-        values[LoggerRelations.RIGHT_MOTOR_POSITION.value] = getRightEncoderPosition();
-        
-        return values;
+    public void periodic() {
+        odometry.update(new Rotation2d(gyro.getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 }

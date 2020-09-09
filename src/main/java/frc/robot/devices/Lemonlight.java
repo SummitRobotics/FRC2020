@@ -3,13 +3,11 @@ package frc.robot.devices;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 
 /**
  * Device driver for the limelight
  */
-public class Lemonlight implements Logger {
+public class Lemonlight {
 
     //TODO - make right
     public static final int X_OFFSET = 0;
@@ -121,14 +119,5 @@ public class Lemonlight implements Logger {
      */
     public double getAreaPercentage() {
         return ta.getDouble(0);
-    }
-
-    //logging
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
-        values[LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
-        values[LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
-        return values;
     }
 }

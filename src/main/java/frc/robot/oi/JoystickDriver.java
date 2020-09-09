@@ -1,8 +1,5 @@
 package frc.robot.oi;
 
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
-
 /**
  * Wrapper class for basic joystick functionality
  */
@@ -20,19 +17,19 @@ public class JoystickDriver extends GenericDriver {
 	axisY,
 	axisZ;
 
-	public JoystickDriver(int port, SyncLogger logger) {
-		super(port, logger);
+	public JoystickDriver(int port) {
+		super(port);
 
 		//TODO - make sure ports are correct
-		trigger = generateLoggerButton(1, LoggerRelations.PLACEHOLDER);
+		trigger = generateLoggerButton(1);
 
-		button2 = generateLoggerButton(2, LoggerRelations.PLACEHOLDER);
-		button3 = generateLoggerButton(3, LoggerRelations.PLACEHOLDER);
-		button4 = generateLoggerButton(4, LoggerRelations.PLACEHOLDER);
-		button5 = generateLoggerButton(5, LoggerRelations.PLACEHOLDER);
+		button2 = generateLoggerButton(2);
+		button3 = generateLoggerButton(3);
+		button4 = generateLoggerButton(4);
+		button5 = generateLoggerButton(5);
 
-		axisX = generateLoggerAxis(0, LoggerRelations.PLACEHOLDER);
-		axisY = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
-		axisZ = generateLoggerAxis(2, LoggerRelations.PLACEHOLDER);
+		axisX = generateLoggerAxis(0);
+		axisY = generateLoggerAxis(1);
+		axisZ = generateLoggerAxis(2);
 	}
 }

@@ -2,9 +2,6 @@ package frc.robot.oi;
 
 import java.util.ArrayList;
 
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Usable;
 import frc.robot.utilities.functionalinterfaces.AxisGetter;
@@ -12,38 +9,24 @@ import frc.robot.utilities.functionalinterfaces.AxisGetter;
 /**
  * Wrapper for axes that allows them to be both logged and passed as variables
  */
-public class LoggerAxis implements Logger, Usable {
+public class LoggerAxis implements Usable {
 
 	private final static double DEFAULT_DEADZONE = 0.05;
 
-	private LoggerRelations logReference;
 	private AxisGetter getter;
 	private double deadzone;
 
 	private ArrayList<Object> users;
 
-	public LoggerAxis(AxisGetter getter, LoggerRelations logReference) {
-		this(getter, logReference, DEFAULT_DEADZONE);
+	public LoggerAxis(AxisGetter getter) {
+		this(getter, DEFAULT_DEADZONE);
 	}
 
-	public LoggerAxis(AxisGetter getter, LoggerRelations logReference, SyncLogger logger) {
-		this(getter, logReference, DEFAULT_DEADZONE);
-
-		logger.addElements(this);
-	}
-
-	public LoggerAxis(AxisGetter getter, LoggerRelations logReference, double deadzone) {
+	public LoggerAxis(AxisGetter getter, double deadzone) {
 		this.getter = getter;
-		this.logReference = logReference;
 		this.deadzone = deadzone;
 
 		users = new ArrayList<>();
-	}
-
-	public LoggerAxis(AxisGetter getter, LoggerRelations logReference, SyncLogger logger, double deadzone) {
-		this(getter, logReference, deadzone);
-
-		logger.addElements(this);
 	}
 
 	/**
@@ -73,12 +56,6 @@ public class LoggerAxis implements Logger, Usable {
 	 */
 	public void setDeadzone(double deadzone) {
 		this.deadzone = deadzone;
-	}
-
-	@Override
-	public double[] getValues(double[] values) {
-		values[logReference.value] = getter.get();
-		return null;
 	}
 
 	@Override

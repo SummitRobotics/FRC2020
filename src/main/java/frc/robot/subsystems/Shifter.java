@@ -5,12 +5,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
 
-public class Shifter implements Subsystem, Logger{
+public class Shifter implements Subsystem {
 
     private DoubleSolenoid shift;
     private boolean oldShift;
@@ -42,11 +40,4 @@ public class Shifter implements Subsystem, Logger{
     public boolean getShiftState(){
         return oldShift;
     }
-
-    public double[] getValues(double[] values){
-        values[LoggerRelations.SHIFT_STATE.value] = oldShift? 1.0 : 0.0;
-
-        return values;
-    }
-
 }

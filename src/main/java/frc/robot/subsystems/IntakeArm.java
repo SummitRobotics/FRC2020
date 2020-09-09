@@ -7,15 +7,13 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
 /**
  * Subsystem to control the intake and its arm
  */
-public class IntakeArm extends SubsystemBase implements Logger {
+public class IntakeArm extends SubsystemBase {
 
 	public enum States{
 		UP,
@@ -34,11 +32,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	private Solenoid lock;
 
 	private DigitalInput upperLimit;
-
-	// data for logger
-	private double 
-	loggerPivotPower = 0, 
-	loggerIntakePower = 0;
 
 	public IntakeArm() {
 		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE);
@@ -65,7 +58,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	 */
 	public void setPivotPower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
-		loggerPivotPower = power;
 		pivot.set(ControlMode.PercentOutput, power);
 	}
 
@@ -75,7 +67,6 @@ public class IntakeArm extends SubsystemBase implements Logger {
 	 */
 	public void setIntakePower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
-		loggerIntakePower = power;
 		intake.set(ControlMode.PercentOutput, power);
 	}
 
@@ -121,12 +112,5 @@ public class IntakeArm extends SubsystemBase implements Logger {
 
 	public void closeLock() {
 		setLock(false);
-	}
-
-	@Override
-	public double[] getValues(double[] values) {
-		values[LoggerRelations.INTAKE_ARM_INTAKE_POWER.value] = loggerIntakePower;
-		values[LoggerRelations.INTAKE_ARM_PIVOT_POWER.value] = loggerPivotPower;
-		return values;
 	}
 }

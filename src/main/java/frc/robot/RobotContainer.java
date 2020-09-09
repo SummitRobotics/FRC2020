@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import frc.robot.logging.SyncLogger;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
@@ -34,6 +33,7 @@ import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.PigeonGyro;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,8 +45,6 @@ import frc.robot.devices.Lemonlight;
 public class RobotContainer {
 
     private CommandScheduler scheduler;
-
-    private SyncLogger logger;
 
     private ControllerDriver controller1;
     private LaunchpadDriver launchpad;
@@ -78,15 +76,14 @@ public class RobotContainer {
      */
     public RobotContainer() {
         scheduler = CommandScheduler.getInstance();
-        logger = new SyncLogger();
 
         leds = new LEDs();
         int[] allRange = {0, 29};
         allLEDS = new LEDRange(leds, allRange);
 
-        controller1 = new ControllerDriver(Ports.XBOX_PORT, logger);
-        launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT, logger);
-        joystick = new JoystickDriver(Ports.JOYSTICK_PORT, logger);
+        controller1 = new ControllerDriver(Ports.XBOX_PORT);
+        launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
+        joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
@@ -107,9 +104,6 @@ public class RobotContainer {
 
         setDefaultCommands();
         configureButtonBindings();
-
-        logger.addElements(drivetrain, shifter);
-        // scheduler.setDefaultCommand(logger, logger);
 
         autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
                 new InstantCommand(shifter::lowGear));
