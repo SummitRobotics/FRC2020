@@ -13,22 +13,13 @@ import frc.robot.oi.ControllerDriver;
 import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
-import frc.robot.commands.climb.ClimbSequence;
-import frc.robot.commands.climb.ClimberArmMO;
-import frc.robot.commands.conveyor.ConveyorAutomation;
-import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
-import frc.robot.commands.intake.IntakeArmDefault;
-import frc.robot.commands.intake.IntakeArmMO;
-import frc.robot.commands.intake.SetDown;
-import frc.robot.commands.intake.SetUp;
+
 import frc.robot.commands.pathfollowing.GenerateRecording;
 //import frc.robot.commands.shooter.ShooterTester;
-import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
@@ -53,14 +44,8 @@ public class RobotContainer {
     private LEDs leds;
     private Compressor compressor;
 
+    private PigeonGyro gyro;
     private Drivetrain drivetrain;
-    private Shifter shifter;
-    private Conveyor conveyor;
-    private IntakeArm intakeArm;
-    private Shooter shooter;
-    private ClimberArm leftArm, rightArm;
-    private Turret turret;
-    private ClimberPneumatics climberPneumatics;
 
     // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
@@ -88,15 +73,9 @@ public class RobotContainer {
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
-        shifter = new Shifter(allLEDS);
-        drivetrain = new Drivetrain(() -> shifter.getShiftState());
-        conveyor = new Conveyor();
-        intakeArm = new IntakeArm();
-        shooter = new Shooter();
-        leftArm = new ClimberArm(Sides.LEFT);
-        rightArm = new ClimberArm(Sides.RIGHT);
-        turret = new Turret();
-        climberPneumatics = new ClimberPneumatics();
+        gyro = new PigeonGyro(0);
+        drivetrain = new Drivetrain(gyro, () -> {return true;});
+  
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
@@ -105,22 +84,16 @@ public class RobotContainer {
         setDefaultCommands();
         configureButtonBindings();
 
-        autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(shifter::lowGear));
+        autoInit = new SequentialCommandGroup();
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
-                new InstantCommand(()-> allLEDS.addLEDCall("default", new LEDCall(1, LEDCall.solid(Colors.Green)))),
-                new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(intakeArm::closeLock),
-                new InstantCommand(shifter::highGear),
+                
                 new InstantCommand(() -> {
                     launchpad.bigLEDRed.set(false);
                     launchpad.bigLEDGreen.set(true);
-                }),
-                new InstantCommand(() -> conveyor.disableIntakeMode()),
-                new InstantCommand(() -> conveyor.disableShootMode()),
-                new GenerateRecording(drivetrain, shifter, intakeArm, launchpad.buttonA, launchpad.buttonB)
+                })
+               
                 );
     }
 
@@ -129,103 +102,11 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
                 controller1.leftTrigger, controller1.leftX));
 
-        // makes intake arm go back to limit when not on limit
-        intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
-
-        conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
-
     }
 
     private void configureButtonBindings() {
         // Launchpad bindings
         
-        //climb
-        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, allLEDS));
-
-        launchpad.buttonA.whenPressed(
-            new InstantCommand(
-                climberPneumatics::toggleClimb
-            )
-        );
-        launchpad.buttonA.booleanSupplierBind(climberPneumatics::getClimbState);
-
-        //moes
-        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
-        launchpad.buttonB.pressBind();
-
-        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
-        launchpad.buttonC.pressBind();
-
-        // launchpad.buttonD.whenPressed(
-        //     new InstantCommand(conveyor::toggleIntakeMode)
-        // );
-        // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
-
-        //launchpad.buttonD.whenPressed(new ShooterTester(shooter));
-
-        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
-        launchpad.buttonE.pressBind();
-
-        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
-        launchpad.buttonF.pressBind();
-
-        //intake arm
-
-        Command intake = new SequentialCommandGroup(
-            new InstantCommand(() -> conveyor.enableIntakeMode()),
-            new SetDown(intakeArm, allLEDS)
-            );
-
-        Command up = new SequentialCommandGroup(
-            new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new SetUp(intakeArm)
-            );
-
-        
-        launchpad.buttonH.whenPressed(intake, false);
-        launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
-
-        launchpad.buttonI.whenPressed(up, false);
-        launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
-
-        // launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
-        //   intakeArm::closeLock,
-        //   intakeArm::openLock,
-        //   intakeArm
-        // ), true);
-        // launchpad.buttonA.toggleBind(); 
-
-        // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
-        // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));
-        // launchpad.funLeft.whenPressed(new PrintCommand("no fun T^T"));
-
-        // Controller bindings for intake
-        controller1.buttonX.whenPressed(up, false);
-        controller1.buttonA.whenPressed(intake, false);
-
-        //shifting
-        controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
-            () -> {
-                shifter.lowGear();
-                launchpad.bigLEDRed.set(true);
-                launchpad.bigLEDGreen.set(false);
-            }, () -> {
-                shifter.highGear();
-                launchpad.bigLEDRed.set(false);
-                launchpad.bigLEDGreen.set(true);
-            }, shifter
-        ));
-
-        turret.setDefaultCommand(new FullManualShootingAssembly(
-            turret,
-            shooter,
-            conveyor,
-            joystick.axisX,
-            joystick.axisZ,
-            joystick.axisY,
-            joystick.trigger
-        ));
     }
 
     /**

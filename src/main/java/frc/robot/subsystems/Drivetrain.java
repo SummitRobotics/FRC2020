@@ -56,18 +56,13 @@ public class Drivetrain implements Subsystem {
 
     private final PigeonGyro gyro;
     private final DifferentialDriveOdometry odometry;
-
-    public Drivetrain(PigeonGyro gyro) {
     // pid config
-    private double 
-    // change later, just so a problem doesn't break my walls
-    OUTPUT_MIN = -1, 
-    OUTPUT_MAX = 1;
+    private final double OUTPUT_MIN = -1, OUTPUT_MAX = 1;
 
     private getShift shift;
     private boolean oldShift;
 
-    public Drivetrain(getShift shift) {
+    public Drivetrain(PigeonGyro gyro, getShift shift) {
         this.shift = shift;
         oldShift = shift.getShift();
         // tells other two motors to follow the first
@@ -222,6 +217,8 @@ public class Drivetrain implements Subsystem {
 
     @Override
     public void periodic() {
+        odometry.update(new Rotation2d(gyro.getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
+
         boolean curent = shift.getShift();
         if(curent != oldShift){
             if(curent = true){
@@ -244,14 +241,11 @@ public class Drivetrain implements Subsystem {
             }
             oldShift = curent;
         }
+    }
 
     public void setMotorVelocityTargets(double left, double right) {
         leftPID.setReference(left, ControlType.kVelocity);
         rightPID.setReference(right, ControlType.kVelocity);
     }
 
-    @Override
-    public void periodic() {
-        odometry.update(new Rotation2d(gyro.getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
-    }
 }

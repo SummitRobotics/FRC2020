@@ -28,8 +28,8 @@ public class EncoderDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.stop();
-        drivetrain.setLeftMotorTarget(left);
-        drivetrain.setRightMotorTarget(right);
+        drivetrain.setLeftMotorPositionTarget(left);
+        drivetrain.setRightMotorPositionTarget(right);
     }
     
     // Called once the command ends or is interrupted.

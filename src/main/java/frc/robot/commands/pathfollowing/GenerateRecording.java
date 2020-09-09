@@ -11,16 +11,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.LoggerButton;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.IntakeArm;
-import frc.robot.subsystems.Shifter;
+//import frc.robot.subsystems.IntakeArm;
+//import frc.robot.subsystems.Shifter;
 
 public class GenerateRecording extends CommandBase {
 
     public static File cacheFile = new File("/home/admin/recordings/cache.chs");
 
     private Drivetrain drivetrain;
-    private Shifter shifter;
-    private IntakeArm intake;
+    //private Shifter shifter;
+    //private IntakeArm intake;
 
     private LoggerButton savePoint;
     private boolean savePointPrior;
@@ -52,12 +52,12 @@ public class GenerateRecording extends CommandBase {
      * @param savePoint button to control save value
      * @param saveSequence button to store sequence
      */
-    public GenerateRecording(Drivetrain drivetrain, Shifter shifter, IntakeArm intake, LoggerButton savePoint, LoggerButton saveSequence) {
+    public GenerateRecording(Drivetrain drivetrain, LoggerButton savePoint, LoggerButton saveSequence){//, Shifter shifter, IntakeArm intake) {
         this.drivetrain = drivetrain;
         this.savePoint = savePoint;
         this.saveSequence = saveSequence;
-        this.intake = intake;
-        this.shifter = shifter;
+        //this.intake = intake;
+        //this.shifter = shifter;
 
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
 
@@ -148,7 +148,7 @@ public class GenerateRecording extends CommandBase {
     }
 
     private void addShiftPoint() throws IOException{
-        String state = shifter.getShiftState() ? "high" : "low";
+        String state = "fake";//shifter.getShiftState() ? "high" : "low";
         file.append("shift: " + state + "\n");
         recordOutput.setString("saved shift " + state);
     }
@@ -158,7 +158,7 @@ public class GenerateRecording extends CommandBase {
     }
 
     private void addIntakePoint() throws IOException{
-        String state = intake.getState().toString();
+        String state = "fake";//intake.getState().toString();
         file.append("intake: " + state + "\n");
         recordOutput.setString("saved intake " + state);
     }
