@@ -164,9 +164,9 @@ public class GenerateRecording extends CommandBase {
     }
     
     private void addDrivetrainPoint() throws IOException{
-        double left = drivetrain.getLeftEncoderPosition();
-        double right = drivetrain.getRightEncoderPosition();
+        //double left = drivetrain.getLeftEncoderPosition();
+        //double right = drivetrain.getRightEncoderPosition();
 
-        file.append("drivetrain: " + left + "," + right + "\n");
+        //file.append("drivetrain: " + left + "," + right + "\n");
     }
 }

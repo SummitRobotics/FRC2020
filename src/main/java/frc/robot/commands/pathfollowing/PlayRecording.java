@@ -86,7 +86,7 @@ public class PlayRecording extends CommandBase {
             System.out.println("Target file could not be accessed, aborting...");
         }
 
-        drivetrain.zeroEncoders();
+        //drivetrain.zeroEncoders();
     }
 
     @Override

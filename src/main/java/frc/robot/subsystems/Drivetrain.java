@@ -11,10 +11,13 @@ import frc.robot.utilities.Ports;
 import frc.robot.utilities.functionalinterfaces.getShift;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.EncoderType;
+import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -37,24 +40,24 @@ public class Drivetrain implements Subsystem {
     private double rightMotorPower = 0, leftMotorPower = 0, rightMotorTarget = 0, leftMotorTarget = 0;
 
     // left motors
-    private final CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
-    private final CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
-    private final CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax left = new CANSparkMax(40, MotorType.kBrushed);
+    //private final CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
+    //private final CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
 
     // right motors
-    private final CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
-    private final CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
-    private final CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
+    private final CANSparkMax right = new CANSparkMax(41, MotorType.kBrushed);
+    //private final CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
+    //private final CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers
     private final CANPIDController leftPID = left.getPIDController();
     private final CANPIDController rightPID = right.getPIDController();
 
     // encoders
-    private final CANEncoder leftEncoder = left.getEncoder();
-    private final CANEncoder rightEncoder = right.getEncoder();
+    private final CANEncoder leftEncoder = new CANEncoder(left, EncoderType.kQuadrature, 4096);
+    private final CANEncoder rightEncoder = new CANEncoder(right, EncoderType.kQuadrature, 4096);
 
-    private final PigeonGyro gyro;
+    private final AHRS gyro;
     private final DifferentialDriveOdometry odometry;
     // pid config
     private final double OUTPUT_MIN = -1, OUTPUT_MAX = 1;
@@ -62,18 +65,18 @@ public class Drivetrain implements Subsystem {
     private getShift shift;
     private boolean oldShift;
 
-    public Drivetrain(PigeonGyro gyro, getShift shift) {
+    public Drivetrain(AHRS gyro, getShift shift) {
         this.shift = shift;
         oldShift = shift.getShift();
         // tells other two motors to follow the first
-        leftMiddle.follow(left);
-        leftBack.follow(left);
+        //leftMiddle.follow(left);
+        //leftBack.follow(left);
 
-        rightMiddle.follow(right);
-        rightBack.follow(right);
+        //rightMiddle.follow(right);
+        //rightBack.follow(right);
 
         // inverts right side
-        left.setInverted(true);
+        left.setInverted(false);
         right.setInverted(false);
 
         // sets pid values
@@ -93,11 +96,6 @@ public class Drivetrain implements Subsystem {
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
         
-        leftMiddle.disableVoltageCompensation();
-        rightMiddle.disableVoltageCompensation();
-
-        leftBack.disableVoltageCompensation();
-        rightBack.disableVoltageCompensation();
 
         this.gyro = gyro;
         odometry = new DifferentialDriveOdometry(new Rotation2d(0));
@@ -217,7 +215,8 @@ public class Drivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        odometry.update(new Rotation2d(gyro.getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
+        System.out.println("left: " + getLeftEncoderPosition() + " right: " + getRightEncoderPosition() );//+ " faults left: " + FaultID.fromId(left.getFaults()) + " faults right: " + FaultID.fromId(right.getFaults()));
+        odometry.update(Rotation2d.fromDegrees(gyro.getFusedHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
 
         boolean curent = shift.getShift();
         if(curent != oldShift){

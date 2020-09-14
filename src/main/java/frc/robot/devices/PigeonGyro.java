@@ -1,5 +1,6 @@
 package frc.robot.devices;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 //TODO - gut it
@@ -11,8 +12,8 @@ public class PigeonGyro {
 
     private PigeonIMU gyro;
 
-    public PigeonGyro(int port) {
-        gyro = new PigeonIMU(port);
+    public PigeonGyro(TalonSRX motor) {
+        gyro = new PigeonIMU(motor);
     }
 
     /**
@@ -43,6 +44,10 @@ public class PigeonGyro {
      */
     public double getHeading() {
         return gyro.getFusedHeading();
+    }
+
+    public double getCompas(){
+        return gyro.getCompassHeading();
     }
 
     /**

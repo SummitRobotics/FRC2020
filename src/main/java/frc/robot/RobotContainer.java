@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +26,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.PigeonGyro;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,6 +47,8 @@ public class RobotContainer {
     private Compressor compressor;
 
     private PigeonGyro gyro;
+    private ADXRS450_Gyro gyroSpi;
+    private AHRS navx;
     private Drivetrain drivetrain;
 
     // private Lemonlight limelight;
@@ -70,12 +74,12 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        compressor = new Compressor(Ports.PCM_1);
-        compressor.setClosedLoopControl(true);
+        //compressor = new Compressor(Ports.PCM_1);
+        //compressor.setClosedLoopControl(true);
 
-        gyro = new PigeonGyro(0);
-        drivetrain = new Drivetrain(gyro, () -> {return true;});
-  
+        navx = new AHRS();
+        gyroSpi = new ADXRS450_Gyro();
+
 
         // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
@@ -85,6 +89,14 @@ public class RobotContainer {
         configureButtonBindings();
 
         autoInit = new SequentialCommandGroup();
+
+        //navx.calibrate();
+        navx.zeroYaw();
+    
+        drivetrain = new Drivetrain(navx, () -> {return true;});
+
+        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
+                controller1.leftTrigger, controller1.leftX));
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
@@ -99,8 +111,7 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         // drive by controler
-        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
-                controller1.leftTrigger, controller1.leftX));
+        
 
     }
 
