@@ -26,14 +26,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Drivetrain implements Subsystem {
 
     private static final double
-    highP = .05,
-    highI = 0,//.00004,
+    highP = .25,
+    highI = .001,//.00004,
     highD = 0;//.00001;
     public final static DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(0); //TODO - get correct track width
 
     private static final double
-    lowP = .05,
-    lowI = 0,//.00004,
+    lowP = .25,
+    lowI = .001,//.00004,
     lowD = 0;//.00001;
 
     //data for logger
@@ -76,7 +76,7 @@ public class Drivetrain implements Subsystem {
         //rightBack.follow(right);
 
         // inverts right side
-        left.setInverted(false);
+        left.setInverted(true);
         right.setInverted(false);
 
         // sets pid values
@@ -127,6 +127,7 @@ public class Drivetrain implements Subsystem {
      * @param position the target position in terms of motor rotations
      */
     public void setLeftMotorPositionTarget(double position) {
+        System.out.println("left target is: "+position);
         leftPID.setReference(position, ControlType.kPosition);
     }
 
@@ -215,7 +216,7 @@ public class Drivetrain implements Subsystem {
 
     @Override
     public void periodic() {
-        System.out.println("left: " + getLeftEncoderPosition() + " right: " + getRightEncoderPosition() );//+ " faults left: " + FaultID.fromId(left.getFaults()) + " faults right: " + FaultID.fromId(right.getFaults()));
+        //System.out.println("left: " + getLeftEncoderPosition() + " right: " + getRightEncoderPosition() );//+ " faults left: " + FaultID.fromId(left.getFaults()) + " faults right: " + FaultID.fromId(right.getFaults()));
         odometry.update(Rotation2d.fromDegrees(gyro.getFusedHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());
 
         boolean curent = shift.getShift();

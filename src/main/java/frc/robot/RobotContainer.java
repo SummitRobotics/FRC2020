@@ -5,6 +5,8 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
+import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
@@ -20,6 +23,7 @@ import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
 
 import frc.robot.commands.pathfollowing.GenerateRecording;
+import frc.robot.commands.pathfollowing.PlayRecording;
 //import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
@@ -42,6 +46,7 @@ public class RobotContainer {
     private ControllerDriver controller1;
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
+    private shufHELLboardDriver Shufhellboard;
 
     private LEDs leds;
     private Compressor compressor;
@@ -73,6 +78,7 @@ public class RobotContainer {
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
+        Shufhellboard = new shufHELLboardDriver();
 
         //compressor = new Compressor(Ports.PCM_1);
         //compressor.setClosedLoopControl(true);
@@ -95,8 +101,13 @@ public class RobotContainer {
     
         drivetrain = new Drivetrain(navx, () -> {return true;});
 
+        Shufhellboard.recordStart.whenPressed(new GenerateRecording(drivetrain, controller1.buttonA, Shufhellboard.finish, Shufhellboard.shift, Shufhellboard.intake));
+
+        controller1.buttonB.whenPressed(new PlayRecording(scheduler, "1.chs", drivetrain));
+
         drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
                 controller1.leftTrigger, controller1.leftX));
+
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
@@ -118,6 +129,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Launchpad bindings
         
+        
+        
     }
 
     /**
@@ -125,6 +138,7 @@ public class RobotContainer {
      */
     public void teleopInit() {
         //inishlises robot
+        drivetrain.zeroEncoders();
         scheduler.schedule(teleInit);
 
     }

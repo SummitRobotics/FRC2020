@@ -28,8 +28,8 @@ public class EncoderDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.stop();
-        //drivetrain.setLeftMotorPositionTarget(left);
-        //drivetrain.setRightMotorPositionTarget(right);
+        drivetrain.setLeftMotorPositionTarget(left);
+        drivetrain.setRightMotorPositionTarget(right);
     }
     
     // Called once the command ends or is interrupted.
@@ -41,6 +41,7 @@ public class EncoderDrive extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false; //Math.abs(drivetrain.getLeftEncoderPosition() - left) < 1 && Math.abs(drivetrain.getRightEncoderPosition() - right) < 1;
+        System.out.println("left: " + drivetrain.getLeftEncoderPosition() + " right: " + drivetrain.getRightEncoderPosition());
+        return Math.abs(drivetrain.getLeftEncoderPosition() - left) < 1 && Math.abs(drivetrain.getRightEncoderPosition() - right) < 1;
     }
 }

@@ -33,7 +33,7 @@ public class PlayRecording extends CommandBase {
     // private IntakeArm intake;
     // private LEDRange intakeLeds;
 
-    private ArrayList<String> points;
+    private ArrayList<String> points = new ArrayList<>();
     private int currentStep = 0;
 
     private boolean aborted = false;
@@ -45,7 +45,7 @@ public class PlayRecording extends CommandBase {
 
     public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain){//, Shifter shift, IntakeArm intake, LEDRange intakeLeds) {
         this.scheduler = scheduler;
-        this.recording = new File("/home/admin/recordings/saved_recordings/" + recording);
+        this.recording = new File("/home/admin/recordings/saved/" + recording);
         this.drivetrain = drivetrain;
         //this.shifter = shift;
         //this.intake = intake;
@@ -74,10 +74,10 @@ public class PlayRecording extends CommandBase {
                 else if(rawLine.contains("sequence: end")){
                     sequinceSection = false;
                 }
-                else if(sequinceSection){
+                
+                if(sequinceSection){
                     points.add(rawLine);
                 }
-                else{}
 
             }
 
@@ -105,10 +105,11 @@ public class PlayRecording extends CommandBase {
         if(command.contains("drivetrain: ")){
             try{
                 String[] values = command.split(" ")[1].split(",");
-                double left = Integer.parseInt(values[0]);
-                double right = Integer.parseInt(values[1]);
+                double left = Double.parseDouble(values[0]);
+                double right = Double.parseDouble(values[1]);
                 CurrentDrivetrainCommand = new EncoderDrive(drivetrain, left, right);
                 scheduler.schedule(CurrentDrivetrainCommand);
+                System.out.println("running drivetrain to " + left + ", " + right);
             }
             catch(Exception e){
                 System.out.println("error parsing '" + command +"'");
@@ -146,7 +147,12 @@ public class PlayRecording extends CommandBase {
     }
 
     private boolean checkForRunningCommands(){
-        return scheduler.isScheduled(CurrentDrivetrainCommand);
+        if(CurrentDrivetrainCommand == null){
+            return false;
+        }
+        else{
+            return scheduler.isScheduled(CurrentDrivetrainCommand);
+        }   
     }
 
 }
