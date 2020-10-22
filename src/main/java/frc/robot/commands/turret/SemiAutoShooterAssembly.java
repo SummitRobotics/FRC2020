@@ -3,8 +3,8 @@ package frc.robot.commands.turret;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.Lemonlight;
-import frc.robot.oi.LoggerAxis;
-import frc.robot.oi.LoggerButton;
+import frc.robot.oi.OIAxis;
+import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
@@ -20,8 +20,8 @@ public class SemiAutoShooterAssembly extends ParallelCommandGroup {
 			Shooter shooter, 
 			Conveyor conveyor,
 			Lemonlight limelight, 
-			LoggerAxis controlAxis,
-			LoggerButton trigger
+			OIAxis controlAxis,
+			OIButton trigger
 		) {
 
 		//Functions.bindCommand(this, new Trigger(), binding, command)

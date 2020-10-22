@@ -1,18 +1,18 @@
 package frc.robot.commands.climb;
 
-import frc.robot.oi.LoggerAxis;
+import frc.robot.oi.OIAxis;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.utilities.MOCommand;
 
 public class ClimberArmMO extends MOCommand {
 
 	private ClimberArm arm;
-	private LoggerAxis controlAxis;
+	private OIAxis controlAxis;
 
 	/**
 	 * Command for manually controlling a single climber arm
 	 */
-	public ClimberArmMO(ClimberArm arm, LoggerAxis controlAxis) {
+	public ClimberArmMO(ClimberArm arm, OIAxis controlAxis) {
 		addRequirements(arm);
 		addUsed(controlAxis);
 

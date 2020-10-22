@@ -2,8 +2,8 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.oi.LoggerAxis;
-import frc.robot.oi.LoggerButton;
+import frc.robot.oi.OIAxis;
+import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
@@ -19,12 +19,12 @@ public class FullManualShootingAssembly extends CommandBase {
 	private Shooter shooter;
 	private Conveyor conveyor;
 
-	private LoggerAxis 
+	private OIAxis 
 	turretRotationPower,
 	shooterSpoolPower,
 	shooterHoodPower;
 
-	private LoggerButton trigger;
+	private OIButton trigger;
 
 	private boolean startupSpinPrevention;
 
@@ -36,10 +36,10 @@ public class FullManualShootingAssembly extends CommandBase {
 			Turret turret, 
 			Shooter shooter, 
 			Conveyor conveyor, 
-			LoggerAxis turretRotationPower, 
-			LoggerAxis shooterSpoolPower,
-			LoggerAxis shooterHoodPower,
-			LoggerButton trigger
+			OIAxis turretRotationPower, 
+			OIAxis shooterSpoolPower,
+			OIAxis shooterHoodPower,
+			OIButton trigger
 		) {
 
 		super();

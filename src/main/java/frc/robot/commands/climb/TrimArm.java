@@ -1,7 +1,7 @@
 package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.oi.LoggerAxis;
+import frc.robot.oi.OIAxis;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.RollingAverage;
@@ -9,7 +9,7 @@ import frc.robot.utilities.RollingAverage;
 public class TrimArm extends CommandBase {
 
 	private ClimberArm arm;
-	private LoggerAxis slider;
+	private OIAxis slider;
 
 	private double startingPosition;
 	private double sliderOffset;
@@ -21,7 +21,7 @@ public class TrimArm extends CommandBase {
 	 * @param arm the climber arm
 	 * @param slider the launchpad trim slider
 	 */
-	public TrimArm(ClimberArm arm, LoggerAxis slider) {
+	public TrimArm(ClimberArm arm, OIAxis slider) {
 		this.arm = arm;
 		this.slider = slider;
 

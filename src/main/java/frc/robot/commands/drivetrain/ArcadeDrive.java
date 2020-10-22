@@ -11,15 +11,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
-import frc.robot.oi.LoggerAxis;
+import frc.robot.oi.OIAxis;
 
 public class ArcadeDrive extends CommandBase {
 
     private Drivetrain drivetrain;
 
-    private LoggerAxis forwardPowerAxis;
-    private LoggerAxis reversePowerAxis;
-    private LoggerAxis turnAxis;
+    private OIAxis forwardPowerAxis;
+    private OIAxis reversePowerAxis;
+    private OIAxis turnAxis;
     private ChangeRateLimiter limiter;
 
     private final double deadzone = .1;
@@ -35,9 +35,9 @@ public class ArcadeDrive extends CommandBase {
      */
     public ArcadeDrive(
         Drivetrain drivetrain, 
-        LoggerAxis forwardPowerAxis, 
-        LoggerAxis reversePowerAxis, 
-        LoggerAxis turnAxis)
+        OIAxis forwardPowerAxis, 
+        OIAxis reversePowerAxis, 
+        OIAxis turnAxis)
     {
 
         this.drivetrain = drivetrain;
