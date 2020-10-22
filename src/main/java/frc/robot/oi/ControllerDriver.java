@@ -29,7 +29,7 @@ public class ControllerDriver extends GenericDriver {
         }
     }
 
-	public LoggerButton
+	public OIButton
     buttonA,
     buttonB,
     buttonX,
@@ -44,7 +44,7 @@ public class ControllerDriver extends GenericDriver {
     dPadLeft,
     dPadRight;
 
-    public LoggerAxis
+    public OIAxis
     leftX,
     leftY,
     leftTrigger,
@@ -55,28 +55,28 @@ public class ControllerDriver extends GenericDriver {
 	public ControllerDriver(int port) {
 		super(port);
 
-        buttonA = generateLoggerButton(Button.kA.value);
+        buttonA = generateOIButton(Button.kA.value);
 
-		buttonA = generateLoggerButton(Button.kA.value);
-		buttonB = generateLoggerButton(Button.kB.value);
-		buttonX = generateLoggerButton(Button.kX.value);
-		buttonY = generateLoggerButton(Button.kY.value);
-		buttonStart = generateLoggerButton(Button.kStart.value);
-		buttonBack = generateLoggerButton(Button.kBack.value);
-		rightBumper = generateLoggerButton(Button.kBumperRight.value);
-		leftBumper = generateLoggerButton(Button.kBumperLeft.value);
+		buttonA = generateOIButton(Button.kA.value);
+		buttonB = generateOIButton(Button.kB.value);
+		buttonX = generateOIButton(Button.kX.value);
+		buttonY = generateOIButton(Button.kY.value);
+		buttonStart = generateOIButton(Button.kStart.value);
+		buttonBack = generateOIButton(Button.kBack.value);
+		rightBumper = generateOIButton(Button.kBumperRight.value);
+		leftBumper = generateOIButton(Button.kBumperLeft.value);
 
-		dPadUp = generateLoggerButton(getDPadValue(DPadValues.UP));
-		dPadDown = generateLoggerButton(getDPadValue(DPadValues.DOWN));
-		dPadLeft = generateLoggerButton(getDPadValue(DPadValues.LEFT));
-        dPadRight = generateLoggerButton(getDPadValue(DPadValues.RIGHT));
+		dPadUp = new OIButton(getDPadValue(DPadValues.UP));
+		dPadDown = new OIButton(getDPadValue(DPadValues.DOWN));
+		dPadLeft = new OIButton(getDPadValue(DPadValues.LEFT));
+        dPadRight = new OIButton(getDPadValue(DPadValues.RIGHT));
         
-        leftX = generateLoggerAxis(0);
-        leftY = generateLoggerAxis(1);
-        leftTrigger = generateLoggerAxis(2);
-        rightTrigger = generateLoggerAxis(3);
-        rightX = generateLoggerAxis(4);
-        rightY = generateLoggerAxis(5);
+        leftX = generateOIAxis(0);
+        leftY = generateOIAxis(1);
+        leftTrigger = generateOIAxis(2);
+        rightTrigger = generateOIAxis(3);
+        rightX = generateOIAxis(4);
+        rightY = generateOIAxis(5);
 	}
 
 	private ButtonGetter getDPadValue(DPadValues value) {

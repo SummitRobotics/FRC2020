@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
-public class LEDButton extends LoggerButton {
+public class LEDButton extends OIButton {
 
 	public interface LED {
 		public void set(boolean state);

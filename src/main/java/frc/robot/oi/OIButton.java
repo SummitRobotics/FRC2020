@@ -7,15 +7,15 @@ import frc.robot.utilities.Usable;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 /**
- * Wrapper class for WPI's button that adds logging functionality
+ * Wrapper class for WPI's button that allows for better management
  */
-public class LoggerButton extends Button implements Usable {
+public class OIButton extends Button implements Usable {
 
     private ButtonGetter getter;
 
     private ArrayList<Object> users;
 
-    public LoggerButton(ButtonGetter getter) {
+    public OIButton(ButtonGetter getter) {
         super();
 
         this.getter = getter;

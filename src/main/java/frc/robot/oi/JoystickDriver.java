@@ -5,14 +5,14 @@ package frc.robot.oi;
  */
 public class JoystickDriver extends GenericDriver {
 
-	public LoggerButton
+	public OIButton
 	button5,
 	button2,
 	button3,
 	button4,
 	trigger;
 
-	public LoggerAxis
+	public OIAxis
 	axisX,
 	axisY,
 	axisZ;
@@ -21,15 +21,15 @@ public class JoystickDriver extends GenericDriver {
 		super(port);
 
 		//TODO - make sure ports are correct
-		trigger = generateLoggerButton(1);
+		trigger = generateOIButton(1);
 
-		button2 = generateLoggerButton(2);
-		button3 = generateLoggerButton(3);
-		button4 = generateLoggerButton(4);
-		button5 = generateLoggerButton(5);
+		button2 = generateOIButton(2);
+		button3 = generateOIButton(3);
+		button4 = generateOIButton(4);
+		button5 = generateOIButton(5);
 
-		axisX = generateLoggerAxis(0);
-		axisY = generateLoggerAxis(1);
-		axisZ = generateLoggerAxis(2);
+		axisX = generateOIAxis(0);
+		axisY = generateOIAxis(1);
+		axisZ = generateOIAxis(2);
 	}
 }

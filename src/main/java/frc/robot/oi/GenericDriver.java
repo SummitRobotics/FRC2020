@@ -64,52 +64,24 @@ public abstract class GenericDriver {
 	}
 
 	/**
-	 * Creates a logger button using a ButtonGetter and a log reference. If a logger has been defined,
-	 * the button wil be automatically registered to the logger
-	 * 
-	 * @param getter the getter for the button
-	 * @param logReference the desired log reference for the button
-	 * @return the generated LoggerButton
-	 */
-	protected LoggerButton generateLoggerButton(ButtonGetter getter) {
-		return new LoggerButton(getter);
-	}
-
-	/**
-	 * Creates a logger button using a port and a log reference. The getButtonGetter() method is automatically 
-	 * used to get a ButtonGetter. If a logger has been defined, the button wil be automatically registered 
-	 * to the logger
+	 * Creates an OI button using a port
 	 * 
 	 * @param port the button port
 	 * @param logReference the desired log reference for the button
 	 * @return the generated LoggerButton
 	 */
-	protected LoggerButton generateLoggerButton(int port) {
-		return new LoggerButton(getButtonGetter(port));
+	protected OIButton generateOIButton(int port) {
+		return new OIButton(getButtonGetter(port));
 	}
 
 	/**
-	 * Creates a logger axis using an AxisGetter and a log reference. If a logger has been defined,
-	 * the axis wil be automatically registered to the logger
-	 * 
-	 * @param getter the getter for the axis
-	 * @param logReference the desired log reference for the button
-	 * @return the generated axis
-	 */
-	protected LoggerAxis generateLoggerAxis(AxisGetter getter) {
-		return new LoggerAxis(getter);
-	}
-
-	/**
-	 * Creates a logger axis using an port and a log reference. The getAxisGetter() method is 
-	 * automatically used to get an AxisGetter. If a logger has been defined, the axis wil be 
-	 * automatically registered to the logger
+	 * Creates a logger axis using an port
 	 * 
 	 * @param port the axis port
 	 * @param logReference the desired log reference for the button
 	 * @return the generated axis
 	 */
-	protected LoggerAxis generateLoggerAxis(int port) {
-		return new LoggerAxis(getAxisGetter(port));
+	protected OIAxis generateOIAxis(int port) {
+		return new OIAxis(getAxisGetter(port));
 	}
 }

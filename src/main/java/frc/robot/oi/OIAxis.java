@@ -7,9 +7,9 @@ import frc.robot.utilities.Usable;
 import frc.robot.utilities.functionalinterfaces.AxisGetter;
 
 /**
- * Wrapper for axes that allows them to be both logged and passed as variables
+ * Wrapper for axes that allows for better management
  */
-public class LoggerAxis implements Usable {
+public class OIAxis implements Usable {
 
 	private final static double DEFAULT_DEADZONE = 0.05;
 
@@ -18,11 +18,11 @@ public class LoggerAxis implements Usable {
 
 	private ArrayList<Object> users;
 
-	public LoggerAxis(AxisGetter getter) {
+	public OIAxis(AxisGetter getter) {
 		this(getter, DEFAULT_DEADZONE);
 	}
 
-	public LoggerAxis(AxisGetter getter, double deadzone) {
+	public OIAxis(AxisGetter getter, double deadzone) {
 		this.getter = getter;
 		this.deadzone = deadzone;
 

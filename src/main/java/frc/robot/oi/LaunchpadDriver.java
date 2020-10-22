@@ -22,7 +22,7 @@ public class LaunchpadDriver extends GenericDriver {
     buttonH,
     buttonI;
 
-    public LoggerButton
+    public OIButton
     missileA,
     missileB,
 
@@ -30,7 +30,7 @@ public class LaunchpadDriver extends GenericDriver {
     funMiddle,
     funRight;
 
-    public LoggerAxis
+    public OIAxis
     axisA,
     axisB,
     axisC,
@@ -49,7 +49,6 @@ public class LaunchpadDriver extends GenericDriver {
     public LaunchpadDriver(int port) {
 		super(port);
 
-        //TODO - create actual logger values
         buttonA = generateLEDButton(1);
         buttonB = generateLEDButton(2);
         buttonC = generateLEDButton(3);
@@ -60,14 +59,14 @@ public class LaunchpadDriver extends GenericDriver {
         buttonH = generateLEDButton(8);
         buttonI = generateLEDButton(9);
 
-        missileA = generateLoggerButton(10);
-        missileB = generateLoggerButton(11);
+        missileA = generateOIButton(10);
+        missileB = generateOIButton(11);
 
         bigLEDGreen = getLEDLambda(10);
         bigLEDRed = getLEDLambda(11);
 
-        axisA = generateLoggerAxis(0);
-        axisB = generateLoggerAxis(1);
+        axisA = generateOIAxis(0);
+        axisB = generateOIAxis(1);
 
         axisA.setDeadzone(0);
         axisB.setDeadzone(0);
@@ -78,12 +77,12 @@ public class LaunchpadDriver extends GenericDriver {
         funMiddle = generateATDButton(2, -1/3, 1/3);
         funRight = generateATDButton(2, 1/3, 1);
 
-        axisC = generateLoggerAxis(3);
-        axisD = generateLoggerAxis(4);
-        axisE = generateLoggerAxis(5);
-        axisF = generateLoggerAxis(6);
-        axisG = generateLoggerAxis(7);
-        axisH = generateLoggerAxis(8);
+        axisC = generateOIAxis(3);
+        axisD = generateOIAxis(4);
+        axisE = generateOIAxis(5);
+        axisF = generateOIAxis(6);
+        axisG = generateOIAxis(7);
+        axisH = generateOIAxis(8);
     }
 
     protected LEDButton generateLEDButton(int output) {
@@ -97,9 +96,9 @@ public class LaunchpadDriver extends GenericDriver {
         return (boolean state) -> setOutput(output, state);
     }
 
-    private LoggerButton generateATDButton(int output, int min, int max) {
+    private OIButton generateATDButton(int output, int min, int max) {
         AxisGetter axis = getAxisGetter(output);
-        return generateLoggerButton(() -> {
+        return new OIButton(() -> {
             double value = axis.get();
             return value >= min && max >= value;
         });
