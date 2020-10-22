@@ -1,29 +1,24 @@
 package frc.robot.commands.pathfollowing;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.drivetrain.EncoderDrive;
 // import frc.robot.commands.intake.SetDown;
 // import frc.robot.commands.intake.SetLoad;
 // import frc.robot.commands.intake.SetUp;
-import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.IntakeArm;
 // import frc.robot.subsystems.Shifter;
 
 public class PlayRecording extends CommandBase {
 //TODO make this also a subsystem too so that we can use subsystem periodic() 
-//insted of exicute to remove the 20ms lag betwen a command being scedualed and 
-//being run the first time beacuse the scedualr is dumb and owen wolnt let me change it
+//insted of execute to remove the 20ms lag betwen a command being scheduled and 
+//being run the first time beacuse the scheduler is dumb and owen won't let me change it
 //DONT REMOVE COMMENT UNTIL DONE
 
     private File recording;
@@ -42,42 +37,42 @@ public class PlayRecording extends CommandBase {
 
     private EncoderDrive CurrentDrivetrainCommand;
 
+    private String recordingName;
 
-    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain){//, Shifter shift, IntakeArm intake, LEDRange intakeLeds) {
+
+    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain) {//, Shifter shift, IntakeArm intake, LEDRange intakeLeds) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/saved/" + recording);
         this.drivetrain = drivetrain;
         //this.shifter = shift;
         //this.intake = intake;
         //this.intakeLeds = intakeLeds;
+
+        recordingName = recording;
     }
 
     public PlayRecording(CommandScheduler scheduler, Drivetrain drivetrain) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/cache.chs");
         this.drivetrain = drivetrain;
+
+        recordingName = "cache";
     }
 
     @Override
     public void initialize() {
         try (Scanner reader = new Scanner(recording)) {
-            String fileID = reader.nextLine();
-            System.out.println("Running recording: " + fileID);
+            String creationTime = reader.nextLine();
+            System.out.println("Running recording: " + recordingName + " created at " + creationTime);
 
-            boolean sequinceSection = false;
             while (reader.hasNextLine()) {
                 String rawLine = reader.nextLine();
 
-                if(rawLine.contains("sequence: start")){
-                    sequinceSection = true;
-                }
-                else if(rawLine.contains("sequence: end")){
-                    sequinceSection = false;
+                if(rawLine.contains("sequence: end")){
+                    break;
                 }
                 
-                if(sequinceSection){
-                    points.add(rawLine);
-                }
+                points.add(rawLine);
 
             }
 

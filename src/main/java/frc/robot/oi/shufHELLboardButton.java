@@ -15,11 +15,9 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.utilities.Usable;
 
 /**
- * MUST BE STATIC TO WORK RIGHT
- * LIRTALY UST BE STATIC TO WORK 
- * WILL CRASH THE ROBOT ON SECOND INIT IF NOT STATIC
+ * A wrapper for a virtual shuffleboard button
  */
-public class shufHELLboardButton extends Button implements Usable{
+public class shufHELLboardButton extends Button implements Usable {
 
     private ArrayList<Object> users;
 
@@ -46,7 +44,7 @@ public class shufHELLboardButton extends Button implements Usable{
      */
     @Override
     public boolean get() {
-        if(button.getBoolean(false)){
+        if (button.getBoolean(false)) {
             button.setBoolean(false);
             return true;
         }

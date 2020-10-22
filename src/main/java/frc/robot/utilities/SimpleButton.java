@@ -7,25 +7,31 @@
 
 package frc.robot.utilities;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * Add your docs here.
  */
-public class ButtonOnlyTureOncePerPress {
+public class SimpleButton {
 
+    private BooleanSupplier supplier;
     private boolean last;
 
-    public ButtonOnlyTureOncePerPress(){
+    public SimpleButton(BooleanSupplier supplier) {
+        this.supplier = supplier;
+
         last = false;
     }
 
-    //returns ture on the first time true is passed in and wolnt ruturn true agin until its state is false agin and the true
-    public boolean get(boolean curentState){
-        if(last != curentState){
-            last = curentState;
-            return curentState;
-        }
-        else{
-            return false;
-        }
+    /**
+     * Returns true only on the rising edge of a button press
+     */
+    public boolean get(){
+        boolean current = supplier.getAsBoolean();
+        boolean output = !last && current;
+
+        last = current;
+
+        return output;
     }
 }
