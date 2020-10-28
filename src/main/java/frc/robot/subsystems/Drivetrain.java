@@ -146,6 +146,12 @@ public class Drivetrain implements Subsystem {
         rightEncoder.setPosition(position);
     }
 
+    public void zeroEncoders(){
+        setRightEncoder(0);
+        setLeftEncoder(0);
+    }
+
+
     /**
      * Returns the current position of right side of the drivetrain
      * 
