@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.oi.ControllerDriver;
 import frc.robot.oi.JoystickDriver;
 import frc.robot.oi.LaunchpadDriver;
+import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Colors;
@@ -26,6 +27,7 @@ import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
+import frc.robot.commands.pathfollowing.GenerateRecording;
 import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
@@ -45,6 +47,7 @@ public class RobotContainer {
     private CommandScheduler scheduler;
 
     private ControllerDriver controller1;
+    private shufHELLboardDriver shufHELLboard;
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
@@ -80,6 +83,7 @@ public class RobotContainer {
         allLEDS = new LEDRange(leds, allRange);
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
+        shufHELLboard = new shufHELLboardDriver();
         // launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         // joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
@@ -134,6 +138,8 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+
+        shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
         // Launchpad bindings
         
         //climb
