@@ -19,7 +19,7 @@ public class Ports {
     RIGHT_DRIVE_MAIN = 22,
     RIGHT_DRIVE_1 = 20,
 
-    SHIFT_SOLENOID_UP = 1,
+    SHIFT_SOLENOID_UP = 4,
     SHIFT_SOLENOID_DOWN = 0,
 
     // pneumatics
