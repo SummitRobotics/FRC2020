@@ -61,9 +61,7 @@ public class GenerateRecording extends CommandBase {
      * @param saveSequence button to store sequence
      */
     public GenerateRecording(Drivetrain drivetrain, Button savePoint, Button saveSequence, Button saveShift, Button saveIntake) { //, Shifter shifter, IntakeArm intake) {
-        if(drivetrain == null){
-            System.out.println("AAAAA BAD REEEE BAD HELL HELL HELL HELL HELL HELL HELL REEEEEEEE");
-        }
+
         
         this.drivetrain = drivetrain;
 
@@ -110,7 +108,7 @@ public class GenerateRecording extends CommandBase {
 
     @Override
     public void execute() {
-        if(aborted = true){
+        if (aborted == true) {
             return;
         }
 

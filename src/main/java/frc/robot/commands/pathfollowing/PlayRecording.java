@@ -89,11 +89,16 @@ public class PlayRecording extends CommandBase {
         if(!checkForRunningCommands()){
             parseNewCommand();
             currentStep++;
+            if(currentStep > (points.size()-1)){
+                aborted = true;
+            }
         }
         
     }
 
     private void parseNewCommand(){
+
+        System.out.println(currentStep);
         String command = points.get(currentStep);
 
 

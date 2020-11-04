@@ -28,6 +28,7 @@ import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.pathfollowing.GenerateRecording;
+import frc.robot.commands.pathfollowing.PlayRecording;
 import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
@@ -141,6 +142,8 @@ public class RobotContainer {
 
         shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
         // Launchpad bindings
+
+        controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain));
         
         //climb
         // launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
