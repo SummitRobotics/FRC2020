@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.IntakeArm;
+import frc.robot.subsystems.Shifter;
 //import frc.robot.subsystems.IntakeArm;
 //import frc.robot.subsystems.Shifter;
 import frc.robot.utilities.SimpleButton;
@@ -20,15 +22,15 @@ public class GenerateRecording extends CommandBase {
     public static File cacheFile = new File("/home/admin/recordings/cache.chs");
 
     private Drivetrain drivetrain;
-    //private Shifter shifter;
-    //private IntakeArm intake;
+    private Shifter shifter;
+    private IntakeArm intake;
 
     // private Button savePoint;
     // private boolean savePointPrior;
 
     private SimpleButton savePoint;
     private SimpleButton saveSequence;
-    
+
     // private Button saveSequence;
     // private boolean saveSequencePrior;
 
@@ -47,21 +49,21 @@ public class GenerateRecording extends CommandBase {
     private FileWriter file;
 
     private static ShuffleboardTab tab = Shuffleboard.getTab("record");
-    private static NetworkTableEntry recordOutput = tab.add("Record status", "recorder object made").withPosition(4, 0).withSize(2, 1).getEntry();
+    private static NetworkTableEntry recordOutput = tab.add("Record status", "recorder object made").withPosition(4, 0)
+            .withSize(2, 1).getEntry();
 
     /**
-     * Generates a recording of an autonomous sequence, and stores it to a cache file.
+     * Generates a recording of an autonomous sequence, and stores it to a cache
+     * file.
      * 
-     * File format is as follows:
-     * 1. Timestamp: "HH:mm:ss"
-     * 2+. left motor pos, right motor pos, shooter mode (number for setpoint, string for auto WIP)
+     * File format is as follows: 1. Timestamp: "HH:mm:ss" 2+. left motor pos, right
+     * motor pos, shooter mode (number for setpoint, string for auto WIP)
      * 
-     * @param drivetrain drivetrain subsystem
-     * @param savePoint button to control save value
+     * @param drivetrain   drivetrain subsystem
+     * @param savePoint    button to control save value
      * @param saveSequence button to store sequence
      */
-    public GenerateRecording(Drivetrain drivetrain, Button savePoint, Button saveSequence, Button saveShift, Button saveIntake) { //, Shifter shifter, IntakeArm intake) {
-
+    public GenerateRecording(Drivetrain drivetrain, Shifter shifter, IntakeArm intake, Button savePoint, Button saveSequence, Button saveShift, Button saveIntake) {
         
         this.drivetrain = drivetrain;
 
@@ -71,14 +73,11 @@ public class GenerateRecording extends CommandBase {
         this.saveShift = new SimpleButton(saveShift::get);
         this.saveIntake = new SimpleButton(saveIntake::get);
 
-        // this.saveShift = saveShift;
-        // this.saveIntake = saveIntake;
+        this.saveShift = new SimpleButton(saveShift);
+        this.saveIntake = new SimpleButton(saveIntake);
 
-        // shiftButtonFixer = new SimpleButton();
-        // intakeButtonFixer = new SimpleButton();
-
-        //this.intake = intake;
-        //this.shifter = shifter;
+        this.intake = intake;
+        this.shifter = shifter;
 
         timeStampFormatter = new SimpleDateFormat("HH:mm:ss");
 
@@ -172,7 +171,7 @@ public class GenerateRecording extends CommandBase {
     }
 
     private void addShiftPoint() throws IOException {
-        String state = "fake";//shifter.getShiftState() ? "high" : "low";
+        String state = shifter.getShiftState() ? "high" : "low";
         file.append("shift: " + state + "\n");
         recordOutput.setString("saved shift " + state);
     }
@@ -182,7 +181,7 @@ public class GenerateRecording extends CommandBase {
     }
 
     private void addIntakePoint() throws IOException{
-        String state = "fake";//intake.getState().toString();
+        String state = intake.getState().toString();
         file.append("intake: " + state + "\n");
         recordOutput.setString("saved intake " + state);
     }

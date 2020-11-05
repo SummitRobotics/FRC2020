@@ -140,10 +140,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
+        shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, shifter, intakeArm, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
         // Launchpad bindings
 
-        controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain));
+        controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
         
         //climb
         // launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,

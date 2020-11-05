@@ -8,6 +8,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -73,9 +74,6 @@ public class Drivetrain implements Subsystem {
         rightPID.setD(D);
         rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
 
-        leftPID.setOutputRange(-0.25, 0.25);
-        rightPID.setOutputRange(-0.25, 0.25);
-
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
         
@@ -86,6 +84,16 @@ public class Drivetrain implements Subsystem {
         rightBack.disableVoltageCompensation();
 
         setClosedRampRate(0);
+
+        left.setIdleMode(IdleMode.kBrake);
+        leftMiddle.setIdleMode(IdleMode.kBrake);
+        leftBack.setIdleMode(IdleMode.kBrake);
+
+        right.setIdleMode(IdleMode.kBrake);
+        rightMiddle.setIdleMode(IdleMode.kBrake);
+        rightBack.setIdleMode(IdleMode.kBrake);
+    
+
     }
 
     /**

@@ -9,16 +9,24 @@ package frc.robot.utilities;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj2.command.button.Button;
+
 /**
  * Add your docs here.
  */
-public class SimpleButton {
+public class SimpleButton extends Button {
 
     private BooleanSupplier supplier;
     private boolean last;
 
     public SimpleButton(BooleanSupplier supplier) {
         this.supplier = supplier;
+
+        last = false;
+    }
+
+    public SimpleButton(Button supplier) {
+        this.supplier = () -> supplier.get();
 
         last = false;
     }
