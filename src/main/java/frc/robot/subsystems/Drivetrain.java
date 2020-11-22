@@ -22,13 +22,13 @@ public class Drivetrain implements Subsystem {
     D = 0;//.00001;
 
     // left motors
-    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_0, MotorType.kBrushless);
+    private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_3, MotorType.kBrushless);
+    private CANSparkMax leftMiddle = new CANSparkMax(Ports.LEFT_DRIVE_2, MotorType.kBrushless);
     private CANSparkMax leftBack = new CANSparkMax(Ports.LEFT_DRIVE_1, MotorType.kBrushless);
 
     // right motors
-    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_MAIN, MotorType.kBrushless);
-    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_0, MotorType.kBrushless);
+    private CANSparkMax right = new CANSparkMax(Ports.RIGHT_DRIVE_3, MotorType.kBrushless);
+    private CANSparkMax rightMiddle = new CANSparkMax(Ports.RIGHT_DRIVE_2, MotorType.kBrushless);
     private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers

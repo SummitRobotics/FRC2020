@@ -11,12 +11,12 @@ public class Ports {
     JOYSTICK_PORT = 2,
     
     // drivetrain
-    LEFT_DRIVE_0 = 31,
-    LEFT_DRIVE_MAIN = 32,
+    LEFT_DRIVE_2 = 31,
+    LEFT_DRIVE_3 = 32,
     LEFT_DRIVE_1 = 30,
     
-    RIGHT_DRIVE_0 = 21,
-    RIGHT_DRIVE_MAIN = 22,
+    RIGHT_DRIVE_2 = 21,
+    RIGHT_DRIVE_3 = 22,
     RIGHT_DRIVE_1 = 20,
 
     SHIFT_SOLENOID_UP = 4,
@@ -51,8 +51,8 @@ public class Ports {
     TURRET_LIMIT_TWO = 3,
 
     // climber
-    LEFT_ARM_MOTOR = 41,
-    RIGHT_ARM_MOTOR = 40,
+    LEFT_CLIMB = 41,
+    RIGHT_CLIMB = 40,
     EXTEND_CLIMB = 4,
     CP_SPIN = 60;
 }
