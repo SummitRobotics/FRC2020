@@ -34,7 +34,7 @@ public class IntakeArm extends SubsystemBase {
 	private DigitalInput upperLimit;
 
 	public IntakeArm() {
-		intake = new VictorSPX(Ports.INTAKE_ARM_INTAKE);
+		intake = new VictorSPX(Ports.INTAKE_ARM_SPIN);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
 		lock = new Solenoid(Ports.PCM_1, Ports.INTAKE_LOCK);
 

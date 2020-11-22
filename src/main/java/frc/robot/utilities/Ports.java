@@ -34,15 +34,14 @@ public class Ports {
 
     // shooter
     SHOOTER = 51,
-    SHOOTER_FOLLOWER = 52,
-    ADJUSTABLE_HOOD = 53,
+    ADJUSTABLE_HOOD = 52,
 
     // conveyor
-    CONVEYOR = 60,
+    CONVEYOR = 53,
     BREAKBEAM = 9,
     
     // intake
-    INTAKE_ARM_INTAKE = 62,
+    INTAKE_ARM_SPIN = 62,
     INTAKE_ARM_PIVOT = 61,
     INTAKE_LOCK = 5,
     UPPER_LIMIT = 1,
@@ -54,5 +53,6 @@ public class Ports {
     // climber
     LEFT_ARM_MOTOR = 41,
     RIGHT_ARM_MOTOR = 40,
-    EXTEND_CLIMB = 4;
+    EXTEND_CLIMB = 4,
+    CP_SPIN = 60;
 }
