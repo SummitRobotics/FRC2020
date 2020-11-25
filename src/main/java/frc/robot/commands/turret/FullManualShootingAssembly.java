@@ -67,11 +67,9 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-		turret.setPower(turretRotationPower.get());
-/*
 		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-			double turretPower = limiter.getRateLimitedValue(turretRotationPower.get());
-			turret.setPower(Functions.deadzone(.05, turretPower) / 5); // Scaled by 5 for sanity
+			double turretPower = limiter.getRateLimitedValue((turretRotationPower.get()/5)); // Scaled by 5 for sanity
+			turret.setPower(Functions.deadzone(.05, turretPower)); 
 
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
@@ -89,18 +87,18 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!shooterSpoolPower.inUse()) {
 			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
 
-			if(startupSpinPrevention && shooterPower < 0.5){
+			if(startupSpinPrevention && (shooterPower > 0.75)){
 				startupSpinPrevention = false;
 			}
 			
 			if(!startupSpinPrevention){
 				shooter.setPower(shooterPower);
 			}
+
 			else{
 				shooter.setPower(0);
 			}
 
-			shooter.setPower(shooterPower);
 			
 			SmartDashboard.putNumber("shooter speed", shooter.getRPM());
 			SmartDashboard.putNumber("shooter temp", shooter.getTemperature());
@@ -109,7 +107,6 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!trigger.inUse()) {
 			conveyor.setShootMode(trigger.get());
 		}
-		*/
 	}
 
 	@Override

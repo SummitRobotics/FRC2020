@@ -27,14 +27,14 @@ public class Turret extends SubsystemBase {
 
     public Turret() {
         turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
-        //encoder = turret.getEncoder();
-        //pidController = turret.getPIDController();
+        encoder = turret.getEncoder();
+        pidController = turret.getPIDController();
 
-        //turret.setClosedLoopRampRate(0);
-        //pidController.setOutputRange(-1, 1);
+        turret.setClosedLoopRampRate(0);
+        pidController.setOutputRange(-1, 1);
 
         turret.setInverted(false);
-        turret.setIdleMode(IdleMode.kCoast);
+        turret.setIdleMode(IdleMode.kBrake);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Turret extends SubsystemBase {
      * @param power new power for the motor
      */
     public void setPower(double power){
-        System.out.println(power);
+        power = Functions.clampDouble(power, 1, -1);
         turret.set(power);
     }
 
