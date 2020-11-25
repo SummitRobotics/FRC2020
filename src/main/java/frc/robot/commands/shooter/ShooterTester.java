@@ -19,7 +19,6 @@ public class ShooterTester extends CommandBase {
     @Override
     public void initialize() {
         shooter.stop();
-        shooter.setOpenLoopRampRate(10);
 
         SmartDashboard.putBoolean("Shooter Stopped", false);
     }

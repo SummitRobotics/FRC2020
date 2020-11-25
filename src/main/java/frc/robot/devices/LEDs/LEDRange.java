@@ -62,7 +62,7 @@ public class LEDRange extends SubsystemBase{
      */
     private void setColor(LEDControlFunction controlFunction, int call){
         for (int[] x : ranges){
-            for(int y = x[0]; y > x[1]; y++){
+            for(int y = x[0]; y < x[1]; y++){
                 int[] color = controlFunction.getLedColor(call, y);
                 leds.setLED(color[0], color[1], color[2], y);
             }

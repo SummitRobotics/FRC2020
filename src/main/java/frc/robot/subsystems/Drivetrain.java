@@ -85,6 +85,14 @@ public class Drivetrain implements Subsystem {
 
         setClosedRampRate(0);
 
+        left.setSmartCurrentLimit(40);
+        leftMiddle.setSmartCurrentLimit(40);
+        leftBack.setSmartCurrentLimit(40);
+
+        right.setSmartCurrentLimit(40);
+        rightMiddle.setSmartCurrentLimit(40);
+        rightBack.setSmartCurrentLimit(40);
+
         left.setIdleMode(IdleMode.kBrake);
         leftMiddle.setIdleMode(IdleMode.kBrake);
         leftBack.setIdleMode(IdleMode.kBrake);

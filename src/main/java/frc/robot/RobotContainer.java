@@ -80,29 +80,30 @@ public class RobotContainer {
         scheduler = CommandScheduler.getInstance();
 
         leds = new LEDs();
-        int[] allRange = {0, 29};
+        int[] allRange = {0, 96};
         allLEDS = new LEDRange(leds, allRange);
+        allLEDS.addLEDCall("default", new LEDCall(1, LEDCall.solid(Colors.Green)));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         shufHELLboard = new shufHELLboardDriver();
-        // launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
-        // joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
+        launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
+        joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
         drivetrain = new Drivetrain();
         shifter = new Shifter(allLEDS);
-        //conveyor = new Conveyor();
-        //intakeArm = new IntakeArm();
-        //shooter = new Shooter();
-        //leftArm = new ClimberArm(Sides.LEFT);
-        //rightArm = new ClimberArm(Sides.RIGHT);
-        //turret = new Turret();
-        //climberPneumatics = new ClimberPneumatics();
+        conveyor = new Conveyor();
+        intakeArm = new IntakeArm();
+        shooter = new Shooter();
+        leftArm = new ClimberArm(Sides.LEFT);
+        rightArm = new ClimberArm(Sides.RIGHT);
+        turret = new Turret();
+        climberPneumatics = new ClimberPneumatics();
 
-        // gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
-        //limelight = new Lemonlight();
+        //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
+        limelight = new Lemonlight();
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         setDefaultCommands();
@@ -113,16 +114,15 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
-                new InstantCommand(()-> allLEDS.addLEDCall("default", new LEDCall(1, LEDCall.solid(Colors.Green)))),
-                // new InstantCommand(climberPneumatics::extendClimb),
-                // new InstantCommand(intakeArm::closeLock),
-                new InstantCommand(shifter::highGear)//,
-                // new InstantCommand(() -> {
-                //     launchpad.bigLEDRed.set(false);
-                //     launchpad.bigLEDGreen.set(true);
-                // })//,
-                // new InstantCommand(() -> conveyor.disableIntakeMode()),
-                // new InstantCommand(() -> conveyor.disableShootMode())
+                new InstantCommand(climberPneumatics::extendClimb),
+                new InstantCommand(intakeArm::closeLock),
+                new InstantCommand(shifter::highGear),
+                new InstantCommand(() -> {
+                    launchpad.bigLEDRed.set(false);
+                    launchpad.bigLEDGreen.set(true);
+                }),
+                new InstantCommand(() -> conveyor.disableIntakeMode()),
+                new InstantCommand(() -> conveyor.disableShootMode())
                 );
     }
 
@@ -143,95 +143,95 @@ public class RobotContainer {
         shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, shifter, intakeArm, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
         // Launchpad bindings
 
-        controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
+        //controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
         
         //climb
-        // launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        // launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, allLEDS));
+        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, allLEDS));
 
-        // launchpad.buttonA.whenPressed(
-        //     new InstantCommand(
-        //         climberPneumatics::toggleClimb
-        //     )
-        // );
-        // launchpad.buttonA.booleanSupplierBind(climberPneumatics::getClimbState);
+        launchpad.buttonA.whenPressed(
+            new InstantCommand(
+                climberPneumatics::toggleClimb
+            )
+        );
+        launchpad.buttonA.booleanSupplierBind(climberPneumatics::getClimbState);
 
         //moes
-        // launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
-        // launchpad.buttonB.pressBind();
+        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
+        launchpad.buttonB.pressBind();
 
-        // launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
-        // launchpad.buttonC.pressBind();
+        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
+        launchpad.buttonC.pressBind();
 
-        // launchpad.buttonD.whenPressed(
-        //     new InstantCommand(conveyor::toggleIntakeMode)
-        // );
-        // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
+        launchpad.buttonD.whenPressed(
+            new InstantCommand(conveyor::toggleIntakeMode)
+        );
+        launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        // launchpad.buttonD.whenPressed(new ShooterTester(shooter));
+        launchpad.buttonD.whenPressed(new ShooterTester(shooter));
 
-        // launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
-        // launchpad.buttonE.pressBind();
+        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
+        launchpad.buttonE.pressBind();
 
-        // launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
-        // launchpad.buttonF.pressBind();
+        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
+        launchpad.buttonF.pressBind();
 
         //intake arm
 
-        // Command intake = new SequentialCommandGroup(
-        //     new InstantCommand(() -> conveyor.enableIntakeMode()),
-        //     new SetDown(intakeArm, allLEDS)
-        //     );
+        Command intake = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.enableIntakeMode()),
+            new SetDown(intakeArm, allLEDS)
+            );
 
-        // Command up = new SequentialCommandGroup(
-        //     new InstantCommand(() -> conveyor.disableIntakeMode()),
-        //     new SetUp(intakeArm)
-        //     );
+        Command up = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new SetUp(intakeArm)
+            );
 
         
-        // launchpad.buttonH.whenPressed(intake, false);
-        // launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
+        launchpad.buttonH.whenPressed(intake, false);
+        launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
 
-        // launchpad.buttonI.whenPressed(up, false);
-        // launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
+        launchpad.buttonI.whenPressed(up, false);
+        launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        // launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
-        //   intakeArm::closeLock,
-        //   intakeArm::openLock,
-        //   intakeArm
-        // ), true);
-        // launchpad.buttonA.toggleBind(); 
+        launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
+          intakeArm::closeLock,
+          intakeArm::openLock,
+          intakeArm
+        ), true);
+        launchpad.buttonA.toggleBind(); 
 
         // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
         // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));
         // launchpad.funLeft.whenPressed(new PrintCommand("no fun T^T"));
 
-        // Controller bindings for intake
-        // controller1.buttonX.whenPressed(up, false);
-        // controller1.buttonA.whenPressed(intake, false);
+        //Controller bindings for intake
+        controller1.buttonX.whenPressed(up, false);
+        controller1.buttonA.whenPressed(intake, false);
 
         //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
             () -> {
                 shifter.lowGear();
-                //launchpad.bigLEDRed.set(true);
-                //launchpad.bigLEDGreen.set(false);
+                launchpad.bigLEDRed.set(true);
+                launchpad.bigLEDGreen.set(false);
             }, () -> {
                 shifter.highGear();
-                //launchpad.bigLEDRed.set(false);
-                //launchpad.bigLEDGreen.set(true);
+                launchpad.bigLEDRed.set(false);
+                launchpad.bigLEDGreen.set(true);
             }, shifter
         ));
 
-        // turret.setDefaultCommand(new FullManualShootingAssembly(
-        //     turret,
-        //     shooter,
-        //     conveyor,
-        //     joystick.axisX,
-        //     joystick.axisZ,
-        //     joystick.axisY,
-        //     joystick.trigger
-        // ));
+        turret.setDefaultCommand(new FullManualShootingAssembly(
+            turret,
+            shooter,
+            conveyor,
+            joystick.axisX,
+            joystick.axisZ,
+            joystick.axisY,
+            joystick.trigger
+        ));
     }
 
     /**

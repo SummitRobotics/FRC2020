@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -26,15 +27,14 @@ public class Turret extends SubsystemBase {
 
     public Turret() {
         turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
-        encoder = turret.getEncoder();
-        pidController = turret.getPIDController();
+        //encoder = turret.getEncoder();
+        //pidController = turret.getPIDController();
 
-        limit = new DigitalInput(Ports.TURRET_LIMIT);
+        //turret.setClosedLoopRampRate(0);
+        //pidController.setOutputRange(-1, 1);
 
-        turret.setClosedLoopRampRate(0);
-        pidController.setOutputRange(-1, 1);
-
-        turret.setInverted(true);
+        turret.setInverted(false);
+        turret.setIdleMode(IdleMode.kCoast);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Turret extends SubsystemBase {
      * @param power new power for the motor
      */
     public void setPower(double power){
-        power = Functions.clampDouble(power, 1, -1);
+        System.out.println(power);
         turret.set(power);
     }
 

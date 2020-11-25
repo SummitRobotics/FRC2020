@@ -31,8 +31,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	private ChangeRateLimiter limiter;
     private final double max_turret_change_rate = 0.025;
 
-	public FullManualShootingAssembly 
-		(
+	public FullManualShootingAssembly (
 			Turret turret, 
 			Shooter shooter, 
 			Conveyor conveyor, 
@@ -68,7 +67,8 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-
+		turret.setPower(turretRotationPower.get());
+/*
 		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
 			double turretPower = limiter.getRateLimitedValue(turretRotationPower.get());
 			turret.setPower(Functions.deadzone(.05, turretPower) / 5); // Scaled by 5 for sanity
@@ -89,7 +89,6 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!shooterSpoolPower.inUse()) {
 			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
 
-			/*
 			if(startupSpinPrevention && shooterPower < 0.5){
 				startupSpinPrevention = false;
 			}
@@ -100,7 +99,6 @@ public class FullManualShootingAssembly extends CommandBase {
 			else{
 				shooter.setPower(0);
 			}
-			*/
 
 			shooter.setPower(shooterPower);
 			
@@ -111,6 +109,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!trigger.inUse()) {
 			conveyor.setShootMode(trigger.get());
 		}
+		*/
 	}
 
 	@Override

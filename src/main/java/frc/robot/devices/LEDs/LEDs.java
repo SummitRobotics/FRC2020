@@ -9,23 +9,21 @@ package frc.robot.devices.LEDs;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.utilities.Ports;
 
 /**
  * Device to manage LEDs
  */
 public class LEDs {
 
-    private final int port = 9; //pwm port the strip is pluged into
-    private final int length = 29; //the length of the strip
-
     private AddressableLED ledStrip;
     private AddressableLEDBuffer buffer;
 
     public LEDs() {
-        ledStrip = new AddressableLED(port);
-        buffer = new AddressableLEDBuffer(length);
+        ledStrip = new AddressableLED(Ports.LED_PORT);
+        buffer = new AddressableLEDBuffer(Ports.LED_LENGTH);
 
-        ledStrip.setLength(length);
+        ledStrip.setLength(Ports.LED_LENGTH);
         ledStrip.start();
     }
 

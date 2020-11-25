@@ -22,6 +22,10 @@ public class Ports {
     SHIFT_SOLENOID_UP = 4,
     SHIFT_SOLENOID_DOWN = 0,
 
+    //leds
+    LED_PORT = 0,
+    LED_LENGTH = 96,
+
     // pneumatics
     PCM_1 = 16,
 
@@ -43,7 +47,7 @@ public class Ports {
     // intake
     INTAKE_ARM_SPIN = 62,
     INTAKE_ARM_PIVOT = 61,
-    INTAKE_LOCK = 5,
+    INTAKE_LOCK = 2,
     UPPER_LIMIT = 1,
 
     // DIO
@@ -53,6 +57,6 @@ public class Ports {
     // climber
     LEFT_CLIMB = 41,
     RIGHT_CLIMB = 40,
-    EXTEND_CLIMB = 4,
+    EXTEND_CLIMB = 6,
     CP_SPIN = 60;
 }

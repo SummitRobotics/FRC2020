@@ -12,6 +12,7 @@ package frc.robot.utilities;
  */
 public class Colors {
     public static int[] Off = {0, 0, 0};
+    public static int[] White = {255, 255, 255};
     public static int[] Red = {255, 0, 0};
     public static int[] Green = {0, 255, 0};
     public static int[] Blue = {0, 0, 255};

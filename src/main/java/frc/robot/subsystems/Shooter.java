@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -14,17 +18,15 @@ import frc.robot.utilities.Ports;
  */
 public class Shooter extends SubsystemBase {
 
-    private CANSparkMax shooterMotor;
-    private CANEncoder shooterEncoder;
+    private TalonFX shooterMotor;
+    private TalonFXSensorCollection shooterEncoder;
 
     private CANSparkMax adjustableHood;
     private CANEncoder hoodEncoder;
 
     public Shooter() {
-        shooterMotor = new CANSparkMax(Ports.SHOOTER, MotorType.kBrushless);
-        shooterEncoder = shooterMotor.getEncoder();
-
-        shooterMotor.setOpenLoopRampRate(0);
+        shooterMotor = new TalonFX(Ports.SHOOTER);
+        shooterEncoder = new TalonFXSensorCollection(shooterMotor);
 
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
 
@@ -39,14 +41,14 @@ public class Shooter extends SubsystemBase {
      */
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
-        shooterMotor.set(power);
+        shooterMotor.set(ControlMode.PercentOutput, power);
     }
 
     /**
      * Stops the motor
      */
     public void stop() {
-        shooterMotor.set(0);
+        shooterMotor.set(ControlMode.PercentOutput, 0);
         adjustableHood.set(0);
     }
 
@@ -61,18 +63,14 @@ public class Shooter extends SubsystemBase {
      * @return the velocity
      */
     public double getRPM() {
-        return shooterEncoder.getVelocity();
+        return shooterEncoder.getIntegratedSensorVelocity();
     }
 
     public double getTemperature() {
-        return shooterMotor.getMotorTemperature() * (9/5) + 32;
+        return shooterMotor.getTemperature();
     }
 
     public double getCurrentDraw() {
-        return shooterMotor.getOutputCurrent();
-    }
-
-    public void setOpenLoopRampRate(double rampRate) {
-        shooterMotor.setOpenLoopRampRate(rampRate);
+        return shooterMotor.getSupplyCurrent();
     }
 }
