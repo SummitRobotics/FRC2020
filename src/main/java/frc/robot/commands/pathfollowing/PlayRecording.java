@@ -12,15 +12,9 @@ import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
-import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
-// import frc.robot.commands.intake.SetDown;
-// import frc.robot.commands.intake.SetLoad;
-// import frc.robot.commands.intake.SetUp;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeArm;
-// import frc.robot.subsystems.IntakeArm;
-// import frc.robot.subsystems.Shifter;
 import frc.robot.subsystems.Shifter;
 
 public class PlayRecording extends CommandBase {
@@ -39,6 +33,7 @@ public class PlayRecording extends CommandBase {
     private ArrayList<String> points = new ArrayList<>();
     private int currentStep = 0;
 
+    //the end function must have been lost in a merge or somthing as this should end i think
     private boolean aborted = false;
 
     private CommandScheduler scheduler;
@@ -135,13 +130,13 @@ public class PlayRecording extends CommandBase {
             }
         }
         else if(command.contains("intake: ")){
-            if(command.contains("intake: " + intake.state.UP.toString())){
+            if(command.contains("intake: " + IntakeArm.States.UP.toString())){
                 scheduler.schedule(new SetUp(intake, Leds));
             }
-            else if(command.contains("intake: " + intake.state.DOWN_YES_INTAKE.toString())){
+            else if(command.contains("intake: " + IntakeArm.States.DOWN_YES_INTAKE.toString())){
                 scheduler.schedule(new SetDown(intake, Leds));
             }
-            else if(command.contains("intake: " + intake.state.DOWN_NO_INTAKE.toString())){
+            else if(command.contains("intake: " + IntakeArm.States.DOWN_NO_INTAKE.toString())){
                 scheduler.schedule(new SetLoad(intake));
             }
             else{
@@ -162,5 +157,7 @@ public class PlayRecording extends CommandBase {
             return scheduler.isScheduled(CurrentDrivetrainCommand);
         }   
     }
+
+    //TODO why does this not end???
 
 }

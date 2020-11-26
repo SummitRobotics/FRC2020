@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix.CANifier.LEDChannel;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.Compressor;

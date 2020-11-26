@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.IntakeArm.States;
-import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.IntakeArm;
 
@@ -14,6 +13,8 @@ public class SetUp extends SequentialCommandGroup {
     private IntakeArm intake;
     private boolean end;
     private LEDs leds;
+
+    private double intakeLiftPower = -0.42;
 
     public SetUp(IntakeArm intake, LEDs leds) {
         this.intake = intake;
@@ -34,7 +35,6 @@ public class SetUp extends SequentialCommandGroup {
 
         @Override
         public void initialize() {
-            leds.RemoveCall("ArmDown");
             intake.openLock();
     
             if (intake.getState() == States.UP) {
@@ -48,14 +48,14 @@ public class SetUp extends SequentialCommandGroup {
     
                 intake.setState(States.UP);
     
-                intake.setPivotPower(-0.42);
+                intake.setPivotPower(intakeLiftPower);
             }
         }
     
         @Override
-        public void end(boolean interrupted) {    
+        public void end(boolean interrupted) {   
+            leds.RemoveCall("ArmDown"); 
             intake.setIntakePower(0);
-    
             end = false;
         }
     

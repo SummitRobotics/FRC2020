@@ -16,8 +16,8 @@ public class Colors {
     public static int[] Red = {255, 0, 0};
     public static int[] Green = {0, 255, 0};
     public static int[] Blue = {0, 0, 255};
-    public static int[] Yellow = {128, 128, 0};
-    public static int[] Orange = {128, 64, 0};
-    public static int[] Purple = {102, 0, 102};
+    public static int[] Yellow = {255, 255, 0};
+    public static int[] Orange = {255, 100, 0};
+    public static int[] Purple = {200, 0, 255};
     //add more as we make them
 }

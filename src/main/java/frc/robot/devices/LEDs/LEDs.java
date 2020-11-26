@@ -7,7 +7,6 @@
 
 package frc.robot.devices.LEDs;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -16,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import frc.robot.utilities.functionalinterfaces.LEDControlFunction;
 
@@ -27,11 +25,11 @@ public class LEDs extends SubsystemBase {
 
     private AddressableLED ledStrip;
     private AddressableLEDBuffer buffer;
-    private HashMap<String, LEDCall> calls = new HashMap<>();
+    private HashMap<String, LEDCall> calls;
 
-    HashMap<Integer, HashMap<Integer,LEDControlFunction>> hell = new HashMap<>();
+    HashMap<Integer, HashMap<Integer,LEDControlFunction>> hell;
 
-    HashMap<Integer, LEDControlFunction> ledToFunction = new HashMap<>();
+    HashMap<Integer, LEDControlFunction> ledToFunction;
 
     private int loops;
 
@@ -42,6 +40,10 @@ public class LEDs extends SubsystemBase {
         loops = 0;
         ledStrip = new AddressableLED(Ports.LED_PORT);
         buffer = new AddressableLEDBuffer(Ports.LED_LENGTH);
+
+        calls = new HashMap<>();
+        hell = new HashMap<>();
+        ledToFunction = new HashMap<>();
 
         ledStrip.setLength(Ports.LED_LENGTH);
         ledStrip.start();
@@ -71,12 +73,12 @@ public class LEDs extends SubsystemBase {
     public void periodic() {
         loops++;
 
-
         //this is bad and uses lots of ram probably
 
         if(listrebiuld){
             hell.clear();
             ledToFunction.clear();
+            
             //goes through all calls
             for(LEDCall call : calls.values()){
                 //gets the range for each call
@@ -114,7 +116,6 @@ public class LEDs extends SubsystemBase {
             }
 
             //makes it so we dont do all of this if we dont need to
-            System.out.println("list rebiult");
             listrebiuld = false;
         }
 
