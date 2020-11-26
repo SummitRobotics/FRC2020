@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.CANifier.LEDChannel;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -52,7 +53,7 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
-    private LEDs leds;
+    private LEDs Leds;
     private Compressor compressor;
 
     private Drivetrain drivetrain;
@@ -71,18 +72,14 @@ public class RobotContainer {
     private Command autoInit;
     private Command teleInit;
 
-    private LEDRange allLEDS;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         scheduler = CommandScheduler.getInstance();
 
-        leds = new LEDs();
-        int[] allRange = {0, 96};
-        allLEDS = new LEDRange(leds, allRange);
-        allLEDS.addLEDCall("default", new LEDCall(1, LEDCall.solid(Colors.Green)));
+        Leds = new LEDs();
+        Leds.AddCall("deafult", new LEDCall(1, LEDCall.solid(Colors.Green), LEDRange.All));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         shufHELLboard = new shufHELLboardDriver();
@@ -93,7 +90,7 @@ public class RobotContainer {
         compressor.setClosedLoopControl(true);
 
         drivetrain = new Drivetrain();
-        shifter = new Shifter(allLEDS);
+        shifter = new Shifter(Leds);
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         shooter = new Shooter();
@@ -147,7 +144,7 @@ public class RobotContainer {
         
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, allLEDS));
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, Leds));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
@@ -180,12 +177,12 @@ public class RobotContainer {
 
         Command intake = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
-            new SetDown(intakeArm, allLEDS)
+            new SetDown(intakeArm, Leds)
             );
 
         Command up = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new SetUp(intakeArm)
+            new SetUp(intakeArm, Leds)
             );
 
         

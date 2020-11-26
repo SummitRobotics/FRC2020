@@ -13,6 +13,7 @@ import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.LEDs.LEDs;
 // import frc.robot.commands.intake.SetDown;
 // import frc.robot.commands.intake.SetLoad;
 // import frc.robot.commands.intake.SetUp;
@@ -33,7 +34,7 @@ public class PlayRecording extends CommandBase {
     private Drivetrain drivetrain;
     private Shifter shifter;
     private IntakeArm intake;
-    private LEDRange intakeLeds;
+    private LEDs Leds;
 
     private ArrayList<String> points = new ArrayList<>();
     private int currentStep = 0;
@@ -47,13 +48,13 @@ public class PlayRecording extends CommandBase {
     private String recordingName;
 
 
-    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake, LEDRange intakeLeds) {
+    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake, LEDs Leds) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/saved/" + recording);
         this.drivetrain = drivetrain;
         this.shifter = shift;
         this.intake = intake;
-        this.intakeLeds = intakeLeds;
+        this.Leds = Leds;
 
         recordingName = recording;
     }
@@ -135,10 +136,10 @@ public class PlayRecording extends CommandBase {
         }
         else if(command.contains("intake: ")){
             if(command.contains("intake: " + intake.state.UP.toString())){
-                scheduler.schedule(new SetUp(intake));
+                scheduler.schedule(new SetUp(intake, Leds));
             }
             else if(command.contains("intake: " + intake.state.DOWN_YES_INTAKE.toString())){
-                scheduler.schedule(new SetDown(intake, intakeLeds));
+                scheduler.schedule(new SetDown(intake, Leds));
             }
             else if(command.contains("intake: " + intake.state.DOWN_NO_INTAKE.toString())){
                 scheduler.schedule(new SetLoad(intake));

@@ -13,15 +13,17 @@ import frc.robot.utilities.functionalinterfaces.LEDControlFunction;
 public class LEDCall {
     private int priority;
     private LEDControlFunction controlFunction;
+    private LEDRange range;
 
     /**
      * led call to be added to a led range
      * @param priority the priority of the call, higher number = higher priority
      * @param controlFunction the function used to determen the color of the leds when the call is exicuted
      */
-    public LEDCall(int priority, LEDControlFunction controlFunction){
+    public LEDCall(int priority, LEDControlFunction controlFunction, LEDRange range){
         this.priority = priority;
         this.controlFunction = controlFunction;
+        this.range = range;
 
     }
 
@@ -111,5 +113,11 @@ public class LEDCall {
      */
     public LEDControlFunction getControlFunction(){
         return controlFunction;
+    }
+    /**
+     * @return the led range asociated with the call
+     */
+    public LEDRange getLedRange(){
+        return range;
     }
 }

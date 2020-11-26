@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.LEDs.LEDs;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
 import frc.robot.oi.LEDButton.LED;
@@ -41,7 +42,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		OIButton nextPhase,
 		LED ledA,
 		LED ledB,
-		LEDRange leds
+		LEDs leds
 	) {
 
 
@@ -69,7 +70,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
-				leds.removeLEDCall("ArmsUp");
+				leds.RemoveCall("ArmsUp");
 
 				if (!interrupted) {
 					pneumatics.retractClimb();
@@ -78,7 +79,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> leds.addLEDCall("ArmsUp", new LEDCall(7, LEDCall.flashing(Colors.Red, Colors.Off)))),
+			new InstantCommand(() -> leds.AddCall("ArmsUp", new LEDCall(7, LEDCall.flashing(Colors.Red, Colors.Off), LEDRange.All))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);
