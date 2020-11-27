@@ -19,8 +19,8 @@ public class Ports {
     RIGHT_DRIVE_3 = 22,
     RIGHT_DRIVE_1 = 20,
 
-    SHIFT_SOLENOID_UP = 4,
-    SHIFT_SOLENOID_DOWN = 0,
+    SHIFT_SOLENOID_UP = 0,
+    SHIFT_SOLENOID_DOWN = 4,
 
     //leds
     LED_PORT = 0,

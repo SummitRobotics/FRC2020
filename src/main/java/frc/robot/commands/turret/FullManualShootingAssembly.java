@@ -100,8 +100,8 @@ public class FullManualShootingAssembly extends CommandBase {
 			}
 
 			
-			SmartDashboard.putNumber("shooter speed", shooter.getRPM());
-			SmartDashboard.putNumber("shooter temp", shooter.getTemperature());
+			SmartDashboard.putNumber("shooter speed", shooter.getShooterRPM());
+			SmartDashboard.putNumber("shooter temp", shooter.getShooterTemperature());
 		}
 		
 		if (!trigger.inUse()) {
