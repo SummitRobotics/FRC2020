@@ -8,14 +8,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.Homeable;
 import frc.robot.utilities.Ports;
 
 /**
  * Subsystem to control the shooter
  */
-public class Shooter extends SubsystemBase {
+public class Shooter extends SubsystemBase implements Homeable {
 
     private TalonFX shooterMotor;
     private TalonFXSensorCollection shooterEncoder;
@@ -61,15 +63,64 @@ public class Shooter extends SubsystemBase {
      * Gets the velocity of the shooter
      * @return the velocity
      */
-    public double getRPM() {
+    public double getShooterRPM() {
         return shooterEncoder.getIntegratedSensorVelocity();
     }
 
-    public double getTemperature() {
+    public double getShooterTemperature() {
         return shooterMotor.getTemperature();
     }
 
-    public double getCurrentDraw() {
+    public double getShooterCurrentDraw() {
         return shooterMotor.getSupplyCurrent();
+    }
+
+    //for homing adj hood
+    @Override
+    public double getCurrent() {
+        return adjustableHood.getOutputCurrent();
+    }
+
+    @Override
+    public double getVelocity() {
+        return hoodEncoder.getVelocity();
+    }
+
+    @Override
+    public void setHomingPower(double power) {
+        setHoodPower(power);
+
+    }
+
+    @Override
+    public void setHome(double position) {
+        hoodEncoder.setPosition(position);
+    }
+
+    @Override
+    public void setSoftLimits(double revers, double fowards) {
+        //enables both soft limits
+        adjustableHood.setSoftLimit(SoftLimitDirection.kForward, (float)fowards);
+        adjustableHood.setSoftLimit(SoftLimitDirection.kReverse, (float)revers);
+
+    }
+
+    @Override
+    public void DisableSoftLimits() {
+        adjustableHood.enableSoftLimit(SoftLimitDirection.kForward, false);
+        adjustableHood.enableSoftLimit(SoftLimitDirection.kReverse, false);
+
+    }
+
+    @Override
+    public void EnableSoftLimits() {
+        adjustableHood.enableSoftLimit(SoftLimitDirection.kForward, true);
+        adjustableHood.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+    }
+
+    @Override
+    public Subsystem getSubsystemObject(){
+        return this;
     }
 }

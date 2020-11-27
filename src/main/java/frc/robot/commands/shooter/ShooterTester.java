@@ -26,7 +26,7 @@ public class ShooterTester extends CommandBase {
     @Override
     public void execute() {
         if (!shooterStopped) {
-            shooterStopped = shooter.getRPM() < 1;
+            shooterStopped = shooter.getShooterRPM() < 1;
 
             if (shooterStopped) {
                 SmartDashboard.putBoolean("Shooter Stopped", true);
@@ -36,8 +36,8 @@ public class ShooterTester extends CommandBase {
             return;
         }
 
-        SmartDashboard.putNumber("Shooter Speed", shooter.getRPM());
-        SmartDashboard.putNumber("Current Current", shooter.getCurrentDraw());
+        SmartDashboard.putNumber("Shooter Speed", shooter.getShooterRPM());
+        SmartDashboard.putNumber("Current Current", shooter.getShooterCurrentDraw());
     }
 
     @Override
