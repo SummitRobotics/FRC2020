@@ -70,7 +70,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
-				leds.RemoveCall("ArmsUp");
+				leds.removeCall("ArmsUp");
 
 				if (!interrupted) {
 					pneumatics.retractClimb();
@@ -79,7 +79,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> leds.AddCall("ArmsUp", new LEDCall(7, LEDCall.flashing(Colors.Red, Colors.Off), LEDRange.All))),
+			new InstantCommand(() -> leds.addCall("ArmsUp", new LEDCall(7, LEDRange.BothClimb).flashing(Colors.Red, Colors.Off))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

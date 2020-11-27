@@ -54,7 +54,7 @@ public class SetUp extends SequentialCommandGroup {
     
         @Override
         public void end(boolean interrupted) {   
-            leds.RemoveCall("ArmDown"); 
+            leds.removeCall("ArmDown"); 
             intake.setIntakePower(0);
             end = false;
         }

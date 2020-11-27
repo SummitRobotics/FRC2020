@@ -78,7 +78,7 @@ public class RobotContainer {
         scheduler = CommandScheduler.getInstance();
 
         Leds = new LEDs();
-        Leds.AddCall("deafult", new LEDCall(1, LEDCall.solid(Colors.Green), LEDRange.All));
+        Leds.addCall("deafult", new LEDCall(1, LEDRange.All).solid(Colors.Green));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         shufHELLboard = new shufHELLboardDriver();

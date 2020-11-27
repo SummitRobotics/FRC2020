@@ -33,7 +33,7 @@ public class SetDown extends CommandBase {
 
     @Override
     public void initialize() {
-        leds.AddCall("ArmDown", new LEDCall(LEDpriority, LEDCall.ffh(Colors.Blue, Colors.Off), LEDRange.All));
+        leds.addCall("ArmDown", new LEDCall(LEDpriority, LEDRange.BothIntake).ffh(Colors.Blue, Colors.Off));
         
         timer.reset();
         timer.start();

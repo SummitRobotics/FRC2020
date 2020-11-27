@@ -13,22 +13,22 @@ public class Shifter implements Subsystem {
 
     private DoubleSolenoid shift;
     private boolean oldShift;
-    private LEDs ShiftLeds;
+    private LEDs Leds;
     private int LEDpriority = 5;
 
     public Shifter(LEDs leds) {
-        ShiftLeds = leds;
+        this.Leds = leds;
         shift = new DoubleSolenoid(Ports.PCM_1, Ports.SHIFT_SOLENOID_UP, Ports.SHIFT_SOLENOID_DOWN);
     }
 
     public void highGear() {
-        ShiftLeds.RemoveCall("lowShift");
+        Leds.removeCall("lowShift");
         oldShift = true;
         shift.set(Value.kForward);
     }
 
     public void lowGear() {
-        ShiftLeds.AddCall("lowShift", new LEDCall(LEDpriority, LEDCall.solid(Colors.Red), LEDRange.All));
+        Leds.addCall("lowShift", new LEDCall(LEDpriority, LEDRange.All).sine(Colors.Red));
         oldShift = false;
         shift.set(Value.kReverse);
     }

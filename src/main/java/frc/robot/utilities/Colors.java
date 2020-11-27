@@ -7,17 +7,20 @@
 
 package frc.robot.utilities;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 /**
  * Add your docs here.
  */
 public class Colors {
-    public static int[] Off = {0, 0, 0};
-    public static int[] White = {255, 255, 255};
-    public static int[] Red = {255, 0, 0};
-    public static int[] Green = {0, 255, 0};
-    public static int[] Blue = {0, 0, 255};
-    public static int[] Yellow = {255, 255, 0};
-    public static int[] Orange = {255, 100, 0};
-    public static int[] Purple = {200, 0, 255};
+    public static Color8Bit Off = new Color8Bit(0,0,0);
+    public static Color8Bit White = new Color8Bit(255,255,255);
+    public static Color8Bit Red = new Color8Bit(255,0,0);
+    public static Color8Bit Green = new Color8Bit(0,255,0);
+    public static Color8Bit Blue = new Color8Bit(0,0,255);
+    public static Color8Bit Yellow = new Color8Bit(Color.kYellow);
+    public static Color8Bit Orange = new Color8Bit(Color.kDarkOrange);
+    public static Color8Bit Purple = new Color8Bit(Color.kPurple);
     //add more as we make them
 }

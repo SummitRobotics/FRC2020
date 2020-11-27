@@ -1,34 +1,81 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.devices.LEDs;
 
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public enum LEDRange{
+public enum LEDRange {
+    LeftClimb(Atomic.LeftClimb),
+    RightClimb(Atomic.RightClimb),
+    Middle(Atomic.Middle),
+    LeftIntake(Atomic.LeftIntake),
+    RightIntake(Atomic.RightIntake),
+    BothClimb(Atomic.LeftClimb, Atomic.RightClimb),
+    BothIntake(Atomic.LeftIntake, Atomic.RightIntake),
+    All(
+        Atomic.LeftClimb, 
+        Atomic.RightClimb, 
+        Atomic.Middle, 
+        Atomic.LeftIntake, 
+        Atomic.RightIntake
+    );
 
-    LeftClimb(new int[][] {{34,57}}),
-    Mid(new int[][] {{24, 33}}),
-    RightClimb(new int[][] {{0, 23}}),
-    BothClimb(new int[][] {{34,57},{0, 23}}), 
-    LeftIntake(new int[][] {{58, 76}}),
-    RightIntake(new int[][] {{77, 96}}),
-    BothIntake(new int[][] {{58, 76},{77, 96}}),
-    AllLeft(new int[][] {{58, 76},{34,57}}), 
-    AllRight(new int[][] {{77, 95},{0, 23}}),
-    All(new int[][] {{0,95}});
+    private Atomic[] ranges;
 
-    public int[][] range;
-
-    LEDRange(int[][] range) {
-        this.range = range;
+    LEDRange(Atomic... ranges) {
+        this.ranges = ranges;
     }
 
-    public int[][] getRange() {
-        return this.range;
-     }
+    public Atomic[] getAtoms() {
+        return ranges;
+    }
 
+    
+    protected enum Atomic {
+        LeftClimb(34, 57),
+        RightClimb(0, 23),
+        Middle(24, 33),
+        LeftIntake(58, 76),
+        RightIntake(77, 95);
+
+        private int start;
+        private int end;
+
+        private final Color8Bit defaultColor;
+        private LEDCall call;
+
+        Atomic(int start, int end) {
+            this.start = start;
+            this.end = end;
+
+            defaultColor = new Color8Bit(Color.kBlack);
+            call = null;
+        }
+
+        public void refreshCalls() {
+            call = null;
+        }
+
+        public void updateCall(LEDCall newCall) {
+            if (call == null) {
+                call = newCall;
+            } else {
+                if (call.getPriority() < newCall.getPriority()) {
+                    call = newCall;
+                }
+            }
+        }
+
+        public void updateLEDs(AddressableLEDBuffer buffer, int loop) {
+            if (call == null) {
+                for (int i = start; i <= end; i++) {
+                    buffer.setLED(i, defaultColor);
+                }
+            } else {
+                for (int i = start; i <= end; i++) {
+                    buffer.setLED(i, call.getColor(loop, i));
+                }
+            }
+        }
+    }
 }
