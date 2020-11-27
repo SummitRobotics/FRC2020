@@ -13,11 +13,13 @@ import frc.robot.subsystems.Drivetrain;
 public class EncoderDrive extends CommandBase {
 
     private Drivetrain drivetrain;
-    private double ticks;
+    private double left;
+    private double right;
 
-    public EncoderDrive(Drivetrain drivetrain, double rotations) {
+    public EncoderDrive(Drivetrain drivetrain, double left, double right) {
         this.drivetrain = drivetrain;
-        this.ticks = rotations;
+        this.left = left;
+        this.right = right;
 
         addRequirements(drivetrain);
     }
@@ -26,10 +28,8 @@ public class EncoderDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.stop();
-        drivetrain.setLeftEncoder(0);
-        drivetrain.setRightEncoder(0);
-        drivetrain.setLeftMotorTarget(ticks);
-        drivetrain.setRightMotorTarget(ticks);
+        drivetrain.setLeftMotorTarget(left);
+        drivetrain.setRightMotorTarget(right);
     }
     
 
@@ -46,8 +46,7 @@ public class EncoderDrive extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        // return Math.abs(drivetrain.getLeftEncoderPosition() - ticks) < 1 &&
-        //     Math.abs(drivetrain.getRightEncoderPosition() - ticks) < 1;
-        return false;
+        return Math.abs(drivetrain.getLeftEncoderPosition() - left) < 1 && Math.abs(drivetrain.getRightEncoderPosition() - right) < 1;
+ 
     }
 }

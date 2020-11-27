@@ -1,8 +1,8 @@
 package frc.robot.commands.intake;
 
 
-import frc.robot.oi.LoggerAxis;
-import frc.robot.oi.LoggerButton;
+import frc.robot.oi.OIAxis;
+import frc.robot.oi.OIButton;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.utilities.MOCommand;
 
@@ -12,16 +12,16 @@ import frc.robot.utilities.MOCommand;
 public class IntakeArmMO extends MOCommand {
 
     private IntakeArm intakeArm;
-    private LoggerAxis controlAxis;
+    private OIAxis controlAxis;
 
-    private LoggerButton controlButtonA, controlButtonB, controlButtonC;
+    private OIButton controlButtonA, controlButtonB, controlButtonC;
 
     public IntakeArmMO(
         IntakeArm intakeArm, 
-        LoggerAxis controlAxis, 
-        LoggerButton controlButtonA, 
-        LoggerButton controlButtonB, 
-        LoggerButton controlButtonC
+        OIAxis controlAxis, 
+        OIButton controlButtonA, 
+        OIButton controlButtonB, 
+        OIButton controlButtonC
     ) {
         addRequirements(intakeArm);
         addUsed(controlAxis, controlButtonA, controlButtonB, controlButtonC);

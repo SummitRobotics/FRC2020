@@ -1,115 +1,104 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.devices.LEDs;
 
-import frc.robot.utilities.functionalinterfaces.LEDControlFunction;
-
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class LEDCall {
+
     private int priority;
-    private LEDControlFunction controlFunction;
+    private LEDRange range;
 
-    /**
-     * led call to be added to a led range
-     * @param priority the priority of the call, higher number = higher priority
-     * @param controlFunction the function used to determen the color of the leds when the call is exicuted
-     */
-    public LEDCall(int priority, LEDControlFunction controlFunction){
+    private Color8Bit defaultColor;
+
+    private int startLoop = 0;
+
+
+    public LEDCall(int priority, LEDRange range) {
         this.priority = priority;
-        this.controlFunction = controlFunction;
+        this.range = range;
 
+        defaultColor = new Color8Bit(Color.kBlack);
+
+        startLoop = 0;
     }
 
-    /**
-     * makes all leds one color
-     * @param color the color to make the leds
-     * @return the function to do it
-     */
-    public static LEDControlFunction solid(int[] color){
-        return (call, led) -> {return color;};
-    }
-
-    /**
-     * makes the leds flash
-     * @param onColor color for leds to change to
-     * @param offColor color to make the leds when in other flash stare, probably black
-     * @return the function to do it
-     */
-    public static LEDControlFunction flashing(int[] onColor, int[] offColor){
-        return (call, led) -> {
-            int time = call % 40;
-            if(time < 20){
-                return onColor;
-            }
-            else{
-                return offColor;
-            }
-        };
-    }
-
-    /**
-     * makes the leds flash twice then hold on the color
-     * @param onColor color for leds to change to
-     * @param offColor color to make the leds when in other flash stare, probably black
-     * @return the function to do it
-     */
-    public static LEDControlFunction ffh(int[] onColor, int[] offColor){
-        //turns on then off then on then off then stays on
-        //each call incriment = ~20ms
-        return (call, led) -> {
-            if(call <= 5) {
-                return onColor;
-            }
-            else if (call <= 10){
-                return offColor;
-            }
-            else if(call <= 15){
-                return onColor;
-            }
-            else if(call <= 20){
-                return offColor;
-            }
-            else{
-                return onColor;
-            }
-        };
-    }
-
-    /**
-     * makes a scroling wave on the leds
-     * @param color brightest color of the wave, all others will be dimmer
-     * @return the function to do it
-     */
-    public static LEDControlFunction sine(int[] color){
-        //use desmos to find this, should make wave land on 1/.5 on a whole number
-        final double waveLength = 6.068;
-        return (call, led) ->{
-            //makes a wave to scale color values by going from 1 to .5
-            double scaler = (Math.cos((((led*Math.PI)/waveLength)-call)+3))*.25;
-            int[] out = new int[3];
-            out[0] = (int)((color[0]*scaler)+.5);
-            out[1] = (int)((color[1]*scaler)+.5);
-            out[2] = (int)((color[2]*scaler)+.5);
-            return out;
-        };
-    }
-
-    /**
-     * @return the priority of the call
-     */
-    public int getPriority(){
+    public int getPriority() {
         return priority;
     }
 
-    /**
-     * @return the control function for the led call
-     */
-    public LEDControlFunction getControlFunction(){
-        return controlFunction;
+    public LEDRange getRange() {
+        return range;
+    }
+
+    public Color8Bit getColor(int loop, int led) {
+        return defaultColor;
+    }
+
+    public LEDCall solid(Color8Bit color) {
+        return new LEDCall(priority, range) {
+            @Override
+            public Color8Bit getColor(int loop, int led) {
+                return color;
+            }
+        };
+    }
+
+    public LEDCall flashing(Color8Bit onColor, Color8Bit offColor) {
+        return new LEDCall(priority, range) {
+            @Override
+            public Color8Bit getColor(int loop, int led) {
+                int time = loop % 40;
+                if (time < 20) {
+                    return onColor;
+
+                } else {
+                    return offColor;
+                }    
+            }
+        };
+    }
+
+    public LEDCall ffh(Color8Bit onColor, Color8Bit offColor) {
+        return new LEDCall(priority, range) {
+            @Override
+            public Color8Bit getColor(int loop, int led) {
+                if(startLoop == 0){
+                    startLoop = loop;
+                }
+                int time = loop - startLoop;
+                if (time <= 10) {
+                    return onColor;
+
+                } else if (time <= 20) {
+                    return offColor;
+
+                } else if(time <= 30) {
+                    return onColor;
+
+                } else if(time <= 40) {
+                    return offColor;
+
+                } else {
+
+                    return onColor;
+                }
+            }
+        };
+    }
+
+    public LEDCall sine(Color8Bit color) {
+        return new LEDCall(priority, range) {
+            private final double waveLength = 6.068;
+
+            @Override
+            public Color8Bit getColor(int loop, int led) {
+                double scaler = (Math.cos((((led * Math.PI) / waveLength) - (loop/4)) + 3)+1) * 0.25;
+                return new Color8Bit(
+                    (int) ((color.red * scaler) + 0.5),
+                    (int) ((color.green * scaler) + 0.5),
+                    (int) ((color.blue * scaler) +.5)
+                );
+            }
+        };
     }
 }

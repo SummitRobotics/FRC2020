@@ -13,8 +13,8 @@ import frc.robot.utilities.Ports;
 public class ClimberArm extends SubsystemBase {
 
     public enum Sides {
-        LEFT(Ports.LEFT_ARM_MOTOR, true),
-        RIGHT(Ports.RIGHT_ARM_MOTOR, false);
+        LEFT(Ports.LEFT_CLIMB, true),
+        RIGHT(Ports.RIGHT_CLIMB, false);
 
         public int motorPort;
         public boolean inverted;

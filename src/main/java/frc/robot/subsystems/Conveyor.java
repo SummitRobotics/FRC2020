@@ -12,14 +12,12 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Ports;
 
 /**
  * Subsystem to control the internal conveyor mechanism of the robot
  */
-public class Conveyor extends SubsystemBase implements Logger {
+public class Conveyor extends SubsystemBase {
 
 	public enum States {
 		SHOOT,
@@ -31,9 +29,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 	public static final double
 	SHOOT_POWER = 1,
 	SUBSUME_POWER = 1;
-
-	// powers saved for faster logging
-	private double power;
 
 	// conveyor motor
 	private VictorSPX conveyorMotor;
@@ -49,8 +44,6 @@ public class Conveyor extends SubsystemBase implements Logger {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
 		breakbeam = new DigitalInput(Ports.BREAKBEAM);
-
-		power = 0;
 
 		shootMode = false;
 		intakeMode = false;
@@ -84,7 +77,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	/**
 	 * Gets the run state of the conveyor based on mode flags
 	 * 
-	 * @return the acntive state
+	 * @return the active state
 	 */
 	public States getState() {
 		if (shootMode) {
@@ -144,12 +137,5 @@ public class Conveyor extends SubsystemBase implements Logger {
 
 	public boolean getIntakeMode() {
 		return intakeMode;
-	}
-
-	@Override
-	public double[] getValues(double[] values) {
-		values[LoggerRelations.CONVEYOR.value] = power;
-		values[LoggerRelations.CONVEYOR_BREAKBEAM.value] = getBreakBeam() ? 1 : 0;
-		return values;
 	}
 }

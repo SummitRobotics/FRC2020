@@ -5,11 +5,9 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
-public class LEDButton extends LoggerButton {
+public class LEDButton extends OIButton {
 
 	public interface LED {
 		public void set(boolean state);
@@ -17,17 +15,8 @@ public class LEDButton extends LoggerButton {
 
 	private Command controller;
 
-	public LEDButton(ButtonGetter getter, LoggerRelations logReference, SyncLogger logger, LED led) {
-		super(getter, logReference, logger);
-
-		controller = new StartEndCommand(
-			() -> led.set(true),
-			() -> led.set(false)
-		);
-	}
-
-	public LEDButton(ButtonGetter getter, LoggerRelations logReference, LED led) {
-		super(getter, logReference);
+	public LEDButton(ButtonGetter getter, LED led) {
+		super(getter);
 
 		controller = new StartEndCommand(
 			() -> led.set(true),

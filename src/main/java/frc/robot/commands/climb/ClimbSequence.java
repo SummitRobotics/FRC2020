@@ -6,8 +6,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.oi.LoggerAxis;
-import frc.robot.oi.LoggerButton;
+import frc.robot.devices.LEDs.LEDs;
+import frc.robot.oi.OIAxis;
+import frc.robot.oi.OIButton;
 import frc.robot.oi.LEDButton.LED;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.subsystems.ClimberPneumatics;
@@ -36,12 +37,12 @@ public class ClimbSequence extends SequentialCommandGroup {
 		ClimberArm leftArm, 
 		ClimberArm rightArm, 
 		ClimberPneumatics pneumatics,
-		LoggerAxis leftSlider, 
-		LoggerAxis rightSlider,
-		LoggerButton nextPhase,
+		OIAxis leftSlider, 
+		OIAxis rightSlider,
+		OIButton nextPhase,
 		LED ledA,
 		LED ledB,
-		LEDRange leds
+		LEDs leds
 	) {
 
 
@@ -69,7 +70,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
-				leds.removeLEDCall("ArmsUp");
+				leds.removeCall("ArmsUp");
 
 				if (!interrupted) {
 					pneumatics.retractClimb();
@@ -78,7 +79,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> leds.addLEDCall("ArmsUp", new LEDCall(7, LEDCall.flashing(Colors.Red, Colors.Off)))),
+			new InstantCommand(() -> leds.addCall("ArmsUp", new LEDCall(7, LEDRange.BothClimb).flashing(Colors.Red, Colors.Off))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

@@ -11,16 +11,20 @@ public class Ports {
     JOYSTICK_PORT = 2,
     
     // drivetrain
-    LEFT_DRIVE_0 = 31,
-    LEFT_DRIVE_MAIN = 32,
+    LEFT_DRIVE_2 = 31,
+    LEFT_DRIVE_3 = 32,
     LEFT_DRIVE_1 = 30,
     
-    RIGHT_DRIVE_0 = 21,
-    RIGHT_DRIVE_MAIN = 22,
+    RIGHT_DRIVE_2 = 21,
+    RIGHT_DRIVE_3 = 22,
     RIGHT_DRIVE_1 = 20,
 
-    SHIFT_SOLENOID_UP = 1,
+    SHIFT_SOLENOID_UP = 4,
     SHIFT_SOLENOID_DOWN = 0,
+
+    //leds
+    LED_PORT = 0,
+    LED_LENGTH = 96,
 
     // pneumatics
     PCM_1 = 16,
@@ -34,17 +38,16 @@ public class Ports {
 
     // shooter
     SHOOTER = 51,
-    SHOOTER_FOLLOWER = 52,
-    ADJUSTABLE_HOOD = 53,
+    ADJUSTABLE_HOOD = 52,
 
     // conveyor
-    CONVEYOR = 60,
+    CONVEYOR = 53,
     BREAKBEAM = 9,
     
     // intake
-    INTAKE_ARM_INTAKE = 62,
+    INTAKE_ARM_SPIN = 62,
     INTAKE_ARM_PIVOT = 61,
-    INTAKE_LOCK = 5,
+    INTAKE_LOCK = 2,
     UPPER_LIMIT = 1,
 
     // DIO
@@ -52,7 +55,8 @@ public class Ports {
     TURRET_LIMIT_TWO = 3,
 
     // climber
-    LEFT_ARM_MOTOR = 41,
-    RIGHT_ARM_MOTOR = 40,
-    EXTEND_CLIMB = 4;
+    LEFT_CLIMB = 41,
+    RIGHT_CLIMB = 40,
+    EXTEND_CLIMB = 6,
+    CP_SPIN = 60;
 }

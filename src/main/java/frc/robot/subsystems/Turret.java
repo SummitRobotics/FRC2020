@@ -4,13 +4,12 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
@@ -18,9 +17,7 @@ import frc.robot.utilities.Ports;
 /**
  * Subsystem to control the turret
  */
-public class Turret extends SubsystemBase implements Logger {
-
-    private double oldPower;
+public class Turret extends SubsystemBase {
 
     private CANSparkMax turret;
     private CANEncoder encoder;
@@ -29,18 +26,15 @@ public class Turret extends SubsystemBase implements Logger {
     private DigitalInput limit;
 
     public Turret() {
-        oldPower = 0;
-
         turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
 
-        limit = new DigitalInput(Ports.TURRET_LIMIT);
-
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
 
-        turret.setInverted(true);
+        turret.setInverted(false);
+        turret.setIdleMode(IdleMode.kBrake);
     }
 
     /**
@@ -76,7 +70,6 @@ public class Turret extends SubsystemBase implements Logger {
      * @param power new power for the motor
      */
     public void setPower(double power){
-        oldPower = power;
         power = Functions.clampDouble(power, 1, -1);
         turret.set(power);
     }
@@ -95,14 +88,5 @@ public class Turret extends SubsystemBase implements Logger {
      */
     public void stop() {
         turret.set(0);
-    }
-
-    /**
-     * Logs the power of the turret
-     */
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.TURRET.value] = oldPower;
-        return values;
     }
 }

@@ -1,7 +1,5 @@
 package frc.robot.oi;
 
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
 import frc.robot.oi.LEDButton.LED;
 import frc.robot.utilities.functionalinterfaces.AxisGetter;
 import edu.wpi.first.hal.HAL;
@@ -24,7 +22,7 @@ public class LaunchpadDriver extends GenericDriver {
     buttonH,
     buttonI;
 
-    public LoggerButton
+    public OIButton
     missileA,
     missileB,
 
@@ -32,7 +30,7 @@ public class LaunchpadDriver extends GenericDriver {
     funMiddle,
     funRight;
 
-    public LoggerAxis
+    public OIAxis
     axisA,
     axisB,
     axisC,
@@ -48,59 +46,48 @@ public class LaunchpadDriver extends GenericDriver {
     bigLEDGreen,
     bigLEDRed;
 
-    public LaunchpadDriver(int port, SyncLogger logger) {
-		super(port, logger);
+    public LaunchpadDriver(int port) {
+		super(port);
 
-        //TODO - create actual logger values
-        buttonA = generateLEDButton(1, LoggerRelations.PLACEHOLDER);
-        buttonB = generateLEDButton(2, LoggerRelations.PLACEHOLDER);
-        buttonC = generateLEDButton(3, LoggerRelations.PLACEHOLDER);
-        buttonD = generateLEDButton(4, LoggerRelations.PLACEHOLDER);
-        buttonE = generateLEDButton(5, LoggerRelations.PLACEHOLDER);
-        buttonF = generateLEDButton(6, LoggerRelations.PLACEHOLDER);
-        buttonG = generateLEDButton(7, LoggerRelations.PLACEHOLDER);
-        buttonH = generateLEDButton(8, LoggerRelations.PLACEHOLDER);
-        buttonI = generateLEDButton(9, LoggerRelations.PLACEHOLDER);
+        buttonA = generateLEDButton(1);
+        buttonB = generateLEDButton(2);
+        buttonC = generateLEDButton(3);
+        buttonD = generateLEDButton(4);
+        buttonE = generateLEDButton(5);
+        buttonF = generateLEDButton(6);
+        buttonG = generateLEDButton(7);
+        buttonH = generateLEDButton(8);
+        buttonI = generateLEDButton(9);
 
-        missileA = generateLoggerButton(10, LoggerRelations.PLACEHOLDER);
-        missileB = generateLoggerButton(11, LoggerRelations.PLACEHOLDER);
+        missileA = generateOIButton(10);
+        missileB = generateOIButton(11);
 
         bigLEDGreen = getLEDLambda(10);
         bigLEDRed = getLEDLambda(11);
 
-        axisA = generateLoggerAxis(0, LoggerRelations.PLACEHOLDER);
-        axisB = generateLoggerAxis(1, LoggerRelations.PLACEHOLDER);
+        axisA = generateOIAxis(0);
+        axisB = generateOIAxis(1);
 
         axisA.setDeadzone(0);
         axisB.setDeadzone(0);
 
         reee = getAxisGetter(2);
 
-        funLeft = generateATDButton(2, -1, -1/3, LoggerRelations.PLACEHOLDER);
-        funMiddle = generateATDButton(2, -1/3, 1/3, LoggerRelations.PLACEHOLDER);
-        funRight = generateATDButton(2, 1/3, 1, LoggerRelations.PLACEHOLDER);
+        funLeft = generateATDButton(2, -1, -1/3);
+        funMiddle = generateATDButton(2, -1/3, 1/3);
+        funRight = generateATDButton(2, 1/3, 1);
 
-        axisC = generateLoggerAxis(3, LoggerRelations.PLACEHOLDER);
-        axisD = generateLoggerAxis(4, LoggerRelations.PLACEHOLDER);
-        axisE = generateLoggerAxis(5, LoggerRelations.PLACEHOLDER);
-        axisF = generateLoggerAxis(6, LoggerRelations.PLACEHOLDER);
-        axisG = generateLoggerAxis(7, LoggerRelations.PLACEHOLDER);
-        axisH = generateLoggerAxis(8, LoggerRelations.PLACEHOLDER);
+        axisC = generateOIAxis(3);
+        axisD = generateOIAxis(4);
+        axisE = generateOIAxis(5);
+        axisF = generateOIAxis(6);
+        axisG = generateOIAxis(7);
+        axisH = generateOIAxis(8);
     }
 
-    protected LEDButton generateLEDButton(int output, LoggerRelations logReference) {
-		if (logger != null) {
-			return new LEDButton(
-                getButtonGetter(output), 
-                logReference, 
-                logger, 
-                (boolean state) -> setOutput(output, state)
-            );
-		}
-
+    protected LEDButton generateLEDButton(int output) {
 		return new LEDButton(
             getButtonGetter(output), 
-            logReference, 
             (boolean state) -> setOutput(output, state)
         );
     }
@@ -109,12 +96,12 @@ public class LaunchpadDriver extends GenericDriver {
         return (boolean state) -> setOutput(output, state);
     }
 
-    private LoggerButton generateATDButton(int output, int min, int max, LoggerRelations logReference) {
+    private OIButton generateATDButton(int output, int min, int max) {
         AxisGetter axis = getAxisGetter(output);
-        return generateLoggerButton(() -> {
+        return new OIButton(() -> {
             double value = axis.get();
             return value >= min && max >= value;
-        }, logReference);
+        });
     }
 
     /**

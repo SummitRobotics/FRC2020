@@ -2,8 +2,8 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.oi.LoggerAxis;
-import frc.robot.oi.LoggerButton;
+import frc.robot.oi.OIAxis;
+import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
@@ -19,27 +19,26 @@ public class FullManualShootingAssembly extends CommandBase {
 	private Shooter shooter;
 	private Conveyor conveyor;
 
-	private LoggerAxis 
+	private OIAxis 
 	turretRotationPower,
 	shooterSpoolPower,
 	shooterHoodPower;
 
-	private LoggerButton trigger;
+	private OIButton trigger;
 
 	private boolean startupSpinPrevention;
 
 	private ChangeRateLimiter limiter;
     private final double max_turret_change_rate = 0.025;
 
-	public FullManualShootingAssembly 
-		(
+	public FullManualShootingAssembly (
 			Turret turret, 
 			Shooter shooter, 
 			Conveyor conveyor, 
-			LoggerAxis turretRotationPower, 
-			LoggerAxis shooterSpoolPower,
-			LoggerAxis shooterHoodPower,
-			LoggerButton trigger
+			OIAxis turretRotationPower, 
+			OIAxis shooterSpoolPower,
+			OIAxis shooterHoodPower,
+			OIButton trigger
 		) {
 
 		super();
@@ -68,10 +67,9 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-
 		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-			double turretPower = limiter.getRateLimitedValue(turretRotationPower.get());
-			turret.setPower(Functions.deadzone(.05, turretPower) / 5); // Scaled by 5 for sanity
+			double turretPower = limiter.getRateLimitedValue((turretRotationPower.get()/5)); // Scaled by 5 for sanity
+			turret.setPower(Functions.deadzone(.05, turretPower)); 
 
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
@@ -89,20 +87,18 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!shooterSpoolPower.inUse()) {
 			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
 
-			/*
-			if(startupSpinPrevention && shooterPower < 0.5){
+			if(startupSpinPrevention && (shooterPower > 0.75)){
 				startupSpinPrevention = false;
 			}
 			
 			if(!startupSpinPrevention){
 				shooter.setPower(shooterPower);
 			}
+
 			else{
 				shooter.setPower(0);
 			}
-			*/
 
-			shooter.setPower(shooterPower);
 			
 			SmartDashboard.putNumber("shooter speed", shooter.getRPM());
 			SmartDashboard.putNumber("shooter temp", shooter.getTemperature());

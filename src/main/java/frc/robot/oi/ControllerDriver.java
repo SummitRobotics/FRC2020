@@ -1,8 +1,6 @@
 package frc.robot.oi;
 
 import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.logging.LoggerRelations;
-import frc.robot.logging.SyncLogger;
 import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 /**
@@ -31,7 +29,7 @@ public class ControllerDriver extends GenericDriver {
         }
     }
 
-	public LoggerButton
+	public OIButton
     buttonA,
     buttonB,
     buttonX,
@@ -46,7 +44,7 @@ public class ControllerDriver extends GenericDriver {
     dPadLeft,
     dPadRight;
 
-    public LoggerAxis
+    public OIAxis
     leftX,
     leftY,
     leftTrigger,
@@ -54,31 +52,31 @@ public class ControllerDriver extends GenericDriver {
     rightY,
     rightTrigger;
 
-	public ControllerDriver(int port, SyncLogger logger) {
-		super(port, logger);
+	public ControllerDriver(int port) {
+		super(port);
 
-        buttonA = generateLoggerButton(Button.kA.value, LoggerRelations.BTN_A);
+        buttonA = generateOIButton(Button.kA.value);
 
-		buttonA = generateLoggerButton(Button.kA.value, LoggerRelations.BTN_A);
-		buttonB = generateLoggerButton(Button.kB.value, LoggerRelations.BTN_B);
-		buttonX = generateLoggerButton(Button.kX.value, LoggerRelations.BTN_X);
-		buttonY = generateLoggerButton(Button.kY.value, LoggerRelations.BTN_Y);
-		buttonStart = generateLoggerButton(Button.kStart.value, LoggerRelations.BTN_START);
-		buttonBack = generateLoggerButton(Button.kBack.value, LoggerRelations.BTN_BACK);
-		rightBumper = generateLoggerButton(Button.kBumperRight.value, LoggerRelations.RIGHT_BUMPER);
-		leftBumper = generateLoggerButton(Button.kBumperLeft.value, LoggerRelations.LEFT_BUMPER);
+		buttonA = generateOIButton(Button.kA.value);
+		buttonB = generateOIButton(Button.kB.value);
+		buttonX = generateOIButton(Button.kX.value);
+		buttonY = generateOIButton(Button.kY.value);
+		buttonStart = generateOIButton(Button.kStart.value);
+		buttonBack = generateOIButton(Button.kBack.value);
+		rightBumper = generateOIButton(Button.kBumperRight.value);
+		leftBumper = generateOIButton(Button.kBumperLeft.value);
 
-		dPadUp = generateLoggerButton(getDPadValue(DPadValues.UP), LoggerRelations.DPAD_UP);
-		dPadDown = generateLoggerButton(getDPadValue(DPadValues.DOWN), LoggerRelations.DPAD_DOWN);
-		dPadLeft = generateLoggerButton(getDPadValue(DPadValues.LEFT), LoggerRelations.DPAD_LEFT);
-        dPadRight = generateLoggerButton(getDPadValue(DPadValues.RIGHT), LoggerRelations.DPAD_RIGHT);
+		dPadUp = new OIButton(getDPadValue(DPadValues.UP));
+		dPadDown = new OIButton(getDPadValue(DPadValues.DOWN));
+		dPadLeft = new OIButton(getDPadValue(DPadValues.LEFT));
+        dPadRight = new OIButton(getDPadValue(DPadValues.RIGHT));
         
-        leftX = generateLoggerAxis(0, LoggerRelations.LEFT_STICK_X);
-        leftY = generateLoggerAxis(1, LoggerRelations.LEFT_STICK_Y);
-        leftTrigger = generateLoggerAxis(2, LoggerRelations.LEFT_TRIGGER);
-        rightTrigger = generateLoggerAxis(3, LoggerRelations.RIGHT_TRIGGER);
-        rightX = generateLoggerAxis(4, LoggerRelations.RIGHT_STICK_X);
-        rightY = generateLoggerAxis(5, LoggerRelations.RIGHT_STICK_Y);
+        leftX = generateOIAxis(0);
+        leftY = generateOIAxis(1);
+        leftTrigger = generateOIAxis(2);
+        rightTrigger = generateOIAxis(3);
+        rightX = generateOIAxis(4);
+        rightY = generateOIAxis(5);
 	}
 
 	private ButtonGetter getDPadValue(DPadValues value) {

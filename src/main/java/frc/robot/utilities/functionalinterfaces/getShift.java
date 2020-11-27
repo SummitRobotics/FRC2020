@@ -7,6 +7,9 @@
 
 package frc.robot.utilities.functionalinterfaces;
 
-public interface LEDControlFunction {
-    int[] getLedColor (int loop, int led);
-   }
+/**
+ * Add your docs here.
+ */
+public interface getShift {
+    public boolean getShift();
+}
