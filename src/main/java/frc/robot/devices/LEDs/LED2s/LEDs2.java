@@ -36,6 +36,7 @@ public class LEDs2 extends SubsystemBase {
 
     public void addCall(String name, LEDCall2 call) {
         callsOutOfDate = true;
+        call.init(loop);
         calls.put(name, call);
     }
 
