@@ -16,7 +16,7 @@ public class RollingAverageNoFill {
      */
     public RollingAverageNoFill(int size) {
         rollingAverageArray = new Double[size];
-        Arrays.fill(rollingAverageArray, 0);
+        Arrays.fill(rollingAverageArray, 0.0);
     }
 
     /**
