@@ -18,7 +18,7 @@ public interface Homeable {
     public double getVelocity();
     public void setHomingPower(double power);
     public void setHome(double position);
-    public void setSoftLimits(double min, double max);
+    public void setSoftLimits(double revers, double foward);
     public void DisableSoftLimits();
     public void EnableSoftLimits();
     public Subsystem getSubsystemObject();

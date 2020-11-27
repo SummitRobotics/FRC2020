@@ -98,10 +98,10 @@ public class Shooter extends SubsystemBase implements Homeable {
     }
 
     @Override
-    public void setSoftLimits(double min, double max) {
+    public void setSoftLimits(double revers, double fowards) {
         //enables both soft limits
-        adjustableHood.setSoftLimit(SoftLimitDirection.kForward, (float)max);
-        adjustableHood.setSoftLimit(SoftLimitDirection.kReverse, (float)min);
+        adjustableHood.setSoftLimit(SoftLimitDirection.kForward, (float)fowards);
+        adjustableHood.setSoftLimit(SoftLimitDirection.kReverse, (float)revers);
 
     }
 

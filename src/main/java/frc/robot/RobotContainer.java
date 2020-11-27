@@ -23,6 +23,7 @@ import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
+import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -70,6 +71,7 @@ public class RobotContainer {
 
     private Command autoInit;
     private Command teleInit;
+    private Command homeTurret;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -109,6 +111,9 @@ public class RobotContainer {
         //         new InstantCommand(shifter::lowGear));
 
         // things that happen when the robot is inishlided
+
+        homeTurret = new HomeByCurrent(turret, -.15, 25, 2, 27);
+
         teleInit = new SequentialCommandGroup(
                 new InstantCommand(climberPneumatics::extendClimb),
                 new InstantCommand(intakeArm::closeLock),
@@ -118,7 +123,8 @@ public class RobotContainer {
                     launchpad.bigLEDGreen.set(true);
                 }),
                 new InstantCommand(() -> conveyor.disableIntakeMode()),
-                new InstantCommand(() -> conveyor.disableShootMode())
+                new InstantCommand(() -> conveyor.disableShootMode()),
+                homeTurret
                 );
     }
 
@@ -164,13 +170,19 @@ public class RobotContainer {
         );
         launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        launchpad.buttonD.whenPressed(new ShooterTester(shooter));
+        //launchpad.buttonD.whenPressed(new ShooterTester(shooter));
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
 
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
+
+        Command reHomeTurret = new HomeByCurrent(turret, -.15, 22, 2, 27);
+
+        launchpad.buttonG.whenPressed(reHomeTurret);
+
+        launchpad.buttonG.booleanSupplierBind(reHomeTurret::isFinished);;
 
         //intake arm
 
@@ -190,13 +202,6 @@ public class RobotContainer {
 
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
-
-        launchpad.buttonA.toggleWhenPressed(new StartEndCommand(
-          intakeArm::closeLock,
-          intakeArm::openLock,
-          intakeArm
-        ), true);
-        launchpad.buttonA.toggleBind(); 
 
         // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
         // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));

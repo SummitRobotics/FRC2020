@@ -7,23 +7,21 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.Homeable;
 import frc.robot.utilities.Ports;
-
 
 /**
  * Subsystem to control the turret
  */
-public class Turret extends SubsystemBase {
+public class Turret extends SubsystemBase implements Homeable {
 
     private CANSparkMax turret;
     private CANEncoder encoder;
     private CANPIDController pidController;
 
-    private DigitalInput limit;
 
     public Turret() {
         turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
@@ -37,39 +35,13 @@ public class Turret extends SubsystemBase {
         turret.setIdleMode(IdleMode.kBrake);
     }
 
-    /**
-     * Sets the encoder position to 0
-     */
-    public void resetEncoder() {
-        encoder.setPosition(0);
-    }
-
-    /**
-     * Sets the soft limits based on limit switch
-     */
-    public void calibrateEncoder() {
-        resetEncoder();
-
-        //TODO - Make sure directions are correct and make values correct based on gear ratios
-        turret.setSoftLimit(SoftLimitDirection.kForward, 0);
-        turret.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    }
-
-    /**
-     * Gets the value of limit switch one
-     * 
-     * @return whether the button is pressed
-     */
-    public boolean getLimit() {
-        return limit.get();
-    }
 
     /**
      * Sets power of the turret motor
      * 
      * @param power new power for the motor
      */
-    public void setPower(double power){
+    public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
         turret.set(power);
     }
@@ -88,5 +60,55 @@ public class Turret extends SubsystemBase {
      */
     public void stop() {
         turret.set(0);
+    }
+
+    public double getEncoder(){
+        return encoder.getPosition();
+    }
+
+    @Override
+    public double getCurrent() {
+        return turret.getOutputCurrent();
+    }
+
+    @Override
+    public double getVelocity() {
+        return encoder.getVelocity();
+    }
+
+    @Override
+    public void setHomingPower(double power) {
+        setPower(power);
+
+    }
+
+    @Override
+    public void setHome(double position) {
+        encoder.setPosition(position);
+
+    }
+
+    @Override
+    public void setSoftLimits(double revers, double fowards) {
+        turret.setSoftLimit(SoftLimitDirection.kReverse, (float)revers);
+        turret.setSoftLimit(SoftLimitDirection.kForward, (float)fowards);
+    }
+
+    @Override
+    public void DisableSoftLimits() {
+        turret.enableSoftLimit(SoftLimitDirection.kForward, false);
+        turret.enableSoftLimit(SoftLimitDirection.kReverse, false);
+
+    }
+
+    @Override
+    public void EnableSoftLimits() {
+        turret.enableSoftLimit(SoftLimitDirection.kForward, true);
+        turret.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    }
+
+    @Override
+    public Subsystem getSubsystemObject() {
+        return this;
     }
 }
