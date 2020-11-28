@@ -28,6 +28,9 @@ public class Turret extends SubsystemBase implements Homeable {
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
 
+        turret.setSmartCurrentLimit(30);
+
+
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
 

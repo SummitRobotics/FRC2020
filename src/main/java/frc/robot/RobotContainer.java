@@ -110,7 +110,7 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
 
-        homeTurret = new HomeByCurrent(turret, -.15, 25, 2, 27);
+        homeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
 
         teleInit = new SequentialCommandGroup(
                 new InstantCommand(climberPneumatics::extendClimb),
