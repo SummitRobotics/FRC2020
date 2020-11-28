@@ -19,11 +19,9 @@ public class SetDown extends CommandBase {
 
     protected double startTime;
 
-    private LEDs leds;
     public int LEDpriority = 2;
 
-    public SetDown(IntakeArm intake, LEDs leds) {
-        this.leds = leds;
+    public SetDown(IntakeArm intake) {
         this.intake = intake;
 
         end = false;
@@ -33,7 +31,7 @@ public class SetDown extends CommandBase {
 
     @Override
     public void initialize() {
-        leds.addCall("ArmDown", new LEDCall(LEDpriority, LEDRange.BothIntake).ffh(Colors.Blue, Colors.Off));
+        LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDpriority, LEDRange.BothIntake).ffh(Colors.Blue, Colors.Off));
         
         timer.reset();
         timer.start();

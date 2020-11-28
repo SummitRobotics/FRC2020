@@ -53,7 +53,6 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
-    private LEDs Leds;
     private Compressor compressor;
 
     private Drivetrain drivetrain;
@@ -79,8 +78,7 @@ public class RobotContainer {
     public RobotContainer() {
         scheduler = CommandScheduler.getInstance();
 
-        Leds = new LEDs();
-        Leds.addCall("deafult", new LEDCall(1, LEDRange.All).solid(Colors.Green));
+        LEDs.getInstance().addCall("deafult", new LEDCall(1, LEDRange.All).solid(Colors.Green));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         shufHELLboard = new shufHELLboardDriver();
@@ -91,7 +89,7 @@ public class RobotContainer {
         compressor.setClosedLoopControl(true);
 
         drivetrain = new Drivetrain();
-        shifter = new Shifter(Leds);
+        shifter = new Shifter();
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         shooter = new Shooter();
@@ -149,7 +147,7 @@ public class RobotContainer {
         
         //climb
         launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed, Leds));
+        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
@@ -188,12 +186,12 @@ public class RobotContainer {
 
         Command intake = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
-            new SetDown(intakeArm, Leds)
+            new SetDown(intakeArm)
             );
 
         Command up = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new SetUp(intakeArm, Leds)
+            new SetUp(intakeArm)
             );
 
         

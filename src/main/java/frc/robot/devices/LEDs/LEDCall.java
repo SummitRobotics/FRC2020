@@ -13,6 +13,12 @@ public class LEDCall {
     private int startLoop = 0;
 
 
+    /**
+     * Used to create new calls
+     * 
+     * @param priority
+     * @param range
+     */
     public LEDCall(int priority, LEDRange range) {
         this.priority = priority;
         this.range = range;
@@ -22,18 +28,41 @@ public class LEDCall {
         startLoop = 0;
     }
 
+    /**
+     * Gets the priority of the call. Larger numbers have greater priority.
+     * 
+     * @return the priority
+     */
     public int getPriority() {
         return priority;
     }
 
+    /**
+     * Gets the used LEDRange
+     * 
+     * @return the LEDRange
+     */
     public LEDRange getRange() {
         return range;
     }
 
+    /**
+     * The color generator function, which can be overloaded. By default it returns black
+     * 
+     * @param loop the current LED loop
+     * @param led the LED color in question
+     * @return the color of the LED
+     */
     public Color8Bit getColor(int loop, int led) {
         return defaultColor;
     }
 
+    /**
+     * Creates a new LEDCall with getColor overloaded. Makes all LEDs in its range one color.
+     * 
+     * @param color the solid color to use
+     * @return the modified LEDCall
+     */
     public LEDCall solid(Color8Bit color) {
         return new LEDCall(priority, range) {
             @Override
@@ -43,6 +72,13 @@ public class LEDCall {
         };
     }
 
+    /**
+     * Creates a new LEDCall with getColor overloaded. Makes LEDs in its range flash between 2 colors at a set interval.
+     * 
+     * @param onColor the first color to flash
+     * @param offColor the second color to flash
+     * @return the modified LEDCall
+     */
     public LEDCall flashing(Color8Bit onColor, Color8Bit offColor) {
         return new LEDCall(priority, range) {
             @Override
@@ -58,6 +94,13 @@ public class LEDCall {
         };
     }
 
+    /**
+     * Creates a new LEDCall with getColor overloaded. Makes LEDs in its range flash color ON, then color OFF, the color ON, then color OFF, then hold color ON.
+     * 
+     * @param onColor color ON
+     * @param offColor color OFF
+     * @return the modified LEDCall
+     */
     public LEDCall ffh(Color8Bit onColor, Color8Bit offColor) {
         return new LEDCall(priority, range) {
             @Override
@@ -86,6 +129,13 @@ public class LEDCall {
         };
     }
 
+    //TODO - have Django explain this
+    /**
+     * Creates a new LEDCall with getColor overloaded. Makes LEDs in its range do something. Ask Django, I don't understand it.
+     * 
+     * @param color the color to do something with?
+     * @return the modified LEDCall
+     */
     public LEDCall sine(Color8Bit color) {
         return new LEDCall(priority, range) {
             private final double waveLength = 6.068;

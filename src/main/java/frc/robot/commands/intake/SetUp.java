@@ -12,13 +12,11 @@ public class SetUp extends SequentialCommandGroup {
 
     private IntakeArm intake;
     private boolean end;
-    private LEDs leds;
 
     private double intakeLiftPower = -0.42;
 
-    public SetUp(IntakeArm intake, LEDs leds) {
+    public SetUp(IntakeArm intake) {
         this.intake = intake;
-        this.leds = leds;
         end = false;
 
         addCommands(
@@ -54,7 +52,7 @@ public class SetUp extends SequentialCommandGroup {
     
         @Override
         public void end(boolean interrupted) {   
-            leds.removeCall("ArmDown"); 
+            LEDs.getInstance().removeCall("ArmDown"); 
             intake.setIntakePower(0);
             end = false;
         }

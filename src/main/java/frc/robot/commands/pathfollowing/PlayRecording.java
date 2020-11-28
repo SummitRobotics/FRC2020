@@ -28,7 +28,6 @@ public class PlayRecording extends CommandBase {
     private Drivetrain drivetrain;
     private Shifter shifter;
     private IntakeArm intake;
-    private LEDs Leds;
 
     private ArrayList<String> points = new ArrayList<>();
     private int currentStep = 0;
@@ -43,13 +42,12 @@ public class PlayRecording extends CommandBase {
     private String recordingName;
 
 
-    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake, LEDs Leds) {
+    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/saved/" + recording);
         this.drivetrain = drivetrain;
         this.shifter = shift;
         this.intake = intake;
-        this.Leds = Leds;
 
         recordingName = recording;
     }
@@ -131,10 +129,10 @@ public class PlayRecording extends CommandBase {
         }
         else if(command.contains("intake: ")){
             if(command.contains("intake: " + IntakeArm.States.UP.toString())){
-                scheduler.schedule(new SetUp(intake, Leds));
+                scheduler.schedule(new SetUp(intake));
             }
             else if(command.contains("intake: " + IntakeArm.States.DOWN_YES_INTAKE.toString())){
-                scheduler.schedule(new SetDown(intake, Leds));
+                scheduler.schedule(new SetDown(intake));
             }
             else if(command.contains("intake: " + IntakeArm.States.DOWN_NO_INTAKE.toString())){
                 scheduler.schedule(new SetLoad(intake));

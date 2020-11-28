@@ -22,5 +22,4 @@ public interface Homeable {
     public void DisableSoftLimits();
     public void EnableSoftLimits();
     public Subsystem getSubsystemObject();
-
 }

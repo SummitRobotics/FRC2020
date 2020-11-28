@@ -41,8 +41,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		OIAxis rightSlider,
 		OIButton nextPhase,
 		LED ledA,
-		LED ledB,
-		LEDs leds
+		LED ledB
 	) {
 
 
@@ -70,7 +69,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
-				leds.removeCall("ArmsUp");
+				LEDs.getInstance().removeCall("ArmsUp");
 
 				if (!interrupted) {
 					pneumatics.retractClimb();
@@ -79,7 +78,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> leds.addCall("ArmsUp", new LEDCall(7, LEDRange.BothClimb).flashing(Colors.Red, Colors.Off))),
+			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(7, LEDRange.BothClimb).flashing(Colors.Red, Colors.Off))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);
