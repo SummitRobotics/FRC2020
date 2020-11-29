@@ -23,7 +23,7 @@ public class LidarV4 implements Lidar {
 		i2c = new I2C(Port.kOnboard, id);
 		value = 0;
 
-		rollingAverage = new RollingAverage(50);
+		rollingAverage = new RollingAverage(10);
 	}
 
 	/**

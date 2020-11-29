@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
@@ -18,6 +19,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	private Turret turret;
 	private Shooter shooter;
 	private Conveyor conveyor;
+	private Hood hood;
 
 	private OIAxis 
 	turretRotationPower,
@@ -34,6 +36,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	public FullManualShootingAssembly (
 			Turret turret, 
 			Shooter shooter, 
+			Hood hood,
 			Conveyor conveyor, 
 			OIAxis turretRotationPower, 
 			OIAxis shooterSpoolPower,
@@ -46,6 +49,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		this.turret = turret;
 		this.shooter = shooter;
 		this.conveyor = conveyor;
+		this.hood = hood;
 
 		this.turretRotationPower = turretRotationPower;
 		this.shooterSpoolPower = shooterSpoolPower;
@@ -74,12 +78,12 @@ public class FullManualShootingAssembly extends CommandBase {
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
-			shooter.setHoodPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
+			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
 
 		}
 		else{
 			turret.setPower(limiter.getRateLimitedValue(0));
-			shooter.setHoodPower(0);
+			hood.setPower(0);
 		}
 
 		//System.out.println("shoot power: " + shooterSpoolPower.get());

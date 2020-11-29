@@ -36,6 +36,7 @@ import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.PresureSensor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -60,6 +61,7 @@ public class RobotContainer {
     private Conveyor conveyor;
     private IntakeArm intakeArm;
     private Shooter shooter;
+    private Hood hood;
     private ClimberArm leftArm, rightArm;
     private Turret turret;
     private ClimberPneumatics climberPneumatics;
@@ -67,6 +69,7 @@ public class RobotContainer {
     // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
     private Lemonlight limelight;
+    private PresureSensor presureSensor;
 
     private Command autoInit;
     private Command teleInit;
@@ -93,6 +96,7 @@ public class RobotContainer {
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
         shooter = new Shooter();
+        hood = new Hood();
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
         turret = new Turret();
@@ -100,6 +104,7 @@ public class RobotContainer {
 
         //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
+        presureSensor = new PresureSensor();
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         setDefaultCommands();
@@ -132,7 +137,7 @@ public class RobotContainer {
                 controller1.leftTrigger, controller1.leftX));
 
         // makes intake arm go back to limit when not on limit
-        // intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
+        intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
         // conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
@@ -140,7 +145,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, shifter, intakeArm, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
+        //shufHELLboard.recordStart.whenPressed(new GenerateRecording(drivetrain, shifter, intakeArm, controller1.buttonA, shufHELLboard.finish, shufHELLboard.shift, shufHELLboard.intake));
         // Launchpad bindings
 
         //controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
@@ -225,6 +230,7 @@ public class RobotContainer {
         turret.setDefaultCommand(new FullManualShootingAssembly(
             turret,
             shooter,
+            hood,
             conveyor,
             joystick.axisX,
             joystick.axisZ,

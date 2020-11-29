@@ -27,6 +27,7 @@ public class Ports {
     LED_LENGTH = 96,
 
     // pneumatics
+    PRESSURE_SENSOR = 0,
     PCM_1 = 16,
 
     // sensors
