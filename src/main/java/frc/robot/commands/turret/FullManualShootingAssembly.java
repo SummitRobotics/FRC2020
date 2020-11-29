@@ -104,7 +104,13 @@ public class FullManualShootingAssembly extends CommandBase {
 		}
 		
 		if (!trigger.inUse()) {
-			conveyor.setShootMode(trigger.get());
+			if(trigger.get()){
+				conveyor.setConveyor(conveyor.SUBSUME_POWER);
+			}
+			else{
+				conveyor.setConveyor(0);
+			}
+			//conveyor.setShootMode(trigger.get());
 		}
 
 

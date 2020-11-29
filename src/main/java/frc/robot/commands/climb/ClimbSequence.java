@@ -78,7 +78,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(7, LEDRange.BothClimb).flashing(Colors.Red, Colors.Off))),
+			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(7, LEDRange.All).flashing(Colors.Red, Colors.Off))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

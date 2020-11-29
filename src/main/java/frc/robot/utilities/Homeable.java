@@ -8,7 +8,6 @@
 package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Add your docs here.
