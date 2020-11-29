@@ -139,7 +139,7 @@ public class RobotContainer {
         // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
-        // conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
+        conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
     }
 
