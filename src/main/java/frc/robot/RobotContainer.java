@@ -81,10 +81,10 @@ public class RobotContainer {
     public RobotContainer() {
         scheduler = CommandScheduler.getInstance();
 
-        LEDs.getInstance().addCall("deafult", new LEDCall(1, LEDRange.All).solid(Colors.Green));
+        LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
-        shufHELLboard = new shufHELLboardDriver();
+        //shufHELLboard = new shufHELLboardDriver();
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
@@ -115,20 +115,19 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
 
-        homeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
-
         teleInit = new SequentialCommandGroup(
-                new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(intakeArm::closeLock),
-                new InstantCommand(shifter::highGear),
-                new InstantCommand(() -> {
-                    launchpad.bigLEDRed.set(false);
-                    launchpad.bigLEDGreen.set(true);
-                }),
-                new InstantCommand(() -> conveyor.disableIntakeMode()),
-                new InstantCommand(() -> conveyor.disableShootMode()),
-                homeTurret
-                );
+            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.DimGreen))),
+            new InstantCommand(climberPneumatics::extendClimb),
+            new InstantCommand(intakeArm::closeLock),
+            new InstantCommand(shifter::highGear),
+            new InstantCommand(() -> {
+                launchpad.bigLEDRed.set(false);
+                launchpad.bigLEDGreen.set(true);
+            }),
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new InstantCommand(() -> conveyor.disableShootMode()),
+            new HomeByCurrent(turret, -.2, 25, 2, 27)
+            );
     }
 
     private void setDefaultCommands() {
