@@ -116,7 +116,7 @@ public class RobotContainer {
         // things that happen when the robot is inishlided
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.DimGreen))),
+            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.Green))),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
@@ -236,6 +236,10 @@ public class RobotContainer {
             joystick.axisY,
             joystick.trigger
         ));
+    }
+
+    public void disabledInit(){
+        LEDs.getInstance().removeCall("enabled");
     }
 
     /**

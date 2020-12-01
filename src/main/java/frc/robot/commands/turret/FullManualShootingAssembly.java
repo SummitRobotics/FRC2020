@@ -118,7 +118,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		}
 
 
-		System.out.println("curent: " + turret.getCurrent() + " encoder: " + turret.getEncoder());
+		//System.out.println("curent: " + turret.getCurrent() + " encoder: " + turret.getEncoder());
 	}
 
 	@Override
