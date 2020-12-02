@@ -78,7 +78,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
-			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
+			hood.setPower(-(Functions.deadzone(.05, (-shooterHoodPower.get())) / 3)); // Scaled by 3 for proper motor control
 
 		}
 		else{
