@@ -36,7 +36,6 @@ public class Turret extends SubsystemBase implements Homeable {
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
 
-        turret.setInverted(false);
         turret.setIdleMode(IdleMode.kBrake);
     }
 
