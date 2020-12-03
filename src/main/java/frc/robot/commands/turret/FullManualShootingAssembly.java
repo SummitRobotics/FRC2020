@@ -72,7 +72,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void execute() {
 		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-			double turretPower = limiter.getRateLimitedValue(((-turretRotationPower.get())/3)); // Scaled by 5 for sanity
+			double turretPower = limiter.getRateLimitedValue((turretRotationPower.get()/3)); // Scaled by 5 for sanity
 			turret.setPower(Functions.deadzone(.05, turretPower)); 
 
 		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
