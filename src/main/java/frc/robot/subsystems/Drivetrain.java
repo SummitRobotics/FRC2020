@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 /**
  * Subsystem to control the drivetrain of the robot
  */
-public class Drivetrain implements Subsystem {
+public class Drivetrain extends SubsystemBase {
 
     private static final double
     P = .05,

@@ -2,14 +2,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.utilities.Colors;
 import frc.robot.utilities.Ports;
 
-public class Shifter implements Subsystem {
+public class Shifter extends SubsystemBase {
 
     private DoubleSolenoid shift;
     private boolean oldShift;

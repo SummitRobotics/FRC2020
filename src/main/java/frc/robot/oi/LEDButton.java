@@ -33,7 +33,7 @@ public class LEDButton extends OIButton {
 	}
 
 	public void commandBind(Command command) {
-		triggerBind(new Trigger(command::isFinished).negate());
+		triggerBind(new Trigger(command::isScheduled));
 	}
 
 	public void booleanSupplierBind(BooleanSupplier supplier) {

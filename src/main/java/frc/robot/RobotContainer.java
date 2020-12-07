@@ -184,7 +184,7 @@ public class RobotContainer {
 
         launchpad.buttonG.whenPressed(reHomeTurret);
 
-        launchpad.buttonG.booleanSupplierBind(reHomeTurret::isFinished);;
+        launchpad.buttonG.commandBind(reHomeTurret);
 
         //intake arm
 
