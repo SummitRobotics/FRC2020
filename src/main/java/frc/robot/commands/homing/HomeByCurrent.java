@@ -56,7 +56,7 @@ public class HomeByCurrent extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //System.out.println("curent: " + toHome.getCurrent());
+    System.out.println("homing curent: " + toHome.getCurrent());
     toHome.setHomingPower(homingPower);
     curentAvrage.update(toHome.getCurrent());
   }

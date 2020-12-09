@@ -108,17 +108,12 @@ public class FullManualShootingAssembly extends CommandBase {
 		}
 		
 		if (!trigger.inUse()) {
-			// if(trigger.get()){
-			// 	conveyor.setConveyor(conveyor.SUBSUME_POWER);
-			// }
-			// else{
-			// 	conveyor.setConveyor(0);
-			// }
+	
 			conveyor.setShootMode(trigger.get());
 		}
 
 
-		//System.out.println("curent: " + turret.getCurrent() + " encoder: " + turret.getEncoder());
+		System.out.println("runnign curent: " + hood.getCurrent() + "curent encoder: " + hood.getEncoder());
 	}
 
 	@Override
@@ -127,6 +122,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		turret.stop();
 		shooter.stop();
+		hood.stop();
 	}
 
 	@Override

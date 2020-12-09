@@ -73,7 +73,9 @@ public class RobotContainer {
 
     private Command autoInit;
     private Command teleInit;
-    private Command homeTurret;
+
+    private Command HomeTurret;
+    private Command HomeHood;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -115,6 +117,10 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
 
+        HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
+        
+        HomeHood = new HomeByCurrent(hood, -.1, 22); //limits tbd
+
         teleInit = new SequentialCommandGroup(
             new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.Green))),
             new InstantCommand(climberPneumatics::extendClimb),
@@ -126,7 +132,8 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
-            new HomeByCurrent(turret, -.2, 25, 2, 27)
+            HomeHood
+
             );
     }
 
@@ -180,11 +187,13 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
-        Command reHomeTurret = new HomeByCurrent(turret, -.15, 22, 2, 27);
+        // launchpad.buttonG.whenPressed(HomeTurret);
 
-        launchpad.buttonG.whenPressed(reHomeTurret);
+        // launchpad.buttonG.commandBind(HomeTurret);
 
-        launchpad.buttonG.commandBind(reHomeTurret);
+        shufHELLboard.homeTurret.whenPressed(HomeTurret);
+
+        shufHELLboard.homeHood.whenPressed(HomeHood);
 
         //intake arm
 

@@ -47,6 +47,10 @@ public class Hood extends SubsystemBase implements Homeable{
         adjustableHood.set(power);
     }
 
+    public double getEncoder(){
+        return hoodEncoder.getPosition();
+    }
+
      //for homing adj hood
      @Override
      public double getCurrent() {

@@ -18,5 +18,8 @@ public class shufHELLboardDriver {
     intake = new shufHELLboardButton(1, 0, "intake", "record"),
     shoot = new shufHELLboardButton(2, 0, "shooter", "record"),
     shift = new shufHELLboardButton(3, 0, "shift", "record"),
-    finish = new shufHELLboardButton(6, 0, "finish", "record");
+    finish = new shufHELLboardButton(6, 0, "finish", "record"),
+
+    homeTurret = new shufHELLboardButton(0, 0, "home turret", "homing"),
+    homeHood = new shufHELLboardButton(1, 0, "home hood", "homing");
 }
