@@ -31,7 +31,7 @@ public class Hood extends SubsystemBase implements Homeable{
 
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
 
-        hoodEncoder = adjustableHood.getAlternateEncoder();
+        hoodEncoder = adjustableHood.getEncoder();
         hoodEncoder.setPosition(0);
 
         adjustableHood.setSmartCurrentLimit(25);
