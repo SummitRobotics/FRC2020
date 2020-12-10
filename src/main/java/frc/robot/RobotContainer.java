@@ -117,9 +117,7 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
 
-        HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
-        
-        HomeHood = new HomeByCurrent(hood, -.1, 22); //limits tbd
+       
 
         teleInit = new SequentialCommandGroup(
             new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.Green))),
@@ -132,8 +130,9 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
+            //make class vars
             new HomeByCurrent(turret, -.2, 25, 2, 27),
-            new HomeByCurrent(hood, -.15, 20, 3, 11.5)
+            new HomeByCurrent(hood, -.15, 20, 2.5, 11.5)
             );
     }
 
@@ -187,8 +186,8 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
-        //make good
-        Command work = new HomeByCurrent(hood, -.15, 20, 3, 11.5);
+        //make shuffhellboard
+        Command work = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
 
         launchpad.buttonG.whenPressed(work);
 

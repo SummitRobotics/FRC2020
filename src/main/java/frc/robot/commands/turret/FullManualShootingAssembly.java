@@ -113,7 +113,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		}
 
 
-		System.out.println("runnign curent: " + hood.getCurrent() + " curent encoder: " + hood.getEncoder());
+		//System.out.println("runnign curent: " + hood.getCurrent() + " curent encoder: " + hood.getEncoder());
 	}
 
 	@Override
