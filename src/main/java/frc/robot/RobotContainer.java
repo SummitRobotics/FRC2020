@@ -132,7 +132,8 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
-            new HomeByCurrent(turret, -.2, 25, 2, 27)
+            new HomeByCurrent(turret, -.2, 25, 2, 27),
+            new HomeByCurrent(hood, -.15, 20, 5, 11)
             );
     }
 
@@ -186,6 +187,7 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
+        //make good
         Command work = new HomeByCurrent(hood, -.15, 22, 0.7, 10.7);
 
         launchpad.buttonG.whenPressed(work);
