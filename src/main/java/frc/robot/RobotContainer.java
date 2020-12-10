@@ -86,7 +86,7 @@ public class RobotContainer {
         LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
-        shufHELLboard = new shufHELLboardDriver();
+        //shufHELLboard = new shufHELLboardDriver();
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
@@ -133,7 +133,6 @@ public class RobotContainer {
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
             HomeHood
-
             );
     }
 
@@ -187,13 +186,13 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
-        // launchpad.buttonG.whenPressed(HomeTurret);
+        launchpad.buttonG.whenPressed(HomeHood);
 
         // launchpad.buttonG.commandBind(HomeTurret);
 
-        shufHELLboard.homeTurret.whenPressed(HomeTurret);
+        //shufHELLboard.homeTurret.whenPressed(HomeTurret);
 
-        shufHELLboard.homeHood.whenPressed(HomeHood);
+        //shufHELLboard.homeHood.whenPressed(HomeHood);
 
         //intake arm
 
