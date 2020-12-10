@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -32,6 +33,12 @@ public class Hood extends SubsystemBase implements Homeable{
 
         hoodEncoder = adjustableHood.getAlternateEncoder();
         hoodEncoder.setPosition(0);
+
+        adjustableHood.setSmartCurrentLimit(25);
+
+        adjustableHood.disableVoltageCompensation();
+
+        adjustableHood.setIdleMode(IdleMode.kBrake);
 
     }
 
