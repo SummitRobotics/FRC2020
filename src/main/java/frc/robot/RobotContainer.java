@@ -86,7 +86,7 @@ public class RobotContainer {
         LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
-        //shufHELLboard = new shufHELLboardDriver();
+        shufHELLboard = new shufHELLboardDriver();
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
