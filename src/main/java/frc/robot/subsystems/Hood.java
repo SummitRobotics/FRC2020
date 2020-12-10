@@ -100,5 +100,10 @@ public class Hood extends SubsystemBase implements Homeable{
          return this;
      }
 
+     @Override
+     public void periodic() {
+         System.out.println(hoodEncoder.getPosition());
+     }
+
 
 }
