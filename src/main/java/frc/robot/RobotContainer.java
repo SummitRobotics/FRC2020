@@ -186,7 +186,7 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
-        Command work = new HomeByCurrent(hood, -.1, 22);
+        Command work = new HomeByCurrent(hood, -.15, 22, 0.7, 10.7);
 
         launchpad.buttonG.whenPressed(work);
 

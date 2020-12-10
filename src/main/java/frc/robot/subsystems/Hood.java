@@ -34,7 +34,7 @@ public class Hood extends SubsystemBase implements Homeable{
         hoodEncoder = adjustableHood.getEncoder();
         hoodEncoder.setPosition(0);
 
-        adjustableHood.setSmartCurrentLimit(25);
+        adjustableHood.setSmartCurrentLimit(30);
 
         adjustableHood.disableVoltageCompensation();
 
@@ -107,10 +107,6 @@ public class Hood extends SubsystemBase implements Homeable{
          return this;
      }
 
-     @Override
-     public void periodic() {
-         System.out.println(hoodEncoder.getPosition());
-     }
 
 
 }
