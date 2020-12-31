@@ -53,6 +53,14 @@ public class HomeByCurrent extends CommandBase {
     toHome.DisableSoftLimits();
   }
 
+  //needed beacuse command groups are dumb
+  public HomeByCurrent getDuplicate(){
+    if(setlimits){
+      return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reversLimit, fowardLimit);
+    }
+    else return new HomeByCurrent(toHome, homingPower, CurrentThreshold);
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

@@ -7,19 +7,34 @@
 
 package frc.robot.oi;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Driver for virtual shuffleboard buttons
  */
 public class shufHELLboardDriver {
 
-    // Variables refering to shuffleboard need to be static for reasons
-    public static shufHELLboardButton
-    recordStart = new shufHELLboardButton(0, 0, "recordstart", "record"),
-    intake = new shufHELLboardButton(1, 0, "intake", "record"),
-    shoot = new shufHELLboardButton(2, 0, "shooter", "record"),
-    shift = new shufHELLboardButton(3, 0, "shift", "record"),
-    finish = new shufHELLboardButton(6, 0, "finish", "record"),
+    private NetworkTable InfoTable = NetworkTableInstance.getDefault().getTable("RobotInfo");
+    private NetworkTable ButtonTable = NetworkTableInstance.getDefault().getTable("Buttons");
 
-    homeTurret = new shufHELLboardButton(0, 0, "home turret", "homing"),
-    homeHood = new shufHELLboardButton(1, 0, "home hood", "homing");
+    // Variables refering to shuffleboard need to be static for reasons
+    public ShuffleboardLEDButton
+    recordStart = new ShuffleboardLEDButton(ButtonTable.getEntry("record Start")),
+    intake = new ShuffleboardLEDButton(ButtonTable.getEntry("record Intake")),
+    shoot = new ShuffleboardLEDButton(ButtonTable.getEntry("record Shoot")),
+    shift = new ShuffleboardLEDButton(ButtonTable.getEntry("record Shift")),
+    finish = new ShuffleboardLEDButton(ButtonTable.getEntry("record Stop")),
+
+    homeTurret = new ShuffleboardLEDButton(ButtonTable.getEntry("Home Turret")),
+    homeHood = new ShuffleboardLEDButton(ButtonTable.getEntry("Home Hood"));
+
+    public HoodIndicatorWidget hoodIndicator = new HoodIndicatorWidget(InfoTable.getEntry("hood"));
+    public TurretIndicatorWidget turretIndicator = new TurretIndicatorWidget(InfoTable.getEntry("turret"));
+
+    public StatusDisplay statusDisplay = new StatusDisplay(InfoTable.getEntry("status"));
+
+    public NetworkTableEntry shooterSpeed = InfoTable.getEntry("Shooter Speed");
+    public NetworkTableEntry shooterTemp = InfoTable.getEntry("Shooter Temp");
 }

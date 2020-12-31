@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.oi.HoodIndicatorWidget;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
 import frc.robot.utilities.Ports;
@@ -26,8 +27,11 @@ public class Hood extends SubsystemBase implements Homeable{
 
     private CANSparkMax adjustableHood;
     private CANEncoder hoodEncoder;
+    private HoodIndicatorWidget indicator;
 
-    public Hood(){
+    public Hood(HoodIndicatorWidget indicator){
+
+        this.indicator = indicator;
 
         adjustableHood = new CANSparkMax(Ports.ADJUSTABLE_HOOD, MotorType.kBrushless);
 
@@ -58,6 +62,14 @@ public class Hood extends SubsystemBase implements Homeable{
         return hoodEncoder.getPosition();
     }
 
+    public double getAngle(){
+        double angle = getEncoder()*360;
+        //tempary, NOT RIGHT, gear ratio
+        angle = angle/40;
+        angle = angle/3;
+        return angle;
+    }
+    
      //for homing adj hood
      @Override
      public double getCurrent() {
@@ -105,6 +117,11 @@ public class Hood extends SubsystemBase implements Homeable{
      @Override
      public Subsystem getSubsystemObject(){
          return this;
+     }
+
+     @Override
+     public void periodic() {
+         indicator.SetValue(getAngle());
      }
 
 

@@ -2,8 +2,15 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -55,6 +62,7 @@ public class RobotContainer {
     private JoystickDriver joystick;
 
     private Compressor compressor;
+    private PowerDistributionPanel pdp;
 
     private Drivetrain drivetrain;
     private Shifter shifter;
@@ -74,8 +82,8 @@ public class RobotContainer {
     private Command autoInit;
     private Command teleInit;
 
-    private Command HomeTurret;
-    private Command HomeHood;
+    private HomeByCurrent HomeTurret;
+    private HomeByCurrent HomeHood;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -83,44 +91,51 @@ public class RobotContainer {
     public RobotContainer() {
         scheduler = CommandScheduler.getInstance();
 
-        LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
-
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
-        //shufHELLboard = new shufHELLboardDriver();
+        shufHELLboard = new shufHELLboardDriver();
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
+        LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
+        shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, 0);
+
+        //wpilib parts
         compressor = new Compressor(Ports.PCM_1);
         compressor.setClosedLoopControl(true);
 
+        pdp = new PowerDistributionPanel();
+
+        //our subsystems
         drivetrain = new Drivetrain();
         shifter = new Shifter();
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
-        shooter = new Shooter();
-        hood = new Hood();
+        shooter = new Shooter(shufHELLboard.shooterSpeed, shufHELLboard.shooterTemp, shufHELLboard.statusDisplay);
+        hood = new Hood(shufHELLboard.hoodIndicator);
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
-        turret = new Turret();
+        turret = new Turret(shufHELLboard.turretIndicator);
         climberPneumatics = new ClimberPneumatics();
+
+        SmartDashboard.putData(pdp);
 
         //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
         presureSensor = new PresureSensor();
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
-        setDefaultCommands();
-        configureButtonBindings();
+        HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
+        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
 
         // things that happen when the robot is inishlided
 
-       
 
         teleInit = new SequentialCommandGroup(
             new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.Green))),
+            new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, 1)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
@@ -130,10 +145,14 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
-            //make class vars
-            new HomeByCurrent(turret, -.2, 25, 2, 27),
-            new HomeByCurrent(hood, -.15, 20, 2.5, 11.5)
+            HomeTurret.getDuplicate(),
+            HomeHood.getDuplicate()
             );
+
+
+        //these should always be the last things to run in the constructure
+        setDefaultCommands();
+        configureButtonBindings();
     }
 
     private void setDefaultCommands() {
@@ -187,15 +206,17 @@ public class RobotContainer {
         launchpad.buttonF.pressBind();
 
         //make shuffhellboard
-        Command work = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
+        //Command work = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
 
-        launchpad.buttonG.whenPressed(work);
+        // launchpad.buttonG.whenPressed(work);
 
-        launchpad.buttonG.commandBind(work);
+        // launchpad.buttonG.commandBind(work);
 
-        //shufHELLboard.homeTurret.whenPressed(HomeTurret);
+        shufHELLboard.homeTurret.whenPressed(HomeTurret);
+        shufHELLboard.homeTurret.commandBind(HomeTurret);
 
-        //shufHELLboard.homeHood.whenPressed(HomeHood);
+        shufHELLboard.homeHood.whenPressed(HomeHood);
+        shufHELLboard.homeHood.commandBind(HomeHood);
 
         //intake arm
 
@@ -251,6 +272,7 @@ public class RobotContainer {
 
     public void disabledInit(){
         LEDs.getInstance().removeCall("enabled");
+        shufHELLboard.statusDisplay.removeStatus("enabled");
     }
 
     /**

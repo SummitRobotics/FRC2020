@@ -4,7 +4,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.oi.StatusDisplay;
+import frc.robot.utilities.Colors;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Ports;
 
@@ -15,12 +18,20 @@ public class Shooter extends SubsystemBase {
 
     private TalonFX shooterMotor;
     private TalonFXSensorCollection shooterEncoder;
+    private NetworkTableEntry speed;
+    private NetworkTableEntry temp;
+    private StatusDisplay status;
+    private boolean overTempStatus;
 
    
 
-    public Shooter() {
+    public Shooter(NetworkTableEntry speed, NetworkTableEntry temp, StatusDisplay status) {
+        this.speed = speed;
+        this.temp = temp;
+        this.status = status;
         shooterMotor = new TalonFX(Ports.SHOOTER);
         shooterEncoder = new TalonFXSensorCollection(shooterMotor);
+        overTempStatus = false;
 
     }
 
@@ -40,13 +51,12 @@ public class Shooter extends SubsystemBase {
         shooterMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    // TODO - convert to RPM
     /**
      * Gets the velocity of the shooter
      * @return the velocity
      */
     public double getShooterRPM() {
-        return shooterEncoder.getIntegratedSensorVelocity();
+        return (shooterEncoder.getIntegratedSensorVelocity()*600)/2048;
     }
 
     public double getShooterTemperature() {
@@ -57,5 +67,19 @@ public class Shooter extends SubsystemBase {
         return shooterMotor.getSupplyCurrent();
     }
 
+    @Override
+    public void periodic() {
+        double tempVal = getShooterTemperature();
+        temp.forceSetNumber(tempVal);
+        speed.forceSetNumber(getShooterRPM());
+        if(tempVal > 75 && !overTempStatus){
+            overTempStatus = true;
+            status.addStatus("shooterOvertemp", "shooter over 75c", Colors.Red, 2);
+        }
+        else if(tempVal <= 75 && overTempStatus){
+            status.removeStatus("shooterOvertemp");
+            overTempStatus = false;
+        }
+    }
    
 }

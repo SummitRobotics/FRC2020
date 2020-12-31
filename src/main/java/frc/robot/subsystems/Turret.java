@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.oi.TurretIndicatorWidget;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
 import frc.robot.utilities.Ports;
@@ -21,9 +22,11 @@ public class Turret extends SubsystemBase implements Homeable {
     private CANSparkMax turret;
     private CANEncoder encoder;
     private CANPIDController pidController;
+    private TurretIndicatorWidget indicator;
 
 
-    public Turret() {
+    public Turret(TurretIndicatorWidget indicator) {
+        this.indicator = indicator;
         turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
         encoder = turret.getEncoder();
         pidController = turret.getPIDController();
@@ -70,6 +73,14 @@ public class Turret extends SubsystemBase implements Homeable {
         return encoder.getPosition();
     }
 
+    public double getAngle(){
+        double angle = getEncoder()*360;
+        //tempary, NOT RIGHT, gear ratio
+        angle = angle/20;
+        angle = angle/5;
+        return angle;
+    }
+
     @Override
     public double getCurrent() {
         return turret.getOutputCurrent();
@@ -114,5 +125,10 @@ public class Turret extends SubsystemBase implements Homeable {
     @Override
     public Subsystem getSubsystemObject() {
         return this;
+    }
+
+    @Override
+    public void periodic() {
+        indicator.SetValue(getAngle());
     }
 }

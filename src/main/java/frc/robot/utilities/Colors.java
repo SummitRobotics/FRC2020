@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  */
 public class Colors {
     public static Color8Bit Off = new Color8Bit(0,0,0);
+    public static Color8Bit Team = new Color8Bit(20, 198, 0);
     public static Color8Bit White = new Color8Bit(255,255,255);
     public static Color8Bit Red = new Color8Bit(255,0,0);
     public static Color8Bit Green = new Color8Bit(0,255,0);
