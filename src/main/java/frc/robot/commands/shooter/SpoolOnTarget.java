@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Shooter;
@@ -10,30 +11,52 @@ import frc.robot.subsystems.Shooter;
 public class SpoolOnTarget extends CommandBase {
 
 	//TODO - make right
-	private static final double TARGET_CLOSE_CUTOFF = 1;
+	private static final double TARGET_CLOSE_CUTOFF = 10;
+
+	//WRONG:MAKE GOOD
+	private double onTargetRpm = 2000;
+
+	private double seesTargetRpm = 1000;
+
+	private double standbyRpm = 500;
 
 	private Shooter shooter;
 	private Lemonlight limelight;
 
+	private PIDController pid;
+
 	public SpoolOnTarget(Shooter shooter, Lemonlight limelight) {
+		//WRONG:make values good
+		pid = new PIDController(0.01, 0, 0);
+		pid.setSetpoint(standbyRpm);
+		pid.setTolerance(50);
 		this.shooter = shooter;
 		this.limelight = limelight;
 
 		addRequirements(shooter);
 	}
 
-	@Override
-	public void execute() {
-		if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
-			shooter.setPower(getSpoolPower());
-		} else {
-			shooter.setPower(0);
-		}
+	/**
+	 * gets weather the shooter is at an acceptable rpm to shoot a ball
+	 * @return true when acceptable to shoot
+	 */
+	public boolean isUpToShootSpeed(){
+		return pid.atSetpoint();
 	}
 
-	//TODO - make actually functional
-	private double getSpoolPower() {
-		return 1;
+	@Override
+	public void execute() {
+
+		if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
+			pid.setSetpoint(onTargetRpm);
+		} else if(limelight.hasTarget()){
+			pid.setSetpoint(seesTargetRpm);
+		}
+		else{
+			pid.setSetpoint(standbyRpm);
+		}
+
+		shooter.setPower(pid.calculate(shooter.getShooterRPM()));
 	}
 
 	@Override

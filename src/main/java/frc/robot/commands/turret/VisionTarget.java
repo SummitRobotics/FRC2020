@@ -28,7 +28,7 @@ public class VisionTarget extends CommandBase {
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
-		pidController.setTolerance(0.1);
+		pidController.setTolerance(0.1, 1);
 
 		addRequirements(turret);
 	}
@@ -45,21 +45,30 @@ public class VisionTarget extends CommandBase {
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 			double power = pidController.calculate(offset);
-			turret.setPower(Functions.clampDouble(power, .25, -.25));
-			shootControl();
-
+			turret.setPower(Functions.clampDouble(power, .33, -.33));
 		} else {
 			noTarget();
 		}
 	}
 
-	protected void noTarget() {
-		turret.setPower(0);
+	private void noTarget() {
 		pidController.reset();
+		turret.setPower(noTargetTurretAction(turret.getAngle()));
 	}
 
-	protected void shootControl(){
-		
+	/**
+	 * OVERRIDE THIS
+	 * this is where the code for what the turret should do when no target is found should go
+	 * this should NOT affect the turret directaly
+	 * @param turretAngle the curent angle from home of the turret
+	 * @return the power fot the turret to move at
+	 */
+	protected double noTargetTurretAction(double turretAngle){
+		return 0;
+	}
+
+	public boolean isOnTagret(){
+		return pidController.atSetpoint();
 	}
 
 	public void end(boolean interrupted) {

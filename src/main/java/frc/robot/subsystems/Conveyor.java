@@ -91,6 +91,14 @@ public class Conveyor extends SubsystemBase {
 		return States.OFF;
 	}
 
+	//WRONG needs to be implimented
+	/**
+	 * shoots one ball
+	 */
+	public void shootOneBall(){
+
+	}
+
 	/**
 	 * Sets the shoot mode flag to true
 	 */

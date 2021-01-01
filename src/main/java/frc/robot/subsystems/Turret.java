@@ -24,6 +24,8 @@ public class Turret extends SubsystemBase implements Homeable {
     private CANPIDController pidController;
     private TurretIndicatorWidget indicator;
 
+    public final double max_change_rate = 0.025;
+
 
     public Turret(TurretIndicatorWidget indicator) {
         this.indicator = indicator;

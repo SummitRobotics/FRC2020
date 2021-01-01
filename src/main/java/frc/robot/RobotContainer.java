@@ -37,7 +37,6 @@ import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.pathfollowing.GenerateRecording;
 import frc.robot.commands.pathfollowing.PlayRecording;
-import frc.robot.commands.shooter.ShooterTester;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;

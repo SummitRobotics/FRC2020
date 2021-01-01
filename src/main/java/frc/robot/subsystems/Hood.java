@@ -29,6 +29,12 @@ public class Hood extends SubsystemBase implements Homeable{
     private CANEncoder hoodEncoder;
     private HoodIndicatorWidget indicator;
 
+    //WRONG ANGLE
+    private double limeLightMountAngle = 10;
+    private double LidarMountAngle = limeLightMountAngle;
+    //this is in cm
+    private double TargetHeight = 250 - (76.2/4);
+
     public Hood(HoodIndicatorWidget indicator){
 
         this.indicator = indicator;
@@ -46,7 +52,7 @@ public class Hood extends SubsystemBase implements Homeable{
 
     }
 
-        /**
+    /**
      * Stops the motor
      */
     public void stop() {
@@ -70,6 +76,32 @@ public class Hood extends SubsystemBase implements Homeable{
         return angle;
     }
     
+
+    /**
+     * compinsated the lidar distance for the lidar mount angle
+     * @param reportedDistance the distance reported by the lidar
+     * @return the new corrected distance
+     */
+    public double getCompinsatedLidarDistance(double reportedDistance){
+        return reportedDistance*Math.cos(LidarMountAngle);
+    }
+
+    /**
+     * gets a distance estmate of the target using the limelight
+     * @param ReportedAngle the angle from 0 the limelight reports
+     * @return the distance estmate
+     */
+    public double getLimelightDistanceEstmate(double reportedAngle){
+        return (reportedAngle+limeLightMountAngle)/Math.tan(reportedAngle);
+    }
+
+    //this is WRONG and needs to be made REAL with desmos or somthing (its probably quardatic but who knows)
+    public double getHoodAngleFromDistance(double distance){
+        double out = distance/8;
+        //we dont want to try to move the turret pased the limits
+        return Functions.clampDouble(out, 40, 0);
+    }
+
      //for homing adj hood
      @Override
      public double getCurrent() {

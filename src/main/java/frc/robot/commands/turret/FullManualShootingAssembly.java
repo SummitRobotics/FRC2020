@@ -1,6 +1,5 @@
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
@@ -31,7 +30,6 @@ public class FullManualShootingAssembly extends CommandBase {
 	private boolean startupSpinPrevention;
 
 	private ChangeRateLimiter limiter;
-    private final double max_turret_change_rate = 0.025;
 
 	public FullManualShootingAssembly (
 			Turret turret, 
@@ -57,7 +55,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		this.trigger = trigger;
 
-		limiter = new ChangeRateLimiter(max_turret_change_rate);
+		limiter = new ChangeRateLimiter(turret.max_change_rate);
 
 		startupSpinPrevention = true;
 
@@ -102,9 +100,6 @@ public class FullManualShootingAssembly extends CommandBase {
 			else{
 				shooter.setPower(0);
 			}
-			
-			SmartDashboard.putNumber("shooter speed", shooter.getShooterRPM());
-			SmartDashboard.putNumber("shooter temp", shooter.getShooterTemperature());
 		}
 		
 		if (!trigger.inUse()) {
