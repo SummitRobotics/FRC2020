@@ -7,7 +7,8 @@ import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeArm.States;
-import frc.robot.utilities.Colors;
+import frc.robot.lists.Colors;
+import frc.robot.lists.LEDPrioritys;
 
 public class SetDown extends CommandBase {
 
@@ -19,8 +20,6 @@ public class SetDown extends CommandBase {
 
     protected double startTime;
 
-    public int LEDpriority = 2;
-
     public SetDown(IntakeArm intake) {
         this.intake = intake;
 
@@ -31,7 +30,7 @@ public class SetDown extends CommandBase {
 
     @Override
     public void initialize() {
-        LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDpriority, LEDRange.All).ffh(Colors.Blue, Colors.Off));
+        LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDPrioritys.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off));
         
         timer.reset();
         timer.start();

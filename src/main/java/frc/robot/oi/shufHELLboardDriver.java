@@ -37,4 +37,6 @@ public class shufHELLboardDriver {
 
     public NetworkTableEntry shooterSpeed = InfoTable.getEntry("Shooter Speed");
     public NetworkTableEntry shooterTemp = InfoTable.getEntry("Shooter Temp");
+
+    public NetworkTableEntry pressure = InfoTable.getEntry("pressure");
 }

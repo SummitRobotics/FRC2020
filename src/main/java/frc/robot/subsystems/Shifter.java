@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.utilities.Colors;
-import frc.robot.utilities.Ports;
+import frc.robot.lists.Colors;
+import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.Ports;
 
 public class Shifter extends SubsystemBase {
 
     private DoubleSolenoid shift;
     private boolean oldShift;
-    private int LEDpriority = 5;
 
     public Shifter() {
         shift = new DoubleSolenoid(Ports.PCM_1, Ports.SHIFT_SOLENOID_UP, Ports.SHIFT_SOLENOID_DOWN);
@@ -26,7 +26,7 @@ public class Shifter extends SubsystemBase {
     }
 
     public void lowGear() {
-        LEDs.getInstance().addCall("lowShift", new LEDCall(LEDpriority, LEDRange.All).sine(Colors.Red));
+        LEDs.getInstance().addCall("lowShift", new LEDCall(LEDPrioritys.lowGear, LEDRange.All).sine(Colors.Red));
         oldShift = false;
         shift.set(Value.kReverse);
     }

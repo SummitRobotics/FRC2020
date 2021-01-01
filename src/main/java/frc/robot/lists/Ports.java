@@ -1,9 +1,8 @@
-package frc.robot.utilities;
+package frc.robot.lists;
 
-//TODO - Make ports right
 public class Ports {
 
-    public static int
+    public static final int
 
     // OI
     XBOX_PORT = 0,

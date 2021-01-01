@@ -1,6 +1,11 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.devices.LEDs.LEDCall;
+import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.LEDs.LEDs;
+import frc.robot.lists.Colors;
+import frc.robot.lists.LEDPrioritys;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
@@ -65,6 +70,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
+		LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPrioritys.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
 	}
 
 	@Override
@@ -118,6 +124,8 @@ public class FullManualShootingAssembly extends CommandBase {
 		turret.stop();
 		shooter.stop();
 		hood.stop();
+
+		LEDs.getInstance().removeCall("manualShoot");
 	}
 
 	@Override

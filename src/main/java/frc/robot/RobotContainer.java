@@ -2,15 +2,10 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,14 +17,15 @@ import frc.robot.oi.LaunchpadDriver;
 import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
-import frc.robot.utilities.Colors;
-import frc.robot.utilities.Ports;
+import frc.robot.lists.Colors;
+import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.Ports;
+import frc.robot.lists.StatusPrioritys;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
@@ -42,7 +38,6 @@ import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
-import frc.robot.devices.PresureSensor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -72,11 +67,11 @@ public class RobotContainer {
     private ClimberArm leftArm, rightArm;
     private Turret turret;
     private ClimberPneumatics climberPneumatics;
+    private Pneumatics pneumatics;
 
     // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
     private Lemonlight limelight;
-    private PresureSensor presureSensor;
 
     private Command autoInit;
     private Command teleInit;
@@ -95,16 +90,14 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        LEDs.getInstance().addCall("disabled", new LEDCall(0, LEDRange.All).solid(Colors.DimGreen));
-        shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, 0);
+        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPrioritys.on, LEDRange.All).solid(Colors.DimGreen));
+        shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
 
         //wpilib parts
-        compressor = new Compressor(Ports.PCM_1);
-        compressor.setClosedLoopControl(true);
-
         pdp = new PowerDistributionPanel();
 
         //our subsystems
+        pneumatics = new Pneumatics(shufHELLboard.pressure);
         drivetrain = new Drivetrain();
         shifter = new Shifter();
         conveyor = new Conveyor();
@@ -116,11 +109,11 @@ public class RobotContainer {
         turret = new Turret(shufHELLboard.turretIndicator);
         climberPneumatics = new ClimberPneumatics();
 
+
         SmartDashboard.putData(pdp);
 
         //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
         limelight = new Lemonlight();
-        presureSensor = new PresureSensor();
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
@@ -133,8 +126,8 @@ public class RobotContainer {
 
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(1, LEDRange.All).solid(Colors.Green))),
-            new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, 1)),
+            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(LEDPrioritys.enabled, LEDRange.All).solid(Colors.Green))),
+            new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),

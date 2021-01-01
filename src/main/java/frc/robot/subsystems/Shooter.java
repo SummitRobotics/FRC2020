@@ -7,9 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.oi.StatusDisplay;
-import frc.robot.utilities.Colors;
+import frc.robot.lists.Colors;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.Ports;
+import frc.robot.lists.Ports;
 
 /**
  * Subsystem to control the shooter

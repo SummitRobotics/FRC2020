@@ -6,13 +6,17 @@ import frc.robot.commands.hood.HoodDistanceAngler;
 import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
+import frc.robot.devices.LEDs.LEDCall;
+import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.LEDs.LEDs;
 import frc.robot.oi.StatusDisplay;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
-import frc.robot.utilities.Colors;
+import frc.robot.lists.Colors;
+import frc.robot.lists.LEDPrioritys;
 import frc.robot.utilities.Functions;
 
 /**
@@ -42,6 +46,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 	//WRONG: make good
 	private final double acceptableLidarVSLimelightDiscrepancy = 20;
 
+	private boolean tragetLEDCall;
+	private boolean shootLEDCall;
+
 	public FullAutoShooterAssembly(CommandScheduler scheduler, Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, Lemonlight limelight, Lidar lidar, StatusDisplay status) {
 		this.status = status;
 		this.scheduler = scheduler;
@@ -57,6 +64,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 		changeRateLimiter = new ChangeRateLimiter(turret.max_change_rate);
 
 		turretDirection = true;
+
+		tragetLEDCall = false;
+		shootLEDCall = false;
 
 		spool = new SpoolOnTarget(shooter, limelight);
 		angler = new HoodDistanceAngler(hood);
@@ -77,18 +87,37 @@ public class FullAutoShooterAssembly extends CommandBase {
 	public void execute() {
 		//we dont want to feed it bad/random distances if the limelight has no target
 		if(limeLight.hasTarget()){
+			LEDs.getInstance().addCall("autoTarget", new LEDCall(LEDPrioritys.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
+			tragetLEDCall = true;
 			//looking into the scuedualers code, it should be safe to feed the distance in now beacuse commands are exicuted in the
 			//order they are added and this command is added before angler so it should always run first so thet new value will be 
 			//loaded into angler before angler.exicute() is called and needs it
 			angler.setDistance(getBestDistance());
+		}
+		else{
+			if(tragetLEDCall){
+				LEDs.getInstance().removeCall("autoTarget");
+				tragetLEDCall = false;
+			}
 		}
 
 		if(badDistanceReadings > 10){
 			status.addStatus("badReadings", "there have been over 10 bad readings from the lidar", Colors.Yellow, 3);
 		}
 
+		boolean ReadyToShoot = spool.isUpToShootSpeed() && target.isOnTagret() && angler.isAtTargetAngle();
+
+		if(ReadyToShoot && !shootLEDCall){
+			LEDs.getInstance().addCall("autoFireReady", new LEDCall(LEDPrioritys.shooterReadyToFIre, LEDRange.All).flashing(Colors.Yellow, Colors.Off));
+			shootLEDCall = true;
+		}
+		else if(!ReadyToShoot && shootLEDCall){
+			LEDs.getInstance().removeCall("autoFireReady");
+			shootLEDCall = false;
+		}
+
 		//if everything is in position then tell the convayer to shoot
-		ShootAction(spool.isUpToShootSpeed() && target.isOnTagret() && angler.isAtTargetAngle());
+		ShootAction(ReadyToShoot);
 	}
 
 	private double getBestDistance(){
@@ -107,9 +136,15 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		if(tragetLEDCall){
+			LEDs.getInstance().removeCall("autoTarget");
+		}
+		if(shootLEDCall){
+			LEDs.getInstance().removeCall("autoFireReady");
+		}
+
 		conveyor.setShootMode(false);
-		scheduler.cancel(spool, target, angler);
-		
+		scheduler.cancel(spool, target, angler);	
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.Ports;
+import frc.robot.lists.Ports;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;

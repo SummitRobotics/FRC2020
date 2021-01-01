@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.Ports;
+import frc.robot.lists.Ports;
 
 /**
  * Subsystem to control the internal conveyor mechanism of the robot

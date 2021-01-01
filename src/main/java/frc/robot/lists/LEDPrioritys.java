@@ -5,23 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.devices;
-
-import edu.wpi.first.wpilibj.AnalogInput;
-import frc.robot.utilities.Ports;
+package frc.robot.lists;
 
 /**
- * Add your docs here.
+ * all the prioritys fro the leds
  */
-public class PresureSensor {
-
-    AnalogInput pressureSensor;
-
-    public PresureSensor(){
-        pressureSensor = new AnalogInput(Ports.PRESSURE_SENSOR);
-    }
-
-    public double getPressure(){
-        return (250 * (pressureSensor.getAverageVoltage() / 5)) - 25;
-    }
+public class LEDPrioritys {
+    public static final int
+    on = 0, 
+    enabled = 1,
+    intakeDown = 2,
+    shooterHasTarget = 3,
+    shooterReadyToFIre = 4,
+    fireing = 5,
+    lowGear = 6,
+    cpmUp = 7,
+    armsUp = 8;
 }
