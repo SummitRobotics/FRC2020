@@ -43,14 +43,20 @@ public class SemiAutoShooterAssembly extends SequentialCommandGroup {
 
 			@Override
 			protected void ShootAction(boolean readyToShoot){
-				if(readyToShoot && simpleTriger.get()){
+				if(readyToShoot && simpleTriger.get() && !trigger.inUse()){
 					conveyor.shootOneBall();
 				}
 			}
 		
 			@Override
 			protected double turretPasiveAction(double turretAngle){
-				return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
+				if(!controlAxis.inUse()){
+					return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
+				}
+				else{
+					return rateLimiter.getRateLimitedValue(0);
+				}
+				
 			}
 		}
 		);

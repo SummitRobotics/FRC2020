@@ -12,6 +12,11 @@ public class Lemonlight {
     //TODO - make right
     public static final int X_OFFSET = 0;
 
+    public static final double mountAngle = 10;
+
+    //in cm
+    public static final double mountHeight = 40;
+
     NetworkTable limelight;
 
     NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;

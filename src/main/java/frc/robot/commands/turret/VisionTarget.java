@@ -17,7 +17,7 @@ public class VisionTarget extends CommandBase {
 
 	private PIDController pidController;
 
-	//TODO - Make right
+	//WRONG - Make right 
 	private final static double
 	P = 0.01,
 	I = 0,

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.oi.HoodIndicatorWidget;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
+import frc.robot.devices.Lemonlight;
 import frc.robot.lists.Ports;
 
 /**
@@ -30,10 +31,9 @@ public class Hood extends SubsystemBase implements Homeable{
     private HoodIndicatorWidget indicator;
 
     //WRONG ANGLE
-    private double limeLightMountAngle = 10;
-    private double LidarMountAngle = limeLightMountAngle;
+    private double LidarMountAngle = Lemonlight.mountAngle;
     //this is in cm
-    private double TargetHeight = 250 - (76.2/4);
+    private double TargetHeight = 269 - Lemonlight.mountHeight;
 
     public Hood(HoodIndicatorWidget indicator){
 
@@ -92,7 +92,7 @@ public class Hood extends SubsystemBase implements Homeable{
      * @return the distance estmate
      */
     public double getLimelightDistanceEstmate(double reportedAngle){
-        return (reportedAngle+limeLightMountAngle)/Math.tan(reportedAngle);
+        return TargetHeight/Math.tan(reportedAngle+Lemonlight.mountAngle);
     }
 
     //this is WRONG and needs to be made REAL with desmos or somthing (its probably quardatic but who knows)

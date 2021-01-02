@@ -17,9 +17,7 @@ public class HoodDistanceAngler extends CommandBase {
   private PIDController pid;
 
   private double distance;
-  /**
-   * Creates a new HoodAngler.
-   */
+  
   public HoodDistanceAngler(Hood hood) {
     addRequirements(hood);
     this.hood = hood;
@@ -54,6 +52,10 @@ public class HoodDistanceAngler extends CommandBase {
     return false;
   }
 
+  /**
+   * sets the distance the hood should go to the angle for
+   * @param distance the distance from the hood to the target
+   */
   public void setDistance(double distance){
     this.distance = distance;
   }

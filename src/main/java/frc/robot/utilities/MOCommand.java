@@ -6,7 +6,7 @@ import java.util.Arrays;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * abstract class for creatign MOcommands
+ * abstract class for creating MOcommands
  */
 public abstract class MOCommand extends CommandBase {
 

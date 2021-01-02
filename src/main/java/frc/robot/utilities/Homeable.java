@@ -10,7 +10,7 @@ package frc.robot.utilities;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * Add your docs here.
+ * interface fir homing a subsystem
  */
 public interface Homeable {
     public double getCurrent();

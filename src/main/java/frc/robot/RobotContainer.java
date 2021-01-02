@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.oi.ControllerDriver;
@@ -33,11 +35,16 @@ import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
 import frc.robot.commands.pathfollowing.GenerateRecording;
 import frc.robot.commands.pathfollowing.PlayRecording;
+import frc.robot.commands.turret.FullAutoShooterAssembly;
 import frc.robot.commands.turret.FullManualShootingAssembly;
+import frc.robot.commands.turret.SemiAutoShooterAssembly;
+import frc.robot.commands.turret.TurretToPosition;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.Lidar;
+import frc.robot.devices.LidarV3;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -55,7 +62,6 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
-    private Compressor compressor;
     private PowerDistributionPanel pdp;
 
     private Drivetrain drivetrain;
@@ -72,6 +78,8 @@ public class RobotContainer {
     // private Lemonlight limelight;
     private ColorSensorV3 colorSensor;
     private Lemonlight limelight;
+    private Lidar turretLidar;
+    private AHRS gyro;
 
     private Command autoInit;
     private Command teleInit;
@@ -112,8 +120,9 @@ public class RobotContainer {
 
         SmartDashboard.putData(pdp);
 
-        //gyro = new PigeonGyro(Ports.PIGEON_IMU.port);
+        gyro = new AHRS();
         limelight = new Lemonlight();
+        turretLidar = new LidarV3();
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
@@ -137,8 +146,8 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
-            HomeTurret.getDuplicate(),
-            HomeHood.getDuplicate()
+            //these can both happen at the same time so we do want that to happen to save time
+            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()) 
             );
 
 
@@ -189,20 +198,11 @@ public class RobotContainer {
         );
         launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        //launchpad.buttonD.whenPressed(new ShooterTester(shooter));
-
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
 
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
-
-        //make shuffhellboard
-        //Command work = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
-
-        // launchpad.buttonG.whenPressed(work);
-
-        // launchpad.buttonG.commandBind(work);
 
         shufHELLboard.homeTurret.whenPressed(HomeTurret);
         shufHELLboard.homeTurret.commandBind(HomeTurret);
@@ -229,9 +229,10 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        // launchpad.funRight.whenPressed(new PrintCommand("maximum f u n :)"));
-        // launchpad.funMiddle.whenPressed(new PrintCommand("medium fun :|"));
-        // launchpad.funLeft.whenPressed(new PrintCommand("no fun T^T"));
+        //bindings for fun dile
+        launchpad.funLeft.whenPressed(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        launchpad.funMiddle.whenPressed(new SemiAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        launchpad.funRight.whenPressed(new FullAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
@@ -250,16 +251,6 @@ public class RobotContainer {
             }, shifter
         ));
 
-        turret.setDefaultCommand(new FullManualShootingAssembly(
-            turret,
-            shooter,
-            hood,
-            conveyor,
-            joystick.axisX,
-            joystick.axisZ,
-            joystick.axisY,
-            joystick.trigger
-        ));
     }
 
     public void disabledInit(){
@@ -273,7 +264,6 @@ public class RobotContainer {
     public void teleopInit() {
         //inishlises robot
         scheduler.schedule(teleInit);
-
     }
 
     /**

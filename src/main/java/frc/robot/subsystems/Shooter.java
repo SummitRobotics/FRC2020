@@ -10,6 +10,7 @@ import frc.robot.oi.StatusDisplay;
 import frc.robot.lists.Colors;
 import frc.robot.utilities.Functions;
 import frc.robot.lists.Ports;
+import frc.robot.lists.StatusPrioritys;
 
 /**
  * Subsystem to control the shooter
@@ -74,7 +75,7 @@ public class Shooter extends SubsystemBase {
         speed.forceSetNumber(getShooterRPM());
         if(tempVal > 75 && !overTempStatus){
             overTempStatus = true;
-            status.addStatus("shooterOvertemp", "shooter over 75c", Colors.Red, 2);
+            status.addStatus("shooterOvertemp", "shooter over 75c", Colors.Red, StatusPrioritys.shooterOver75);
         }
         else if(tempVal <= 75 && overTempStatus){
             status.removeStatus("shooterOvertemp");

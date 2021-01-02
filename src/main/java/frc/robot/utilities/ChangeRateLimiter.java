@@ -36,7 +36,6 @@ public class ChangeRateLimiter {
     }
 
     public double getRateLimitedValue(double value){
-
         if (value > old + rate) {
             value = old + rate;
             old = value;
