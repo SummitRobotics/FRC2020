@@ -6,7 +6,7 @@ import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Shooter;
 
 /**
- * Command to spool when the turret is on target
+ * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITS SELF**
  */
 public class SpoolOnTarget extends CommandBase {
 

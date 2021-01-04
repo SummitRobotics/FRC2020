@@ -8,7 +8,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Functions;
 
 /**
- * Command to vision align the turret
+ * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITS SELF**
  */
 public class VisionTarget extends CommandBase {
 

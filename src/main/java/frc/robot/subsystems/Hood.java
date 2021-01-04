@@ -70,9 +70,8 @@ public class Hood extends SubsystemBase implements Homeable{
 
     public double getAngle(){
         double angle = getEncoder()*360;
-        //tempary, NOT RIGHT, gear ratio
-        angle = angle/40;
-        angle = angle/3;
+        //from jake, hopefully right
+        angle = angle/120;
         return angle;
     }
     
