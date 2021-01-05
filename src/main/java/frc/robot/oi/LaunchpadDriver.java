@@ -1,7 +1,9 @@
 package frc.robot.oi;
 
 import frc.robot.oi.LEDButton.LED;
-import frc.robot.utilities.functionalinterfaces.AxisGetter;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.hal.HAL;
 
 /**
@@ -40,7 +42,7 @@ public class LaunchpadDriver extends GenericDriver {
     axisG,
     axisH;
 
-    public AxisGetter reee;
+    public DoubleSupplier reee;
 
     public LED
     bigLEDGreen,
@@ -97,9 +99,9 @@ public class LaunchpadDriver extends GenericDriver {
     }
 
     private OIButton generateATDButton(int output, int min, int max) {
-        AxisGetter axis = getAxisGetter(output);
+        DoubleSupplier axis = getAxisGetter(output);
         return new OIButton(() -> {
-            double value = axis.get();
+            double value = axis.getAsDouble();
             return value >= min && max >= value;
         });
     }

@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 public class LEDButton extends OIButton {
 
@@ -15,7 +14,7 @@ public class LEDButton extends OIButton {
 
 	private Command controller;
 
-	public LEDButton(ButtonGetter getter, LED led) {
+	public LEDButton(BooleanSupplier getter, LED led) {
 		super(getter);
 
 		controller = new StartEndCommand(

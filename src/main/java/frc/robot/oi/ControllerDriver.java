@@ -1,7 +1,9 @@
 package frc.robot.oi;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.XboxController.Button;
-import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 /**
  * Wrapper class for XBox controllers
@@ -79,7 +81,7 @@ public class ControllerDriver extends GenericDriver {
         rightY = generateOIAxis(5);
 	}
 
-	private ButtonGetter getDPadValue(DPadValues value) {
+	private BooleanSupplier getDPadValue(DPadValues value) {
 		return () -> value.isEqual(getPOV());
 	}
 }

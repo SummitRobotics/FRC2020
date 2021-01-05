@@ -1,8 +1,9 @@
 package frc.robot.oi;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.utilities.functionalinterfaces.AxisGetter;
-import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 public abstract class GenericDriver {
 
@@ -49,7 +50,7 @@ public abstract class GenericDriver {
 	 * @param button the button number
 	 * @return the getter function
 	 */
-	protected ButtonGetter getButtonGetter(int button) {
+	protected BooleanSupplier getButtonGetter(int button) {
 		return () -> getRawButton(button);
 	}
 
@@ -59,7 +60,7 @@ public abstract class GenericDriver {
 	 * @param axis the axis number
 	 * @return the getter function
 	 */
-	protected AxisGetter getAxisGetter(int axis) {
+	protected DoubleSupplier getAxisGetter(int axis) {
 		return () -> getRawAxis(axis);
 	}
 

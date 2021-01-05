@@ -1,21 +1,22 @@
 package frc.robot.oi;
 
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.utilities.Usable;
-import frc.robot.utilities.functionalinterfaces.ButtonGetter;
 
 /**
  * Wrapper class for WPI's button that allows for better management
  */
 public class OIButton extends Button implements Usable {
 
-    private ButtonGetter getter;
+    private BooleanSupplier getter;
 
     private ArrayList<Object> users;
 
-    public OIButton(ButtonGetter getter) {
+    public OIButton(BooleanSupplier getter) {
         super();
 
         this.getter = getter;
@@ -29,7 +30,7 @@ public class OIButton extends Button implements Usable {
      */
     @Override
     public boolean get() {
-        return getter.get();
+        return getter.getAsBoolean();
     }
 
     @Override
