@@ -64,12 +64,13 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		spool = new SpoolOnTarget(shooter, limelight);
 		angler = new HoodDistanceAngler(hood);
-		target = new VisionTarget(turret, limelight) {
+		target = new VisionTarget(turret, limelight, true) {
 			@Override
 			protected double noTargetTurretAction(double turretAngle) {
 				return turretPassiveAction(turretAngle);
 			}
 		};
+		addRequirements(turret);
 	}
 
 	@Override
