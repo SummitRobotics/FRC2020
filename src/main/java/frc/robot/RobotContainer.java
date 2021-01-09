@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.oi.ControllerDriver;
@@ -126,7 +127,7 @@ public class RobotContainer {
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
+        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 11);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
@@ -230,9 +231,13 @@ public class RobotContainer {
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         //bindings for fun dile
-        launchpad.funLeft.whenPressed(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        launchpad.funMiddle.whenPressed(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        launchpad.funRight.whenPressed(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        launchpad.funLeft.whileHeld(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger), true);
+        launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
+        launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
+
+        // launchpad.funRight.whenHeld(new PrintCommand("right"));
+        // launchpad.funMiddle.whenHeld(new PrintCommand("middle"));
+        // launchpad.funLeft.whenHeld(new PrintCommand("no"));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
@@ -256,6 +261,15 @@ public class RobotContainer {
     public void disabledInit(){
         LEDs.getInstance().removeCall("enabled");
         shufHELLboard.statusDisplay.removeStatus("enabled");
+    }
+
+    public void telyopPeriodic(){
+        // System.out.println("django stuff");
+        // System.out.println(launchpad.reee.getAsDouble());
+        // System.out.println("left: " + launchpad.funLeft.get());
+        // System.out.println("middle: " + launchpad.funMiddle.get());
+        // System.out.println("right: " + launchpad.funRight.get());
+        // System.out.println("end django stuff");
     }
 
     /**
