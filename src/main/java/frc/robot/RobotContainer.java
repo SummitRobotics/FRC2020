@@ -136,7 +136,6 @@ public class RobotContainer {
 
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(LEDPriorities.enabled, LEDRange.All).solid(Colors.Green))),
             new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
@@ -279,7 +278,8 @@ public class RobotContainer {
     }
 
     public void disabledInit(){
-        LEDs.getInstance().removeCall("enabled");
+        LEDs.getInstance().removeAllCalls();
+        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
         shufHELLboard.statusDisplay.removeStatus("enabled");
     }
 

@@ -23,14 +23,17 @@ public abstract class VisionTarget extends CommandBase {
 	I = 0,
 	D = 0;
 
-	public VisionTarget(Turret turret, Lemonlight limelight) {
+	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
 		this.turret = turret;
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(0.1, 1);
 
-		addRequirements(turret);
+		if(!partOfFullAuto){
+			addRequirements(turret);
+		}
+		
 	}
 
 	public void initialize() {
