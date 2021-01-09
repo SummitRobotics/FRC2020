@@ -230,10 +230,20 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        //bindings for fun dile
-        launchpad.funLeft.whileHeld(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger), true);
-        launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
-        launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
+        // bindings for fun dial
+        // launchpad.funLeft.whileHeld(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger), true);
+        // launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
+        // launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
+
+        launchpad.funLeft.whenPressed(new InstantCommand(() -> {
+            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        }));
+        launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        }));
+        launchpad.funRight.whenPressed(new InstantCommand(() -> {
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        }));
 
         // launchpad.funRight.whenHeld(new PrintCommand("right"));
         // launchpad.funMiddle.whenHeld(new PrintCommand("middle"));
