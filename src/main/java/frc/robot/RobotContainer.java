@@ -245,12 +245,15 @@ public class RobotContainer {
         // launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
 
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
         }));
 
