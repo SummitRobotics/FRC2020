@@ -168,10 +168,13 @@ public class RobotContainer {
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
         if (launchpad.funLeft.get()) {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
         } else if (launchpad.funMiddle.get()) {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
         } else if (launchpad.funRight.get()) {
+            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
         }
     }
