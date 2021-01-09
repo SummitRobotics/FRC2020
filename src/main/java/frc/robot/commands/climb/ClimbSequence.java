@@ -13,7 +13,7 @@ import frc.robot.oi.LEDButton.LED;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.subsystems.ClimberPneumatics;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 
 public class ClimbSequence extends SequentialCommandGroup {
 
@@ -79,7 +79,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(LEDPrioritys.armsUp, LEDRange.All).flashing(Colors.Red, Colors.Off))),
+			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(LEDPriorities.armsUp, LEDRange.All).flashing(Colors.Red, Colors.Off))),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

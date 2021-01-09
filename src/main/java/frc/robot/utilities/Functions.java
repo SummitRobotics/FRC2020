@@ -51,12 +51,12 @@ public class Functions {
     }
 
     /**
-     * returns true if the abs of a is bigger then b
-     * @param a refrence value
+     * returns true if the abs of a is bigger than b
+     * @param a reference value
      * @param b comparing value
-     * @return ture if abs of refrence is bigger
+     * @return true if abs of reference is bigger
      */
-    public static boolean absoluteGreater(double a, double b) {
+    public static boolean absGreater(double a, double b) {
         return Math.abs(a) > Math.abs(b);
     }
 }

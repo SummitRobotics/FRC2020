@@ -10,14 +10,14 @@ package frc.robot.lists;
 /**
  * all the prioritys fro the leds
  */
-public class LEDPrioritys {
+public class LEDPriorities {
     public static final int
     on = 0, 
     enabled = 1,
     intakeDown = 2,
     shooterHasTarget = 3,
-    shooterReadyToFIre = 4,
-    fireing = 5,
+    shooterReadyToFire = 4,
+    firing = 5,
     lowGear = 6,
     cpmUp = 7,
     armsUp = 8;

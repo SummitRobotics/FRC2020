@@ -81,7 +81,7 @@ public class Hood extends SubsystemBase implements Homeable{
      * @param reportedDistance the distance reported by the lidar
      * @return the new corrected distance
      */
-    public double getCompinsatedLidarDistance(double reportedDistance){
+    public double getCompensatedLidarDistance(double reportedDistance){
         return reportedDistance*Math.cos(LidarMountAngle);
     }
 

@@ -13,14 +13,13 @@ package frc.robot.utilities;
 public class ChangeRateLimiter {
 
     private double rate;
-
     private double old;
 
     /**
-     * new ratelimiter with starting value of 0
+     * new rate limiter with starting value of 0
      * @param rate the maximum change each time the function is called
      */
-    public ChangeRateLimiter(double rate){
+    public ChangeRateLimiter(double rate) {
         this.rate = rate;
         old = 0;
     }
@@ -30,22 +29,23 @@ public class ChangeRateLimiter {
      * @param rate the maximum change each time the function is called
      * @param startingValue the value to start out to allow things to run at full at init
      */
-    public ChangeRateLimiter(double rate, double startingValue){
+    public ChangeRateLimiter(double rate, double startingValue) {
         this.rate = rate;
         old = startingValue;
     }
 
-    public double getRateLimitedValue(double value){
-        if (value > old + rate) {
-            value = old + rate;
-            old = value;
-        } else if (value < old - rate) {
-            value = old - rate;
-            old = value;
+    /**
+     * limits a rate
+     * @param value the value that's changing
+     * @return the rate-limited value
+     */
+    public double getRateLimitedValue(double value) {
+        if (Math.abs(value) > rate + Math.abs(old)) {
+            old = Math.copySign(rate, value) + old;
         } else {
             old = value;
         }
 
-        return value;
+        return old;
     }
 }

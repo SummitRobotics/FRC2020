@@ -7,7 +7,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 import frc.robot.lists.Ports;
 
 public class Shifter extends SubsystemBase {
@@ -26,7 +26,7 @@ public class Shifter extends SubsystemBase {
     }
 
     public void lowGear() {
-        LEDs.getInstance().addCall("lowShift", new LEDCall(LEDPrioritys.lowGear, LEDRange.All).sine(Colors.Red));
+        LEDs.getInstance().addCall("lowShift", new LEDCall(LEDPriorities.lowGear, LEDRange.All).sine(Colors.Red));
         oldShift = false;
         shift.set(Value.kReverse);
     }

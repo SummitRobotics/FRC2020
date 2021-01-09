@@ -18,7 +18,7 @@ public class SpoolOnTarget extends CommandBase {
 
 	private double seesTargetRpm = 1000;
 
-	private double standbyRpm = 500;
+	private double standByRpm = 500;
 
 	private Shooter shooter;
 	private Lemonlight limelight;
@@ -26,14 +26,15 @@ public class SpoolOnTarget extends CommandBase {
 	private PIDController pid;
 
 	public SpoolOnTarget(Shooter shooter, Lemonlight limelight) {
-		//WRONG:make values good
-		pid = new PIDController(0.01, 0, 0);
-		pid.setSetpoint(standbyRpm);
-		pid.setTolerance(50);
+        addRequirements(shooter);
+        
 		this.shooter = shooter;
 		this.limelight = limelight;
 
-		addRequirements(shooter);
+		// TODO - make values good
+		pid = new PIDController(0.01, 0, 0);
+		pid.setSetpoint(standByRpm);
+        pid.setTolerance(50);
 	}
 
 	/**
@@ -48,12 +49,13 @@ public class SpoolOnTarget extends CommandBase {
 	public void execute() {
 
 		if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
-			pid.setSetpoint(onTargetRpm);
-		} else if(limelight.hasTarget()){
-			pid.setSetpoint(seesTargetRpm);
-		}
-		else{
-			pid.setSetpoint(standbyRpm);
+            pid.setSetpoint(onTargetRpm);
+            
+		} else if (limelight.hasTarget()) {
+            pid.setSetpoint(seesTargetRpm);
+            
+		} else{
+			pid.setSetpoint(standByRpm);
 		}
 
 		shooter.setPower(pid.calculate(shooter.getShooterRPM()));

@@ -20,7 +20,7 @@ import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 import frc.robot.lists.Ports;
 import frc.robot.lists.StatusPrioritys;
 import frc.robot.commands.climb.ClimbSequence;
@@ -98,7 +98,7 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPrioritys.on, LEDRange.All).solid(Colors.DimGreen));
+        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
         shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
 
         //wpilib parts
@@ -135,7 +135,7 @@ public class RobotContainer {
 
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(LEDPrioritys.enabled, LEDRange.All).solid(Colors.Green))),
+            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(LEDPriorities.enabled, LEDRange.All).solid(Colors.Green))),
             new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
@@ -231,8 +231,8 @@ public class RobotContainer {
 
         //bindings for fun dile
         launchpad.funLeft.whenPressed(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        launchpad.funMiddle.whenPressed(new SemiAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        launchpad.funRight.whenPressed(new FullAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        launchpad.funMiddle.whenPressed(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        launchpad.funRight.whenPressed(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
