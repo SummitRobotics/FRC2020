@@ -73,9 +73,7 @@ public class Turret extends SubsystemBase implements Homeable {
 
     public double getAngle(){
         double angle = getEncoder()*360;
-        //tempary, NOT RIGHT, gear ratio
-        angle = angle/20;
-        angle = angle/5;
+        angle = angle/69;
         return angle;
     }
 

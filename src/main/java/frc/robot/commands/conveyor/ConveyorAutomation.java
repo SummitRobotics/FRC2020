@@ -36,6 +36,7 @@ public class ConveyorAutomation extends CommandBase {
 			case SHOOT: 
 				power = Conveyor.SHOOT_POWER;
 				if(!shootModeLED){
+					shootModeLED = true;
 					LEDs.getInstance().addCall("convayerShoot", new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off));
 				}
 				break;

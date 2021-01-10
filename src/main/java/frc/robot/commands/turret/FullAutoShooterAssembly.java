@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.hood.HoodDistanceAngler;
@@ -76,6 +77,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(spool, target, angler);
+		LEDs.getInstance().addCall("a", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
 	}
 
 	@Override
@@ -150,10 +152,10 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	protected double turretPassiveAction(double turretAngle) {
 		//reverses travel direction when aproching an end
-		if (turretAngle < 5) {
+		if (turretAngle < 20) {
 			turretDirection = true;
 
-		} else if(turretAngle > 100) {
+		} else if(turretAngle > 135) {
 			turretDirection = false;
 		}
 

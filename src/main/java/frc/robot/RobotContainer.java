@@ -127,7 +127,7 @@ public class RobotContainer {
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 11);
+        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
@@ -167,13 +167,10 @@ public class RobotContainer {
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
         if (launchpad.funLeft.get()) {
-            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
         } else if (launchpad.funMiddle.get()) {
-            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
         } else if (launchpad.funRight.get()) {
-            turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
         }
     }

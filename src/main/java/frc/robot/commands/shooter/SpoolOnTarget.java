@@ -58,7 +58,7 @@ public class SpoolOnTarget extends CommandBase {
 			pid.setSetpoint(standByRpm);
 		}
 
-		shooter.setPower(pid.calculate(shooter.getShooterRPM()));
+		///shooter.setPower(pid.calculate(shooter.getShooterRPM()));
 	}
 
 	@Override

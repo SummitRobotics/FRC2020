@@ -44,7 +44,6 @@ public abstract class VisionTarget extends CommandBase {
 	}
 
 	public void execute() {
-		System.out.println("vision");
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 			double power = pidController.calculate(offset);
