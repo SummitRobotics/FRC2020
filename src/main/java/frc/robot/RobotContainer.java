@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.oi.ControllerDriver;
@@ -20,7 +21,7 @@ import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 import frc.robot.lists.Ports;
 import frc.robot.lists.StatusPrioritys;
 import frc.robot.commands.climb.ClimbSequence;
@@ -98,7 +99,7 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPrioritys.on, LEDRange.All).solid(Colors.DimGreen));
+        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
         shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
 
         //wpilib parts
@@ -126,7 +127,7 @@ public class RobotContainer {
         //colorSensor = new ColorSensorV3(Port.kOnboard);
 
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 11.5);
+        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
@@ -135,7 +136,6 @@ public class RobotContainer {
 
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() ->  LEDs.getInstance().addCall("enabled", new LEDCall(LEDPrioritys.enabled, LEDRange.All).solid(Colors.Green))),
             new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
@@ -166,6 +166,13 @@ public class RobotContainer {
 
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
+        if (launchpad.funLeft.get()) {
+            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        } else if (launchpad.funMiddle.get()) {
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        } else if (launchpad.funRight.get()) {
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        }
     }
 
     private void configureButtonBindings() {
@@ -229,10 +236,27 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        //bindings for fun dile
-        launchpad.funLeft.whenPressed(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        launchpad.funMiddle.whenPressed(new SemiAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        launchpad.funRight.whenPressed(new FullAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        // bindings for fun dial
+        // launchpad.funLeft.whileHeld(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger), true);
+        // launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
+        // launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
+
+        launchpad.funLeft.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        }));
+        launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        }));
+        launchpad.funRight.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        }));
+
+        // launchpad.funRight.whenHeld(new PrintCommand("right"));
+        // launchpad.funMiddle.whenHeld(new PrintCommand("middle"));
+        // launchpad.funLeft.whenHeld(new PrintCommand("no"));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
@@ -254,8 +278,18 @@ public class RobotContainer {
     }
 
     public void disabledInit(){
-        LEDs.getInstance().removeCall("enabled");
+        LEDs.getInstance().removeAllCalls();
+        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
         shufHELLboard.statusDisplay.removeStatus("enabled");
+    }
+
+    public void telyopPeriodic(){
+        // System.out.println("django stuff");
+        // System.out.println(launchpad.reee.getAsDouble());
+        // System.out.println("left: " + launchpad.funLeft.get());
+        // System.out.println("middle: " + launchpad.funMiddle.get());
+        // System.out.println("right: " + launchpad.funRight.get());
+        // System.out.println("end django stuff");
     }
 
     /**

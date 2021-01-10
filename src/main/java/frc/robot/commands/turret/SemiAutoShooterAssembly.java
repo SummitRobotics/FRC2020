@@ -1,9 +1,8 @@
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
+import frc.robot.devices.LEDs.LEDs;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
 import frc.robot.oi.StatusDisplay;
@@ -19,11 +18,18 @@ import frc.robot.utilities.SimpleButton;
  * Command for running the semi auto mode
  */
 //there may be somthing better then a SequentialCommandGroup for this but this was simple and should work
-public class SemiAutoShooterAssembly extends SequentialCommandGroup {
+public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
+
+    private ChangeRateLimiter rateLimiter;
+    private Conveyor conveyor;
+
+    private OIButton trigger;
+    private OIAxis controlAxis;
+
+    private SimpleButton simpleTrigger;
 
 	public SemiAutoShooterAssembly
 		(
-			CommandScheduler scheduler, 
 			Turret turret, 
 			Shooter shooter, 
 			Hood hood, 
@@ -34,32 +40,38 @@ public class SemiAutoShooterAssembly extends SequentialCommandGroup {
 			OIAxis controlAxis,
 			OIButton trigger
 		) {
+            super(turret, shooter, hood, conveyor, limelight, lidar, status);
 
-		SimpleButton simpleTriger = new SimpleButton(trigger);
-		ChangeRateLimiter rateLimiter = new ChangeRateLimiter(turret.max_change_rate);
+		simpleTrigger = new SimpleButton(trigger);
+        rateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
-		//takes everything from full auto and just adds in the bit of manual control
-		addCommands(new FullAutoShooterAssembly(scheduler, turret, shooter, hood, conveyor, limelight, lidar, status){
+        this.controlAxis = controlAxis;
+        this.trigger = trigger;
 
-			@Override
-			protected void ShootAction(boolean readyToShoot){
-				if(readyToShoot && simpleTriger.get() && !trigger.inUse()){
-					conveyor.shootOneBall();
-				}
-			}
-		
-			@Override
-			protected double turretPasiveAction(double turretAngle){
-				if(!controlAxis.inUse()){
-					return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
-				}
-				else{
-					return rateLimiter.getRateLimitedValue(0);
-				}
-				
-			}
-		}
-		);
+        this.conveyor = conveyor;
+        this.trigger = trigger;
+    }
 
-	}
+    @Override
+    public void initialize() {
+        super.initialize();
+        LEDs.getInstance().removeCall("a");
+    }
+    
+    @Override
+    protected void shootAction(boolean readyToShoot) {
+        if (readyToShoot && simpleTrigger.get() && !trigger.inUse()) {
+            conveyor.shootOneBall();
+        }
+    }
+
+    @Override
+    protected double turretPassiveAction(double turretAngle) {
+        if(!controlAxis.inUse()){
+            return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
+        }
+        else{
+            return rateLimiter.getRateLimitedValue(0);
+        }
+    }
 }

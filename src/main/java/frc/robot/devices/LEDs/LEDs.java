@@ -78,6 +78,14 @@ public class LEDs extends SubsystemBase {
         calls.remove(name);
     }
 
+     /**
+     * Removes all calls
+     * 
+     */
+    public void removeAllCalls() {
+        callsOutOfDate = true;
+        calls.clear();
+    }
     /**
      * Reassigns the states of the LED atoms, to assure that priorities up-to date.
      * Runs whenever the currently active calls are modified

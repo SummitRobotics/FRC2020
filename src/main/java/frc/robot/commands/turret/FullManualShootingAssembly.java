@@ -5,7 +5,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 import frc.robot.oi.OIAxis;
 import frc.robot.oi.OIButton;
 import frc.robot.subsystems.Conveyor;
@@ -60,7 +60,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		this.trigger = trigger;
 
-		limiter = new ChangeRateLimiter(turret.max_change_rate);
+		limiter = new ChangeRateLimiter(turret.MAX_CHANGE_RATE);
 
 		startupSpinPrevention = true;
 
@@ -70,22 +70,21 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
-		LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPrioritys.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
+		LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
 	}
 
 	@Override
 	public void execute() {
-		if (!turretRotationPower.inUse() && Functions.absoluteGreater(turretRotationPower.get(), shooterHoodPower.get())) {
+		if (!turretRotationPower.inUse() && Functions.absGreater(turretRotationPower.get(), shooterHoodPower.get())) {
 			double turretPower = limiter.getRateLimitedValue((turretRotationPower.get()/3)); // Scaled by 5 for sanity
 			turret.setPower(Functions.deadzone(.05, turretPower)); 
 
-		} else if (!shooterHoodPower.inUse() && Functions.absoluteGreater(shooterHoodPower.get(), turretRotationPower.get())) {
+		} else if (!shooterHoodPower.inUse() && Functions.absGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
 			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
 
-		}
-		else{
+		} else {
 			turret.setPower(limiter.getRateLimitedValue(0));
 			hood.setPower(0);
 		}
@@ -95,15 +94,14 @@ public class FullManualShootingAssembly extends CommandBase {
 		if (!shooterSpoolPower.inUse()) {
 			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
 
-			if(startupSpinPrevention && (shooterPower > 0.75)){
+			if (startupSpinPrevention && (shooterPower > 0.75)) {
 				startupSpinPrevention = false;
 			}
 			
-			if(!startupSpinPrevention){
-				shooter.setPower(shooterPower);
-			}
-
-			else{
+			if (!startupSpinPrevention) {
+                shooter.setPower(shooterPower);
+                
+			} else {
 				shooter.setPower(0);
 			}
 		}

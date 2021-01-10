@@ -24,26 +24,22 @@ public class Turret extends SubsystemBase implements Homeable {
     private CANPIDController pidController;
     private TurretIndicatorWidget indicator;
 
-    public static final double max_change_rate = 0.025;
-
+    public static final double MAX_CHANGE_RATE = 0.025;
 
     public Turret(TurretIndicatorWidget indicator) {
         this.indicator = indicator;
-        turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
-        encoder = turret.getEncoder();
-        pidController = turret.getPIDController();
+
+        this.turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
+        this.encoder = turret.getEncoder();
+        this.pidController = turret.getPIDController();
 
         turret.setInverted(true);
-
         turret.setSmartCurrentLimit(30);
-
-
         turret.setClosedLoopRampRate(0);
         pidController.setOutputRange(-1, 1);
 
         turret.setIdleMode(IdleMode.kBrake);
     }
-
 
     /**
      * Sets power of the turret motor
@@ -77,9 +73,7 @@ public class Turret extends SubsystemBase implements Homeable {
 
     public double getAngle(){
         double angle = getEncoder()*360;
-        //tempary, NOT RIGHT, gear ratio
-        angle = angle/20;
-        angle = angle/5;
+        angle = angle/69;
         return angle;
     }
 

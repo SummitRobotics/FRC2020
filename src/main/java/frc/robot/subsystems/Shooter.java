@@ -24,8 +24,6 @@ public class Shooter extends SubsystemBase {
     private StatusDisplay status;
     private boolean overTempStatus;
 
-   
-
     public Shooter(NetworkTableEntry speed, NetworkTableEntry temp, StatusDisplay status) {
         this.speed = speed;
         this.temp = temp;
@@ -33,7 +31,6 @@ public class Shooter extends SubsystemBase {
         shooterMotor = new TalonFX(Ports.SHOOTER);
         shooterEncoder = new TalonFXSensorCollection(shooterMotor);
         overTempStatus = false;
-
     }
 
     /**

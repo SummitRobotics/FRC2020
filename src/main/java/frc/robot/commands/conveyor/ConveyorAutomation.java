@@ -5,7 +5,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPrioritys;
+import frc.robot.lists.LEDPriorities;
 import frc.robot.subsystems.Conveyor;
 
 public class ConveyorAutomation extends CommandBase {
@@ -36,7 +36,8 @@ public class ConveyorAutomation extends CommandBase {
 			case SHOOT: 
 				power = Conveyor.SHOOT_POWER;
 				if(!shootModeLED){
-					LEDs.getInstance().addCall("convayerShoot", new LEDCall(LEDPrioritys.fireing, LEDRange.All).ffh(Colors.Orange, Colors.Off));
+					shootModeLED = true;
+					LEDs.getInstance().addCall("convayerShoot", new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off));
 				}
 				break;
 			case INTAKE: 

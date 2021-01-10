@@ -8,9 +8,9 @@ import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Functions;
 
 /**
- * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITS SELF**
+ * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITSELF**
  */
-public class VisionTarget extends CommandBase {
+public abstract class VisionTarget extends CommandBase {
 
 	protected Turret turret;
 	private Lemonlight limelight;
@@ -23,14 +23,17 @@ public class VisionTarget extends CommandBase {
 	I = 0,
 	D = 0;
 
-	public VisionTarget(Turret turret, Lemonlight limelight) {
+	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
 		this.turret = turret;
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(0.1, 1);
 
-		addRequirements(turret);
+		if(!partOfFullAuto){
+			addRequirements(turret);
+		}
+		
 	}
 
 	public void initialize() {
@@ -41,7 +44,6 @@ public class VisionTarget extends CommandBase {
 	}
 
 	public void execute() {
-		System.out.println("vision");
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 			double power = pidController.calculate(offset);
@@ -57,17 +59,14 @@ public class VisionTarget extends CommandBase {
 	}
 
 	/**
-	 * OVERRIDE THIS
 	 * this is where the code for what the turret should do when no target is found should go
-	 * this should NOT affect the turret directaly
-	 * @param turretAngle the curent angle from home of the turret
-	 * @return the power fot the turret to move at
+	 * this should NOT affect the turret directly
+	 * @param turretAngle the curent angle of the turret
+	 * @return the power for the turret to move at
 	 */
-	protected double noTargetTurretAction(double turretAngle){
-		return 0;
-	}
+	protected abstract double noTargetTurretAction(double turretAngle);
 
-	public boolean isOnTagret(){
+	public boolean isOnTarget(){
 		return pidController.atSetpoint();
 	}
 
