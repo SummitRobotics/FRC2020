@@ -56,7 +56,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		badDistanceReadings = 0;
 
-		changeRateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
+		changeRateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE/2);
 
 		turretDirection = true;
 
@@ -152,7 +152,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	protected double turretPassiveAction(double turretAngle) {
 		//reverses travel direction when aproching an end
-		if (turretAngle < 20) {
+		if (turretAngle < 45) {
 			turretDirection = true;
 
 		} else if(turretAngle > 135) {
@@ -161,9 +161,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		//sets power from direction
 		if (turretDirection) {
-			return changeRateLimiter.getRateLimitedValue(0.2);
+			return changeRateLimiter.getRateLimitedValue(0.1);
 		} else {
-			return changeRateLimiter.getRateLimitedValue(-0.2);
+			return changeRateLimiter.getRateLimitedValue(-0.1);
 		}
 	}
 }

@@ -47,6 +47,10 @@ public abstract class VisionTarget extends CommandBase {
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 			double power = pidController.calculate(offset);
+			if(turret.isAtLimit()){
+				//makes shure intagral does not get out of control when it cant move any more in the target direction
+				pidController.reset();
+			}
 			turret.setPower(Functions.clampDouble(power, .33, -.33));
 		} else {
 			noTarget();

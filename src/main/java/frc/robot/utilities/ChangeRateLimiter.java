@@ -19,7 +19,7 @@ public class ChangeRateLimiter {
      * new rate limiter with starting value of 0
      * @param rate the maximum change each time the function is called
      */
-    public ChangeRateLimiter(double rate) {
+    public 1ChangeRateLimiter(double rate) {
         this.rate = rate;
         old = 0;
     }

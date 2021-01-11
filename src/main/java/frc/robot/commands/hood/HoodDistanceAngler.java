@@ -37,8 +37,10 @@ public class HoodDistanceAngler extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        pid.setSetpoint(hood.getHoodAngleFromDistance(distance));
-        hood.setPower(pid.calculate(hood.getAngle()));
+        double angle = hood.getAngle();
+        double setpoint = hood.getHoodAngleFromDistance(distance);
+        pid.setSetpoint(setpoint);
+        hood.setPower(pid.calculate(angle));
     }
 
     // Called once the command ends or is interrupted.

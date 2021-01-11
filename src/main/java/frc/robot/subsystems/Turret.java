@@ -77,6 +77,18 @@ public class Turret extends SubsystemBase implements Homeable {
         return angle;
     }
 
+    public boolean isAtFowardLimit(){
+        return turret.isSoftLimitEnabled(SoftLimitDirection.kForward) && (turret.getSoftLimit(SoftLimitDirection.kForward) >= getEncoder());
+    }
+
+    public boolean isAtReversLimit(){
+        return turret.isSoftLimitEnabled(SoftLimitDirection.kForward) && (turret.getSoftLimit(SoftLimitDirection.kForward) >= getEncoder());
+    }
+
+    public boolean isAtLimit(){
+        return isAtFowardLimit() || isAtReversLimit();
+    }
+
     @Override
     public double getCurrent() {
         return turret.getOutputCurrent();
