@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -106,8 +107,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		// Cancels all running commands at the start of test mode.
-		CommandScheduler.getInstance().cancelAll();
+		System.out.println("init");
+		teleopInit();
 	}
 
 	/**
@@ -115,5 +116,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		CommandScheduler.getInstance().enable();
+		teleopPeriodic();
 	}
 }

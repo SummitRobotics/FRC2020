@@ -147,18 +147,18 @@ public class RobotContainer {
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
             //these can both happen at the same time so we do want that to happen to save time
-            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
+            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate())
             //sets the turret command
-            new InstantCommand(() -> {  
-                turret.getDefaultCommand().cancel();   
-                if (launchpad.funLeft.get()) {
-                    turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-                } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-                } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
-                }
-            })
+            // new InstantCommand(() -> {  
+            //     turret.getDefaultCommand().cancel();   
+            //     if (launchpad.funLeft.get()) {
+            //         turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+            //     } else if (launchpad.funMiddle.get()) {
+            //         turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+            //     } else if (launchpad.funRight.get()) {
+            //         turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+            //     }
+            // })
             );
 
 
@@ -178,13 +178,14 @@ public class RobotContainer {
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
         //does it on init, realy a failsafe for doing it at telyinit
-        if (launchpad.funLeft.get()) {
-            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        } else if (launchpad.funMiddle.get()) {
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        } else if (launchpad.funRight.get()) {
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
-        }
+        // if (launchpad.funLeft.get()) {
+        //     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        // } else if (launchpad.funMiddle.get()) {
+        //     turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        // } else if (launchpad.funRight.get()) {
+        //     turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        // }
+
     }
 
     private void configureButtonBindings() {
@@ -253,18 +254,18 @@ public class RobotContainer {
         // launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
         // launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
 
-        launchpad.funLeft.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        }));
-        launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        }));
-        launchpad.funRight.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
-        }));
+        // launchpad.funLeft.whenPressed(new InstantCommand(() -> {
+        //     turret.getDefaultCommand().cancel();
+        //     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        // }));
+        // launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
+        //     turret.getDefaultCommand().cancel();
+        //     turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        // }));
+        // launchpad.funRight.whenPressed(new InstantCommand(() -> {
+        //     turret.getDefaultCommand().cancel();
+        //     turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        // }));
 
         // launchpad.funRight.whenHeld(new PrintCommand("right"));
         // launchpad.funMiddle.whenHeld(new PrintCommand("middle"));
@@ -310,6 +311,9 @@ public class RobotContainer {
     public void teleopInit() {
         //inishlises robot
         scheduler.schedule(teleInit);
+        turret.setDefaultCommand(new TurretToPosition(turret, 90));
+        System.out.println("scedualed");
+        //SmartDashboard.putData("tutterAngle", new TurretToPosition(turret, 90));
     }
 
     /**
