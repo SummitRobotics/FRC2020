@@ -19,7 +19,7 @@ public class ChangeRateLimiter {
      * new rate limiter with starting value of 0
      * @param rate the maximum change each time the function is called
      */
-    public 1ChangeRateLimiter(double rate) {
+    public ChangeRateLimiter(double rate) {
         this.rate = rate;
         old = 0;
     }
@@ -40,12 +40,16 @@ public class ChangeRateLimiter {
      * @return the rate-limited value
      */
     public double getRateLimitedValue(double value) {
-        if (Math.abs(value) > rate + Math.abs(old)) {
-            old = Math.copySign(rate, value) + old;
+        if (value > old + rate) {
+            value = old + rate;
+            old = value;
+        } else if (value < old - rate) {
+            value = old - rate;
+            old = value;
         } else {
             old = value;
         }
 
-        return old;
+        return value;
     }
 }
