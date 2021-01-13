@@ -237,6 +237,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("drivetrain periodic");
 
         /*
         System.out.println(left.getBusVoltage());

@@ -8,6 +8,7 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.Turret;
@@ -31,6 +32,7 @@ public class TurretToPosition extends CommandBase {
     pid = new PIDController(0.01, 0, 0);
     pid.setTolerance(0.2, 1);
     pid.setName("turret angle pid");
+    //SmartDashboard.putData(pid);
   }
 
   //Called when the command is initially scheduled.

@@ -297,6 +297,7 @@ public class RobotContainer {
     }
 
     public void telyopPeriodic(){
+        System.out.println("peridoic loop");
         // System.out.println("django stuff");
         // System.out.println(launchpad.reee.getAsDouble());
         // System.out.println("left: " + launchpad.funLeft.get());

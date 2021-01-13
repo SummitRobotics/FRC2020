@@ -107,7 +107,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		System.out.println("init");
 		teleopInit();
 	}
 
@@ -116,7 +115,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		CommandScheduler.getInstance().enable();
 		teleopPeriodic();
 	}
 }
