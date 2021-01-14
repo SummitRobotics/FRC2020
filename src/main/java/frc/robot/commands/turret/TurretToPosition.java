@@ -51,6 +51,7 @@ public class TurretToPosition extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     turret.stop();
+    pid.close();
   }
 
   // Returns true when the command should end.

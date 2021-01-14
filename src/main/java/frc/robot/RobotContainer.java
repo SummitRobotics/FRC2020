@@ -118,9 +118,6 @@ public class RobotContainer {
         turret = new Turret(shufHELLboard.turretIndicator);
         climberPneumatics = new ClimberPneumatics();
 
-
-        SmartDashboard.putData(pdp);
-
         gyro = new AHRS();
         limelight = new Lemonlight();
         turretLidar = new LidarV3();
@@ -176,6 +173,9 @@ public class RobotContainer {
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
+
+        //for tuning
+        turret.setDefaultCommand(new TurretToPosition(turret, 90));
 
         //does it on init, realy a failsafe for doing it at telyinit
         // if (launchpad.funLeft.get()) {
@@ -314,7 +314,6 @@ public class RobotContainer {
     }
 
     public void robotInit(){
-        turret.setDefaultCommand(new TurretToPosition(turret, 90));
     }
 
     /**
