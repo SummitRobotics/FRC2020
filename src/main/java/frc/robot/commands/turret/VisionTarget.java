@@ -60,7 +60,6 @@ public abstract class VisionTarget extends CommandBase {
 	private void noTarget() {
 		pidController.reset();
 		double power = noTargetTurretAction(turret.getAngle());
-		System.out.println("turret power:" + power);
 		turret.setPower(power);
 	}
 

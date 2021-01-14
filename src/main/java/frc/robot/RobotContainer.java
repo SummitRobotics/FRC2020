@@ -297,7 +297,6 @@ public class RobotContainer {
     }
 
     public void telyopPeriodic(){
-        System.out.println("peridoic loop");
         // System.out.println("django stuff");
         // System.out.println(launchpad.reee.getAsDouble());
         // System.out.println("left: " + launchpad.funLeft.get());
@@ -312,9 +311,10 @@ public class RobotContainer {
     public void teleopInit() {
         //inishlises robot
         scheduler.schedule(teleInit);
+    }
+
+    public void robotInit(){
         turret.setDefaultCommand(new TurretToPosition(turret, 90));
-        System.out.println("scedualed");
-        //SmartDashboard.putData("tutterAngle", new TurretToPosition(turret, 90));
     }
 
     /**
