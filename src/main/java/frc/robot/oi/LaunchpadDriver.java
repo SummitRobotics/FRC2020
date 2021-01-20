@@ -107,8 +107,7 @@ public class LaunchpadDriver extends GenericDriver {
     }
 
     /**
-     * Black box to set outputs
-     * 
+     * Black box to set outputs coppyed from wpilib
      * @param outputNumber the output number
      * @param value the state of the output
      */

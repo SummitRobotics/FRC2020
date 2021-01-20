@@ -88,19 +88,24 @@ public class StatusDisplay extends SubsystemBase{
         NameAndMessage.remove(name);
     }
 
+    //sin to get a css compatable hex color from a color8bit
     private String hexStringFomColor(Color8Bit color){
         String out = "#";
         String[] cs = new String[3];
         cs[0] = Integer.toHexString(color.red);
         cs[1] = Integer.toHexString(color.green);
         cs[2] = Integer.toHexString(color.blue);
+        //makes the hex values 2 chars long
         for(String x : cs){
+            //if its yo long jsut take the first part
             if(x.length() > 2){
                 x = x.substring(x.length()-3, x.length()-1);
             }
+            //if it is too short add a 0
             if (x.length() < 2){
                 x = "0" + x;
             }
+            //append the fixed value to the output string
             out = out + x;
         }
         return out;
@@ -131,6 +136,11 @@ public class StatusDisplay extends SubsystemBase{
         private int prioirty;
         private String message;
 
+        /**
+         * makes a new status
+         * @param prioirty the intager priorty of the message. a higher number menas a igher priority
+         * @param message the string of the message test to display. CAN NOT CONTAIN A ":"
+         */
         public StatusMessage(int prioirty, String message){
             this.prioirty = prioirty;
             this.message = message;

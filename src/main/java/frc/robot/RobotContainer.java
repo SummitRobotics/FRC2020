@@ -241,9 +241,6 @@ public class RobotContainer {
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         // bindings for fun dial
-        // launchpad.funLeft.whileHeld(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger), true);
-        // launchpad.funMiddle.whileHeld(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger), true);
-        // launchpad.funRight.whileHeld(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay), true);
 
         // launchpad.funLeft.whenPressed(new InstantCommand(() -> {
         //     turret.getDefaultCommand().cancel();
@@ -257,10 +254,6 @@ public class RobotContainer {
         //     turret.getDefaultCommand().cancel();
         //     turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
         // }));
-
-        // launchpad.funRight.whenHeld(new PrintCommand("right"));
-        // launchpad.funMiddle.whenHeld(new PrintCommand("middle"));
-        // launchpad.funLeft.whenHeld(new PrintCommand("no"));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
@@ -288,12 +281,7 @@ public class RobotContainer {
     }
 
     public void telyopPeriodic(){
-        // System.out.println("django stuff");
-        // System.out.println(launchpad.reee.getAsDouble());
-        // System.out.println("left: " + launchpad.funLeft.get());
-        // System.out.println("middle: " + launchpad.funMiddle.get());
-        // System.out.println("right: " + launchpad.funRight.get());
-        // System.out.println("end django stuff");
+
     }
 
     /**

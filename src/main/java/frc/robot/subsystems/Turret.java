@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -21,7 +19,6 @@ public class Turret extends SubsystemBase implements Homeable {
 
     private CANSparkMax turret;
     private CANEncoder encoder;
-    private CANPIDController pidController;
     private TurretIndicatorWidget indicator;
 
     public static final double MAX_CHANGE_RATE = 0.025;
@@ -31,13 +28,9 @@ public class Turret extends SubsystemBase implements Homeable {
 
         this.turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);
         this.encoder = turret.getEncoder();
-        this.pidController = turret.getPIDController();
 
         turret.setInverted(true);
         turret.setSmartCurrentLimit(30);
-        turret.setClosedLoopRampRate(0);
-        pidController.setOutputRange(-1, 1);
-
         turret.setIdleMode(IdleMode.kBrake);
     }
 
@@ -49,15 +42,6 @@ public class Turret extends SubsystemBase implements Homeable {
     public void setPower(double power) {
         power = Functions.clampDouble(power, 1, -1);
         turret.set(power);
-    }
-
-    /**
-     * Sets encoder target for turret
-     * 
-     * @param value new setpoint for the motor
-     */
-    public void setTarget(double value) {
-        pidController.setReference(value, ControlType.kPosition);
     }
 
     /**

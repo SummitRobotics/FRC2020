@@ -148,7 +148,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setLeftEncoder(int position) {
+    public void setLeftEncoder(double position) {
         leftEncoder.setPosition(position);
     }
 

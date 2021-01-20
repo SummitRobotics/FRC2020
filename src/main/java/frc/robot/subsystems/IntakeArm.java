@@ -30,7 +30,6 @@ public class IntakeArm extends SubsystemBase {
 	pivot;
 
 	private Solenoid lock;
-
 	private DigitalInput upperLimit;
 
 	public IntakeArm() {
@@ -41,7 +40,7 @@ public class IntakeArm extends SubsystemBase {
 		upperLimit = new DigitalInput(Ports.UPPER_LIMIT);
 		
 		state = States.UP;
-		brake();
+		pivot.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void setState(States newState){
@@ -80,14 +79,6 @@ public class IntakeArm extends SubsystemBase {
 
 	public boolean getUpperLimit() {
 		return !upperLimit.get();
-	}
-
-	public void coast() {
-		pivot.setNeutralMode(NeutralMode.Coast);
-	}
-
-	public void brake() {
-		pivot.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public boolean isUp() {

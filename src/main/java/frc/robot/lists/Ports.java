@@ -34,7 +34,6 @@ public class Ports {
 
     // turret
     TURRET = 50,
-    TURRET_LIMIT = 0,
 
     // shooter
     SHOOTER = 51,
@@ -49,10 +48,6 @@ public class Ports {
     INTAKE_ARM_PIVOT = 61,
     INTAKE_LOCK = 2,
     UPPER_LIMIT = 1,
-
-    // DIO
-    TURRET_LIMIT_ONE = 2,
-    TURRET_LIMIT_TWO = 3,
 
     // climber
     LEFT_CLIMB = 41,
