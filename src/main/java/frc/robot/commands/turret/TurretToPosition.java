@@ -27,7 +27,7 @@ public class TurretToPosition extends CommandBase {
     this.turret = turret;
     target = targetAngle;
     //WRONG make good
-    pid = new PIDController(0.01, 0, 0);
+    pid = new PIDController(0.02, 0, 0.0005);
     pid.setTolerance(0.2, 1);
     pid.setName("turret angle pid");
     //SmartDashboard.putData(pid);

@@ -4,7 +4,9 @@
 
 package frc.robot.commands.drivetrain;
 
+import java.time.Period;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -31,48 +33,49 @@ public class FollowSpline extends CommandBase {
 
   public FollowSpline(Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
+  }
 
+  @Override
+  public void initialize() {
     double[] pid  = drivetrain.getPid();
 
-    //TODO make numbers right
-    config = new TrajectoryConfig(2,1)
+    config = new TrajectoryConfig(3,3)
     // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(drivetrain.driveKinimatics)
+    .setKinematics(drivetrain.DriveKinimatics)
     // Apply the voltage constraint
-    .addConstraint(drivetrain.VoltageConstraint);
+    .addConstraint(drivetrain.getVoltageConstraint());
 
+    //scaled by 3 for testing so i dont break my walls
     trajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
       new Pose2d(0, 0, new Rotation2d(0)),
       // Pass through these two interior waypoints, making an 's' curve path
       List.of(
-          new Translation2d(1, 1),
-          new Translation2d(2, -1)
+          new Translation2d(1, 1).div(3),
+          new Translation2d(2, -1).div(3)
       ),
       // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(3, 0, new Rotation2d(0)),
+      new Pose2d(new Translation2d(3, 0).div(3), new Rotation2d(0)),
       // Pass config
       config
-  );
+    );
 
-    //this is biggest sin
     this.command = new RamseteCommand(
       trajectory, 
       drivetrain::getPose, 
       //TODO make right
-      new RamseteController(1, .5), 
-      drivetrain.feedFoward, 
-      drivetrain.driveKinimatics, 
+      new RamseteController(2, 0.7), 
+      drivetrain.getFeedFoward(), 
+      drivetrain.DriveKinimatics, 
       drivetrain::getWheelSpeeds, 
-      new PIDController(pid[0], pid[1], pid[2], pid[3]), 
-      new PIDController(pid[0], pid[1], pid[2], pid[3]), 
+      new PIDController(pid[0], pid[1], pid[2]), 
+      new PIDController(pid[0], pid[1], pid[2]), 
       drivetrain::setMotorVolts, 
       drivetrain);
-  }
 
-  @Override
-  public void initialize() {
     drivetrain.setPose(trajectory.getInitialPose());
+
+    //this is biggest sin
     command.initialize();
   }
 

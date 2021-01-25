@@ -24,23 +24,25 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Drivetrain extends SubsystemBase {
 
     private static final double
-    //TODO make right
-    LowP = 0.0,
+    LowP = 2.29,
     LowI = 0.0,
     LowD = 0.0,
-    LowF = 0.0,
-    HighP = 0.0,
+    LowKs = 0.177,
+    LowKv = 1.55,
+    LowKa = 0.133,
+    HighP = 2.85,
     HighI = 0.0,
     HighD = 0.0,
-    HighF = 0.0,
-    //TODO make right
+    HighKs = 0.211,
+    HighKv = 0.734,
+    HighKa = 0.141,
     HighGearRatio = 9.1,
-    LowGEarRatio = 19.2,
-    //this is right
+    LowGEarRatio = 19.65,
     WheleRadiusInMeters = 0.0762,
     wheleCirconfranceInMeters = (2*WheleRadiusInMeters)*Math.PI,
-    //TODO make right
-    DriveWidth = 0.0;
+    MaxOutputVoltage = 11,
+    //TODO check if right (is in meters)
+    DriveWidth = 1.5;
 
     // left motors
     private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_3, MotorType.kBrushless);
@@ -65,15 +67,15 @@ public class Drivetrain extends SubsystemBase {
     private BooleanSupplier shift;
     private AHRS gyro;
 
-    public DifferentialDriveKinematics driveKinimatics = new DifferentialDriveKinematics(DriveWidth);
+    public DifferentialDriveKinematics DriveKinimatics = new DifferentialDriveKinematics(DriveWidth);
 
-    //TODO make right
-    public SimpleMotorFeedforward feedFoward = new SimpleMotorFeedforward(0.0, 0.0, 0.0);
+    public SimpleMotorFeedforward HighFeedFoward = new SimpleMotorFeedforward(HighKs, HighKv, HighKa);
 
-    public DifferentialDriveVoltageConstraint VoltageConstraint = new DifferentialDriveVoltageConstraint(
-        feedFoward,
-        driveKinimatics,
-        10);
+    public SimpleMotorFeedforward LowFeedFoward = new SimpleMotorFeedforward(LowKs, LowKv, LowKa);
+
+    public DifferentialDriveVoltageConstraint HighVoltageConstraint = new DifferentialDriveVoltageConstraint(HighFeedFoward, DriveKinimatics, MaxOutputVoltage);
+
+    public DifferentialDriveVoltageConstraint LowVoltageConstraint = new DifferentialDriveVoltageConstraint(LowFeedFoward, DriveKinimatics, MaxOutputVoltage);
 
     /**
      * i am in PAIN wow this is BAD
@@ -272,10 +274,10 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getLeftSpeed(){
         if(shift.getAsBoolean()){
-            return covertRpmToMetersPerSencondWithMathAndPainHellHellHEllHEllHEllHEll((getLeftRPM()/HighGearRatio));
+            return covertRpmToMetersPerSencond((getLeftRPM()/HighGearRatio));
         }
         else{
-            return covertRpmToMetersPerSencondWithMathAndPainHellHellHEllHEllHEllHEll((getLeftRPM()/LowGEarRatio));
+            return covertRpmToMetersPerSencond((getLeftRPM()/LowGEarRatio));
         }
     }
     /**
@@ -283,15 +285,15 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getRightSpeed(){
         if(shift.getAsBoolean()){
-            return covertRpmToMetersPerSencondWithMathAndPainHellHellHEllHEllHEllHEll((getRightRPM()/HighGearRatio));
+            return covertRpmToMetersPerSencond((getRightRPM()/HighGearRatio));
         }
         else{
-            return covertRpmToMetersPerSencondWithMathAndPainHellHellHEllHEllHEllHEll((getRightRPM()/LowGEarRatio));
+            return covertRpmToMetersPerSencond((getRightRPM()/LowGEarRatio));
         }
     }
 
     //could things be good for once please
-    private double covertRpmToMetersPerSencondWithMathAndPainHellHellHEllHEllHEllHEll(double RPM){
+    private double covertRpmToMetersPerSencond(double RPM){
         return ((RPM/60)*(2*Math.PI))*WheleRadiusInMeters;
     }
 
@@ -343,16 +345,34 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * gets the right pid values for the curent shift state
-     * @return double array of p,i,d,f
+     * @return double array of p,i,d
      */
     public double[] getPid(){
         if(shift.getAsBoolean()){
-            double[] out = {HighP, HighI, HighD, HighF};
+            double[] out = {HighP, HighI, HighD};
             return out;
         }
         else{
-            double[] out = {LowP, LowI, LowD, LowF};
+            double[] out = {LowP, LowI, LowD};
             return out;
+        }
+    }
+
+    public SimpleMotorFeedforward getFeedFoward(){
+        if(shift.getAsBoolean()){
+            return HighFeedFoward;
+        }
+        else{
+            return LowFeedFoward;
+        }
+    }
+
+    public DifferentialDriveVoltageConstraint getVoltageConstraint(){
+        if(shift.getAsBoolean()){
+            return HighVoltageConstraint;
+        }
+        else{
+            return LowVoltageConstraint;
         }
     }
 
