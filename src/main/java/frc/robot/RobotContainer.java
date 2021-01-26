@@ -102,12 +102,15 @@ public class RobotContainer {
         LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
         shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
 
+        gyro = new AHRS();
+        limelight = new Lemonlight();
+        turretLidar = new LidarV3();
+
         //wpilib parts
         pdp = new PowerDistributionPanel();
 
         //our subsystems
         pneumatics = new Pneumatics(shufHELLboard.pressure);
-        drivetrain = new Drivetrain();
         shifter = new Shifter();
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
@@ -117,12 +120,9 @@ public class RobotContainer {
         rightArm = new ClimberArm(Sides.RIGHT);
         turret = new Turret(shufHELLboard.turretIndicator);
         climberPneumatics = new ClimberPneumatics();
+        drivetrain = new Drivetrain(gyro, () -> shifter.getShiftState());
 
-        gyro = new AHRS();
-        limelight = new Lemonlight();
-        turretLidar = new LidarV3();
-        //colorSensor = new ColorSensorV3(Port.kOnboard);
-
+        
         HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
         HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
 
