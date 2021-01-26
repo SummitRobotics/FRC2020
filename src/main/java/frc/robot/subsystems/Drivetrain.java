@@ -88,6 +88,8 @@ public class Drivetrain extends SubsystemBase {
         this.gyro = gyro;
         this.shift = shiftState;
 
+        odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+
         // tells other two motors to follow the first
         leftMiddle.follow(left);
         leftBack.follow(left);
