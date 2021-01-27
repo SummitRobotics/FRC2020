@@ -17,82 +17,67 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 
 //this is REAL bad
-public class FollowSpline extends CommandBase {
+public class FollowSpline extends SequentialCommandGroup {
 
-  private TrajectoryConfig config;
+    private TrajectoryConfig config;
 
-  private Trajectory trajectory;
-  
-  private Drivetrain drivetrain;
+    private Trajectory trajectory;
 
-  private RamseteCommand command;
+    private Drivetrain drivetrain;
 
-  public FollowSpline(Drivetrain drivetrain) {
-    this.drivetrain = drivetrain;
-  }
+    public FollowSpline(Drivetrain drivetrain) {
+        super();
 
-  @Override
-  public void initialize() {
-    double[] pid  = drivetrain.getPid();
+        this.drivetrain = drivetrain;
+    }
 
-    config = new TrajectoryConfig(3,3)
-    // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(drivetrain.DriveKinimatics)
-    // Apply the voltage constraint
-    .addConstraint(drivetrain.getVoltageConstraint());
+    @Override
+    public void initialize() {
+        double[] pid = drivetrain.getPid();
 
-    //scaled by 3 for testing so i dont break my walls
-    trajectory = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, new Rotation2d(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(
-          new Translation2d(1, 1).div(3),
-          new Translation2d(2, -1).div(3)
-      ),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(new Translation2d(3, 0).div(3), new Rotation2d(0)),
-      // Pass config
-      config
-    );
+        config = new TrajectoryConfig(2, 2)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(drivetrain.DriveKinimatics)
+            // Apply the voltage constraint
+            .addConstraint(drivetrain.getVoltageConstraint());
 
-    this.command = new RamseteCommand(
-      trajectory, 
-      drivetrain::getPose, 
-      //TODO make right
-      new RamseteController(2, 0.7), 
-      drivetrain.getFeedFoward(), 
-      drivetrain.DriveKinimatics, 
-      drivetrain::getWheelSpeeds, 
-      new PIDController(pid[0], pid[1], pid[2]), 
-      new PIDController(pid[0], pid[1], pid[2]), 
-      drivetrain::setMotorVolts, 
-      drivetrain);
+        // scaled by 3 for testing so i dont break my walls
+        trajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(3, 1).div(3), new Translation2d(6, -1).div(3)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(new Translation2d(9, 0).div(3), new Rotation2d(0)),
+            // Pass config
+            config);
 
-    drivetrain.setPose(trajectory.getInitialPose());
+        RamseteCommand command = new RamseteCommand(
+            trajectory, 
+            drivetrain::getPose,
+            // TODO make right
+            new RamseteController(2, 0.7), 
+            drivetrain.getFeedFoward(), 
+            drivetrain.DriveKinimatics,
+            drivetrain::getWheelSpeeds, 
+            new PIDController(pid[0], pid[1], pid[2]),
+            new PIDController(pid[0], pid[1], pid[2]), 
+            drivetrain::setMotorVolts, drivetrain
+        );
 
-    //this is biggest sin
-    command.initialize();
-  }
+        drivetrain.setPose(trajectory.getInitialPose());
 
-  @Override
-  public void execute() {
-    command.execute();
-  }
+        clearGroupedCommands();
+        addCommands(command);
 
-  @Override
-  public void end(boolean interrupted) {
-    command.end(interrupted);
-    drivetrain.setMotorVolts(0, 0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return command.isFinished();
-  }
-
+        super.initialize();
+    }
 }

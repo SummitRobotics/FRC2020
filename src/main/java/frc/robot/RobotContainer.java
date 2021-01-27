@@ -29,6 +29,7 @@ import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
+import frc.robot.commands.drivetrain.FollowSpline;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
@@ -146,19 +147,23 @@ public class RobotContainer {
             //these can both happen at the same time so we do want that to happen to save time
             new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             //for tuning turret pid
-            new InstantCommand(() -> turret.setDefaultCommand(new TurretToPosition(turret, 90)))
-            //sets the turret deafult command
-            // new InstantCommand(() -> {  
-            //     try{turret.getDefaultCommand().cancel();}
-            //     catch(NullPointerException e){}
-            //     if (launchpad.funLeft.get()) {
-            //         turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-            //     } else if (launchpad.funMiddle.get()) {
-            //         turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-            //     } else if (launchpad.funRight.get()) {
-            //         turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
-            //     }
-            // })
+            new TurretToPosition(turret, 90),
+            // sets the turret deafult command
+            new InstantCommand(() -> {  
+                try {
+                    turret.getDefaultCommand().cancel();
+                    System.out.println("yes default");
+                } catch(NullPointerException e) {
+                    System.out.println("no default ERREEEREREER");
+                }
+                if (launchpad.funLeft.get()) {
+                    turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+                } else if (launchpad.funMiddle.get()) {
+                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+                } else if (launchpad.funRight.get()) {
+                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+                }
+            })
             );
 
 
@@ -204,10 +209,14 @@ public class RobotContainer {
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
         launchpad.buttonC.pressBind();
 
-        launchpad.buttonD.whenPressed(
-            new InstantCommand(conveyor::toggleIntakeMode)
-        );
-        launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
+        // launchpad.buttonD.whenPressed(
+        //     new InstantCommand(conveyor::toggleIntakeMode)
+        // );
+        // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
+
+        Command testSpline = new FollowSpline(drivetrain);
+        launchpad.buttonD.whenPressed(testSpline);
+        launchpad.buttonD.commandBind(testSpline);
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -242,18 +251,18 @@ public class RobotContainer {
 
         // bindings for fun dial
 
-        // launchpad.funLeft.whenPressed(new InstantCommand(() -> {
-        //     turret.getDefaultCommand().cancel();
-        //     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
-        // }));
-        // launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
-        //     turret.getDefaultCommand().cancel();
-        //     turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
-        // }));
-        // launchpad.funRight.whenPressed(new InstantCommand(() -> {
-        //     turret.getDefaultCommand().cancel();
-        //     turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
-        // }));
+        launchpad.funLeft.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+        }));
+        launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+        }));
+        launchpad.funRight.whenPressed(new InstantCommand(() -> {
+            turret.getDefaultCommand().cancel();
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+        }));
 
         //Controller bindings for intake
         controller1.buttonX.whenPressed(up, false);
