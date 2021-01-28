@@ -1,6 +1,5 @@
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj.interfaces.Accelerometer.Range;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.hood.HoodDistanceAngler;
@@ -56,7 +55,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		badDistanceReadings = 0;
 
-		changeRateLimiter = new ChangeRateLimiter(turret.MAX_CHANGE_RATE);
+		changeRateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
 		turretDirection = true;
 

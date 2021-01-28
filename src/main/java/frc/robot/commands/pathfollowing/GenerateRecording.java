@@ -176,17 +176,17 @@ public class GenerateRecording extends CommandBase {
         recordOutput.setString("saved shift " + state);
     }
 
-    private void addShootPoint() throws IOException{
+    private void addShootPoint() throws IOException {
         return;
     }
 
-    private void addIntakePoint() throws IOException{
+    private void addIntakePoint() throws IOException {
         String state = intake.getState().toString();
         file.append("intake: " + state + "\n");
         recordOutput.setString("saved intake " + state);
     }
     
-    private void addDrivetrainPoint() throws IOException{
+    private void addDrivetrainPoint() throws IOException {
         double left = drivetrain.getLeftEncoderPosition();
         double right = drivetrain.getRightEncoderPosition();
 

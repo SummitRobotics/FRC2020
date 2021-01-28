@@ -60,7 +60,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		this.trigger = trigger;
 
-		limiter = new ChangeRateLimiter(turret.MAX_CHANGE_RATE);
+		limiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
 		startupSpinPrevention = true;
 

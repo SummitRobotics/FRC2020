@@ -1,7 +1,6 @@
 package frc.robot.oi.drivers;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.oi.inputs.OIAxis;
