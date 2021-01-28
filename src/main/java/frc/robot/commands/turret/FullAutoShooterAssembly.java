@@ -15,8 +15,8 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
-import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPriorities;
+import frc.robot.utilities.lists.Colors;
+import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 import frc.robot.utilities.Functions;
 

@@ -6,10 +6,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.lists.Colors;
+import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.Functions;
-import frc.robot.lists.Ports;
-import frc.robot.lists.StatusPrioritys;
+import frc.robot.utilities.lists.Ports;
+import frc.robot.utilities.lists.StatusPrioritys;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 
 /**

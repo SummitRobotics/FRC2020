@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
-import frc.robot.lists.Ports;
+import frc.robot.utilities.lists.Ports;
 
 /**
  * Subsystem to control the intake and its arm

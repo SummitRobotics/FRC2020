@@ -11,7 +11,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.lists.Ports;
+import frc.robot.utilities.lists.Ports;
 
 public class Pneumatics extends SubsystemBase {
   

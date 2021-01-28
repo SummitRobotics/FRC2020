@@ -12,7 +12,7 @@ import java.util.HashMap;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.lists.Colors;
+import frc.robot.utilities.lists.Colors;
 
 /**
  * Add your docs here.

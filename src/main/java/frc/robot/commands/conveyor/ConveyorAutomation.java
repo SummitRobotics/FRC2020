@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPriorities;
+import frc.robot.utilities.lists.Colors;
+import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.subsystems.Conveyor;
 
 public class ConveyorAutomation extends CommandBase {

@@ -5,20 +5,16 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.lists;
+package frc.robot.utilities.lists;
 
 /**
- * all the prioritys fro the leds
+ * all the prioritys for the status display
  */
-public class LEDPriorities {
-    public static final int
-    on = 0, 
+public class StatusPrioritys {
+    public static final int 
+    on = 0,
     enabled = 1,
-    intakeDown = 2,
-    shooterHasTarget = 3,
-    shooterReadyToFire = 4,
-    firing = 5,
-    lowGear = 6,
-    cpmUp = 7,
-    armsUp = 8;
+    badLidarReadings = 2,
+    shooterOver75 = 3;
+
 }

@@ -7,8 +7,8 @@ import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeArm.States;
-import frc.robot.lists.Colors;
-import frc.robot.lists.LEDPriorities;
+import frc.robot.utilities.lists.Colors;
+import frc.robot.utilities.lists.LEDPriorities;
 
 public class SetDown extends CommandBase {
 
