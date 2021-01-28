@@ -90,4 +90,13 @@ public class FollowSpline extends CommandBase {
     public boolean isFinished() {
         return command.isFinished();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+
+        if (interrupted) {
+            command.cancel();
+        }
+    }
 }
