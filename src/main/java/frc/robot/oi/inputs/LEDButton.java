@@ -1,4 +1,4 @@
-package frc.robot.oi;
+package frc.robot.oi.inputs;
 
 import java.util.function.BooleanSupplier;
 
@@ -12,7 +12,7 @@ public class LEDButton extends OIButton {
 		public void set(boolean state);
 	}
 
-	private Command controller;
+	protected Command controller;
 
 	public LEDButton(BooleanSupplier getter, LED led) {
 		super(getter);
@@ -21,6 +21,14 @@ public class LEDButton extends OIButton {
 			() -> led.set(true),
 			() -> led.set(false)
 		);
+	}
+
+	public LEDButton() {
+		super();
+	}
+
+	private void triggerBind(Trigger trigger) {
+		trigger.whileActiveOnce(controller);
 	}
 
 	public void toggleBind() {
@@ -37,9 +45,5 @@ public class LEDButton extends OIButton {
 
 	public void booleanSupplierBind(BooleanSupplier supplier) {
 		new Trigger(supplier).whileActiveContinuous(controller);
-	}
-
-	private void triggerBind(Trigger trigger) {
-		trigger.whileActiveOnce(controller);
 	}
 }

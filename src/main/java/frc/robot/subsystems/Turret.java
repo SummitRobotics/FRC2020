@@ -7,10 +7,10 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.oi.TurretIndicatorWidget;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
 import frc.robot.lists.Ports;
+import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 
 /**
  * Subsystem to control the turret
@@ -19,11 +19,11 @@ public class Turret extends SubsystemBase implements Homeable {
 
     private CANSparkMax turret;
     private CANEncoder encoder;
-    private TurretIndicatorWidget indicator;
+    private DoubleDisplayWidget indicator;
 
     public static final double MAX_CHANGE_RATE = 0.025;
 
-    public Turret(TurretIndicatorWidget indicator) {
+    public Turret(DoubleDisplayWidget indicator) {
         this.indicator = indicator;
 
         this.turret = new CANSparkMax(Ports.TURRET, MotorType.kBrushless);

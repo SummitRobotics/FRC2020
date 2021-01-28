@@ -15,11 +15,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.oi.HoodIndicatorWidget;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
 import frc.robot.devices.Lemonlight;
 import frc.robot.lists.Ports;
+import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 
 /**
  * Add your docs here.
@@ -28,14 +28,14 @@ public class Hood extends SubsystemBase implements Homeable{
 
     private CANSparkMax adjustableHood;
     private CANEncoder hoodEncoder;
-    private HoodIndicatorWidget indicator;
+    private DoubleDisplayWidget indicator;
 
     //WRONG ANGLE
     private double LidarMountAngle = Lemonlight.mountAngle;
     //this is in cm
     private double TargetHeight = 269 - Lemonlight.mountHeight;
 
-    public Hood(HoodIndicatorWidget indicator){
+    public Hood(DoubleDisplayWidget indicator){
 
         this.indicator = indicator;
 

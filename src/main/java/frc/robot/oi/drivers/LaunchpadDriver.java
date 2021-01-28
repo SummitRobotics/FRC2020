@@ -1,10 +1,12 @@
-package frc.robot.oi;
-
-import frc.robot.oi.LEDButton.LED;
+package frc.robot.oi.drivers;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.hal.HAL;
+import frc.robot.oi.inputs.LEDButton;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
+import frc.robot.oi.inputs.LEDButton.LED;
 
 /**
  * Wrappper class for the TI Launchpad in mode 1

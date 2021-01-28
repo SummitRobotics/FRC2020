@@ -9,82 +9,90 @@ package frc.robot.commands.homing;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utilities.Homeable;
-
-import frc.robot.utilities.RollingAverageNoFill;
+import frc.robot.utilities.RollingAverage;
 
 public class HomeByCurrent extends CommandBase {
 
-  private boolean setlimits;
+    private boolean setlimits;
 
-  private Homeable toHome;
-  private double homingPower;
-  private double CurrentThreshold;
-  private double reversLimit;
-  private double fowardLimit;
- 
-  private RollingAverageNoFill curentAvrage = new RollingAverageNoFill(5);
+    private Homeable toHome;
+    private double homingPower;
+    private double CurrentThreshold;
+    private double reverseLimit;
+    private double fowardLimit;
 
-  /**
-   * Creates a new HomeByCurrent.
-   */
-  public HomeByCurrent(Homeable toHome, double homingPower, double CurrentThreshold) {
-      setlimits = false;
-      this.toHome = toHome;
-      this.homingPower = homingPower;
-      this.CurrentThreshold = CurrentThreshold;
-      addRequirements(toHome.getSubsystemObject());
-  }
+    private RollingAverage currentAverage = new RollingAverage(5, false);
 
-  public HomeByCurrent(Homeable toHome, double homingPower, double CurrentThreshold, double reversLimit, double fowardLimit){
-    setlimits = true;
-    this.toHome = toHome;
-    this.homingPower = homingPower;
-    this.CurrentThreshold = CurrentThreshold;
-    this.reversLimit = reversLimit;
-    this.fowardLimit = fowardLimit;
-    addRequirements(toHome.getSubsystemObject());
-}
+    /**
+     * Creates a new HomeByCurrent.
+     */
+    public HomeByCurrent(Homeable toHome, double homingPower, double CurrentThreshold) {
+        this.toHome = toHome;
+        this.homingPower = homingPower;
+        this.CurrentThreshold = CurrentThreshold;
 
+        setlimits = false;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    //System.out.println("running");
-    toHome.DisableSoftLimits();
-  }
-
-  //needed beacuse command groups are dumb
-  public HomeByCurrent getDuplicate(){
-    if(setlimits){
-      return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reversLimit, fowardLimit);
+        addRequirements(toHome.getSubsystemObject());
     }
-    else return new HomeByCurrent(toHome, homingPower, CurrentThreshold);
-  }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    //System.out.println("homing curent: " + toHome.getCurrent());
-    toHome.setHomingPower(homingPower);
-    curentAvrage.update(toHome.getCurrent());
-  }
+    public HomeByCurrent(
+        Homeable toHome, 
+        double homingPower, 
+        double CurrentThreshold, 
+        double reversLimit,
+        double fowardLimit
+    ) {
+        this.toHome = toHome;
+        this.homingPower = homingPower;
+        this.CurrentThreshold = CurrentThreshold;
+        this.reverseLimit = reversLimit;
+        this.fowardLimit = fowardLimit;
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    toHome.setHomingPower(0);
-    if(!interrupted){
-      toHome.setHome(0);
-      if(setlimits){
-        toHome.setSoftLimits(reversLimit, fowardLimit);
-        toHome.EnableSoftLimits();
-      }
+        setlimits = true;
+
+        addRequirements(toHome.getSubsystemObject());
     }
-  }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return (curentAvrage.getAverage() >= CurrentThreshold);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        // System.out.println("running");
+        toHome.DisableSoftLimits();
+    }
+
+    // needed beacuse command groups are dumb
+    public HomeByCurrent getDuplicate() {
+        if (setlimits) {
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit);
+        } else
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold);
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        // System.out.println("homing curent: " + toHome.getCurrent());
+        toHome.setHomingPower(homingPower);
+        currentAverage.update(toHome.getCurrent());
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        toHome.setHomingPower(0);
+        if (!interrupted) {
+            toHome.setHome(0);
+            if (setlimits) {
+                toHome.setSoftLimits(reverseLimit, fowardLimit);
+                toHome.EnableSoftLimits();
+            }
+        }
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return (currentAverage.getAverage() >= CurrentThreshold);
+    }
 }

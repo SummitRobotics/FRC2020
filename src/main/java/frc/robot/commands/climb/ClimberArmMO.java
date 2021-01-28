@@ -1,6 +1,6 @@
 package frc.robot.commands.climb;
 
-import frc.robot.oi.OIAxis;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.utilities.MOCommand;
 

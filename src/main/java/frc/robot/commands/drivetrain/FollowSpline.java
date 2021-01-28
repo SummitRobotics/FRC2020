@@ -25,18 +25,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 
 //this is REAL bad
-public class FollowSpline extends SequentialCommandGroup {
+public class FollowSpline extends CommandBase {
 
     private TrajectoryConfig config;
-
     private Trajectory trajectory;
-
     private Drivetrain drivetrain;
+
+    private RamseteCommand command;
 
     public FollowSpline(Drivetrain drivetrain) {
         super();
 
         this.drivetrain = drivetrain;
+        addRequirements(drivetrain);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class FollowSpline extends SequentialCommandGroup {
             // Pass config
             config);
 
-        RamseteCommand command = new RamseteCommand(
+        command = new RamseteCommand(
             trajectory, 
             drivetrain::getPose,
             // TODO make right
@@ -75,9 +76,18 @@ public class FollowSpline extends SequentialCommandGroup {
 
         drivetrain.setPose(trajectory.getInitialPose());
 
-        clearGroupedCommands();
-        addCommands(command);
-
         super.initialize();
+    }
+
+    @Override
+    public void execute() {
+        super.execute();
+
+        command.execute();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return command.isFinished();
     }
 }

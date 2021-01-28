@@ -1,6 +1,6 @@
 package frc.robot.commands.conveyor;
 
-import frc.robot.oi.OIAxis;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.utilities.MOCommand;
 

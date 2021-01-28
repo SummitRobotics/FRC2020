@@ -6,11 +6,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.oi.StatusDisplay;
 import frc.robot.lists.Colors;
 import frc.robot.utilities.Functions;
 import frc.robot.lists.Ports;
 import frc.robot.lists.StatusPrioritys;
+import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 
 /**
  * Subsystem to control the shooter
@@ -21,10 +21,10 @@ public class Shooter extends SubsystemBase {
     private TalonFXSensorCollection shooterEncoder;
     private NetworkTableEntry speed;
     private NetworkTableEntry temp;
-    private StatusDisplay status;
+    private StatusDisplayWidget status;
     private boolean overTempStatus;
 
-    public Shooter(NetworkTableEntry speed, NetworkTableEntry temp, StatusDisplay status) {
+    public Shooter(NetworkTableEntry speed, NetworkTableEntry temp, StatusDisplayWidget status) {
         this.speed = speed;
         this.temp = temp;
         this.status = status;

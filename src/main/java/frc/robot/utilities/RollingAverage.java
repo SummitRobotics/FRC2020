@@ -9,13 +9,18 @@ public class RollingAverage {
 
     private Double[] rollingAverageArray;
     private int rollingTarget;
+    private boolean initialized;
+    private boolean fill;
 
     /**
      * creates new rollingavrage
      * @param size the number of values you want to avrage
      */
-    public RollingAverage(int size) {
+    public RollingAverage(int size, boolean fill) {
         rollingAverageArray = new Double[size];
+
+        initialized = false;
+        this.fill = fill;
     }
 
     /**
@@ -24,8 +29,12 @@ public class RollingAverage {
      * @param value the new value
      */
     public void update(double value) {
-        if (rollingAverageArray[rollingTarget] == null) {
-            Arrays.fill(rollingAverageArray, value);
+        if (!initialized) {
+            if (fill) {
+                Arrays.fill(rollingAverageArray, value);
+            } else {
+                Arrays.fill(rollingAverageArray, 0);
+            }
         } else {
             rollingAverageArray[rollingTarget] = value;
         }

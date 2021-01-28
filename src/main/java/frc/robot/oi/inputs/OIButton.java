@@ -1,4 +1,4 @@
-package frc.robot.oi;
+package frc.robot.oi.inputs;
 
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
@@ -11,25 +11,18 @@ import frc.robot.utilities.Usable;
  */
 public class OIButton extends Button implements Usable {
 
-    private BooleanSupplier getter;
-
     private ArrayList<Object> users;
 
     public OIButton(BooleanSupplier getter) {
-        super();
-
-        this.getter = getter;
+        super(getter);
 
         users = new ArrayList<>();
     }
 
-    /**
-     * Gets the button value
-     * @return the button value
-     */
-    @Override
-    public boolean get() {
-        return getter.getAsBoolean();
+    public OIButton() {
+        super();
+
+        users = new ArrayList<>();
     }
 
     @Override

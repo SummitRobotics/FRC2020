@@ -1,9 +1,11 @@
-package frc.robot.oi;
+package frc.robot.oi.drivers;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 
 public abstract class GenericDriver {
 

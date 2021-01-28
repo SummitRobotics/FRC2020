@@ -10,7 +10,6 @@ import frc.robot.devices.Lidar;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.oi.StatusDisplay;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
@@ -18,6 +17,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.lists.Colors;
 import frc.robot.lists.LEDPriorities;
+import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 import frc.robot.utilities.Functions;
 
 /**
@@ -25,7 +25,7 @@ import frc.robot.utilities.Functions;
  */
 public class FullAutoShooterAssembly extends CommandBase {
 
-	private StatusDisplay status;
+	private StatusDisplayWidget status;
 	private Lidar lidar;
 	private Lemonlight limeLight;
 	private Conveyor conveyor;
@@ -47,7 +47,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 	private boolean targetLEDCall;
 	private boolean shootLEDCall;
 
-	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, Lemonlight limelight, Lidar lidar, StatusDisplay status) {
+	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, Lemonlight limelight, Lidar lidar, StatusDisplayWidget status) {
 		this.status = status;
 		this.limeLight = limelight;
 		this.lidar = lidar;

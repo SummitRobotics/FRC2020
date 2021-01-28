@@ -1,7 +1,7 @@
 package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.oi.OIAxis;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.ClimberArm;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.RollingAverage;
@@ -25,7 +25,7 @@ public class TrimArm extends CommandBase {
 		this.arm = arm;
 		this.slider = slider;
 
-		average = new RollingAverage(8); //Rolling average to increase slider precision
+		average = new RollingAverage(8, true); //Rolling average to increase slider precision
 
 		addRequirements(arm);
 	}

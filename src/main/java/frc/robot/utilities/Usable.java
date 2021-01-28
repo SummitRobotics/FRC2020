@@ -1,7 +1,7 @@
 package frc.robot.utilities;
 
 /**
- * interface for makign a button or axis usable for moes
+ * interface for making a button or axis usable for MOes
  */
 public interface Usable {
 	public void using(Object user);

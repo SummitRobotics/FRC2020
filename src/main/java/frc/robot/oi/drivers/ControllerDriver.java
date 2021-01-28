@@ -1,9 +1,11 @@
-package frc.robot.oi;
+package frc.robot.oi.drivers;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 
 /**
  * Wrapper class for XBox controllers

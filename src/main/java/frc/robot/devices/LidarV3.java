@@ -18,7 +18,7 @@ public class LidarV3 implements Lidar {
         m_port = (byte) Port.kOnboard.value;
 		I2CJNI.i2CInitialize(m_port);
 
-		rollingAverage = new RollingAverage(50);
+		rollingAverage = new RollingAverage(50, true);
     }
     
     private static final byte k_deviceAddress = 0x62;

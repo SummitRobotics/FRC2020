@@ -1,4 +1,4 @@
-package frc.robot.oi;
+package frc.robot.oi.inputs;
 
 import java.util.ArrayList;
 import java.util.function.DoubleSupplier;

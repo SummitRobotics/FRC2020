@@ -14,16 +14,16 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import frc.robot.oi.ControllerDriver;
-import frc.robot.oi.JoystickDriver;
-import frc.robot.oi.LaunchpadDriver;
-import frc.robot.oi.shufHELLboardDriver;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.lists.Colors;
 import frc.robot.lists.LEDPriorities;
 import frc.robot.lists.Ports;
 import frc.robot.lists.StatusPrioritys;
+import frc.robot.oi.drivers.ControllerDriver;
+import frc.robot.oi.drivers.JoystickDriver;
+import frc.robot.oi.drivers.LaunchpadDriver;
+import frc.robot.oi.drivers.ShufhellboardDriver;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
@@ -60,7 +60,6 @@ public class RobotContainer {
     private CommandScheduler scheduler;
 
     private ControllerDriver controller1;
-    private shufHELLboardDriver shufHELLboard;
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
@@ -96,12 +95,11 @@ public class RobotContainer {
         scheduler = CommandScheduler.getInstance();
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
-        shufHELLboard = new shufHELLboardDriver();
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
         LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
-        shufHELLboard.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
+        ShufhellboardDriver.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
 
         gyro = new AHRS();
         limelight = new Lemonlight();
@@ -111,15 +109,15 @@ public class RobotContainer {
         pdp = new PowerDistributionPanel();
 
         //our subsystems
-        pneumatics = new Pneumatics(shufHELLboard.pressure);
+        pneumatics = new Pneumatics(ShufhellboardDriver.pressure);
         shifter = new Shifter();
         conveyor = new Conveyor();
         intakeArm = new IntakeArm();
-        shooter = new Shooter(shufHELLboard.shooterSpeed, shufHELLboard.shooterTemp, shufHELLboard.statusDisplay);
-        hood = new Hood(shufHELLboard.hoodIndicator);
+        shooter = new Shooter(ShufhellboardDriver.shooterSpeed, ShufhellboardDriver.shooterTemp, ShufhellboardDriver.statusDisplay);
+        hood = new Hood(ShufhellboardDriver.hoodIndicator);
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
-        turret = new Turret(shufHELLboard.turretIndicator);
+        turret = new Turret(ShufhellboardDriver.turretIndicator);
         climberPneumatics = new ClimberPneumatics();
         drivetrain = new Drivetrain(gyro, () -> shifter.getShiftState());
 
@@ -134,7 +132,7 @@ public class RobotContainer {
 
 
         teleInit = new SequentialCommandGroup(
-            new InstantCommand(() -> shufHELLboard.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
+            new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
@@ -159,9 +157,9 @@ public class RobotContainer {
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
                 } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay));
                 }
             })
             );
@@ -174,8 +172,11 @@ public class RobotContainer {
 
     private void setDefaultCommands() {
         // drive by controler
-        drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, controller1.rightTrigger,
-                controller1.leftTrigger, controller1.leftX));
+        drivetrain.setDefaultCommand(new ArcadeDrive(
+            drivetrain, 
+            controller1.rightTrigger,
+            controller1.leftTrigger, 
+            controller1.leftX));
 
         // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
@@ -192,8 +193,15 @@ public class RobotContainer {
         //controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
         
         //climb
-        launchpad.missileA.whenPressed(new ClimbSequence(leftArm, rightArm, climberPneumatics, launchpad.axisA,
-        launchpad.axisB, launchpad.missileA, launchpad.bigLEDGreen, launchpad.bigLEDRed));
+        launchpad.missileA.whenPressed(new ClimbSequence(
+            leftArm, 
+            rightArm, 
+            climberPneumatics, 
+            launchpad.axisA,
+            launchpad.axisB, 
+            launchpad.missileA, 
+            launchpad.bigLEDGreen, 
+            launchpad.bigLEDRed));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
@@ -224,11 +232,11 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
-        shufHELLboard.homeTurret.whenPressed(HomeTurret);
-        shufHELLboard.homeTurret.commandBind(HomeTurret);
+        ShufhellboardDriver.homeTurret.whenPressed(HomeTurret);
+        ShufhellboardDriver.homeTurret.commandBind(HomeTurret);
 
-        shufHELLboard.homeHood.whenPressed(HomeHood);
-        shufHELLboard.homeHood.commandBind(HomeHood);
+        ShufhellboardDriver.homeHood.whenPressed(HomeHood);
+        ShufhellboardDriver.homeHood.commandBind(HomeHood);
 
         //intake arm
 
@@ -257,11 +265,11 @@ public class RobotContainer {
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay, joystick.axisX, joystick.trigger));
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, shufHELLboard.statusDisplay));
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay));
         }));
 
         //Controller bindings for intake
@@ -286,7 +294,7 @@ public class RobotContainer {
     public void disabledInit(){
         LEDs.getInstance().removeAllCalls();
         LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
-        shufHELLboard.statusDisplay.removeStatus("enabled");
+        ShufhellboardDriver.statusDisplay.removeStatus("enabled");
     }
 
     public void telyopPeriodic(){

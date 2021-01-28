@@ -3,9 +3,9 @@ package frc.robot.commands.turret;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.oi.OIAxis;
-import frc.robot.oi.OIButton;
-import frc.robot.oi.StatusDisplay;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
+import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
@@ -29,18 +29,18 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
     private SimpleButton simpleTrigger;
 
 	public SemiAutoShooterAssembly
-		(
-			Turret turret, 
-			Shooter shooter, 
-			Hood hood, 
-			Conveyor conveyor, 
-			Lemonlight limelight, 
-			Lidar lidar,
-			StatusDisplay status,
-			OIAxis controlAxis,
-			OIButton trigger
-		) {
-            super(turret, shooter, hood, conveyor, limelight, lidar, status);
+    (
+        Turret turret, 
+        Shooter shooter, 
+        Hood hood, 
+        Conveyor conveyor, 
+        Lemonlight limelight, 
+        Lidar lidar,
+        StatusDisplayWidget status,
+        OIAxis controlAxis,
+        OIButton trigger
+    ) {
+        super(turret, shooter, hood, conveyor, limelight, lidar, status);
 
 		simpleTrigger = new SimpleButton(trigger);
         rateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);

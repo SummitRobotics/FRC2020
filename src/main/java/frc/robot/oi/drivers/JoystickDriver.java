@@ -1,4 +1,7 @@
-package frc.robot.oi;
+package frc.robot.oi.drivers;
+
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 
 /**
  * Wrapper class for basic joystick functionality

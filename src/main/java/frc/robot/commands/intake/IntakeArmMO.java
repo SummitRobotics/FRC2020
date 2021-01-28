@@ -1,8 +1,7 @@
 package frc.robot.commands.intake;
 
-
-import frc.robot.oi.OIAxis;
-import frc.robot.oi.OIButton;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.utilities.MOCommand;
 
