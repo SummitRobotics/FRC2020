@@ -152,7 +152,7 @@ public class Hood extends SubsystemBase implements Homeable{
 
      @Override
      public void periodic() {
-         indicator.SetValue(getAngle());
+         indicator.setValue(getAngle());
      }
 
 

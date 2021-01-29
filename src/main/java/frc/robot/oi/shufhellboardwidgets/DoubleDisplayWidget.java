@@ -18,7 +18,7 @@ public class DoubleDisplayWidget {
     /**
      * @param value the value that the diplay should show
      */
-    public void SetValue(double value){
+    public void setValue(double value){
         entry.setDouble(value);
     }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -28,9 +29,12 @@ public class Shooter extends SubsystemBase {
         this.speed = speed;
         this.temp = temp;
         this.status = status;
+
         shooterMotor = new TalonFX(Ports.SHOOTER);
         shooterEncoder = new TalonFXSensorCollection(shooterMotor);
         overTempStatus = false;
+
+        shooterMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 60, 60, 4));
     }
 
     /**

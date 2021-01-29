@@ -21,7 +21,7 @@ public class HomeByCurrent extends CommandBase {
     private double reverseLimit;
     private double fowardLimit;
 
-    private RollingAverage currentAverage = new RollingAverage(5, false);
+    private RollingAverage currentAverage = new RollingAverage(10, false);
 
     /**
      * Creates a new HomeByCurrent.
@@ -81,6 +81,7 @@ public class HomeByCurrent extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         toHome.setHomingPower(0);
+        System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " ended with intrupted "+ interrupted);
         if (!interrupted) {
             toHome.setHome(0);
             if (setlimits) {
@@ -93,6 +94,12 @@ public class HomeByCurrent extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (currentAverage.getAverage() >= CurrentThreshold);
+        double curretn = currentAverage.getAverage();
+        System.out.println("current is " + curretn);
+        boolean done = curretn >= CurrentThreshold;
+        if(done){
+            System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " is done");
+        }
+        return done;
     }
 }

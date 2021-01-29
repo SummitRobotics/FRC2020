@@ -116,7 +116,7 @@ public class RobotContainer {
         drivetrain = new Drivetrain(gyro, () -> shifter.getShiftState());
 
         
-        HomeTurret = new HomeByCurrent(turret, -.2, 25, 2, 27);
+        HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
         HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
@@ -219,6 +219,7 @@ public class RobotContainer {
         Command testSpline = new FollowSpline(drivetrain);
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
+        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();

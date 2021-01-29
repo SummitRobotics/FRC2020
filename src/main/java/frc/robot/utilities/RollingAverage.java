@@ -33,8 +33,10 @@ public class RollingAverage {
             if (fill) {
                 Arrays.fill(rollingAverageArray, value);
             } else {
-                Arrays.fill(rollingAverageArray, 0);
+                Arrays.fill(rollingAverageArray, 0.0);
             }
+
+            initialized = true;
         } else {
             rollingAverageArray[rollingTarget] = value;
         }

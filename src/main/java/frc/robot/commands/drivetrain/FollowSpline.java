@@ -38,7 +38,7 @@ public class FollowSpline extends CommandBase {
     public void initialize() {
         double[] pid = drivetrain.getPid();
 
-        config = new TrajectoryConfig(2, 2)
+        config = new TrajectoryConfig(2.5, 2.5)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(drivetrain.DriveKinimatics)
             // Apply the voltage constraint
@@ -70,13 +70,11 @@ public class FollowSpline extends CommandBase {
 
         drivetrain.setPose(trajectory.getInitialPose());
 
-        super.initialize();
+        command.initialize();
     }
 
     @Override
     public void execute() {
-        super.execute();
-
         command.execute();
     }
 
@@ -87,8 +85,6 @@ public class FollowSpline extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
-
         if (interrupted) {
             command.cancel();
         }
