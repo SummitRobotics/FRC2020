@@ -57,6 +57,8 @@ public class HomeByCurrent extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        currentAverage.reset();
+
         // System.out.println("running");
         toHome.DisableSoftLimits();
     }
@@ -94,10 +96,9 @@ public class HomeByCurrent extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        double curretn = currentAverage.getAverage();
-        System.out.println("current is " + curretn);
-        boolean done = curretn >= CurrentThreshold;
-        if(done){
+        double current = currentAverage.getAverage();
+        boolean done = current >= CurrentThreshold;
+        if (done ){
             System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " is done");
         }
         return done;

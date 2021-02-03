@@ -76,8 +76,10 @@ public abstract class VisionTarget extends CommandBase {
 	}
 
 	public void end(boolean interrupted) {
-		limelight.setLEDMode(LEDModes.FORCE_OFF);
+        pidController.reset();
 		pidController.close();
+
+		limelight.setLEDMode(LEDModes.FORCE_OFF);
 	}
 
 	public boolean isFinished() {

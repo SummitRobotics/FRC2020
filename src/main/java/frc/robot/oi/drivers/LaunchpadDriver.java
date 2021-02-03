@@ -77,9 +77,9 @@ public class LaunchpadDriver extends GenericDriver {
 
         reee = getAxisGetter(2);
 
-        funLeft = generateATDButton(2, -1.0, -0.33);
-        funMiddle = generateATDButton(2, -0.33, 0.33);
-        funRight = generateATDButton(2, 0.33, 1.0);
+        funLeft = generateATDRangeButton(2, -1.0, -0.95);
+        funMiddle = generateATDRangeButton(2, -0.03, 0.03);
+        funRight = generateATDRangeButton(2, 0.95, 1.0);
 
         axisC = generateOIAxis(3);
         axisD = generateOIAxis(4);
@@ -100,7 +100,7 @@ public class LaunchpadDriver extends GenericDriver {
         return (boolean state) -> setOutput(output, state);
     }
 
-    private OIButton generateATDButton(int output, double min, double max) {
+    private OIButton generateATDRangeButton(int output, double min, double max) {
         DoubleSupplier axis = getAxisGetter(output);
         return new OIButton(() -> {
             double value = axis.getAsDouble();

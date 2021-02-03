@@ -8,6 +8,7 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
@@ -26,7 +27,7 @@ public class TurretToPosition extends CommandBase {
         this.turret = turret;
         target = targetAngle;
         // WRONG make good
-        pid = new PIDController(0.02, 0.01, 0.0005);
+        pid = new PIDController(0.024, 0.0, 0.0009);
         pid.setTolerance(.75, 1);
         // SmartDashboard.putData(pid);
     }
@@ -46,8 +47,10 @@ public class TurretToPosition extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        turret.stop();
+        pid.reset();
         pid.close();
+
+        turret.stop();
     }
 
     // Returns true when the command should end.

@@ -63,6 +63,9 @@ public class SpoolOnTarget extends CommandBase {
 
 	@Override
 	public void end(boolean interupted) {
+        pid.reset();
+        pid.close();
+
 		shooter.stop();
 	}
 

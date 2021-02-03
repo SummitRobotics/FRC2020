@@ -46,6 +46,9 @@ public class HoodDistanceAngler extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        pid.reset();
+        pid.close();
+
         hood.stop();
     }
 

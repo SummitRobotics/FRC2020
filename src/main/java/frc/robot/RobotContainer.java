@@ -27,6 +27,8 @@ import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.FollowSpline;
 import frc.robot.commands.homing.HomeByCurrent;
+import frc.robot.commands.homing.HomeByEncoder;
+import frc.robot.commands.hood.HoodToAngle;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -79,7 +81,7 @@ public class RobotContainer {
     private Command autoInit;
     private Command teleInit;
 
-    private HomeByCurrent HomeTurret;
+    private HomeByEncoder HomeTurret;
     private HomeByCurrent HomeHood;
 
     /**
@@ -93,7 +95,7 @@ public class RobotContainer {
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
         LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
-        ShufhellboardDriver.statusDisplay.addStatus("deafult", "robot on", Colors.White, StatusPrioritys.on);
+        ShufhellboardDriver.statusDisplay.addStatus("default", "robot on", Colors.White, StatusPrioritys.on);
 
         gyro = new AHRS();
         limelight = new Lemonlight();
@@ -116,8 +118,10 @@ public class RobotContainer {
         drivetrain = new Drivetrain(gyro, () -> shifter.getShiftState());
 
         
-        HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
+        //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
         HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
+
+        HomeTurret = new HomeByEncoder(turret, -0.2, 5, 2, 20);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
@@ -139,14 +143,14 @@ public class RobotContainer {
             //these can both happen at the same time so we do want that to happen to save time
             new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             //for tuning turret pid
-            new TurretToPosition(turret, 90),
-            // sets the turret deafult command
+            new HoodToAngle(hood, 20),
+            // sets the turret default command
             new InstantCommand(() -> {  
                 try {
                     turret.getDefaultCommand().cancel();
                     System.out.println("yes default");
                 } catch(NullPointerException e) {
-                    System.out.println("no default ERREEEREREER");
+                    System.out.println("no default reeeeee");
                 }
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));

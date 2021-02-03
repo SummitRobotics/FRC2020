@@ -23,6 +23,14 @@ public class RollingAverage {
         this.fill = fill;
     }
 
+    public void set(double value) {
+        Arrays.fill(rollingAverageArray, value);
+    }
+
+    public void reset() {
+        set(0);
+    }
+
     /**
      * Adds a new value to the average
      * 
@@ -30,13 +38,10 @@ public class RollingAverage {
      */
     public void update(double value) {
         if (!initialized) {
-            if (fill) {
-                Arrays.fill(rollingAverageArray, value);
-            } else {
-                Arrays.fill(rollingAverageArray, 0.0);
-            }
+            set(fill? value: 0.0);
 
             initialized = true;
+            
         } else {
             rollingAverageArray[rollingTarget] = value;
         }
