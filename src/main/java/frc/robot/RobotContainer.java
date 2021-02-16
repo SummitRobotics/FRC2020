@@ -121,7 +121,7 @@ public class RobotContainer {
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
         HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 5, 2, 27);
+        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27);
 
         // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
         //         new InstantCommand(shifter::lowGear));
