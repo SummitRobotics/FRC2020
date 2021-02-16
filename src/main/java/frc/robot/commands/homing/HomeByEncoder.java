@@ -12,13 +12,13 @@ public class HomeByEncoder extends CommandBase {
     private boolean setlimits;
     private Homeable toHome;
     private double homingPower;
-    private double minLoops;
+    private int minLoops;
     private double reverseLimit;
     private double fowardLimit;
 
     private int loops;
 
-    public HomeByEncoder(Homeable toHome, double homingPower, double minLoops) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
@@ -30,7 +30,7 @@ public class HomeByEncoder extends CommandBase {
         addRequirements(toHome.getSubsystemObject());
     }
 
-    public HomeByEncoder(Homeable toHome, double homingPower, double minLoops, double reverseLimit, double fowardLimit) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
@@ -81,12 +81,14 @@ public class HomeByEncoder extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        boolean done = (loops > minLoops) && Math.abs(toHome.getVelocity()) < 1;
+        double v = toHome.getVelocity();
+
+        boolean done = (loops > minLoops) && (Math.abs(v) < 1);
         
         if (done) {
             System.out.println("homing of " + 
             toHome.getSubsystemObject().getClass().getCanonicalName() + 
-            " is done");
+            " is done with " + loops + " loops and a velocity of " + v + " rpm" );
         }
         return done;
     }

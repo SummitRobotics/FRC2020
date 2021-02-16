@@ -27,8 +27,10 @@ public class ConveyorAutomation extends CommandBase {
 
 	@Override
 	public void execute() {
-		double power = 0;
-		
+        double power = 0;
+        
+        System.out.println(shootModeLED);
+
 		/**
 		 * Sets the conveyors power based on its state. Shoot mode overrides intake mode
 		 */
@@ -37,19 +39,19 @@ public class ConveyorAutomation extends CommandBase {
 				power = Conveyor.SHOOT_POWER;
 				if(!shootModeLED){
 					shootModeLED = true;
-					LEDs.getInstance().addCall("convayerShoot", new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off));
+					LEDs.getInstance().addCall("conveyorShoot", new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off));
 				}
 				break;
 			case INTAKE: 
 				power = intake();
 				if(shootModeLED){
-					LEDs.getInstance().removeCall("convayerShoot");
+					LEDs.getInstance().removeCall("conveyorShoot");
 				}
 				break;
 			case OFF: 
 				power = 0;
 				if(shootModeLED){
-					LEDs.getInstance().removeCall("convayerShoot");
+					LEDs.getInstance().removeCall("conveyorShoot");
 				}
 				break;
 		}
@@ -65,7 +67,7 @@ public class ConveyorAutomation extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		if(shootModeLED){
-			LEDs.getInstance().removeCall("convayerShoot");
+			LEDs.getInstance().removeCall("conveyorShoot");
 		}
 		conveyor.stop();
 	}
