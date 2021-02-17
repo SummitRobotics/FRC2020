@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,6 +40,7 @@ public class ClimberArm extends SubsystemBase {
         this.side = side;
         motor = new CANSparkMax(side.motorPort, MotorType.kBrushless);
         motor.setInverted(side.inverted);
+        motor.setIdleMode(IdleMode.kBrake);
 
         encoder = motor.getEncoder();
         pidController = motor.getPIDController();

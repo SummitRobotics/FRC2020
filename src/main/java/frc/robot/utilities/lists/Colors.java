@@ -21,8 +21,8 @@ public class Colors {
     public static final Color8Bit Green = new Color8Bit(0,255,0);
     public static final Color8Bit DimGreen = new Color8Bit(0,80,0);
     public static final Color8Bit Blue = new Color8Bit(0,0,255);
-    public static final Color8Bit Yellow = new Color8Bit(Color.kYellow);
-    public static final Color8Bit Orange = new Color8Bit(Color.kDarkOrange);
-    public static final Color8Bit Purple = new Color8Bit(Color.kPurple);
+    public static final Color8Bit Yellow = new Color8Bit(255,255,0);
+    public static final Color8Bit Orange = new Color8Bit(255,140,0);
+    public static final Color8Bit Purple = new Color8Bit(128,0,128);
     //add more as we make them
 }
