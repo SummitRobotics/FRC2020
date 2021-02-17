@@ -70,6 +70,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 			public void end(boolean interrupted) {
 				super.end(interrupted);
 
+				System.out.println("climber interupted is: " + interrupted);
+
 				LEDs.getInstance().removeCall("ArmsUp");
 
 				if (!interrupted) {

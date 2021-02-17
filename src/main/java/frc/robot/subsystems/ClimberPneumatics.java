@@ -24,6 +24,7 @@ public class ClimberPneumatics extends SubsystemBase {
     }
 
     public void retractClimb() {
+        System.out.println("climb retracted");
         climbState = false;
         climb.set(false);
     }
