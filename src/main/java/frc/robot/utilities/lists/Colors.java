@@ -7,7 +7,6 @@
 
 package frc.robot.utilities.lists;
 
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**

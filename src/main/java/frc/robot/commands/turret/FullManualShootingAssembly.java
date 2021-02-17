@@ -101,12 +101,13 @@ public class FullManualShootingAssembly extends CommandBase {
 			}
 			
 			if (!startupSpinPrevention) {
-				if(shooterPower > 0.1 && !ledON){
+				if((shooterPower > 0.1) && !ledON){
 					LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
+					ledON = true;
 				}
-				else if(ledON){
-					ledON = false;
+				if(ledON && (shooterPower < 0.1)){
 					LEDs.getInstance().removeCall("manualShoot");
+					ledON = false;
 				}
 
                 shooter.setPower(shooterPower);
@@ -135,6 +136,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		if(ledON){
 			LEDs.getInstance().removeCall("manualShoot");
+			ledON = false;
 		}
 		
 	}

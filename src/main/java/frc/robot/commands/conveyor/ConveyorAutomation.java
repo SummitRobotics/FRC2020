@@ -45,12 +45,14 @@ public class ConveyorAutomation extends CommandBase {
 			case INTAKE: 
 				power = intake();
 				if(shootModeLED){
+					shootModeLED = false;
 					LEDs.getInstance().removeCall("conveyorShoot");
 				}
 				break;
 			case OFF: 
 				power = 0;
 				if(shootModeLED){
+					shootModeLED = false;
 					LEDs.getInstance().removeCall("conveyorShoot");
 				}
 				break;
@@ -67,6 +69,7 @@ public class ConveyorAutomation extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		if(shootModeLED){
+			shootModeLED = false;
 			LEDs.getInstance().removeCall("conveyorShoot");
 		}
 		conveyor.stop();
