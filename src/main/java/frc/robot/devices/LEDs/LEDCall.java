@@ -83,8 +83,8 @@ public class LEDCall {
         return new LEDCall(priority, range) {
             @Override
             public Color8Bit getColor(int loop, int led) {
-                int time = loop % 20;
-                if (time < 10) {
+                int time = loop % 14;
+                if (time < 7) {
                     return onColor;
 
                 } else {
@@ -109,16 +109,16 @@ public class LEDCall {
                     startLoop = loop;
                 }
                 int time = loop - startLoop;
-                if (time <= 10) {
+                if (time <= 8) {
                     return onColor;
 
-                } else if (time <= 20) {
+                } else if (time <= 16) {
                     return offColor;
 
-                } else if(time <= 30) {
+                } else if(time <= 24) {
                     return onColor;
 
-                } else if(time <= 40) {
+                } else if(time <= 32) {
                     return offColor;
 
                 } else {
