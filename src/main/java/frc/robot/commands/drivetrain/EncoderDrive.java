@@ -35,7 +35,7 @@ public class EncoderDrive extends CommandBase {
 
     @Override
     public void execute() {
-        System.out.println(drivetrain.getLeftEncoderPosition());
+        //System.out.println(drivetrain.getLeftEncoderPosition());
     }
     // Called once the command ends or is interrupted.
     @Override

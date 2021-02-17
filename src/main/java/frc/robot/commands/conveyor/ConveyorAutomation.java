@@ -28,8 +28,6 @@ public class ConveyorAutomation extends CommandBase {
 	@Override
 	public void execute() {
         double power = 0;
-        
-        System.out.println(shootModeLED);
 
 		/**
 		 * Sets the conveyors power based on its state. Shoot mode overrides intake mode

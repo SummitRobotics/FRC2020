@@ -149,9 +149,7 @@ public class RobotContainer {
             new InstantCommand(() -> {  
                 try {
                     turret.getDefaultCommand().cancel();
-                    System.out.println("yes default");
                 } catch(NullPointerException e) {
-                    System.out.println("no default reeeeee");
                 }
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
