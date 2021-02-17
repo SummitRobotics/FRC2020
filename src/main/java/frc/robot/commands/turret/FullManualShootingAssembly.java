@@ -36,6 +36,8 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	private ChangeRateLimiter limiter;
 
+	private boolean ledON;
+
 	public FullManualShootingAssembly (
 			Turret turret, 
 			Shooter shooter, 
@@ -63,6 +65,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		limiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
 		startupSpinPrevention = true;
+		ledON = false;
 
 		addRequirements(turret);
 	}
@@ -70,7 +73,6 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
-		LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
 	}
 
 	@Override
@@ -99,6 +101,14 @@ public class FullManualShootingAssembly extends CommandBase {
 			}
 			
 			if (!startupSpinPrevention) {
+				if(shooterPower > 0.1 && !ledON){
+					LEDs.getInstance().addCall("manualShoot", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
+				}
+				else if(ledON){
+					ledON = false;
+					LEDs.getInstance().removeCall("manualShoot");
+				}
+
                 shooter.setPower(shooterPower);
                 
 			} else {
@@ -123,7 +133,10 @@ public class FullManualShootingAssembly extends CommandBase {
 		shooter.stop();
 		hood.stop();
 
-		LEDs.getInstance().removeCall("manualShoot");
+		if(ledON){
+			LEDs.getInstance().removeCall("manualShoot");
+		}
+		
 	}
 
 	@Override
