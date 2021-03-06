@@ -316,7 +316,7 @@ public class RobotContainer {
     public void robotInit(){
         //TODO make good add path to jason
         System.out.println("wrighting trajectory");
-        LEDs.getInstance().addCall("making", new LEDCall(LEDPriorities.on, LEDRange.All).flashing(Colors.Green, Colors.Purple));
+        LEDs.getInstance().addCall("making", new LEDCall(999999999, LEDRange.All).flashing(Colors.Green, Colors.Purple));
         //TODO make good make path right and creat the spmines folder
         Functions.saveObjectToFile(SerialisableMultiGearTrajectory.createSerialisableMultiGearTrejectory("PATH"), "/home/admin/splines/spline.spl");
         LEDs.getInstance().removeCall("making");

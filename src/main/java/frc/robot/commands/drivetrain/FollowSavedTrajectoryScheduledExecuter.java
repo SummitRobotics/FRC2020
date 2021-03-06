@@ -29,7 +29,7 @@ public class FollowSavedTrajectoryScheduledExecuter extends CommandBase {
     private Command splineCommand;
     private ScheduledFuture<?> result;
 
-    public FollowSavedTrajectoryScheduledExecuter(Drivetrain drivetain, String path) {
+    public FollowSavedTrajectoryScheduledExecuter(Drivetrain drivetrain, String path) {
         super();
 
         this.drivetrain = drivetrain;
@@ -60,7 +60,7 @@ public class FollowSavedTrajectoryScheduledExecuter extends CommandBase {
             drivetrain::getPose,
 
             // TODO make right
-            new RamseteController(2, 0.7), drivetrain.getFeedFoward(), drivetrain.DriveKinimatics,
+            new RamseteController(2, 0.7), drivetrain.getFeedFoward(), Drivetrain.DriveKinimatics,
 
             drivetrain::getWheelSpeeds, 
             new PIDController(pid[0], pid[1], pid[2], period/1000),
@@ -74,13 +74,13 @@ public class FollowSavedTrajectoryScheduledExecuter extends CommandBase {
         splineCommand.initialize();
 
         result = FollowSavedTrajectoryScheduledExecuter.scheduledExecutor
-            .scheduleWithFixedDelay(() -> {
+            .scheduleAtFixedRate(() -> {
                 // Dubious thread safety
                 synchronized (splineCommand) {
                     // Executes the ramsete command to set drivetrain motor powers
                     splineCommand.execute();
                 }
-            }, 0, period, TimeUnit.SECONDS);
+            }, 0, period, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -96,5 +96,9 @@ public class FollowSavedTrajectoryScheduledExecuter extends CommandBase {
     public void end(boolean interrupted) {
         // Cancels the running of the splineCommand
         result.cancel(true); // This should maybe be false ???
+        synchronized (splineCommand) {
+            splineCommand.end(interrupted);
+        }
+        drivetrain.stop();
     }
 }
