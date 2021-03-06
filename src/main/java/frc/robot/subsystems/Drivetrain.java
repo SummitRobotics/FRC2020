@@ -67,15 +67,15 @@ public class Drivetrain extends SubsystemBase {
     private BooleanSupplier shift;
     private AHRS gyro;
 
-    public DifferentialDriveKinematics DriveKinimatics = new DifferentialDriveKinematics(DriveWidth);
+    public static DifferentialDriveKinematics DriveKinimatics = new DifferentialDriveKinematics(DriveWidth);
 
-    public SimpleMotorFeedforward HighFeedFoward = new SimpleMotorFeedforward(HighKs, HighKv, HighKa);
+    public static SimpleMotorFeedforward HighFeedFoward = new SimpleMotorFeedforward(HighKs, HighKv, HighKa);
 
-    public SimpleMotorFeedforward LowFeedFoward = new SimpleMotorFeedforward(LowKs, LowKv, LowKa);
+    public static SimpleMotorFeedforward LowFeedFoward = new SimpleMotorFeedforward(LowKs, LowKv, LowKa);
 
-    public DifferentialDriveVoltageConstraint HighVoltageConstraint = new DifferentialDriveVoltageConstraint(HighFeedFoward, DriveKinimatics, MaxOutputVoltage);
+    public static DifferentialDriveVoltageConstraint HighVoltageConstraint = new DifferentialDriveVoltageConstraint(HighFeedFoward, DriveKinimatics, MaxOutputVoltage);
 
-    public DifferentialDriveVoltageConstraint LowVoltageConstraint = new DifferentialDriveVoltageConstraint(LowFeedFoward, DriveKinimatics, MaxOutputVoltage);
+    public static DifferentialDriveVoltageConstraint LowVoltageConstraint = new DifferentialDriveVoltageConstraint(LowFeedFoward, DriveKinimatics, MaxOutputVoltage);
 
     /**
      * i am in PAIN wow this is BAD
@@ -360,6 +360,10 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    public boolean getShift(){
+        return shift.getAsBoolean();
+    }
+
     public SimpleMotorFeedforward getFeedFoward(){
         if(shift.getAsBoolean()){
             return HighFeedFoward;
@@ -377,6 +381,7 @@ public class Drivetrain extends SubsystemBase {
             return LowVoltageConstraint;
         }
     }
+
 
     public void periodic() {
         // Update the odometry in the periodic block

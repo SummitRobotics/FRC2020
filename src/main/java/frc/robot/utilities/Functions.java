@@ -1,5 +1,10 @@
 package frc.robot.utilities;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Contains various static utility functions for use throughout the program
  */
@@ -58,5 +63,40 @@ public class Functions {
      */
     public static boolean absGreater(double a, double b) {
         return Math.abs(a) > Math.abs(b);
+    }
+
+    /**
+     * saves an object to a file
+     * @param <T> the object type
+     * @param object the object to save
+     * @param path the path, including the file name, to save
+     * warning, this can fail and not save the object!
+     */
+    public static <T> void saveObjectToFile(T object, String path) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(object);
+            objectOut.close();
+            fileOut.close();
+ 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * reads an object out of a file
+     * @param <T> the object type
+     * @param path the path where the object is
+     * @return the object read from thre file
+     * @throws Exception throws an exception if the fie can not be read
+     */
+    public static <T> T RetriveObjectFromFile(String path) throws Exception {
+        FileInputStream fis = new FileInputStream(path);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        T result = (T) ois.readObject();
+        ois.close();
+        return result;
     }
 }

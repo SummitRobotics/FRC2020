@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.Functions;
+import frc.robot.utilities.SerialisableMultiGearTrejectory;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -25,6 +27,8 @@ import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
+import frc.robot.commands.drivetrain.FollowSavedTrejectory;
+import frc.robot.commands.drivetrain.FollowSavedTrejectoryWithLotsOfSinButMightBeBetter;
 import frc.robot.commands.drivetrain.FollowSpline;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
@@ -219,7 +223,7 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        Command testSpline = new FollowSpline(drivetrain);
+        Command testSpline = new FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(drivetrain, "spline.spl");
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
         launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
@@ -304,10 +308,14 @@ public class RobotContainer {
      */
     public void teleopInit() {
         //inishlises robot
+        //for testing ONLY
         scheduler.schedule(teleInit);
+       
     }
 
     public void robotInit(){
+        //TODO make good add path to jason
+        Functions.saveObjectToFile(SerialisableMultiGearTrejectory.createSerialisableMultiGearTrejectory("PATH"), "spline.spl");
     }
 
     /**
