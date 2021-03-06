@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SerialisableMultiGearTrejectory;
+import frc.robot.utilities.SerialisableMultiGearTrajectory;
 
 //this is REAL bad
-public class FollowSavedTrejectory extends CommandBase {
+public class FollowSavedTrajectory extends CommandBase {
 
     private Trajectory trajectory;
     private Drivetrain drivetrain;
@@ -27,7 +27,7 @@ public class FollowSavedTrejectory extends CommandBase {
      * @param drivetrain drivetrain to control
      * @param path path to SerialisableMultiGearTrejectory object to run
      */
-    public FollowSavedTrejectory(Drivetrain drivetrain, String path) {
+    public FollowSavedTrajectory(Drivetrain drivetrain, String path) {
         super();
 
         this.path = path;
@@ -41,7 +41,7 @@ public class FollowSavedTrejectory extends CommandBase {
 
         // scaled by 3 for testing so i dont break my walls
         try{
-            SerialisableMultiGearTrejectory both = Functions.RetriveObjectFromFile(path);
+            SerialisableMultiGearTrajectory both = Functions.RetriveObjectFromFile(path);
             trajectory = both.getTrajectory(drivetrain.getShift());
         }
         catch(Exception e){

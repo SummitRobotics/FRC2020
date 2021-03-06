@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SerialisableMultiGearTrejectory;
+import frc.robot.utilities.SerialisableMultiGearTrajectory;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -27,8 +27,8 @@ import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.commands.drivetrain.FollowSavedTrejectory;
-import frc.robot.commands.drivetrain.FollowSavedTrejectoryWithLotsOfSinButMightBeBetter;
+import frc.robot.commands.drivetrain.FollowSavedTrajectory;
+import frc.robot.commands.drivetrain.FollowSavedTrajectoryThreaded;
 import frc.robot.commands.drivetrain.FollowSpline;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
@@ -223,7 +223,7 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        Command testSpline = new FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(drivetrain, "/home/admin/splines/spline.spl");
+        Command testSpline = new FollowSavedTrajectoryThreaded(drivetrain, "/home/admin/splines/spline.spl");
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
         launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
@@ -318,7 +318,7 @@ public class RobotContainer {
         System.out.println("wrighting trajectory");
         LEDs.getInstance().addCall("making", new LEDCall(LEDPriorities.on, LEDRange.All).flashing(Colors.Green, Colors.Purple));
         //TODO make good make path right and creat the spmines folder
-        Functions.saveObjectToFile(SerialisableMultiGearTrejectory.createSerialisableMultiGearTrejectory("PATH"), "/home/admin/splines/spline.spl");
+        Functions.saveObjectToFile(SerialisableMultiGearTrajectory.createSerialisableMultiGearTrejectory("PATH"), "/home/admin/splines/spline.spl");
         LEDs.getInstance().removeCall("making");
         System.out.println("trajectory written");
     }

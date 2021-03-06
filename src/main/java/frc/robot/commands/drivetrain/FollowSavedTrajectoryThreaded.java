@@ -20,32 +20,33 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SerialisableMultiGearTrejectory;
+import frc.robot.utilities.SerialisableMultiGearTrajectory;
 
 //this is REAL bad
-public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandBase {
+public class FollowSavedTrajectoryThreaded extends CommandBase {
 
     private Trajectory trajectory;
     private Drivetrain drivetrain;
     private String path;
     private Thread t;
     private int period;
-    private sin sin;
+    private ThreadedSplineExecutor sin;
 
     private RamseteCommand command;
 
     /**
-     * command to folow a trejectory object that has been saved to the roborio with threding to make it more precice
+     * command to folow a trejectory object that has been saved to the roborio with threading to make it more precice
      * @param drivetrain drivetain to control
      * @param path path to the saved SerialisableMultiGearTrejectory object
      */
-    public FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(Drivetrain drivetrain, String path) {
+    public FollowSavedTrajectoryThreaded(Drivetrain drivetrain, String path) {
         super();
 
         this.path = path;
         this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
         this.period = 1;
+
+        addRequirements(drivetrain);
     }
 
     @Override
@@ -71,9 +72,10 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
         //     // Pass config
         //     config);
 
-            //real and good for real use but requires running on robot
+
+        //real and good for real use but requires running on robot
         try {
-            SerialisableMultiGearTrejectory both = Functions.RetriveObjectFromFile(path);
+            SerialisableMultiGearTrajectory both = Functions.RetriveObjectFromFile(path);
             trajectory = both.getTrajectory(drivetrain.getShift());
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,38 +94,35 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
 
         
         command.initialize();
-        System.out.println("command initlised");
+        System.out.println("command initialized");
 
-        //we CAN NOT touch the command outside of the thred once it has started
+        //we CAN NOT touch the command outside of the thread once it has started
         //nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
-        sin = new sin(command, period);
+        sin = new ThreadedSplineExecutor(command, period);
         t = new Thread(sin);
-        t.setName("spline thred");
+        t.setName("spline thread");
         //1-10
         t.setPriority(9);
         t.start();
-        System.out.println("thred started");
-    }
-
-    @Override
-    public void execute() {
-        // does nothing now beacuse thred
+        System.out.println("thread started");
     }
 
     @Override
     public boolean isFinished() {
-        //checks if thred is running or ended
+        //checks if thread is running or ended
         return t.getState() == State.TERMINATED;
     }
 
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            //tells the thred to stop
+            // tells the thread to stop
             sin.stopRunning();
         }
+
         boolean stopped = t.getState() == State.TERMINATED;
-        //makes sure thred is stopped before allowing scedular to continue to prevent unintentional movement
+
+        // makes sure thread is stopped before allowing scheduler to continue to prevent unintentional movement
         while(!stopped){
             stopped = t.getState() == State.TERMINATED;
         }
@@ -133,13 +132,13 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
 
 }
 
-//class that is run by the thred to run the 
-class sin extends Thread {
+//class that is run by the thread to run the 
+class ThreadedSplineExecutor extends Thread {
     private Command command;
     private volatile boolean done = false;
     private int period;
 
-    sin(Command command, int period) {
+    ThreadedSplineExecutor(Command command, int period) {
         super();
         this.command = command;
         this.done = false;
@@ -147,33 +146,35 @@ class sin extends Thread {
     }
 
     @Override
-    //gets called when thred starts
+    //gets called when thread starts
     public void run() {
         super.run();
         while (!command.isFinished() && !done) {
-            //thred saftey??? (i tryed)
-            synchronized(command){
-                //calls the exicute of the ramset command to set new motor powers
+
+            // Dubious thread safety
+            synchronized (command) {
+                // Executes the ramsete command to set drivetrain motor powers
                 command.execute();
             }
-            //System.out.println("command exicuted!");
+
+            //System.out.println("command executed!");
+
             try {
-                //sleep period ms to make the itmeing consistant
+                //sleep period ms to make the timing consistant
                 sleep(period, 0);
+
             } catch (InterruptedException e) {
-                //chronic
+                // chronic
                 e.printStackTrace();
             }
         }
     }
 
-    //stops the thred if called for by another
+    // Stops the thread if called for by another
     public synchronized void stopRunning(){
         synchronized(command){
             command.cancel();
         }
         done = true;
     }
-
-
 }

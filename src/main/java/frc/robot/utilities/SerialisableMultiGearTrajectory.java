@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.robot.subsystems.Drivetrain;
 
 /** Add your docs here. */
-public class SerialisableMultiGearTrejectory implements Serializable {
+public class SerialisableMultiGearTrajectory implements Serializable {
 
     //random number
     private static final long serialVersionUID = 256594604239963776L;
@@ -50,7 +50,7 @@ public class SerialisableMultiGearTrejectory implements Serializable {
      * @param high the high gear trejectory
      * @param low the low gear trejectory
      */
-    public SerialisableMultiGearTrejectory(Trajectorist high, Trajectorist low){
+    public SerialisableMultiGearTrajectory(Trajectorist high, Trajectorist low){
         this.highGear = high;
         this.LowGear = low;
     }
@@ -79,9 +79,9 @@ public class SerialisableMultiGearTrejectory implements Serializable {
      * @param end the point for the robot to end at
      * @return the new object ready to save
      */
-    public static SerialisableMultiGearTrejectory createSerialisableMultiGearTrejectory(Pose2d stat, List<Translation2d> points, Pose2d end){
+    public static SerialisableMultiGearTrajectory createSerialisableMultiGearTrejectory(Pose2d stat, List<Translation2d> points, Pose2d end){
 
-        return new SerialisableMultiGearTrejectory(
+        return new SerialisableMultiGearTrajectory(
             (Trajectorist)TrajectoryGenerator.generateTrajectory(stat, points, end, highConfig), 
             (Trajectorist)TrajectoryGenerator.generateTrajectory(stat, points, end, lowConfig)
             );
@@ -93,7 +93,7 @@ public class SerialisableMultiGearTrejectory implements Serializable {
      * @return the object ready to save
      * warning CAN FAIL AND RETURN AN EMPTY TRAJECTORY
      */
-    public static SerialisableMultiGearTrejectory createSerialisableMultiGearTrejectory(String jasonPath){
+    public static SerialisableMultiGearTrajectory createSerialisableMultiGearTrejectory(String jasonPath){
         Trajectory trajectory = new Trajectory();
         try {
             Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(jasonPath);
@@ -103,7 +103,7 @@ public class SerialisableMultiGearTrejectory implements Serializable {
             throw(new RuntimeException("reading trejectory jason failed"));
         }
 
-        return new SerialisableMultiGearTrejectory(
+        return new SerialisableMultiGearTrajectory(
             (Trajectorist)trajectory,
             (Trajectorist)trajectory
             );
