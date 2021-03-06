@@ -223,7 +223,7 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        Command testSpline = new FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(drivetrain, "spline.spl");
+        Command testSpline = new FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(drivetrain, "/home/admin/splines/spline.spl");
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
         launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
@@ -315,7 +315,12 @@ public class RobotContainer {
 
     public void robotInit(){
         //TODO make good add path to jason
-        Functions.saveObjectToFile(SerialisableMultiGearTrejectory.createSerialisableMultiGearTrejectory("PATH"), "spline.spl");
+        System.out.println("wrighting trajectory");
+        LEDs.getInstance().addCall("making", new LEDCall(LEDPriorities.on, LEDRange.All).flashing(Colors.Green, Colors.Purple));
+        //TODO make good make path right and creat the spmines folder
+        Functions.saveObjectToFile(SerialisableMultiGearTrejectory.createSerialisableMultiGearTrejectory("PATH"), "/home/admin/splines/spline.spl");
+        LEDs.getInstance().removeCall("making");
+        System.out.println("trajectory written");
     }
 
     /**

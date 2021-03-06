@@ -22,23 +22,24 @@ import frc.robot.subsystems.Drivetrain;
 /** Add your docs here. */
 public class SerialisableMultiGearTrejectory implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    //random number
+    private static final long serialVersionUID = 256594604239963776L;
 
-    private Trajectory highGear;
+    private Trajectorist highGear;
 
-    private Trajectory LowGear;
+    private Trajectorist LowGear;
 
-    private double accelration = 2.5;
+    private static double accelration = 2.5;
 
-    private double velocity = 2.5;
+    private static double velocity = 2.5;
 
-    private static TrajectoryConfig lowConfig = new TrajectoryConfig(2.5, 2.5)
+    private static TrajectoryConfig lowConfig = new TrajectoryConfig(velocity, accelration)
     // Add kinematics to ensure max speed is actually obeyed
     .setKinematics(Drivetrain.DriveKinimatics)
     // Apply the voltage constraint
     .addConstraint(Drivetrain.LowVoltageConstraint);
 
-    private static TrajectoryConfig highConfig = new TrajectoryConfig(2.5, 2.5)
+    private static TrajectoryConfig highConfig = new TrajectoryConfig(velocity, accelration)
     // Add kinematics to ensure max speed is actually obeyed
     .setKinematics(Drivetrain.DriveKinimatics)
     // Apply the voltage constraint
@@ -49,7 +50,7 @@ public class SerialisableMultiGearTrejectory implements Serializable {
      * @param high the high gear trejectory
      * @param low the low gear trejectory
      */
-    public SerialisableMultiGearTrejectory(Trajectory high, Trajectory low){
+    public SerialisableMultiGearTrejectory(Trajectorist high, Trajectorist low){
         this.highGear = high;
         this.LowGear = low;
     }
@@ -71,14 +72,27 @@ public class SerialisableMultiGearTrejectory implements Serializable {
         }
     }
 
+    /**
+     * creats a new SerialisableMultiGearTrejectory from a list of points
+     * @param stat the stating position of the robot (normaly 0,0)
+     * @param points the points to travle through
+     * @param end the point for the robot to end at
+     * @return the new object ready to save
+     */
     public static SerialisableMultiGearTrejectory createSerialisableMultiGearTrejectory(Pose2d stat, List<Translation2d> points, Pose2d end){
 
         return new SerialisableMultiGearTrejectory(
-            TrajectoryGenerator.generateTrajectory(stat, points, end, highConfig), 
-            TrajectoryGenerator.generateTrajectory(stat, points, end, lowConfig)
+            (Trajectorist)TrajectoryGenerator.generateTrajectory(stat, points, end, highConfig), 
+            (Trajectorist)TrajectoryGenerator.generateTrajectory(stat, points, end, lowConfig)
             );
     }
 
+    /**
+     * creats a new SerialisableMultiGearTrejectory from a pathwever jason file
+     * @param jasonPath path to jason file
+     * @return the object ready to save
+     * warning CAN FAIL AND RETURN AN EMPTY TRAJECTORY
+     */
     public static SerialisableMultiGearTrejectory createSerialisableMultiGearTrejectory(String jasonPath){
         Trajectory trajectory = new Trajectory();
         try {
@@ -86,11 +100,12 @@ public class SerialisableMultiGearTrejectory implements Serializable {
             trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + jasonPath, ex.getStackTrace());
+            throw(new RuntimeException("reading trejectory jason failed"));
         }
 
         return new SerialisableMultiGearTrejectory(
-            trajectory,
-            trajectory
+            (Trajectorist)trajectory,
+            (Trajectorist)trajectory
             );
     }
 

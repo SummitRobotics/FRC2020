@@ -22,6 +22,11 @@ public class FollowSavedTrejectory extends CommandBase {
 
     private RamseteCommand command;
 
+    /**
+     * follows a save trejectory object
+     * @param drivetrain drivetrain to control
+     * @param path path to SerialisableMultiGearTrejectory object to run
+     */
     public FollowSavedTrejectory(Drivetrain drivetrain, String path) {
         super();
 
@@ -40,8 +45,8 @@ public class FollowSavedTrejectory extends CommandBase {
             trajectory = both.getTrajectory(drivetrain.getShift());
         }
         catch(Exception e){
-            //should cause a crash
-            end(true);
+            e.printStackTrace();
+            throw(new RuntimeException("reading failed"));
         }
 
         command = new RamseteCommand(

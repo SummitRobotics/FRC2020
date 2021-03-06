@@ -149,7 +149,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param power -1 - 1
      */
-    public void setLeftMotorPower(double power) {
+    public synchronized void setLeftMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
         left.set(power);
     }
@@ -159,20 +159,20 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param power -1 - 1
      */
-    public void setRightMotorPower(double power) {
+    public synchronized void setRightMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
         right.set(power);
     }
 
-    public void setLeftMotorVolts(double volts){
+    public synchronized void setLeftMotorVolts(double volts){
         left.setVoltage(volts);
     }
 
-    public void setRightMotorVolts(double volts){
+    public synchronized void setRightMotorVolts(double volts){
         right.setVoltage(volts);
     }
 
-    public void setMotorVolts(double left, double right){
+    public synchronized void setMotorVolts(double left, double right){
         setRightMotorVolts(right);
         setLeftMotorVolts(left);
     }
@@ -182,7 +182,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setLeftMotorTarget(double position) {
+    public synchronized void setLeftMotorTarget(double position) {
         leftPID.setReference(position, ControlType.kPosition);
     }
 
@@ -191,7 +191,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param position the target position in terms of motor rotations
      */
-    public void setRightMotorTarget(double position) {
+    public synchronized void setRightMotorTarget(double position) {
         rightPID.setReference(position, ControlType.kPosition);
     }
 
@@ -201,7 +201,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setLeftEncoder(double position) {
+    public synchronized void setLeftEncoder(double position) {
         leftEncoder.setPosition(position);
     }
 
@@ -211,11 +211,11 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param position the position for the encoder to register in rotations
      */
-    public void setRightEncoder(double position) {
+    public synchronized void setRightEncoder(double position) {
         rightEncoder.setPosition(position);
     }
 
-    public void zeroEncoders(){
+    public synchronized void zeroEncoders(){
         setRightEncoder(0);
         setLeftEncoder(0);
     }
@@ -226,7 +226,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return position of motor in rotations
      */
-    public double getRightEncoderPosition() {
+    public synchronized double getRightEncoderPosition() {
         return rightEncoder.getPosition();
     }
 
@@ -235,22 +235,22 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return position of motor in rotations
      */
-    public double getLeftEncoderPosition() {
+    public synchronized double getLeftEncoderPosition() {
         return leftEncoder.getPosition();
     }
 
-    public double getLeftRPM(){
+    public synchronized double getLeftRPM(){
         return leftEncoder.getVelocity();
     }
 
-    public double getRightRPM(){
+    public synchronized double getRightRPM(){
         return rightEncoder.getVelocity();
     }
 
     /**
      * @return the total distance in meters the side as travled sense the last reset
      */
-    public double getLeftDistance(){
+    public synchronized double getLeftDistance(){
         if(shift.getAsBoolean()){
             return (getLeftEncoderPosition()/HighGearRatio)*wheleCirconfranceInMeters;
         }
@@ -262,7 +262,7 @@ public class Drivetrain extends SubsystemBase {
      /**
      * @return the total distance in meters the side as travled sense the last reset
      */
-    public double getRightDistance(){
+    public synchronized double getRightDistance(){
         if(shift.getAsBoolean()){
             return (getRightEncoderPosition()/HighGearRatio)*wheleCirconfranceInMeters;
         }
@@ -274,7 +274,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * @return the linear speed of the side in meters per second
      */
-    public double getLeftSpeed(){
+    public synchronized double getLeftSpeed(){
         if(shift.getAsBoolean()){
             return covertRpmToMetersPerSencond((getLeftRPM()/HighGearRatio));
         }
@@ -285,7 +285,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * @return the linear speed of the side in meters per second
      */
-    public double getRightSpeed(){
+    public synchronized double getRightSpeed(){
         if(shift.getAsBoolean()){
             return covertRpmToMetersPerSencond((getRightRPM()/HighGearRatio));
         }
@@ -295,7 +295,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     //could things be good for once please
-    private double covertRpmToMetersPerSencond(double RPM){
+    private synchronized double covertRpmToMetersPerSencond(double RPM){
         return ((RPM/60)*(2*Math.PI))*WheleRadiusInMeters;
     }
 
@@ -304,7 +304,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param rate time in seconds to go from 0 to full power
      */
-    public void setOpenRampRate(double rate) {
+    public synchronized void setOpenRampRate(double rate) {
         left.setOpenLoopRampRate(rate);
         right.setOpenLoopRampRate(rate);
     }
@@ -315,7 +315,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param rate time in seconds to go from 0 to full power
      */
-    public void setClosedRampRate(double rate) {
+    public synchronized void setClosedRampRate(double rate) {
         left.setClosedLoopRampRate(rate);
         right.setClosedLoopRampRate(rate);
     }
@@ -323,12 +323,12 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Stops the motors
      */
-    public void stop() {
+    public synchronized void stop() {
         left.stopMotor();
         right.stopMotor();
     }
 
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    public synchronized DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
     }
 
@@ -336,12 +336,12 @@ public class Drivetrain extends SubsystemBase {
      * sets the curent pos and RESETS ENCODERS TO 0
      * @param pose the new pose
      */
-    public void setPose(Pose2d pose) {
+    public synchronized void setPose(Pose2d pose) {
         zeroEncoders();
         odometry.resetPosition(pose, gyro.getRotation2d());
       }
 
-    public Pose2d getPose() {
+    public synchronized Pose2d getPose() {
         return odometry.getPoseMeters();
     }
 
@@ -349,7 +349,7 @@ public class Drivetrain extends SubsystemBase {
      * gets the right pid values for the curent shift state
      * @return double array of p,i,d
      */
-    public double[] getPid(){
+    public synchronized double[] getPid(){
         if(shift.getAsBoolean()){
             double[] out = {HighP, HighI, HighD};
             return out;
@@ -360,11 +360,11 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public boolean getShift(){
+    public synchronized boolean getShift(){
         return shift.getAsBoolean();
     }
 
-    public SimpleMotorFeedforward getFeedFoward(){
+    public synchronized SimpleMotorFeedforward getFeedFoward(){
         if(shift.getAsBoolean()){
             return HighFeedFoward;
         }
@@ -373,7 +373,7 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public DifferentialDriveVoltageConstraint getVoltageConstraint(){
+    public synchronized DifferentialDriveVoltageConstraint getVoltageConstraint(){
         if(shift.getAsBoolean()){
             return HighVoltageConstraint;
         }
@@ -383,7 +383,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
 
-    public void periodic() {
+    public synchronized void periodic() {
         // Update the odometry in the periodic block
         odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
     }

@@ -34,6 +34,11 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
 
     private RamseteCommand command;
 
+    /**
+     * command to folow a trejectory object that has been saved to the roborio with threding to make it more precice
+     * @param drivetrain drivetain to control
+     * @param path path to the saved SerialisableMultiGearTrejectory object
+     */
     public FollowSavedTrejectoryWithLotsOfSinButMightBeBetter(Drivetrain drivetrain, String path) {
         super();
 
@@ -71,13 +76,13 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
             SerialisableMultiGearTrejectory both = Functions.RetriveObjectFromFile(path);
             trajectory = both.getTrajectory(drivetrain.getShift());
         } catch (Exception e) {
-            // should cause a crash
-            end(true);
+            e.printStackTrace();
+            throw(new RuntimeException("reading failed"));
         }
 
         command = new RamseteCommand(trajectory, drivetrain::getPose,
                 // TODO make right
-                new RamseteController(2, 0.7), drivetrain.HighFeedFoward, drivetrain.DriveKinimatics,
+                new RamseteController(2, 0.7), drivetrain.getFeedFoward(), drivetrain.DriveKinimatics,
                 drivetrain::getWheelSpeeds, 
                 new PIDController(pid[0], pid[1], pid[2], period/1000),
                 new PIDController(pid[0], pid[1], pid[2], period/1000), 
@@ -85,11 +90,12 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
 
         drivetrain.setPose(trajectory.getInitialPose());
 
-        // command.initialize();
-        //we CAN NOT touch the command outside of the thred once it has started
-        //nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
+        
         command.initialize();
         System.out.println("command initlised");
+
+        //we CAN NOT touch the command outside of the thred once it has started
+        //nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
         sin = new sin(command, period);
         t = new Thread(sin);
         t.setName("spline thred");
@@ -106,27 +112,31 @@ public class FollowSavedTrejectoryWithLotsOfSinButMightBeBetter extends CommandB
 
     @Override
     public boolean isFinished() {
+        //checks if thred is running or ended
         return t.getState() == State.TERMINATED;
     }
 
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
+            //tells the thred to stop
             sin.stopRunning();
         }
         boolean stopped = t.getState() == State.TERMINATED;
-        //makes sure thred is stopped before allowing scedular to continue
+        //makes sure thred is stopped before allowing scedular to continue to prevent unintentional movement
         while(!stopped){
             stopped = t.getState() == State.TERMINATED;
         }
+        //stops the drivetrain motors
         drivetrain.stop();
     }
 
 }
 
+//class that is run by the thred to run the 
 class sin extends Thread {
     private Command command;
-    private boolean done = false;
+    private volatile boolean done = false;
     private int period;
 
     sin(Command command, int period) {
@@ -137,13 +147,18 @@ class sin extends Thread {
     }
 
     @Override
+    //gets called when thred starts
     public void run() {
         super.run();
         while (!command.isFinished() && !done) {
-            command.execute();
+            //thred saftey??? (i tryed)
+            synchronized(command){
+                //calls the exicute of the ramset command to set new motor powers
+                command.execute();
+            }
             //System.out.println("command exicuted!");
             try {
-                //sleep 1 ms
+                //sleep period ms to make the itmeing consistant
                 sleep(period, 0);
             } catch (InterruptedException e) {
                 //chronic
@@ -152,8 +167,11 @@ class sin extends Thread {
         }
     }
 
-    public void stopRunning(){
-        command.cancel();
+    //stops the thred if called for by another
+    public synchronized void stopRunning(){
+        synchronized(command){
+            command.cancel();
+        }
         done = true;
     }
 
