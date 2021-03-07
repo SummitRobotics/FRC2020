@@ -172,7 +172,8 @@ public class Drivetrain extends SubsystemBase {
         right.setVoltage(volts);
     }
 
-    public synchronized void setMotorVolts(double left, double right){
+    public void setMotorVolts(double left, double right){
+        System.out.println(String.format("left is: %f, right is %f", left, right));
         setRightMotorVolts(right);
         setLeftMotorVolts(left);
     }

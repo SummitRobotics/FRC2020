@@ -16,34 +16,22 @@ import frc.robot.subsystems.Drivetrain;
 public class FollowTrajectory extends CommandBase {
 
     private Drivetrain drivetrain;
-    private String path;
+    private Trajectory trajectory;
 
     private RamseteCommand command;
 
-    public FollowTrajectory(Drivetrain drivetrain, String path) {
+    public FollowTrajectory(Drivetrain drivetrain, Trajectory trajectory) {
         super();
 
         this.drivetrain = drivetrain;
-        this.path = path;
+        this.trajectory = trajectory;
 
         addRequirements(drivetrain);
     }
 
     @Override
     public void initialize() {
-        System.out.println("Trajectory is being initialized");
-
         double[] pid = drivetrain.getPid();
-
-        Trajectory trajectory = null;
-        try {
-            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(path);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + path, ex.getStackTrace());
-        }
-
-        System.out.println(trajectory);
 
         command = new RamseteCommand(
             trajectory, 
@@ -61,8 +49,6 @@ public class FollowTrajectory extends CommandBase {
         drivetrain.setPose(trajectory.getInitialPose());
 
         command.initialize();
-
-        System.out.println("Trajectory has been initialized");
     }
 
     @Override

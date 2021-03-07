@@ -20,10 +20,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SerialisableMultiGearTrajectory;
+// import frc.robot.utilities.SerialisableMultiGearTrajectory;
 
 //this is REAL bad
-public class FollowSavedTrajectoryThreaded extends CommandBase {
+public class FollowTrajectoryThreaded extends CommandBase {
 
     private Trajectory trajectory;
     private Drivetrain drivetrain;
@@ -39,12 +39,13 @@ public class FollowSavedTrajectoryThreaded extends CommandBase {
      * @param drivetrain drivetain to control
      * @param path path to the saved SerialisableMultiGearTrejectory object
      */
-    public FollowSavedTrajectoryThreaded(Drivetrain drivetrain, String path) {
+    public FollowTrajectoryThreaded(Drivetrain drivetrain, Trajectory trajectory) {
         super();
 
-        this.path = path;
         this.drivetrain = drivetrain;
-        this.period = 1;
+        this.trajectory = trajectory;
+
+        this.period = 20;
 
         addRequirements(drivetrain);
     }
@@ -53,34 +54,6 @@ public class FollowSavedTrajectoryThreaded extends CommandBase {
     public void initialize() {
         //TODO make good tune pid for new faster updaes
         double[] pid = drivetrain.getPid();
-
-        //for test
-        // TrajectoryConfig config = new TrajectoryConfig(2.5, 2.5)
-        //     // Add kinematics to ensure max speed is actually obeyed
-        //     .setKinematics(drivetrain.DriveKinimatics)
-        //     // Apply the voltage constraint
-        //     .addConstraint(drivetrain.getVoltageConstraint());
-
-        // // scaled by 3 for testing so i dont break my walls
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        //     // Start at the origin facing the +X direction
-        //     new Pose2d(0, 0, new Rotation2d(0)),
-        //     // Pass through these two interior waypoints, making an 's' curve path
-        //     List.of(new Translation2d(3, 1).div(3), new Translation2d(6, -1).div(3)),
-        //     // End 3 meters straight ahead of where we started, facing forward
-        //     new Pose2d(new Translation2d(9, 0).div(3), new Rotation2d(0)),
-        //     // Pass config
-        //     config);
-
-
-        //real and good for real use but requires running on robot
-        try {
-            SerialisableMultiGearTrajectory both = Functions.RetriveObjectFromFile(path);
-            trajectory = both.getTrajectory(drivetrain.getShift());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw(new RuntimeException("reading failed"));
-        }
 
         command = new RamseteCommand(trajectory, drivetrain::getPose,
                 // TODO make right
@@ -91,7 +64,6 @@ public class FollowSavedTrajectoryThreaded extends CommandBase {
                 drivetrain::setMotorVolts, drivetrain);
 
         drivetrain.setPose(trajectory.getInitialPose());
-
         
         command.initialize();
         System.out.println("command initialized");

@@ -1,9 +1,16 @@
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SerialisableMultiGearTrajectory;
+// import frc.robot.utilities.SerialisableMultiGearTrajectory;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -29,8 +36,8 @@ import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
-import frc.robot.commands.drivetrain.FollowSavedTrajectory;
-import frc.robot.commands.drivetrain.FollowSavedTrajectoryThreaded;
+import frc.robot.commands.drivetrain.FollowSavedTrajectoryScheduledExecuter;
+import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
 import frc.robot.commands.drivetrain.FollowSpline;
 import frc.robot.commands.drivetrain.FollowTrajectory;
 import frc.robot.commands.homing.HomeByCurrent;
@@ -90,6 +97,8 @@ public class RobotContainer {
 
     private HomeByEncoder HomeTurret;
     private HomeByCurrent HomeHood;
+
+    Command testSpline;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -226,11 +235,9 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        Command testSpline = new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json");
-        Command testSpline = new FollowSavedTrajectoryThreaded(drivetrain, "/home/admin/splines/spline.spl");
-        launchpad.buttonD.whenPressed(testSpline);
-        launchpad.buttonD.commandBind(testSpline);
-        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
+        // Command testSpline = new FollowSavedTrajectoryThreaded(drivetrain, "/home/admin/splines/spline.spl");
+        // Command testSpline = new FollowSavedTrajectoryScheduledExecuter(drivetrain, "not currently relevant");
+        
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -311,20 +318,36 @@ public class RobotContainer {
      * runs when robot is inited to telyop
      */
     public void teleopInit() {
-        //inishlises robot
-        //for testing ONLY
+        // initialises robot
+        // for testing ONLY
+        // TODO make good add path to jason
+        System.out.println("writing trajectory");
+        LEDs.getInstance().addCall("making", new LEDCall(999999999, LEDRange.All).flashing(Colors.Green, Colors.Purple));
+        // TODO make good make path right and creat the spmines folder
+        //  Functions.saveObjectToFile(
+        //      SerialisableMultiGearTrajectory.createSerialisableMultiGearTrejectory("paths/garbo-auto-path-1.wpilib.json"), "/home/admin/splines/spline.spl");
+        LEDs.getInstance().removeCall("making");
+        System.out.println("trajectory written");
         scheduler.schedule(teleInit);
        
     }
 
     public void robotInit(){
-        //TODO make good add path to jason
-        System.out.println("wrighting trajectory");
-        LEDs.getInstance().addCall("making", new LEDCall(999999999, LEDRange.All).flashing(Colors.Green, Colors.Purple));
-        //TODO make good make path right and creat the spmines folder
-        Functions.saveObjectToFile(SerialisableMultiGearTrajectory.createSerialisableMultiGearTrejectory("PATH"), "/home/admin/splines/spline.spl");
-        LEDs.getInstance().removeCall("making");
-        System.out.println("trajectory written");
+        String path = "paths/garbo-auto-path-1.wpilib.json";
+        Trajectory trajectory = new Trajectory();
+
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(path);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + path, ex.getStackTrace());
+        }
+
+        // testSpline = new FollowTrajectory(drivetrain, trajectory);
+        testSpline = new FollowTrajectoryThreaded(drivetrain, trajectory);
+        launchpad.buttonD.whenPressed(testSpline);
+        launchpad.buttonD.commandBind(testSpline);
+        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
     }
 
     /**
@@ -335,7 +358,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
             teleInit,
-            new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
+            // new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
             new InstantCommand(() -> drivetrain.stop()),
             new InstantCommand(() -> conveyor.enableIntakeMode()),
             new SetDown(intakeArm),
