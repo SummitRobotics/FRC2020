@@ -45,7 +45,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
         this.drivetrain = drivetrain;
         this.trajectory = trajectory;
 
-        this.period = 20;
+        this.period = 1;
 
         addRequirements(drivetrain);
     }
@@ -59,8 +59,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
                 // TODO make right
                 new RamseteController(2, 0.7), drivetrain.getFeedFoward(), drivetrain.DriveKinimatics,
                 drivetrain::getWheelSpeeds, 
-                new PIDController(pid[0], pid[1], pid[2], period/1000),
-                new PIDController(pid[0], pid[1], pid[2], period/1000), 
+                new PIDController(pid[0], pid[1], pid[2], 0.001),
+                new PIDController(pid[0], pid[1], pid[2], 0.001), 
                 drivetrain::setMotorVolts, drivetrain);
 
         drivetrain.setPose(trajectory.getInitialPose());

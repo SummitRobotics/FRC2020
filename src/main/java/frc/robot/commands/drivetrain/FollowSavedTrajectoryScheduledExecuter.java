@@ -92,8 +92,8 @@ public class FollowSavedTrajectoryScheduledExecuter extends CommandBase {
             new RamseteController(2, 0.7), drivetrain.getFeedFoward(), Drivetrain.DriveKinimatics,
 
             drivetrain::getWheelSpeeds, 
-            new PIDController(pid[0], pid[1], pid[2], period/1000),
-            new PIDController(pid[0], pid[1], pid[2], period/1000), 
+            new PIDController(pid[0], pid[1], pid[2], 0.001),
+            new PIDController(pid[0], pid[1], pid[2], 0.001), 
             drivetrain::setMotorVolts, 
             drivetrain
         );

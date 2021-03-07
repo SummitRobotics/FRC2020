@@ -320,14 +320,8 @@ public class RobotContainer {
     public void teleopInit() {
         // initialises robot
         // for testing ONLY
-        // TODO make good add path to jason
-        System.out.println("writing trajectory");
-        LEDs.getInstance().addCall("making", new LEDCall(999999999, LEDRange.All).flashing(Colors.Green, Colors.Purple));
-        // TODO make good make path right and creat the spmines folder
-        //  Functions.saveObjectToFile(
-        //      SerialisableMultiGearTrajectory.createSerialisableMultiGearTrejectory("paths/garbo-auto-path-1.wpilib.json"), "/home/admin/splines/spline.spl");
-        LEDs.getInstance().removeCall("making");
-        System.out.println("trajectory written");
+        //scheduler.schedule(testSpline);
+
         scheduler.schedule(teleInit);
        
     }
