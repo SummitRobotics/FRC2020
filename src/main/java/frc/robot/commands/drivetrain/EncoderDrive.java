@@ -28,6 +28,7 @@ public class EncoderDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.stop();
+        drivetrain.zeroEncoders();
         drivetrain.setLeftMotorTarget(left);
         drivetrain.setRightMotorTarget(right);
     }

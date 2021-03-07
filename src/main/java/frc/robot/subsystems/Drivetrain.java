@@ -104,15 +104,15 @@ public class Drivetrain extends SubsystemBase {
         // sets pid values
         zeroEncoders();
 
-        // leftPID.setP(P);
-        // leftPID.setI(I);
-        // leftPID.setD(D);
-        // leftPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
+        leftPID.setP(0.05);
+        leftPID.setI(0);
+        leftPID.setD(0);
+        leftPID.setOutputRange(-.25, .25);
         
-        // rightPID.setP(P);
-        // rightPID.setI(I);
-        // rightPID.setD(D);
-        // rightPID.setOutputRange(OUTPUT_MIN, OUTPUT_MAX);
+        rightPID.setP(0.05);
+        rightPID.setI(0);
+        rightPID.setD(0);
+        rightPID.setOutputRange(-.25, .25);
 
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();

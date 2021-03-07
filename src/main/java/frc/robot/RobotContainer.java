@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Functions;
@@ -27,9 +28,11 @@ import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
+import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.drivetrain.FollowSavedTrajectory;
 import frc.robot.commands.drivetrain.FollowSavedTrajectoryThreaded;
 import frc.robot.commands.drivetrain.FollowSpline;
+import frc.robot.commands.drivetrain.FollowTrajectory;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
 import frc.robot.commands.hood.HoodToAngle;
@@ -223,6 +226,7 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
+        Command testSpline = new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json");
         Command testSpline = new FollowSavedTrajectoryThreaded(drivetrain, "/home/admin/splines/spline.spl");
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
@@ -328,10 +332,19 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    // public Command getAutonomousCommand() {
-    //     return new SequentialCommandGroup(
-    //         autoInit,
-    //         new EncoderDrive(drivetrain, 50)
-    //     );
-    // }
+    public Command getAutonomousCommand() {
+        return new SequentialCommandGroup(
+            teleInit,
+            new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
+            new InstantCommand(() -> drivetrain.stop()),
+            new InstantCommand(() -> conveyor.enableIntakeMode()),
+            new SetDown(intakeArm),
+            new WaitCommand(1),
+            new EncoderDrive(drivetrain, 25, 25),
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new SetUp(intakeArm),
+            new FollowSpline(drivetrain),
+            new InstantCommand(() -> drivetrain.stop())
+        );
+    }
 }
