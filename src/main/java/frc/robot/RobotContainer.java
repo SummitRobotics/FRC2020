@@ -270,8 +270,12 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        // bindings for fun dial
+        launchpad.buttonG.whenHeld(new StartEndCommand(
+            () -> shooter.setCoolerSolenoid(true), 
+            () -> shooter.setCoolerSolenoid(false)));
+        launchpad.buttonG.pressBind();
 
+        // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
             turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
@@ -341,7 +345,7 @@ public class RobotContainer {
         testSpline = new FollowTrajectoryThreaded(drivetrain, trajectory);
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
-        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
+        // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
     }
 
     /**

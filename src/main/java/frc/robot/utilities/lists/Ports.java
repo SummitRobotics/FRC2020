@@ -38,6 +38,8 @@ public class Ports {
     // shooter
     SHOOTER = 51,
     ADJUSTABLE_HOOD = 52,
+    COOLER_OPEN = 5,
+    COOLER_CLOSE = 1,
 
     // conveyor
     CONVEYOR = 53,

@@ -45,7 +45,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
         this.drivetrain = drivetrain;
         this.trajectory = trajectory;
 
-        this.period = 1;
+        this.period = 3_000_000;
 
         addRequirements(drivetrain);
     }
@@ -59,8 +59,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
                 // TODO make right
                 new RamseteController(2, 0.7), drivetrain.getFeedFoward(), drivetrain.DriveKinimatics,
                 drivetrain::getWheelSpeeds, 
-                new PIDController(pid[0], pid[1], pid[2], 0.001),
-                new PIDController(pid[0], pid[1], pid[2], 0.001), 
+                new PIDController(pid[0], pid[1], pid[2], (float) period * 1_000_000 / 1000),
+                new PIDController(pid[0], pid[1], pid[2], (float) period * 1_000_000 / 1000), 
                 drivetrain::setMotorVolts, drivetrain);
 
         drivetrain.setPose(trajectory.getInitialPose());
@@ -108,9 +108,14 @@ public class FollowTrajectoryThreaded extends CommandBase {
 class ThreadedSplineExecutor extends Thread {
     private Command command;
     private volatile boolean done = false;
-    private int period;
+    private long period;
 
-    ThreadedSplineExecutor(Command command, int period) {
+    /**
+     * Creates a spline executor on its own thread to speed up period
+     * @param command the spline to run
+     * @param period the period in nanoseconds
+     */
+    ThreadedSplineExecutor(Command command, long period) {
         super();
         this.command = command;
         this.done = false;
@@ -121,7 +126,10 @@ class ThreadedSplineExecutor extends Thread {
     //gets called when thread starts
     public void run() {
         super.run();
+
         while (!command.isFinished() && !done) {
+
+            long commandStartingTime = System.nanoTime();
 
             // Dubious thread safety
             synchronized (command) {
@@ -133,7 +141,15 @@ class ThreadedSplineExecutor extends Thread {
 
             try {
                 //sleep period ms to make the timing consistant
-                sleep(period, 0);
+                long executeTime = (System.nanoTime() - commandStartingTime);
+                long sleepPeriod = period - executeTime;
+
+                if (sleepPeriod < 0) {
+                    System.out.println(String.format("Loop overran with time %d", Math.abs(sleepPeriod/1_000_000)));
+
+                } else {
+                    sleep(sleepPeriod / 1_000_000, (int) (sleepPeriod % 1_000_000));
+                }
 
             } catch (InterruptedException e) {
                 // chronic

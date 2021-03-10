@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.Functions;
@@ -20,6 +24,8 @@ public class Shooter extends SubsystemBase {
 
     private TalonFX shooterMotor;
     private TalonFXSensorCollection shooterEncoder;
+    private DoubleSolenoid coolerSolenoid;
+
     private NetworkTableEntry speed;
     private NetworkTableEntry temp;
     private StatusDisplayWidget status;
@@ -32,9 +38,12 @@ public class Shooter extends SubsystemBase {
 
         shooterMotor = new TalonFX(Ports.SHOOTER);
         shooterEncoder = new TalonFXSensorCollection(shooterMotor);
+        coolerSolenoid = new DoubleSolenoid(Ports.PCM_1, Ports.COOLER_OPEN, Ports.COOLER_CLOSE);
+
         overTempStatus = false;
 
         shooterMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 60, 60, 4));
+        coolerSolenoid.set(Value.kReverse);
     }
 
     /**
@@ -67,6 +76,10 @@ public class Shooter extends SubsystemBase {
 
     public double getShooterCurrentDraw() {
         return shooterMotor.getSupplyCurrent();
+    }
+
+    public void setCoolerSolenoid(boolean value) {
+        coolerSolenoid.set(value ? Value.kForward : Value.kReverse);
     }
 
     @Override
