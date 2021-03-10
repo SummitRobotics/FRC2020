@@ -57,11 +57,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
         command = new RamseteCommand(trajectory, drivetrain::getPose,
                 // TODO make right
-                new RamseteController(2, 0.7), drivetrain.getFeedFoward(), drivetrain.DriveKinimatics,
-                drivetrain::getWheelSpeeds, 
-                new PIDController(pid[0], pid[1], pid[2], (float) period * 1_000_000 / 1000),
-                new PIDController(pid[0], pid[1], pid[2], (float) period * 1_000_000 / 1000), 
-                drivetrain::setMotorVolts, drivetrain);
+                new RamseteController(2, 0.7), Drivetrain.DriveKinimatics,
+                drivetrain::setMotorTargetSpeed, drivetrain);
 
         drivetrain.setPose(trajectory.getInitialPose());
         
@@ -70,11 +67,11 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
         //we CAN NOT touch the command outside of the thread once it has started
         //nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
-        sin = new ThreadedSplineExecutor(command, period);
+        sin = new ThreadedSplineExecutor(command, drivetrain, period);
         t = new Thread(sin);
         t.setName("spline thread");
         //1-10
-        t.setPriority(9);
+        t.setPriority(10);
         t.start();
         System.out.println("thread started");
     }
@@ -108,6 +105,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
 class ThreadedSplineExecutor extends Thread {
     private Command command;
     private volatile boolean done = false;
+    private volatile Drivetrain drivetrain;
     private long period;
 
     /**
@@ -115,8 +113,9 @@ class ThreadedSplineExecutor extends Thread {
      * @param command the spline to run
      * @param period the period in nanoseconds
      */
-    ThreadedSplineExecutor(Command command, long period) {
+    ThreadedSplineExecutor(Command command, Drivetrain drivetrain, long period) {
         super();
+        this.drivetrain = drivetrain;
         this.command = command;
         this.done = false;
         this.period = period;
@@ -131,11 +130,10 @@ class ThreadedSplineExecutor extends Thread {
 
             long commandStartingTime = System.nanoTime();
 
-            // Dubious thread safety
-            synchronized (command) {
-                // Executes the ramsete command to set drivetrain motor powers
-                command.execute();
-            }
+            // Executes the ramsete command to set drivetrain motor powers
+            drivetrain.updateOdomitry();
+            //put a measurement here
+            command.execute();
 
             //System.out.println("command executed!");
 
@@ -145,7 +143,7 @@ class ThreadedSplineExecutor extends Thread {
                 long sleepPeriod = period - executeTime;
 
                 if (sleepPeriod < 0) {
-                    System.out.println(String.format("Loop overran with time %d", Math.abs(sleepPeriod/1_000_000)));
+                    System.out.println(String.format("Loop overran with time %d", Math.abs(((float)sleepPeriod)/1_000_000)));
 
                 } else {
                     sleep(sleepPeriod / 1_000_000, (int) (sleepPeriod % 1_000_000));

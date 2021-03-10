@@ -324,7 +324,7 @@ public class RobotContainer {
     public void teleopInit() {
         // initialises robot
         // for testing ONLY
-        //scheduler.schedule(testSpline);
+        scheduler.schedule(testSpline);
 
         scheduler.schedule(teleInit);
        

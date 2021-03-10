@@ -104,15 +104,26 @@ public class Drivetrain extends SubsystemBase {
         // sets pid values
         zeroEncoders();
 
+        //pid for position
         leftPID.setP(0.05);
         leftPID.setI(0);
         leftPID.setD(0);
         leftPID.setOutputRange(-.25, .25);
-        
+
         rightPID.setP(0.05);
         rightPID.setI(0);
         rightPID.setD(0);
         rightPID.setOutputRange(-.25, .25);
+
+        //pid for velocity
+        //TODO set pid vals corectly
+        leftPID.setP(0.05, 2);
+        leftPID.setI(0, 2);
+        leftPID.setD(0, 2);
+
+        rightPID.setP(0.05, 2);
+        rightPID.setI(0, 2);
+        rightPID.setD(0, 2);
 
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
@@ -164,18 +175,30 @@ public class Drivetrain extends SubsystemBase {
         right.set(power);
     }
 
-    public synchronized void setLeftMotorVolts(double volts){
+    public void setLeftMotorVolts(double volts){
         left.setVoltage(volts);
     }
 
-    public synchronized void setRightMotorVolts(double volts){
+    public void setRightMotorVolts(double volts){
         right.setVoltage(volts);
     }
 
-    public synchronized void setMotorVolts(double left, double right){
+    public void setMotorVolts(double left, double right){
         //System.out.println(String.format("left is: %f, right is %f", left, right));
         setRightMotorVolts(right);
         setLeftMotorVolts(left);
+    }
+
+    public void setMotorTargetSpeed(double leftMS, double rightMS){
+        leftPID.setReference(MStoRPM(leftMS), ControlType.kVelocity, 2);
+        rightPID.setReference(MStoRPM(rightMS), ControlType.kVelocity, 2);
+    }
+
+    public double MStoRPM(double input){
+        double out = input/WheleRadiusInMeters;
+        out = out*60;
+        out = out*(2*Math.PI);
+        return out;
     }
 
     /**
@@ -296,7 +319,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     //could things be good for once please
-    private synchronized double covertRpmToMetersPerSencond(double RPM){
+    private double covertRpmToMetersPerSencond(double RPM){
         return ((RPM/60)*(2*Math.PI))*WheleRadiusInMeters;
     }
 
@@ -305,7 +328,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param rate time in seconds to go from 0 to full power
      */
-    public synchronized void setOpenRampRate(double rate) {
+    public void setOpenRampRate(double rate) {
         left.setOpenLoopRampRate(rate);
         right.setOpenLoopRampRate(rate);
     }
@@ -316,7 +339,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param rate time in seconds to go from 0 to full power
      */
-    public synchronized void setClosedRampRate(double rate) {
+    public void setClosedRampRate(double rate) {
         left.setClosedLoopRampRate(rate);
         right.setClosedLoopRampRate(rate);
     }
@@ -324,7 +347,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Stops the motors
      */
-    public synchronized void stop() {
+    public void stop() {
         left.stopMotor();
         right.stopMotor();
     }
@@ -350,7 +373,7 @@ public class Drivetrain extends SubsystemBase {
      * gets the right pid values for the curent shift state
      * @return double array of p,i,d
      */
-    public synchronized double[] getPid(){
+    public double[] getPid(){
         if(shift.getAsBoolean()){
             double[] out = {HighP, HighI, HighD};
             return out;
@@ -361,11 +384,11 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public synchronized boolean getShift(){
+    public boolean getShift(){
         return shift.getAsBoolean();
     }
 
-    public synchronized SimpleMotorFeedforward getFeedFoward(){
+    public SimpleMotorFeedforward getFeedFoward(){
         if(shift.getAsBoolean()){
             return HighFeedFoward;
         }
@@ -374,7 +397,7 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-    public synchronized DifferentialDriveVoltageConstraint getVoltageConstraint(){
+    public DifferentialDriveVoltageConstraint getVoltageConstraint(){
         if(shift.getAsBoolean()){
             return HighVoltageConstraint;
         }
@@ -383,9 +406,13 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    public synchronized void updateOdomitry(){
 
-    public synchronized void periodic() {
-        // Update the odometry in the periodic block
         odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+    }
+
+    public void periodic() {
+        // Update the odometry in the periodic block
+        updateOdomitry();
     }
 }
