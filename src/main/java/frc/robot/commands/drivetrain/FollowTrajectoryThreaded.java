@@ -28,7 +28,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
     private Trajectory trajectory;
     private Drivetrain drivetrain;
     private String path;
-    private Thread t;
+    private Thread executionThread;
     private int period;
     private ThreadedSplineExecutor sin;
 
@@ -65,21 +65,21 @@ public class FollowTrajectoryThreaded extends CommandBase {
         command.initialize();
         System.out.println("command initialized");
 
-        //we CAN NOT touch the command outside of the thread once it has started
-        //nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
+        // we CAN NOT touch the command outside of the thread once it has started
+        // nor can we touch the drivetrain but that should be ok beacuse the scedular should handle that
         sin = new ThreadedSplineExecutor(command, drivetrain, period);
-        t = new Thread(sin);
-        t.setName("spline thread");
+        executionThread = new Thread(sin);
+        executionThread.setName("spline thread");
         //1-10
-        t.setPriority(10);
-        t.start();
+        executionThread.setPriority(10);
+        executionThread.start();
         System.out.println("thread started");
     }
 
     @Override
     public boolean isFinished() {
         //checks if thread is running or ended
-        return t.getState() == State.TERMINATED;
+        return executionThread.getState() == State.TERMINATED;
     }
 
     @Override
@@ -89,11 +89,11 @@ public class FollowTrajectoryThreaded extends CommandBase {
             sin.stopRunning();
         }
 
-        boolean stopped = t.getState() == State.TERMINATED;
+        boolean stopped = executionThread.getState() == State.TERMINATED;
 
         // makes sure thread is stopped before allowing scheduler to continue to prevent unintentional movement
         while(!stopped){
-            stopped = t.getState() == State.TERMINATED;
+            stopped = executionThread.getState() == State.TERMINATED;
         }
         //stops the drivetrain motors
         drivetrain.stop();
@@ -131,7 +131,7 @@ class ThreadedSplineExecutor extends Thread {
             long commandStartingTime = System.nanoTime();
 
             // Executes the ramsete command to set drivetrain motor powers
-            drivetrain.updateOdomitry();
+            drivetrain.updateOdometry();
             //put a measurement here
             command.execute();
 

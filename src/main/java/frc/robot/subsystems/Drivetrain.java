@@ -38,8 +38,8 @@ public class Drivetrain extends SubsystemBase {
     HighKa = 0.141,
     HighGearRatio = 9.1,
     LowGEarRatio = 19.65,
-    WheleRadiusInMeters = 0.0762,
-    wheleCirconfranceInMeters = (2*WheleRadiusInMeters)*Math.PI,
+    WheelRadiusInMeters = 0.0762,
+    wheleCirconfranceInMeters = (2*WheelRadiusInMeters)*Math.PI,
     MaxOutputVoltage = 11,
     //TODO check if right (is in meters)
     DriveWidth = 1.5;
@@ -175,27 +175,42 @@ public class Drivetrain extends SubsystemBase {
         right.set(power);
     }
 
-    public void setLeftMotorVolts(double volts){
+    public void setLeftMotorVolts(double volts) {
         left.setVoltage(volts);
     }
 
-    public void setRightMotorVolts(double volts){
+    public void setRightMotorVolts(double volts) {
         right.setVoltage(volts);
     }
 
-    public void setMotorVolts(double left, double right){
+    /**
+     * Sets the voltage of the motors
+     * @param left the right motor voltage
+     * @param right the left motor voltage
+     */
+    public void setMotorVolts(double left, double right) {
         //System.out.println(String.format("left is: %f, right is %f", left, right));
         setRightMotorVolts(right);
         setLeftMotorVolts(left);
     }
 
-    public void setMotorTargetSpeed(double leftMS, double rightMS){
-        leftPID.setReference(MStoRPM(leftMS), ControlType.kVelocity, 2);
-        rightPID.setReference(MStoRPM(rightMS), ControlType.kVelocity, 2);
+    /**
+     * Sets the motor power based on desired meters per second
+     * @param leftMS the left motor MPS
+     * @param rightMS the right motor MPS
+     */
+    public void setMotorTargetSpeed(double leftMS, double rightMS) {
+        leftPID.setReference(MPStoRPM(leftMS), ControlType.kVelocity, 2);
+        rightPID.setReference(MPStoRPM(rightMS), ControlType.kVelocity, 2);
     }
 
-    public double MStoRPM(double input){
-        double out = input/WheleRadiusInMeters;
+    /**
+     * Converts robot meters per second into motor rotations per minute
+     * @param input the MPS to convert
+     * @return the corresponding RPM
+     */
+    public double MPStoRPM(double input) {
+        double out = input/WheelRadiusInMeters;
         out = out*60;
         out = out*(2*Math.PI);
         return out;
@@ -239,7 +254,7 @@ public class Drivetrain extends SubsystemBase {
         rightEncoder.setPosition(position);
     }
 
-    public synchronized void zeroEncoders(){
+    public synchronized void zeroEncoders() {
         setRightEncoder(0);
         setLeftEncoder(0);
     }
@@ -263,19 +278,19 @@ public class Drivetrain extends SubsystemBase {
         return leftEncoder.getPosition();
     }
 
-    public synchronized double getLeftRPM(){
+    public synchronized double getLeftRPM() {
         return leftEncoder.getVelocity();
     }
 
-    public synchronized double getRightRPM(){
+    public synchronized double getRightRPM() {
         return rightEncoder.getVelocity();
     }
 
     /**
      * @return the total distance in meters the side as travled sense the last reset
      */
-    public synchronized double getLeftDistance(){
-        if(shift.getAsBoolean()){
+    public synchronized double getLeftDistance() {
+        if (shift.getAsBoolean()) {
             return (getLeftEncoderPosition()/HighGearRatio)*wheleCirconfranceInMeters;
         }
         else{
@@ -286,8 +301,8 @@ public class Drivetrain extends SubsystemBase {
      /**
      * @return the total distance in meters the side as travled sense the last reset
      */
-    public synchronized double getRightDistance(){
-        if(shift.getAsBoolean()){
+    public synchronized double getRightDistance() {
+        if (shift.getAsBoolean()) {
             return (getRightEncoderPosition()/HighGearRatio)*wheleCirconfranceInMeters;
         }
         else{
@@ -298,8 +313,8 @@ public class Drivetrain extends SubsystemBase {
     /**
      * @return the linear speed of the side in meters per second
      */
-    public synchronized double getLeftSpeed(){
-        if(shift.getAsBoolean()){
+    public synchronized double getLeftSpeed() {
+        if (shift.getAsBoolean()) {
             return covertRpmToMetersPerSencond((getLeftRPM()/HighGearRatio));
         }
         else{
@@ -309,8 +324,8 @@ public class Drivetrain extends SubsystemBase {
     /**
      * @return the linear speed of the side in meters per second
      */
-    public synchronized double getRightSpeed(){
-        if(shift.getAsBoolean()){
+    public synchronized double getRightSpeed() {
+        if (shift.getAsBoolean()) {
             return covertRpmToMetersPerSencond((getRightRPM()/HighGearRatio));
         }
         else{
@@ -319,8 +334,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     //could things be good for once please
-    private double covertRpmToMetersPerSencond(double RPM){
-        return ((RPM/60)*(2*Math.PI))*WheleRadiusInMeters;
+    private double covertRpmToMetersPerSencond(double RPM) {
+        return ((RPM / 60) * (2 * Math.PI)) * WheelRadiusInMeters;
     }
 
     /**
@@ -363,7 +378,7 @@ public class Drivetrain extends SubsystemBase {
     public synchronized void setPose(Pose2d pose) {
         zeroEncoders();
         odometry.resetPosition(pose, gyro.getRotation2d());
-      }
+    }
 
     public synchronized Pose2d getPose() {
         return odometry.getPoseMeters();
@@ -373,46 +388,43 @@ public class Drivetrain extends SubsystemBase {
      * gets the right pid values for the curent shift state
      * @return double array of p,i,d
      */
-    public double[] getPid(){
-        if(shift.getAsBoolean()){
+    public double[] getPid() {
+        if (shift.getAsBoolean()) {
             double[] out = {HighP, HighI, HighD};
             return out;
-        }
-        else{
+
+        } else {
             double[] out = {LowP, LowI, LowD};
             return out;
         }
     }
 
-    public boolean getShift(){
+    public boolean getShift() {
         return shift.getAsBoolean();
     }
 
-    public SimpleMotorFeedforward getFeedFoward(){
-        if(shift.getAsBoolean()){
+    public SimpleMotorFeedforward getFeedFoward() {
+        if (getShift()) {
             return HighFeedFoward;
-        }
-        else{
+        } else {
             return LowFeedFoward;
         }
     }
 
-    public DifferentialDriveVoltageConstraint getVoltageConstraint(){
-        if(shift.getAsBoolean()){
+    public DifferentialDriveVoltageConstraint getVoltageConstraint() {
+        if (getShift()) {
             return HighVoltageConstraint;
-        }
-        else{
+        } else {
             return LowVoltageConstraint;
         }
     }
 
-    public synchronized void updateOdomitry(){
-
+    public synchronized void updateOdometry() {
         odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
     }
 
     public void periodic() {
         // Update the odometry in the periodic block
-        updateOdomitry();
+        updateOdometry();
     }
 }
