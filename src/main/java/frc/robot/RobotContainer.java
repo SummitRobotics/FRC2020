@@ -313,9 +313,7 @@ public class RobotContainer {
         // TODO - make an actual rainbow LEDCall to run
         Konami.getInstance().addSequence(
             new InstantCommand(
-                () -> LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).flashing(
-                    new Color8Bit(129, 255, 176), 
-                    new Color8Bit(180, 32, 225)))
+                () -> LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow())
             ),
             "up", "up", "down", "down", "down", "left", "right", "left", "right", "b", "a", "start"
         );
