@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.oi.Konami;
 import frc.robot.utilities.Usable;
 
 /**
@@ -17,6 +18,16 @@ public class OIButton extends Button implements Usable {
         super(getter);
 
         users = new ArrayList<>();
+
+        whenHeld(Konami.nonRegisteredButtonPress());
+    }
+
+    public OIButton(BooleanSupplier getter, String id) {
+        super(getter);
+
+        users = new ArrayList<>();
+
+        whenHeld(Konami.registeredButtonPress(id));
     }
 
     public OIButton() {
