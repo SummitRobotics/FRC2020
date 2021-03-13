@@ -324,25 +324,38 @@ public class RobotContainer {
     public void teleopInit() {
         // initialises robot
         // for testing ONLY
-        scheduler.schedule(testSpline);
+        //scheduler.schedule(testSpline);
 
         scheduler.schedule(teleInit);
        
     }
 
     public void robotInit(){
-        String path = "paths/garbo-auto-path-1.wpilib.json";
-        Trajectory trajectory = new Trajectory();
+        String path1 = "paths/garbo-auto-path-1.wpilib.json";
+        String path2 = "paths/garbo-auto-path-2.wpilib.json";
+
+        Trajectory trajectory1 = new Trajectory();
+        Trajectory trajectory2 = new Trajectory();
 
         try {
-            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(path);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(path1);
+            trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + path, ex.getStackTrace());
+            DriverStation.reportError("Unable to open trajectory: " + path1, ex.getStackTrace());
+        }
+
+        try {
+            Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(path2);
+            trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + path2, ex.getStackTrace());
         }
 
         // testSpline = new FollowTrajectory(drivetrain, trajectory);
-        testSpline = new FollowTrajectoryThreaded(drivetrain, trajectory);
+        testSpline = new SequentialCommandGroup(
+            new FollowTrajectoryThreaded(drivetrain, trajectory1),
+            new FollowTrajectoryThreaded(drivetrain, trajectory2)
+        );
         launchpad.buttonD.whenPressed(testSpline);
         launchpad.buttonD.commandBind(testSpline);
         // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));

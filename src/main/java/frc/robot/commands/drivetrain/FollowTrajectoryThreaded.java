@@ -45,7 +45,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
         this.drivetrain = drivetrain;
         this.trajectory = trajectory;
 
-        this.period = 3_000_000;
+        this.period = 5_000_000;
 
         addRequirements(drivetrain);
     }
@@ -57,7 +57,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
         command = new RamseteCommand(trajectory, drivetrain::getPose,
                 // TODO make right
-                new RamseteController(2, 0.7), Drivetrain.DriveKinimatics,
+                new RamseteController(1.5, 0.8), Drivetrain.DriveKinimatics,
                 drivetrain::setMotorTargetSpeed, drivetrain);
 
         drivetrain.setPose(trajectory.getInitialPose());
@@ -143,7 +143,7 @@ class ThreadedSplineExecutor extends Thread {
                 long sleepPeriod = period - executeTime;
 
                 if (sleepPeriod < 0) {
-                    System.out.println(String.format("Loop overran with time %d", Math.abs(((float)sleepPeriod)/1_000_000)));
+                    System.out.println(String.format("Loop overran with time %d", Math.abs((sleepPeriod)/1_000_00)));
 
                 } else {
                     sleep(sleepPeriod / 1_000_000, (int) (sleepPeriod % 1_000_000));

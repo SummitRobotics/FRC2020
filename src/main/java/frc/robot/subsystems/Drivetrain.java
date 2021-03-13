@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
     wheleCirconfranceInMeters = (2*WheelRadiusInMeters)*Math.PI,
     MaxOutputVoltage = 11,
     //TODO check if right (is in meters)
-    DriveWidth = 1.5;
+    DriveWidth = 0.7112;
 
     // left motors
     private CANSparkMax left = new CANSparkMax(Ports.LEFT_DRIVE_3, MotorType.kBrushless);
@@ -117,13 +117,13 @@ public class Drivetrain extends SubsystemBase {
 
         //pid for velocity
         //TODO set pid vals corectly
-        leftPID.setP(0.05, 2);
+        leftPID.setP(0.000278, 2);
         leftPID.setI(0, 2);
-        leftPID.setD(0, 2);
+        leftPID.setD(0.0001, 2);
 
-        rightPID.setP(0.05, 2);
+        rightPID.setP(0.000278, 2);
         rightPID.setI(0, 2);
-        rightPID.setD(0, 2);
+        rightPID.setD(0.0001, 2);
 
         left.disableVoltageCompensation();
         right.disableVoltageCompensation();
@@ -210,9 +210,11 @@ public class Drivetrain extends SubsystemBase {
      * @return the corresponding RPM
      */
     public double MPStoRPM(double input) {
-        double out = input/WheelRadiusInMeters;
-        out = out*60;
-        out = out*(2*Math.PI);
+        double out = input / WheelRadiusInMeters;
+        out = out * 60;
+        out = out * (2 * Math.PI);
+        out = out * HighGearRatio;
+        out /= 39.4784176044;
         return out;
     }
 
@@ -426,5 +428,8 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update the odometry in the periodic block
         updateOdometry();
+        // System.out.println(MPStoRPM(getRightSpeed()));
+        // System.out.println(rightEncoder.getVelocity());
+        // System.out.println("------------------------");
     }
 }
