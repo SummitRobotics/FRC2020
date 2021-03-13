@@ -70,18 +70,26 @@ public abstract class GenericDriver {
 	 * Creates an OI button using a port
 	 * 
 	 * @param port the button port
-	 * @param logReference the desired log reference for the button
-	 * @return the generated LoggerButton
+	 * @return the generated button
 	 */
 	protected OIButton generateOIButton(int port) {
 		return new OIButton(getButtonGetter(port));
-	}
+    }
+    
+    /**
+     * Creates an OI button with a given id using a port
+     * @param port the button port
+     * @param id the button's id
+     * @return the generated button
+     */
+    protected OIButton generateOIButton(int port, String id) {
+        return new OIButton(getButtonGetter(port), id);
+    }
 
 	/**
-	 * Creates a logger axis using an port
+	 * Creates an axis using an port
 	 * 
 	 * @param port the axis port
-	 * @param logReference the desired log reference for the button
 	 * @return the generated axis
 	 */
 	protected OIAxis generateOIAxis(int port) {

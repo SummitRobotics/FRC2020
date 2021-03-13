@@ -8,7 +8,7 @@
 package frc.robot.utilities.lists;
 
 /**
- * all the prioritys fro the leds
+ * all the priorities for the leds
  */
 public class LEDPriorities {
     public static final int

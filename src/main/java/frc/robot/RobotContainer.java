@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,6 +27,7 @@ import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
 import frc.robot.utilities.lists.StatusPrioritys;
+import frc.robot.oi.Konami;
 import frc.robot.oi.drivers.ControllerDriver;
 import frc.robot.oi.drivers.JoystickDriver;
 import frc.robot.oi.drivers.LaunchpadDriver;
@@ -306,6 +308,19 @@ public class RobotContainer {
             }, shifter
         ));
 
+
+        // secret!
+        // TODO - make an actual rainbow LEDCall to run
+        Konami.getInstance().addSequence(
+            new InstantCommand(
+                () -> LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow())
+            ),
+            "up", "up", "down", "down", "down", "left", "right", "left", "right", "b", "a", "start"
+        );
+
+        Konami.getInstance().addSequence(
+            new InstantCommand(() -> LEDs.getInstance().removeCall("rainboooow")), 
+            "start", "a", "b", "right", "left", "right", "left", "down", "down", "up", "up");
     }
 
     public void disabledInit(){
@@ -314,7 +329,7 @@ public class RobotContainer {
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
     }
 
-    public void telyopPeriodic(){
+    public void teleopPeriodic(){
 
     }
 
