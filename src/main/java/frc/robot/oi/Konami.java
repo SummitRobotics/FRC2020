@@ -55,7 +55,7 @@ public class Konami {
         }
     }
 
-    public void addSequence(String[] code, Command command) {
+    public void addSequence(Command command, String... code) {
         sequences.add(new Sequence(code, command));
     }
 
