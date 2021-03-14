@@ -15,12 +15,18 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.devices.LEDs.LEDCall;
+import frc.robot.devices.LEDs.LEDRange;
+import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.lists.Colors;
 // import frc.robot.utilities.SerialisableMultiGearTrajectory;
+import frc.robot.utilities.lists.LEDPriorities;
 
 //this is REAL bad
 public class FollowTrajectoryThreaded extends CommandBase {
@@ -54,6 +60,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
     public void initialize() {
         //TODO make good tune pid for new faster updaes
         double[] pid = drivetrain.getPid();
+
+        LEDs.getInstance().addCall("spline", new LEDCall(LEDPriorities.splines, LEDRange.All).sine(Colors.Purple));
 
         command = new RamseteCommand(trajectory, drivetrain::getPose,
                 // TODO make right
@@ -97,6 +105,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
         }
         //stops the drivetrain motors
         drivetrain.stop();
+
+        LEDs.getInstance().removeCall("spline");
     }
 
 }

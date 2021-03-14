@@ -64,7 +64,7 @@ public class Conveyor extends SubsystemBase {
 	 * @return the breakbeam state where true is unbroken and false is broken
 	 */
 	public boolean getBreakBeam() {
-		return breakbeam.get();
+		return !breakbeam.get();
 	}
 
 	/**

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -49,6 +50,7 @@ import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
+import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.commands.turret.FullAutoShooterAssembly;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.commands.turret.SemiAutoShooterAssembly;
@@ -258,12 +260,12 @@ public class RobotContainer {
         Command intake = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
             new SetDown(intakeArm)
-            );
+        );
 
         Command up = new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new SetUp(intakeArm)
-            );
+        );
 
         
         launchpad.buttonH.whenPressed(intake, false);
@@ -310,17 +312,19 @@ public class RobotContainer {
 
 
         // secret!
-        // TODO - make an actual rainbow LEDCall to run
         Konami.getInstance().addSequence(
             new InstantCommand(
-                () -> LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow())
+                () -> {
+                    System.out.println("there should be rainbows");
+                    LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow());
+                }
             ),
-            "up", "up", "down", "down", "down", "left", "right", "left", "right", "b", "a", "start"
+            "up", "up", "down", "down", "left", "right", "left", "right", "b", "a", "start"
         );
 
         Konami.getInstance().addSequence(
             new InstantCommand(() -> LEDs.getInstance().removeCall("rainboooow")), 
-            "start", "a", "b", "right", "left", "right", "left", "down", "down", "up", "up");
+            "b", "b", "b", "b", "b", "b", "b", "b");
     }
 
     public void disabledInit(){
@@ -342,6 +346,8 @@ public class RobotContainer {
         //scheduler.schedule(testSpline);
 
         scheduler.schedule(teleInit);
+
+        scheduler.schedule(new SpoolOnTarget(shooter, limelight));
        
     }
 

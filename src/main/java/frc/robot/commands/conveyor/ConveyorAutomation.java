@@ -77,6 +77,7 @@ public class ConveyorAutomation extends CommandBase {
 	 */
 	private double intake() {
 		if (conveyor.getBreakBeam()) {
+            System.out.println("break beam!!!");
 			return Conveyor.SUBSUME_POWER;
 		}
 

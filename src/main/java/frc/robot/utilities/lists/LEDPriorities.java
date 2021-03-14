@@ -20,5 +20,6 @@ public class LEDPriorities {
     firing = 5,
     lowGear = 6,
     cpmUp = 7,
-    armsUp = 8;
+    armsUp = 8,
+    splines = 9;
 }

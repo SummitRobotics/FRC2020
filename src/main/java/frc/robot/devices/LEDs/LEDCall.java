@@ -162,8 +162,8 @@ public class LEDCall {
             @Override
             public Color8Bit getColor(int loop, int led) {
                 return new Color8Bit(Color.fromHSV(
-                    (loop + led) % 180, 
-                    1, 1));
+                    (loop + led) * 2 % 180, 
+                    255, 255));
             }
         };
     }

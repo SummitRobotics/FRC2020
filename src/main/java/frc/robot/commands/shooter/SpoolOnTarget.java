@@ -1,6 +1,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.subsystems.Shooter;
@@ -16,9 +17,9 @@ public class SpoolOnTarget extends CommandBase {
 	//WRONG:MAKE GOOD
 	private double onTargetRpm = 2000;
 
-	private double seesTargetRpm = 1000;
+	private double seesTargetRpm = 1500;
 
-	private double standByRpm = 500;
+	private double standByRpm = 200;
 
 	private Shooter shooter;
 	private Lemonlight limelight;
@@ -32,9 +33,14 @@ public class SpoolOnTarget extends CommandBase {
 		this.limelight = limelight;
 
 		// TODO - make values good
-		pid = new PIDController(0.01, 0, 0);
-		pid.setSetpoint(standByRpm);
+		pid = new PIDController(0.001, 0.0005, 0);
+		//pid.setSetpoint(standByRpm);
         pid.setTolerance(50);
+        
+
+        pid.setSetpoint(onTargetRpm);
+
+        SmartDashboard.putData(pid);
 	}
 
 	/**
@@ -48,17 +54,19 @@ public class SpoolOnTarget extends CommandBase {
 	@Override
 	public void execute() {
 
-		if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
-            pid.setSetpoint(onTargetRpm);
+		// if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
             
-		} else if (limelight.hasTarget()) {
-            pid.setSetpoint(seesTargetRpm);
             
-		} else{
-			pid.setSetpoint(standByRpm);
-		}
+		// } else if (limelight.hasTarget()) {
+        //     pid.setSetpoint(seesTargetRpm);
+            
+		// } else{
+		// 	pid.setSetpoint(standByRpm);
+        // }
+        double power  = pid.calculate(shooter.getShooterRPM());
+        System.out.println("shooter power is: "+ power);
 
-		///shooter.setPower(pid.calculate(shooter.getShooterRPM()));
+		shooter.setPower(power);
 	}
 
 	@Override

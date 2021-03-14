@@ -110,10 +110,10 @@ public class FullManualShootingAssembly extends CommandBase {
 					ledON = false;
 				}
 
-                shooter.setPower(shooterPower);
+                //shooter.setPower(shooterPower);
                 
 			} else {
-				shooter.setPower(0);
+				//shooter.setPower(0);
 			}
 		}
 		
@@ -131,7 +131,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		conveyor.setShootMode(false);
 
 		turret.stop();
-		shooter.stop();
+		//shooter.stop();
 		hood.stop();
 
 		if(ledON){

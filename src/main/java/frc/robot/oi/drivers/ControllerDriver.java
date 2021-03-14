@@ -14,8 +14,8 @@ public class ControllerDriver extends GenericDriver {
 	public enum DPadValues {
         UP(0, 45, 315),
         DOWN(180, 135, 225),
-        LEFT(90, 45, 135),
-        RIGHT(270, 225, 315);
+        RIGHT(90, 45, 135),
+        LEFT(270, 225, 315);
 
         public int[] values;
         private DPadValues(int... values) {
