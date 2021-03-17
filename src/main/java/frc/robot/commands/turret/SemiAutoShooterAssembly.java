@@ -1,7 +1,5 @@
 package frc.robot.commands.turret;
 
-import frc.robot.devices.Lemonlight;
-import frc.robot.devices.Lidar;
 import frc.robot.devices.LidarLight;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.oi.inputs.OIAxis;

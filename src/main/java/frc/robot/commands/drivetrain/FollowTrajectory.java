@@ -1,14 +1,8 @@
 package frc.robot.commands.drivetrain;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -36,10 +30,9 @@ public class FollowTrajectory extends CommandBase {
         command = new RamseteCommand(
             trajectory, 
             drivetrain::getPose,
-            // TODO make right
             new RamseteController(2, 0.7), 
             drivetrain.getFeedFoward(), 
-            drivetrain.DriveKinimatics,
+            Drivetrain.DriveKinimatics,
             drivetrain::getWheelSpeeds, 
             new PIDController(pid[0], pid[1], pid[2]),
             new PIDController(pid[0], pid[1], pid[2]), 

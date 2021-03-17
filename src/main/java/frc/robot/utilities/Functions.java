@@ -96,7 +96,7 @@ public class Functions {
     public static <T> T RetriveObjectFromFile(String path) throws Exception {
         FileInputStream fis = new FileInputStream(path);
         ObjectInputStream ois = new ObjectInputStream(fis);
-        T result = (T)ois.readObject();
+        T result = (T) ois.readObject();
         ois.close();
         return result;
     }

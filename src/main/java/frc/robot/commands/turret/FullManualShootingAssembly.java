@@ -21,7 +21,6 @@ import frc.robot.utilities.Functions;
 public class FullManualShootingAssembly extends CommandBase {
 
 	private Turret turret;
-	private Shooter shooter;
 	private Conveyor conveyor;
 	private Hood hood;
 
@@ -52,7 +51,6 @@ public class FullManualShootingAssembly extends CommandBase {
 		super();
 
 		this.turret = turret;
-		this.shooter = shooter;
 		this.conveyor = conveyor;
 		this.hood = hood;
 
@@ -78,8 +76,10 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void execute() {
 		if (!turretRotationPower.inUse() && Functions.absGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-			double turretPower = limiter.getRateLimitedValue((turretRotationPower.get()/3)); // Scaled by 5 for sanity
-			turret.setPower(Functions.deadzone(.05, turretPower)); 
+            double turretPower = turretRotationPower.get() / 3;
+            turretPower = limiter.getRateLimitedValue(turretPower);
+            turretPower = Functions.deadzone(.05, turretPower);
+			turret.setPower(turretPower); 
 
 		} else if (!shooterHoodPower.inUse() && Functions.absGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));

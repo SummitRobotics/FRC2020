@@ -5,17 +5,9 @@
 package frc.robot.commands.drivetrain;
 
 import java.lang.Thread.State;
-import java.util.List;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -23,17 +15,13 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
-// import frc.robot.utilities.SerialisableMultiGearTrajectory;
 import frc.robot.utilities.lists.LEDPriorities;
 
-//this is REAL bad
 public class FollowTrajectoryThreaded extends CommandBase {
 
     private Trajectory trajectory;
     private Drivetrain drivetrain;
-    private String path;
     private Thread executionThread;
     private int period;
     private ThreadedSplineExecutor sin;
@@ -58,15 +46,14 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
     @Override
     public void initialize() {
-        //TODO make good tune pid for new faster updaes
-        double[] pid = drivetrain.getPid();
-
         LEDs.getInstance().addCall("spline", new LEDCall(LEDPriorities.splines, LEDRange.All).sine(Colors.Purple));
 
-        command = new RamseteCommand(trajectory, drivetrain::getPose,
-                // TODO make right
-                new RamseteController(1.5, 0.8), Drivetrain.DriveKinimatics,
-                drivetrain::setMotorTargetSpeed, drivetrain);
+        command = new RamseteCommand(
+            trajectory, 
+            drivetrain::getPose,
+            new RamseteController(1.5, 0.8), Drivetrain.DriveKinimatics,
+            drivetrain::setMotorTargetSpeed, drivetrain
+        );
 
         drivetrain.setPose(trajectory.getInitialPose());
         

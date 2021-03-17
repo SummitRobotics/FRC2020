@@ -129,9 +129,8 @@ public class LEDCall {
         };
     }
 
-    //TODO - have Django explain this
     /**
-     * Creates a new LEDCall with getColor overloaded. Makes LEDs in its range do something. Ask Django, I don't understand it.
+     * Creates a new LEDCall with getColor overloaded. Makes LEDs in its range do a wave?
      * 
      * @param color the color to do something with?
      * @return the modified LEDCall

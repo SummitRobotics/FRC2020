@@ -3,7 +3,6 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.devices.Lemonlight;
 import frc.robot.devices.LidarLight;
 import frc.robot.subsystems.Shooter;
 
@@ -15,9 +14,8 @@ public class SpoolOnTarget extends CommandBase {
 	//TODO - make right
 	private static final double TARGET_CLOSE_CUTOFF = 10;
 
-	//WRONG:MAKE GOOD
-	private double seesTargetRPM = 1500;
-    private double standByRPM = 200;
+	private static final double TARGET_SIGHTED_RPM = 1500;
+    private static final double STAND_BY_RPM = 200;
 
 	private Shooter shooter;
 	private LidarLight lidarLight;
@@ -30,19 +28,16 @@ public class SpoolOnTarget extends CommandBase {
 		this.shooter = shooter;
 		this.lidarLight = lidarLight;
 
-		// TODO - make values good
 		pid = new PIDController(0.001, 0.0005, 0);
-		//pid.setSetpoint(standByRpm);
+		pid.setSetpoint(STAND_BY_RPM);
         pid.setTolerance(50);
         
-
-        pid.setSetpoint(0);
-
         SmartDashboard.putData(pid);
 	}
 
 	/**
-	 * gets weather the shooter is at an acceptable rpm to shoot a ball
+	 * gets whether the shooter is at an acceptable rpm to shoot a ball
+     * 
 	 * @return true when acceptable to shoot
 	 */
 	public boolean isUpToShootSpeed(){
@@ -60,9 +55,9 @@ public class SpoolOnTarget extends CommandBase {
             }
             
 		} else if (lidarLight.hasTarget()) {
-            pid.setSetpoint(seesTargetRPM);
+            pid.setSetpoint(TARGET_SIGHTED_RPM);
 		} else {
-			pid.setSetpoint(standByRPM);
+			pid.setSetpoint(STAND_BY_RPM);
         }
         
 
@@ -79,9 +74,4 @@ public class SpoolOnTarget extends CommandBase {
 
 		shooter.stop();
 	}
-
-	@Override
-	public boolean isFinished() {
-		return false;
-    }
 }

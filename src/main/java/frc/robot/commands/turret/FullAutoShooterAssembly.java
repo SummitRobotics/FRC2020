@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.hood.HoodDistanceAngler;
 import frc.robot.commands.shooter.SpoolOnTarget;
-import frc.robot.devices.Lemonlight;
-import frc.robot.devices.Lidar;
 import frc.robot.devices.LidarLight;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
@@ -18,7 +16,6 @@ import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
-import frc.robot.utilities.Functions;
 
 /**
  * Command for running the full auto mode
@@ -28,7 +25,6 @@ public class FullAutoShooterAssembly extends CommandBase {
     private StatusDisplayWidget status;
     private LidarLight lidarlight;
 	private Conveyor conveyor;
-	private Hood hood;
 
 	private SpoolOnTarget spool;
 	private VisionTarget target;
@@ -43,11 +39,17 @@ public class FullAutoShooterAssembly extends CommandBase {
 	private boolean targetLEDCall;
 	private boolean shootLEDCall;
 
-	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, LidarLight lidarlight, StatusDisplayWidget status) {
+	public FullAutoShooterAssembly(
+        Turret turret, 
+        Shooter shooter, 
+        Hood hood, 
+        Conveyor conveyor, 
+        LidarLight lidarlight, 
+        StatusDisplayWidget status
+    ) {
 		this.status = status;
         this.lidarlight = lidarlight;
         this.conveyor = conveyor;
-		this.hood = hood;
 
 		badDistanceReadings = 0;
 

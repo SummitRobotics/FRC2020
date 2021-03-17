@@ -40,7 +40,7 @@ public class FollowSpline extends CommandBase {
 
         config = new TrajectoryConfig(2.5, 2.5)
             // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(drivetrain.DriveKinimatics)
+            .setKinematics(Drivetrain.DriveKinimatics)
             // Apply the voltage constraint
             .addConstraint(drivetrain.getVoltageConstraint());
 
@@ -58,10 +58,9 @@ public class FollowSpline extends CommandBase {
         command = new RamseteCommand(
             trajectory, 
             drivetrain::getPose,
-            // TODO make right
             new RamseteController(2, 0.7), 
             drivetrain.getFeedFoward(), 
-            drivetrain.DriveKinimatics,
+            Drivetrain.DriveKinimatics,
             drivetrain::getWheelSpeeds, 
             new PIDController(pid[0], pid[1], pid[2]),
             new PIDController(pid[0], pid[1], pid[2]), 
