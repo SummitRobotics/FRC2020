@@ -1,6 +1,7 @@
 package frc.robot.devices.LEDs;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -101,6 +102,20 @@ public class LEDs extends SubsystemBase {
         for (LEDCall call : calls.values()) {
             for (LEDRange.Atomic atom : call.getRange().getAtoms()) {
                 atom.updateCall(call);
+            }
+        }
+    }
+
+    /**
+     * Generates a unique string ID for a unnamed LEDCall
+     * 
+     * @return the unique ID
+     */
+    public String getUniqueID() {
+        while (true) {
+            String potentialID = UUID.randomUUID().toString();
+            if (!calls.keySet().contains(potentialID)) {
+                return potentialID;
             }
         }
     }

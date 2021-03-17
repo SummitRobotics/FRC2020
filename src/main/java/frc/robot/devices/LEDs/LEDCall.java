@@ -3,8 +3,9 @@ package frc.robot.devices.LEDs;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class LEDCall {
+public class LEDCall implements LEDHandler {
 
+    private String name;
     private int priority;
     private LEDRange range;
 
@@ -14,18 +15,30 @@ public class LEDCall {
 
 
     /**
-     * Used to create new calls
+     * Creates a new LEDCall
      * 
-     * @param priority
-     * @param range
+     * @param name the unique name of the call
+     * @param priority the priority, where higher values override lower values
+     * @param range the LEDRange the call applies to
      */
-    public LEDCall(int priority, LEDRange range) {
+    public LEDCall(String name, int priority, LEDRange range) {
+        this.name = name;
         this.priority = priority;
         this.range = range;
 
         defaultColor = new Color8Bit(Color.kBlack);
 
         startLoop = 0;
+    }
+
+    /**
+     * Creates a new LEDCall without a supplied name
+     * 
+     * @param priority the priority, where higher values override lower values
+     * @param range the LEDRange the call applies to
+     */
+    public LEDCall(int priority, LEDRange range) {
+        this(LEDs.getInstance().getUniqueID(), priority, range);
     }
 
     /**
@@ -44,6 +57,19 @@ public class LEDCall {
      */
     public LEDRange getRange() {
         return range;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LEDHandler activate() {
+        LEDs.getInstance().addCall(name, this);
+        return this;
+    }
+
+    public void cancel() {
+        LEDs.getInstance().removeCall(name);
     }
 
     /**
