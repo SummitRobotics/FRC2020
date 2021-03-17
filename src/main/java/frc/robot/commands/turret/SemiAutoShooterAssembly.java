@@ -2,6 +2,7 @@ package frc.robot.commands.turret;
 
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
+import frc.robot.devices.LidarLight;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.oi.inputs.OIButton;
@@ -34,13 +35,12 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
         Shooter shooter, 
         Hood hood, 
         Conveyor conveyor, 
-        Lemonlight limelight, 
-        Lidar lidar,
+        LidarLight lidarlight, 
         StatusDisplayWidget status,
         OIAxis controlAxis,
         OIButton trigger
     ) {
-        super(turret, shooter, hood, conveyor, limelight, lidar, status);
+        super(turret, shooter, hood, conveyor, lidarlight, status);
 
 		simpleTrigger = new SimpleButton(trigger);
         rateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
@@ -67,10 +67,9 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
 
     @Override
     protected double turretPassiveAction(double turretAngle) {
-        if(!controlAxis.inUse()){
+        if (!controlAxis.inUse()) {
             return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
-        }
-        else{
+        } else {
             return rateLimiter.getRateLimitedValue(0);
         }
     }

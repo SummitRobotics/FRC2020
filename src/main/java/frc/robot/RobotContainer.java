@@ -11,19 +11,15 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
-import frc.robot.utilities.Functions;
-// import frc.robot.utilities.SerialisableMultiGearTrajectory;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -39,13 +35,10 @@ import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
-import frc.robot.commands.drivetrain.FollowSavedTrajectoryScheduledExecuter;
 import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
 import frc.robot.commands.drivetrain.FollowSpline;
-import frc.robot.commands.drivetrain.FollowTrajectory;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
-import frc.robot.commands.hood.HoodToAngle;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
@@ -60,6 +53,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
+import frc.robot.devices.LidarLight;
 import frc.robot.devices.LidarV3;
 
 /**
@@ -94,6 +88,7 @@ public class RobotContainer {
     private ColorSensorV3 colorSensor;
     private Lemonlight limelight;
     private Lidar turretLidar;
+    private LidarLight lidarlight;
     private AHRS gyro;
 
     private Command autoInit;
@@ -120,6 +115,7 @@ public class RobotContainer {
         gyro = new AHRS();
         limelight = new Lemonlight();
         turretLidar = new LidarV3();
+        lidarlight = new LidarLight(limelight, turretLidar);
 
         //wpilib parts
         pdp = new PowerDistributionPanel();
@@ -174,9 +170,9 @@ public class RobotContainer {
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
                 } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
+                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay));
+                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay));
                 }
             })
             );
@@ -286,11 +282,11 @@ public class RobotContainer {
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, limelight, turretLidar, ShufhellboardDriver.statusDisplay));
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay));
         }));
 
         //Controller bindings for intake
@@ -347,7 +343,7 @@ public class RobotContainer {
 
         scheduler.schedule(teleInit);
 
-        scheduler.schedule(new SpoolOnTarget(shooter, limelight));
+        scheduler.schedule(new SpoolOnTarget(shooter, lidarlight));
        
     }
 

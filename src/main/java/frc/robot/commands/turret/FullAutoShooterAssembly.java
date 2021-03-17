@@ -26,7 +26,7 @@ import frc.robot.utilities.Functions;
 public class FullAutoShooterAssembly extends CommandBase {
 
     private StatusDisplayWidget status;
-    private LidarLight lidarLight;
+    private LidarLight lidarlight;
 	private Conveyor conveyor;
 	private Hood hood;
 
@@ -43,9 +43,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 	private boolean targetLEDCall;
 	private boolean shootLEDCall;
 
-	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, LidarLight lidarLight, StatusDisplayWidget status) {
+	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, LidarLight lidarlight, StatusDisplayWidget status) {
 		this.status = status;
-        this.lidarLight = lidarLight;
+        this.lidarlight = lidarlight;
         this.conveyor = conveyor;
 		this.hood = hood;
 
@@ -58,9 +58,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 		targetLEDCall = false;
 		shootLEDCall = false;
 
-		spool = new SpoolOnTarget(shooter, lidarLight);
-		angler = new HoodDistanceAngler(hood);
-		target = new VisionTarget(turret, lidarLight.limelight, true) {
+		spool = new SpoolOnTarget(shooter, lidarlight);
+		angler = new HoodDistanceAngler(hood, lidarlight);
+		target = new VisionTarget(turret, lidarlight.limelight, true) {
 			@Override
 			protected double noTargetTurretAction(double turretAngle) {
 				return turretPassiveAction(turretAngle);
@@ -78,11 +78,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 	@Override
 	public void execute() {
 		// we don't want to feed it bad/random distances if the limelight has no target
-		if (limeLight.hasTarget()) {
+		if (lidarlight.limelight.hasTarget()) {
 			LEDs.getInstance().addCall("autoTarget", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
 			targetLEDCall = true;
-
-			angler.setDistance(getBestDistance());
 
 		} else if (targetLEDCall) {
             LEDs.getInstance().removeCall("autoTarget");
