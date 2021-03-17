@@ -31,9 +31,7 @@ public class Hood extends SubsystemBase implements Homeable{
     private DoubleDisplayWidget indicator;
 
     //WRONG ANGLE
-    private double LidarMountAngle = Lemonlight.mountAngle;
-    //this is in cm
-    private double TargetHeight = 269 - Lemonlight.mountHeight;
+    public double LidarMountAngle = Lemonlight.mountAngle;
 
     public Hood(DoubleDisplayWidget indicator){
 
@@ -75,32 +73,6 @@ public class Hood extends SubsystemBase implements Homeable{
         return angle;
     }
     
-
-    /**
-     * compinsated the lidar distance for the lidar mount angle
-     * @param reportedDistance the distance reported by the lidar
-     * @return the new corrected distance
-     */
-    public double getCompensatedLidarDistance(double reportedDistance){
-        return reportedDistance*Math.cos(LidarMountAngle);
-    }
-
-    /**
-     * gets a distance estmate of the target using the limelight
-     * @param ReportedAngle the angle from 0 the limelight reports
-     * @return the distance estmate
-     */
-    public double getLimelightDistanceEstmate(double reportedAngle){
-        return TargetHeight/Math.tan(reportedAngle+Lemonlight.mountAngle);
-    }
-
-    //this is WRONG and needs to be made REAL with desmos or somthing (its probably quardatic but who knows)
-    public double getHoodAngleFromDistance(double distance){
-        double out = distance/8;
-        //we dont want to try to move the turret pased the limits
-        return Functions.clampDouble(out, 40, 0);
-    }
-
      //for homing adj hood
      @Override
      public double getCurrent() {

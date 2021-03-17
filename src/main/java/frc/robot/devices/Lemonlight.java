@@ -16,6 +16,7 @@ public class Lemonlight {
 
     //in cm
     public static final double mountHeight = 40;
+    private double targetHeight = 269 - Lemonlight.mountHeight;
 
     NetworkTable limelight;
 
@@ -124,5 +125,14 @@ public class Lemonlight {
      */
     public double getAreaPercentage() {
         return ta.getDouble(0);
+    }
+
+    /**
+     * gets a distance estimate of the target using the limelight
+     * @param ReportedAngle the angle from 0 the limelight reports
+     * @return the distance estmate
+     */
+    public double getLimelightDistanceEstimate(double reportedAngle){
+        return targetHeight / Math.tan(reportedAngle + Lemonlight.mountAngle);
     }
 }

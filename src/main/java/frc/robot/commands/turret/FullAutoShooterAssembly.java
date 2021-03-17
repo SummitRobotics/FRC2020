@@ -6,6 +6,7 @@ import frc.robot.commands.hood.HoodDistanceAngler;
 import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
+import frc.robot.devices.LidarLight;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
@@ -24,9 +25,8 @@ import frc.robot.utilities.Functions;
  */
 public class FullAutoShooterAssembly extends CommandBase {
 
-	private StatusDisplayWidget status;
-	private Lidar lidar;
-	private Lemonlight limeLight;
+    private StatusDisplayWidget status;
+    private LidarLight lidarLight;
 	private Conveyor conveyor;
 	private Hood hood;
 
@@ -40,17 +40,13 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	private int badDistanceReadings;
 
-	//WRONG: make good
-	private final double acceptableLidarVSLimelightDiscrepancy = 20;
-
 	private boolean targetLEDCall;
 	private boolean shootLEDCall;
 
-	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, Lemonlight limelight, Lidar lidar, StatusDisplayWidget status) {
+	public FullAutoShooterAssembly(Turret turret, Shooter shooter, Hood hood, Conveyor conveyor, LidarLight lidarLight, StatusDisplayWidget status) {
 		this.status = status;
-		this.limeLight = limelight;
-		this.lidar = lidar;
-		this.conveyor = conveyor;
+        this.lidarLight = lidarLight;
+        this.conveyor = conveyor;
 		this.hood = hood;
 
 		badDistanceReadings = 0;
@@ -62,9 +58,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 		targetLEDCall = false;
 		shootLEDCall = false;
 
-		spool = new SpoolOnTarget(shooter, limelight);
+		spool = new SpoolOnTarget(shooter, lidarLight);
 		angler = new HoodDistanceAngler(hood);
-		target = new VisionTarget(turret, limelight, true) {
+		target = new VisionTarget(turret, lidarLight.limelight, true) {
 			@Override
 			protected double noTargetTurretAction(double turretAngle) {
 				return turretPassiveAction(turretAngle);
@@ -89,8 +85,8 @@ public class FullAutoShooterAssembly extends CommandBase {
 			angler.setDistance(getBestDistance());
 
 		} else if (targetLEDCall) {
-				LEDs.getInstance().removeCall("autoTarget");
-				targetLEDCall = false;
+            LEDs.getInstance().removeCall("autoTarget");
+            targetLEDCall = false;
 		}
 
 		if (badDistanceReadings > 10) {
@@ -102,7 +98,8 @@ public class FullAutoShooterAssembly extends CommandBase {
 		if (ReadyToShoot && !shootLEDCall) {
 			LEDs.getInstance().addCall("autoFireReady", new LEDCall(LEDPriorities.shooterReadyToFire, LEDRange.All).flashing(Colors.Yellow, Colors.Off));
 			shootLEDCall = true;
-		}
+        }
+        
 		else if (!ReadyToShoot && shootLEDCall) {
 			LEDs.getInstance().removeCall("autoFireReady");
 			shootLEDCall = false;
@@ -110,19 +107,6 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		// if everything is in position then tell the conveyor to shoot
 		shootAction(ReadyToShoot);
-	}
-
-	private double getBestDistance(){
-		double lidarDistance = hood.getCompensatedLidarDistance(lidar.getAverageDistance());
-		double limeLightDisctance = hood.getLimelightDistanceEstmate(limeLight.getVerticalOffset());
-		// if the lidar is to far from the limelight distance we use the limelight estimate beacuse it should be more reliable but less acurate
-		if (Functions.isWithin(lidarDistance, limeLightDisctance, acceptableLidarVSLimelightDiscrepancy)) {
-			badDistanceReadings = 0;
-			return lidarDistance;
-		} else {
-			badDistanceReadings++;
-			return limeLightDisctance;
-		}
 	}
 
 	@Override

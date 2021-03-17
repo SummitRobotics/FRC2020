@@ -44,6 +44,7 @@ public class Shooter extends SubsystemBase {
 
         shooterMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 60, 60, 4));
         coolerSolenoid.set(Value.kReverse);
+        shooterMotor.setInverted(true);
     }
 
     /**

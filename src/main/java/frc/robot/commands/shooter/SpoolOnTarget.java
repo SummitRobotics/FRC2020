@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.LidarLight;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -15,22 +16,19 @@ public class SpoolOnTarget extends CommandBase {
 	private static final double TARGET_CLOSE_CUTOFF = 10;
 
 	//WRONG:MAKE GOOD
-	private double onTargetRpm = 2000;
-
-	private double seesTargetRpm = 1500;
-
-	private double standByRpm = 200;
+	private double seesTargetRPM = 1500;
+    private double standByRPM = 200;
 
 	private Shooter shooter;
-	private Lemonlight limelight;
+	private LidarLight lidarLight;
 
 	private PIDController pid;
 
-	public SpoolOnTarget(Shooter shooter, Lemonlight limelight) {
+	public SpoolOnTarget(Shooter shooter, LidarLight lidarLight) {
         addRequirements(shooter);
         
 		this.shooter = shooter;
-		this.limelight = limelight;
+		this.lidarLight = lidarLight;
 
 		// TODO - make values good
 		pid = new PIDController(0.001, 0.0005, 0);
@@ -38,7 +36,7 @@ public class SpoolOnTarget extends CommandBase {
         pid.setTolerance(50);
         
 
-        pid.setSetpoint(onTargetRpm);
+        pid.setSetpoint(0);
 
         SmartDashboard.putData(pid);
 	}
@@ -54,15 +52,20 @@ public class SpoolOnTarget extends CommandBase {
 	@Override
 	public void execute() {
 
-		// if (limelight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
+		if (lidarLight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
+            if (lidarLight.getBestDistance() < 155) {
+                pid.setSetpoint(2000);
+            } else {
+                pid.setSetpoint((lidarLight.getBestDistance() * 4.61328) + 1366.23);
+            }
             
-            
-		// } else if (limelight.hasTarget()) {
-        //     pid.setSetpoint(seesTargetRpm);
-            
-		// } else{
-		// 	pid.setSetpoint(standByRpm);
-        // }
+		} else if (lidarLight.hasTarget()) {
+            pid.setSetpoint(seesTargetRPM);
+		} else {
+			pid.setSetpoint(standByRPM);
+        }
+        
+
         double power  = pid.calculate(shooter.getShooterRPM());
         System.out.println("shooter power is: "+ power);
 
@@ -80,5 +83,5 @@ public class SpoolOnTarget extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		return false;
-	}
+    }
 }

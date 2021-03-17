@@ -9,7 +9,9 @@ package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.devices.LidarLight;
 import frc.robot.subsystems.Hood;
+import frc.robot.utilities.Functions;
 
 /**
  * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, IT SHOULD NOT BE USED BY
@@ -20,13 +22,13 @@ public class HoodDistanceAngler extends CommandBase {
     private Hood hood;
     private PIDController pid;
 
-    private double distance;
+    private LidarLight lidarLight;
 
-    public HoodDistanceAngler(Hood hood) {
+    public HoodDistanceAngler(Hood hood, LidarLight lidarLight) {
         addRequirements(hood);
 
         this.hood = hood;
-        this.distance = 0;
+        this.lidarLight = lidarLight;
 
         // TODO - make good
         pid = new PIDController(0.01, 0, 0);
@@ -38,9 +40,22 @@ public class HoodDistanceAngler extends CommandBase {
     @Override
     public void execute() {
         double angle = hood.getAngle();
-        double setpoint = hood.getHoodAngleFromDistance(distance);
+        double setpoint = getAngleFromDistance(lidarLight.getBestDistance());
         pid.setSetpoint(setpoint);
         hood.setPower(pid.calculate(angle));
+    }
+
+    //TODO - get correct max hood angle
+    public double getAngleFromDistance(double distance) {
+        double out = 0;
+
+        if (distance > 155) {
+            out = 40;
+        } else {
+            out = (0.0677965 * distance) + 14.4861;
+        }
+
+        return Functions.clampDouble(out, 40, 0);
     }
 
     // Called once the command ends or is interrupted.
@@ -56,15 +71,6 @@ public class HoodDistanceAngler extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
-    }
-
-    /**
-     * sets the distance the hood should go to the angle for
-     * 
-     * @param distance the distance from the hood to the target
-     */
-    public void setDistance(double distance) {
-        this.distance = distance;
     }
 
     /**
