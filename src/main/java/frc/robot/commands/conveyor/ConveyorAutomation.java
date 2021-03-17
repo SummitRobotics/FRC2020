@@ -10,8 +10,10 @@ import frc.robot.subsystems.Conveyor;
 
 public class ConveyorAutomation extends CommandBase {
 
-	private Conveyor conveyor;
-	private boolean shootModeLED;
+    private Conveyor conveyor;
+    
+    private boolean shootModeLED = false;
+    private LEDCall conveyorShoot = new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off);
 
 	/**
 	 * Default command for the conveyor to manage its current function based on its state
@@ -19,8 +21,6 @@ public class ConveyorAutomation extends CommandBase {
 	 */
 	public ConveyorAutomation(Conveyor conveyor) {
 		this.conveyor = conveyor;
-
-		shootModeLED = false;
 	
 		addRequirements(conveyor);
 	}
@@ -35,24 +35,29 @@ public class ConveyorAutomation extends CommandBase {
 		switch (conveyor.getState()) {
 			case SHOOT: 
 				power = Conveyor.SHOOT_POWER;
-				if(!shootModeLED){
+				if (!shootModeLED) {
 					shootModeLED = true;
-					LEDs.getInstance().addCall("conveyorShoot", new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off));
-				}
-				break;
+					conveyorShoot.activate();
+                }
+                
+                break;
+                
 			case INTAKE: 
 				power = intake();
-				if(shootModeLED){
+				if (shootModeLED) {
 					shootModeLED = false;
-					LEDs.getInstance().removeCall("conveyorShoot");
-				}
-				break;
+					conveyorShoot.cancel();
+                }
+                
+                break;
+                
 			case OFF: 
 				power = 0;
-				if(shootModeLED){
+				if (shootModeLED) {
 					shootModeLED = false;
-					LEDs.getInstance().removeCall("conveyorShoot");
-				}
+					conveyorShoot.cancel();
+                }
+                
 				break;
 		}
 
@@ -66,10 +71,11 @@ public class ConveyorAutomation extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		if(shootModeLED){
+		if (shootModeLED) {
 			shootModeLED = false;
-			LEDs.getInstance().removeCall("conveyorShoot");
-		}
+			conveyorShoot.cancel();
+        }
+        
 		conveyor.stop();
 	}
 	/**

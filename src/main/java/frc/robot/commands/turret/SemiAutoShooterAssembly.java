@@ -53,7 +53,7 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
     @Override
     public void initialize() {
         super.initialize();
-        LEDs.getInstance().removeCall("a");
+        LEDs.getInstance().removeCall("fullautoshooting");
     }
     
     @Override

@@ -16,21 +16,19 @@ public class SetDown extends CommandBase {
     protected IntakeArm intake;
 
     protected Timer timer = new Timer();
-    protected boolean end;
+    protected boolean end = false;
 
     protected double startTime;
 
     public SetDown(IntakeArm intake) {
         this.intake = intake;
 
-        end = false;
-
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-        LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off));
+        new LEDCall("ArmDown", LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off).activate();
         
         timer.reset();
         timer.start();

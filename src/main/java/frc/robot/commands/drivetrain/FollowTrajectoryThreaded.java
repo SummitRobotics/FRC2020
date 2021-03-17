@@ -28,6 +28,8 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
     private RamseteCommand command;
 
+    private LEDCall splineLEDs = new LEDCall(LEDPriorities.splines, LEDRange.All).sine(Colors.Purple);
+
     /**
      * command to folow a trejectory object that has been saved to the roborio with threading to make it more precice
      * @param drivetrain drivetain to control
@@ -46,7 +48,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
 
     @Override
     public void initialize() {
-        LEDs.getInstance().addCall("spline", new LEDCall(LEDPriorities.splines, LEDRange.All).sine(Colors.Purple));
+        splineLEDs.activate();
 
         command = new RamseteCommand(
             trajectory, 
@@ -93,7 +95,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
         //stops the drivetrain motors
         drivetrain.stop();
 
-        LEDs.getInstance().removeCall("spline");
+        splineLEDs.cancel();
     }
 
 }

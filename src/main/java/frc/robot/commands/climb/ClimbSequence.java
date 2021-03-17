@@ -44,7 +44,8 @@ public class ClimbSequence extends SequentialCommandGroup {
 		LED ledA,
 		LED ledB
 	) {
-
+        
+        LEDCall armsUp = new LEDCall(LEDPriorities.armsUp, LEDRange.All).flashing(Colors.Red, Colors.Off);
 
 		/**
 		 * A command to allow for both climber arms to be manually trimmed using the trimming sliders
@@ -72,7 +73,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 
 				System.out.println("climber interupted is: " + interrupted);
 
-				LEDs.getInstance().removeCall("ArmsUp");
+				armsUp.cancel();
 
 				if (!interrupted) {
 					pneumatics.retractClimb();
@@ -81,7 +82,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 		};
 
 		addCommands(
-			new InstantCommand(() -> LEDs.getInstance().addCall("ArmsUp", new LEDCall(LEDPriorities.armsUp, LEDRange.All).flashing(Colors.Red, Colors.Off))),
+			new InstantCommand(armsUp::activate),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
 				ledA.set(false);

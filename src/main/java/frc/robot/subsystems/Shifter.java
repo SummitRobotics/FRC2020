@@ -15,18 +15,20 @@ public class Shifter extends SubsystemBase {
     private DoubleSolenoid shift;
     private boolean oldShift;
 
+    private LEDCall lowShift = new LEDCall(LEDPriorities.lowGear, LEDRange.All).sine(Colors.Red);
+
     public Shifter() {
         shift = new DoubleSolenoid(Ports.PCM_1, Ports.SHIFT_SOLENOID_UP, Ports.SHIFT_SOLENOID_DOWN);
     }
 
     public void highGear() {
-        LEDs.getInstance().removeCall("lowShift");
+        lowShift.cancel();
         oldShift = true;
         shift.set(Value.kForward);
     }
 
     public void lowGear() {
-        LEDs.getInstance().addCall("lowShift", new LEDCall(LEDPriorities.lowGear, LEDRange.All).sine(Colors.Red));
+        lowShift.activate();
         oldShift = false;
         shift.set(Value.kReverse);
     }

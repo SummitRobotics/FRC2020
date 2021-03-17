@@ -109,7 +109,7 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
+        new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.addStatus("default", "robot on", Colors.White, StatusPrioritys.on);
 
         gyro = new AHRS();
@@ -308,24 +308,25 @@ public class RobotContainer {
 
 
         // secret!
+        LEDCall secretLEDs = new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow();
         Konami.getInstance().addSequence(
             new InstantCommand(
                 () -> {
                     System.out.println("there should be rainbows");
-                    LEDs.getInstance().addCall("rainboooow", new LEDCall(Integer.MAX_VALUE, LEDRange.All).rainbow());
+                    secretLEDs.activate();
                 }
             ),
             "up", "up", "down", "down", "left", "right", "left", "right", "b", "a", "start"
         );
 
         Konami.getInstance().addSequence(
-            new InstantCommand(() -> LEDs.getInstance().removeCall("rainboooow")), 
+            new InstantCommand(secretLEDs::cancel), 
             "b", "b", "b", "b", "b", "b", "b", "b");
     }
 
     public void disabledInit(){
         LEDs.getInstance().removeAllCalls();
-        LEDs.getInstance().addCall("disabled", new LEDCall(LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen));
+        new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
     }
 

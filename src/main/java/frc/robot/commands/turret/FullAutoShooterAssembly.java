@@ -32,12 +32,15 @@ public class FullAutoShooterAssembly extends CommandBase {
 	
 	private ChangeRateLimiter changeRateLimiter;
 
-	private boolean turretDirection;
+	private boolean turretDirection = true;
 
-	private int badDistanceReadings;
+	private int badDistanceReadings = 0;
 
-	private boolean targetLEDCall;
-	private boolean shootLEDCall;
+	private boolean targetLEDCall = false;
+    private boolean shootLEDCall = false;
+    
+    private LEDCall autoTarget = new LEDCall(10000, LEDRange.All).solid(Colors.Blue);
+    private LEDCall autoFireReady = new LEDCall(LEDPriorities.shooterReadyToFire, LEDRange.All).flashing(Colors.Yellow, Colors.Off);
 
 	public FullAutoShooterAssembly(
         Turret turret, 
@@ -51,14 +54,7 @@ public class FullAutoShooterAssembly extends CommandBase {
         this.lidarlight = lidarlight;
         this.conveyor = conveyor;
 
-		badDistanceReadings = 0;
-
 		changeRateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
-
-		turretDirection = true;
-
-		targetLEDCall = false;
-		shootLEDCall = false;
 
 		spool = new SpoolOnTarget(shooter, lidarlight);
 		angler = new HoodDistanceAngler(hood, lidarlight);
@@ -74,18 +70,18 @@ public class FullAutoShooterAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(spool, target, angler);
-		LEDs.getInstance().addCall("a", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
+		LEDs.getInstance().addCall("fullautoshooting", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
 	}
 
 	@Override
 	public void execute() {
 		// we don't want to feed it bad/random distances if the limelight has no target
 		if (lidarlight.limelight.hasTarget()) {
-			LEDs.getInstance().addCall("autoTarget", new LEDCall(LEDPriorities.shooterHasTarget, LEDRange.All).solid(Colors.Yellow));
+            autoTarget.activate();
 			targetLEDCall = true;
 
 		} else if (targetLEDCall) {
-            LEDs.getInstance().removeCall("autoTarget");
+            autoTarget.cancel();
             targetLEDCall = false;
 		}
 
@@ -96,12 +92,12 @@ public class FullAutoShooterAssembly extends CommandBase {
 		boolean ReadyToShoot = spool.isUpToShootSpeed() && target.isOnTarget() && angler.isAtTargetAngle();
 
 		if (ReadyToShoot && !shootLEDCall) {
-			LEDs.getInstance().addCall("autoFireReady", new LEDCall(LEDPriorities.shooterReadyToFire, LEDRange.All).flashing(Colors.Yellow, Colors.Off));
+            autoFireReady.activate();
 			shootLEDCall = true;
         }
         
 		else if (!ReadyToShoot && shootLEDCall) {
-			LEDs.getInstance().removeCall("autoFireReady");
+            autoFireReady.cancel();
 			shootLEDCall = false;
 		}
 
@@ -112,11 +108,11 @@ public class FullAutoShooterAssembly extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		if (targetLEDCall) {
-			LEDs.getInstance().removeCall("autoTarget");
+            autoTarget.cancel();
 		}
 
 		if (shootLEDCall) {
-			LEDs.getInstance().removeCall("autoFireReady");
+            autoFireReady.cancel();
 		}
 
 		conveyor.setShootMode(false);
