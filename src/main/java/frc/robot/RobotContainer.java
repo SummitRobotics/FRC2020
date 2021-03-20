@@ -293,6 +293,11 @@ public class RobotContainer {
         controller1.buttonX.whenPressed(up, false);
         controller1.buttonA.whenPressed(intake, false);
 
+        //Music
+        controller1.rightBumper.toggleWhenPressed(new InstantCommand(() -> {
+            shooter.lottaStuff();
+        }));
+
         //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
             () -> {
