@@ -15,6 +15,7 @@ import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;
 import frc.robot.utilities.lists.StatusPrioritys;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem to control the shooter
@@ -91,9 +92,28 @@ public class Shooter extends SubsystemBase {
     public void setCoolerSolenoid(boolean value) {
         coolerSolenoid.set(value ? Value.kForward : Value.kReverse);
     }
+    // Loads Currently Selected Song
+    public void shooterLoadMusic(){
+        obj.loadMusic(musicPath);
+        while(loadTime<11)
+        {
+            System.out.println("It has loaded " + loadTime + "time(s)");
+            loadTime++;
+        }
+        SmartDashboard.putBoolean("Song Loaded?", true);
+    }
+    // Plays Song
+    public void shooterPlay(){
+        obj.play();
+        SmartDashboard.putBoolean("Is Playing?", true);
+    }
+    // Stops Playing
+    public void shooterPause(){
+        obj.pause();
+        SmartDashboard.putBoolean("Is Playing?", false);
+    }
 
-    //loads and then plays music
-    public void lottaStuff(){
+    public void playSelected(){
         obj.loadMusic(musicPath);
         while(loadTime<11)
         {
