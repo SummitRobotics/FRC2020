@@ -12,7 +12,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
- * takes a button or bolean supplyer and makes a new button that is only true on the rising edge of the press
+ * takes a button or boolean supplyer and makes a new button that is only true on the rising edge of the press
  */
 public class SimpleButton extends Button {
 
