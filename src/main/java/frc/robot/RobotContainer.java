@@ -48,6 +48,7 @@ import frc.robot.commands.turret.FullAutoShooterAssembly;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.TurretToPosition;
+import frc.robot.commands.turret.VisionTarget;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
@@ -272,10 +273,18 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        launchpad.buttonG.whenHeld(new StartEndCommand(
-            () -> shooter.setCoolerSolenoid(true), 
-            () -> shooter.setCoolerSolenoid(false)));
-        launchpad.buttonG.pressBind();
+        // launchpad.buttonG.whenHeld(new StartEndCommand(
+        //     () -> shooter.setCoolerSolenoid(true), 
+        //     () -> shooter.setCoolerSolenoid(false)));
+        // launchpad.buttonG.pressBind();
+
+        launchpad.buttonG.whenHeld(new VisionTarget(turret, limelight, false) {
+            @Override
+            protected double noTargetTurretAction(double turretAngle) {
+                return joystick.axisX.get();
+            };
+        });
+        launchpad.buttonG.toggleBind();
 
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {

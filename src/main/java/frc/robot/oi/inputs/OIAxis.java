@@ -13,8 +13,8 @@ public class OIAxis implements Usable {
 
 	private final static double DEFAULT_DEADZONE = 0.05;
 
-	private DoubleSupplier getter;
-	private double deadzone;
+	protected DoubleSupplier getter;
+	protected double deadzone;
 
 	private ArrayList<Object> users;
 

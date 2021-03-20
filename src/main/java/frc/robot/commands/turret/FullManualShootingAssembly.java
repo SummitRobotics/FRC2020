@@ -98,29 +98,30 @@ public class FullManualShootingAssembly extends CommandBase {
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
 		if (!shooterSpoolPower.inUse()) {
-			double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
+            // double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
+            double shooterPower = shooterSpoolPower.get();
 
-			if (startupSpinPrevention && (shooterPower > 0.75)) {
-				startupSpinPrevention = false;
-			}
+			// if (startupSpinPrevention && (shooterPower > 0.75)) {
+			// 	startupSpinPrevention = false;
+			// }
 			
-			if (!startupSpinPrevention) {
-				if ((shooterPower > 0.1) && !ledON) {
-                    manualShoot.activate();
-                    ledON = true;
-                }
-                
-				if (ledON && (shooterPower < 0.1)) {
-					manualShoot.cancel();
-					ledON = false;
-				}
+			// if (!startupSpinPrevention) {
+            if ((shooterPower > 0.1) && !ledON) {
+                manualShoot.activate();
+                ledON = true;
+            }
+            
+            if (ledON && (shooterPower < 0.1)) {
+                manualShoot.cancel();
+                ledON = false;
+            }
 
-                System.out.println(shooterPower);
-                shooter.setPower(shooterPower);
+            System.out.println(shooterPower);
+            shooter.setPower(shooterPower);
                 
-			} else {
-				shooter.setPower(0);
-			}
+			// } else {
+			// 	shooter.setPower(0);
+			// }
 		}
 		
 		if (!trigger.inUse()) {

@@ -30,7 +30,7 @@ public abstract class VisionTarget extends CommandBase {
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(0.1, 1);
 
-		if(!partOfFullAuto){
+		if (!partOfFullAuto){
 			addRequirements(turret);
 		}
 		
@@ -47,8 +47,8 @@ public abstract class VisionTarget extends CommandBase {
 		if (limelight.hasTarget()) {
 			double offset = limelight.getHorizontalOffset();
 			double power = pidController.calculate(offset);
-			if(turret.isAtLimit()){
-				//makes shure intagral does not get out of control when it cant move any more in the target direction
+			if (turret.isAtLimit()) {
+				//makes sure intagral does not get out of control when it cant move any more in the target direction
 				pidController.reset();
 			}
 			turret.setPower(Functions.clampDouble(power, .33, -.33));
