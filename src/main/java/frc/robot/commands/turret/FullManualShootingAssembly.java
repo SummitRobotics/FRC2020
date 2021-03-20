@@ -20,7 +20,8 @@ import frc.robot.utilities.Functions;
  */
 public class FullManualShootingAssembly extends CommandBase {
 
-	private Turret turret;
+    private Turret turret;
+    private Shooter shooter;
 	private Conveyor conveyor;
 	private Hood hood;
 
@@ -52,11 +53,12 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		super();
 
-		this.turret = turret;
+        this.turret = turret;
+        this.shooter = shooter;
 		this.conveyor = conveyor;
 		this.hood = hood;
 
-		this.turretRotationPower = turretRotationPower;
+        this.turretRotationPower = turretRotationPower;
 		this.shooterSpoolPower = shooterSpoolPower;
 		this.shooterHoodPower = shooterHoodPower;
 
@@ -113,10 +115,11 @@ public class FullManualShootingAssembly extends CommandBase {
 					ledON = false;
 				}
 
-                //shooter.setPower(shooterPower);
+                System.out.println(shooterPower);
+                shooter.setPower(shooterPower);
                 
 			} else {
-				//shooter.setPower(0);
+				shooter.setPower(0);
 			}
 		}
 		
@@ -134,7 +137,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		conveyor.setShootMode(false);
 
 		turret.stop();
-		//shooter.stop();
+		shooter.stop();
 		hood.stop();
 
 		if(ledON){

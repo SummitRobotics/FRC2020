@@ -344,7 +344,7 @@ public class RobotContainer {
 
         scheduler.schedule(teleInit);
 
-        scheduler.schedule(new SpoolOnTarget(shooter, lidarlight));
+        // scheduler.schedule(new SpoolOnTarget(shooter, lidarlight));
        
     }
 
