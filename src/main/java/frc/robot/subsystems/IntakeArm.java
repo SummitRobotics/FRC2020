@@ -13,7 +13,7 @@ import frc.robot.utilities.lists.Ports;
 /**
  * Subsystem to control the intake and its arm
  */
-public class IntakeArm extends SubsystemBase {
+public class IntakeArm {
 
 	public enum States{
 		UP,
@@ -35,7 +35,7 @@ public class IntakeArm extends SubsystemBase {
 	public IntakeArm() {
 		intake = new VictorSPX(Ports.INTAKE_ARM_SPIN);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
-		lock = new Solenoid(Ports.PCM_1, Ports.INTAKE_LOCK);
+		lock = new Solenoid(Ports.PCM_1, Ports.ADJUSTABLE_HOOD);
 
 		upperLimit = new DigitalInput(Ports.UPPER_LIMIT);
 		
@@ -74,7 +74,7 @@ public class IntakeArm extends SubsystemBase {
 	 */
 	public void stop() {
 		intake.set(ControlMode.PercentOutput, 0);
-		pivot.set(ControlMode.PercentOutput, 0);
+		pivot.set(ControlMode.PercentOutput, 1);
 	}
 
 	public boolean getUpperLimit() {

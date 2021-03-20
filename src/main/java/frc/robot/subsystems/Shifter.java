@@ -13,7 +13,7 @@ import frc.robot.utilities.lists.Ports;
 public class Shifter extends SubsystemBase {
 
     private DoubleSolenoid shift;
-    private boolean oldShift;
+    private boolean;
 
     private LEDCall lowShift = new LEDCall(LEDPriorities.lowGear, LEDRange.All).sine(Colors.Red);
 
