@@ -116,7 +116,6 @@ public class FullManualShootingAssembly extends CommandBase {
                 ledON = false;
             }
 
-            System.out.println(shooterPower);
             shooter.setPower(shooterPower);
                 
 			// } else {

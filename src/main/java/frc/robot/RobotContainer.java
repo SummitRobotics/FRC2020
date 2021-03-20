@@ -278,7 +278,7 @@ public class RobotContainer {
         //     () -> shooter.setCoolerSolenoid(false)));
         // launchpad.buttonG.pressBind();
 
-        launchpad.buttonG.whenHeld(new VisionTarget(turret, limelight, false) {
+        launchpad.buttonG.toggleWhenPressed(new VisionTarget(turret, limelight, false) {
             @Override
             protected double noTargetTurretAction(double turretAngle) {
                 return joystick.axisX.get();

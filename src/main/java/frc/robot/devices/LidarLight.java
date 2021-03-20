@@ -1,5 +1,6 @@
 package frc.robot.devices;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.Functions;
 
 public class LidarLight {
@@ -19,16 +20,23 @@ public class LidarLight {
     }
 
 	public double getBestDistance(){
-		double lidarDistance = lidar.getCompensatedLidarDistance(lidar.getAverageDistance());
-		double limeLightDistance = limelight.getLimelightDistanceEstimate(limelight.getVerticalOffset());
+        // double lidarDistance = lidar.getCompensatedLidarDistance(lidar.getAverageDistance());
+        double lidarDistance = lidar.getDistance();
+        double limelightDistance = limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset());
+
+        SmartDashboard.putNumber("Distance from Limelight", limelightDistance);
+        return limelightDistance;
+
 		// if the lidar is to far from the limelight distance we use the limelight estimate beacuse it should be more reliable but less acurate
-		if (Functions.isWithin(lidarDistance, limeLightDistance, acceptableLidarVSLimelightDiscrepancy)) {
-			lidarBadDistanceReading = 0;
-			return lidarDistance;
-		} else {
-			lidarBadDistanceReading++;
-			return limeLightDistance;
-		}
+		// if (Functions.isWithin(lidarDistance, limelightDistance, acceptableLidarVSLimelightDiscrepancy)) {
+        //     lidarBadDistanceReading = 0;
+        //     System.out.println("distance from lidar: " + lidarDistance);
+        //     return lidarDistance;
+		// } else {
+        //     lidarBadDistanceReading++;
+        //     System.out.println("distance from limelight: " + limelightDistance);
+		// 	return limelightDistance;
+		// }
     }
     
     public boolean isLidarBeingBad() {

@@ -59,7 +59,10 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
     @Override
     protected void shootAction(boolean readyToShoot) {
         if (readyToShoot && simpleTrigger.get() && !trigger.inUse()) {
-            conveyor.shootOneBall();
+            // conveyor.shootOneBall();
+            conveyor.setShootMode(true);
+        } else {
+            conveyor.setShootMode(false);
         }
     }
 

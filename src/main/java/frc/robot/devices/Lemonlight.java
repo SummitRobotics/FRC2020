@@ -3,6 +3,7 @@ package frc.robot.devices;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.utilities.RollingAverage;
 
 /**
  * Device driver for the limelight
@@ -15,12 +16,14 @@ public class Lemonlight {
     public static final double mountAngle = 10;
 
     //in cm
-    public static final double mountHeight = 40;
-    private double targetHeight = 269 - Lemonlight.mountHeight;
+    public static final double mountHeight = 60.5;
+    private double targetHeight = 269;
 
-    NetworkTable limelight;
+    private NetworkTable limelight;
 
-    NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;
+    private NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;
+
+    private RollingAverage horizontalSmoothed;
 
     public Lemonlight() {
         limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -34,6 +37,8 @@ public class Lemonlight {
         camMode = limelight.getEntry("camMode");
 
         pipeline = limelight.getEntry("pipeline");
+
+        horizontalSmoothed = new RollingAverage(5, false);
     }
 
     /**
@@ -113,6 +118,11 @@ public class Lemonlight {
         return tx.getDouble(0);
     }
 
+    public double getSmoothedHorizontalOffset() {
+        horizontalSmoothed.set(getHorizontalOffset());
+        return horizontalSmoothed.getAverage();
+    }
+
     /**
      * @return the vertical offset
      */
@@ -132,7 +142,7 @@ public class Lemonlight {
      * @param ReportedAngle the angle from 0 the limelight reports
      * @return the distance estmate
      */
-    public double getLimelightDistanceEstimate(double reportedAngle){
-        return targetHeight / Math.tan(reportedAngle + Lemonlight.mountAngle);
+    public double getLimelightDistanceEstimateIN(double reportedAngle){
+        return ((targetHeight-mountHeight) / Math.tan(((reportedAngle + Lemonlight.mountAngle) * (Math.PI/180)))) * 0.393701;
     }
 }

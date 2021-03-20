@@ -37,6 +37,8 @@ public class IntakeArmMO extends MOCommand {
     public void initialize() {
         super.initialize();
         intakeArm.stop();
+
+        controlAxis.using(this);
     }
 
     @Override
@@ -60,6 +62,8 @@ public class IntakeArmMO extends MOCommand {
     public void end(final boolean interrupted) {
         super.end(interrupted);
         intakeArm.stop();
+
+        controlAxis.release(this);
     }
 
     @Override

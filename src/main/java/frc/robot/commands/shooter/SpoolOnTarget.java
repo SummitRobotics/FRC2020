@@ -31,8 +31,6 @@ public class SpoolOnTarget extends CommandBase {
 		pid = new PIDController(0.001, 0.0005, 0);
 		pid.setSetpoint(STAND_BY_RPM);
         pid.setTolerance(50);
-        
-        SmartDashboard.putData(pid);
 	}
 
 	/**
@@ -62,7 +60,8 @@ public class SpoolOnTarget extends CommandBase {
         
 
         double power  = pid.calculate(shooter.getShooterRPM());
-        System.out.println("shooter power is: "+ power);
+        SmartDashboard.putNumber("Shooter Power", power);
+        SmartDashboard.putNumber("Shooter Setpoint", pid.getSetpoint());
 
 		shooter.setPower(power);
 	}

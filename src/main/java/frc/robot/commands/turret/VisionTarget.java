@@ -1,8 +1,10 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
+import frc.robot.devices.Lemonlight.CamModes;
 import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Functions;
@@ -19,7 +21,7 @@ public abstract class VisionTarget extends CommandBase {
 
 	//WRONG - Make right 
 	private final static double
-	P = 0.01,
+	P = 0.012,
 	I = 0,
 	D = 0;
 
@@ -28,33 +30,33 @@ public abstract class VisionTarget extends CommandBase {
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
-		pidController.setTolerance(0.1, 1);
-
+        pidController.setTolerance(0.1, 1);
+        
 		if (!partOfFullAuto){
 			addRequirements(turret);
 		}
-		
 	}
 
 	public void initialize() {
 		pidController.setSetpoint(0);
 		limelight.setPipeline(0);
-		limelight.setLEDMode(LEDModes.FORCE_ON);
+        limelight.setLEDMode(LEDModes.PIPELINE);
+        limelight.setCamMode(CamModes.VISION_PROCESSOR);
 		pidController.reset();
 	}
 
 	public void execute() {
 		if (limelight.hasTarget()) {
-			double offset = limelight.getHorizontalOffset();
+			double offset = -(limelight.getSmoothedHorizontalOffset());
 			double power = pidController.calculate(offset);
 			if (turret.isAtLimit()) {
-				//makes sure intagral does not get out of control when it cant move any more in the target direction
+				//makes sure integral does not get out of control when it cant move any more in the target direction
 				pidController.reset();
 			}
-			turret.setPower(Functions.clampDouble(power, .33, -.33));
+			turret.setPower(power);
 		} else {
 			noTarget();
-		}
+        }
 	}
 
 	private void noTarget() {

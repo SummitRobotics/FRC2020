@@ -14,12 +14,16 @@ public class JoystickDriver extends GenericDriver {
 	button2,
 	button3,
 	button4,
-	trigger;
+    trigger;
 
 	public OIAxis
 	axisX,
 	axisY,
-	axisZ;
+    axisZ;
+    
+    private boolean
+    assureZUp = false,
+    assureZDown = false;
 
 	public JoystickDriver(int port) {
 		super(port);
@@ -36,10 +40,28 @@ public class JoystickDriver extends GenericDriver {
         axisY = generateOIAxis(1);
         // axisZ = generateOIAxis(2);
         
-        axisZ = new OIAxis(getAxisGetter(2), .1) {
+        axisZ = new OIAxis(getAxisGetter(2)) {
             @Override
             public double get() {
                 double position  = (getter.getAsDouble() - 1) / -2;
+
+                if (!assureZUp) {
+                    if (position > .95) {
+                        assureZUp = true;
+                        System.out.println("axis z is up");
+                    }
+
+                    return 0;
+                }
+
+                if (!assureZDown) {
+                    if (position < .05) {
+                        assureZDown = true;
+                        System.out.println("axis z is down, activated");
+                    }
+
+                    return 0;
+                }
 
                 if (Functions.isWithin(position, 0, deadzone)) {
                     return 0;

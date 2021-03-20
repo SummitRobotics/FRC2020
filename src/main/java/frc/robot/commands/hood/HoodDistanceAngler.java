@@ -8,6 +8,7 @@
 package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LidarLight;
 import frc.robot.subsystems.Hood;
@@ -22,13 +23,13 @@ public class HoodDistanceAngler extends CommandBase {
     private Hood hood;
     private PIDController pid;
 
-    private LidarLight lidarLight;
+    private LidarLight lidarlight;
 
     public HoodDistanceAngler(Hood hood, LidarLight lidarLight) {
         addRequirements(hood);
 
         this.hood = hood;
-        this.lidarLight = lidarLight;
+        this.lidarlight = lidarLight;
 
         // TODO - make good
         pid = new PIDController(0.01, 0, 0);
@@ -40,9 +41,14 @@ public class HoodDistanceAngler extends CommandBase {
     @Override
     public void execute() {
         double angle = hood.getAngle();
-        double setpoint = getAngleFromDistance(lidarLight.getBestDistance());
+        SmartDashboard.putNumber("Hood Angle Current", angle);
+
+        double setpoint = getAngleFromDistance(lidarlight.getBestDistance());
+        SmartDashboard.putNumber("Hood Angle Setpoint", setpoint);
         pid.setSetpoint(setpoint);
-        hood.setPower(pid.calculate(angle));
+
+        double power = pid.calculate(angle);
+        hood.setPower(power);
     }
 
     //TODO - get correct max hood angle
@@ -50,12 +56,12 @@ public class HoodDistanceAngler extends CommandBase {
         double out = 0;
 
         if (distance > 155) {
-            out = 40;
+            out = 32;
         } else {
             out = (0.0677965 * distance) + 14.4861;
         }
 
-        return Functions.clampDouble(out, 40, 0);
+        return Functions.clampDouble(out, 32, 0);
     }
 
     // Called once the command ends or is interrupted.
