@@ -51,12 +51,11 @@ public class HoodDistanceAngler extends CommandBase {
         hood.setPower(power);
     }
 
-    //TODO - get correct max hood angle
     public double getAngleFromDistance(double distance) {
         double out = 0;
 
         if (distance > 155) {
-            out = 32;
+            out = 31.5;
         } else {
             out = (0.0677965 * distance) + 14.4861;
         }

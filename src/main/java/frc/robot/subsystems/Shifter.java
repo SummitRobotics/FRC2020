@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.LEDs.LEDs;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -36,7 +35,7 @@ public class Shifter extends SubsystemBase {
     /**
      * Getes the shift state
      * 
-     * @return the shift state
+     * @return the shift state where true is high and false is low
      */
     public boolean getShiftState(){
         return oldShift;

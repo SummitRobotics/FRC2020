@@ -41,7 +41,6 @@ public class Drivetrain extends SubsystemBase {
     WheelRadiusInMeters = 0.0762,
     wheleCirconfranceInMeters = (2*WheelRadiusInMeters)*Math.PI,
     MaxOutputVoltage = 11,
-    //TODO check if right (is in meters)
     DriveWidth = 0.7112;
 
     // left motors
@@ -116,7 +115,6 @@ public class Drivetrain extends SubsystemBase {
         rightPID.setOutputRange(-.25, .25);
 
         //pid for velocity
-        //TODO set pid vals corectly
         leftPID.setP(0.000278, 2);
         leftPID.setI(0, 2);
         leftPID.setD(0.0001, 2);
@@ -160,9 +158,11 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param power -1 - 1
      */
-    public synchronized void setLeftMotorPower(double power) {
+    public void setLeftMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        left.set(power);
+        synchronized(left){
+            left.set(power);
+        }
     }
 
     /**
@@ -170,17 +170,23 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param power -1 - 1
      */
-    public synchronized void setRightMotorPower(double power) {
+    public void setRightMotorPower(double power) {
         power = Functions.clampDouble(power, 1.0, -1.0);
-        right.set(power);
+        synchronized(right){
+            right.set(power);
+        }
     }
 
     public void setLeftMotorVolts(double volts) {
-        left.setVoltage(volts);
+        synchronized(left){
+            left.setVoltage(volts);
+        }
     }
 
     public void setRightMotorVolts(double volts) {
-        right.setVoltage(volts);
+        synchronized(right){
+            right.setVoltage(volts);
+        }
     }
 
     /**
@@ -267,7 +273,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return position of motor in rotations
      */
-    public synchronized double getRightEncoderPosition() {
+    public double getRightEncoderPosition() {
         return rightEncoder.getPosition();
     }
 
@@ -276,22 +282,22 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return position of motor in rotations
      */
-    public synchronized double getLeftEncoderPosition() {
+    public double getLeftEncoderPosition() {
         return leftEncoder.getPosition();
     }
 
-    public synchronized double getLeftRPM() {
+    public double getLeftRPM() {
         return leftEncoder.getVelocity();
     }
 
-    public synchronized double getRightRPM() {
+    public double getRightRPM() {
         return rightEncoder.getVelocity();
     }
 
     /**
      * @return the total distance in meters the side as travled sense the last reset
      */
-    public synchronized double getLeftDistance() {
+    public double getLeftDistance() {
         if (shift.getAsBoolean()) {
             return (getLeftEncoderPosition()/HighGearRatio)*wheleCirconfranceInMeters;
         }

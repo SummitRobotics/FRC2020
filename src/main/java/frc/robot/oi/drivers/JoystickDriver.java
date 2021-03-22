@@ -70,5 +70,10 @@ public class JoystickDriver extends GenericDriver {
                 return (1 + deadzone) * position - Math.copySign(deadzone, position);
             }
         };
-	}
+    }
+    
+    public void ReEnableJoysticCalibrationCheck(){
+        assureZDown = false;
+        assureZUp = false;
+    }
 }

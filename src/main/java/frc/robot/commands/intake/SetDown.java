@@ -3,6 +3,7 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LEDs.LEDCall;
+import frc.robot.devices.LEDs.LEDHandler;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.IntakeArm;
@@ -13,6 +14,7 @@ import frc.robot.utilities.lists.LEDPriorities;
 public class SetDown extends CommandBase {
 
     private final static double targetTime = 0.5;
+
     protected IntakeArm intake;
 
     protected Timer timer = new Timer();
