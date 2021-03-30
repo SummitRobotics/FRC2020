@@ -18,6 +18,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 
+//TODO move this to a command that is threded with commandThreder
 public class FollowTrajectoryThreaded extends CommandBase {
 
     private Trajectory trajectory;

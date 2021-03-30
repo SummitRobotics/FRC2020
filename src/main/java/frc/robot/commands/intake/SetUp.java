@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -30,9 +31,15 @@ public class SetUp extends SequentialCommandGroup {
     }
 
     private class SetUpProxy extends CommandBase {
+        private Timer timer = new Timer();
+        private double intakeLPower = intakeLiftPower;
+        private double timeBeforePowerIncrese = 3;
 
         @Override
         public void initialize() {
+            timer.reset();
+            timer.start();
+
             intake.openLock();
     
             if (intake.getState() == States.UP) {
@@ -46,14 +53,28 @@ public class SetUp extends SequentialCommandGroup {
     
                 intake.setState(States.UP);
     
-                intake.setPivotPower(intakeLiftPower);
+                intake.setPivotPower(intakeLPower);
             }
+        }
+
+        //fix for trying to rase intake if battery is low
+        //this will gradualy increse the motor power if the intake has not raised after 3s
+        //this way the intake will not be left down if the battery is low and the motor therefor has less power
+        @Override
+        public void execute() {
+            if((intakeLPower < 1) && (timer.get() > timeBeforePowerIncrese)){
+                intakeLPower = intakeLPower + Math.copySign(0.05, intakeLPower);
+                intake.setPivotPower(intakeLPower);
+            } 
         }
     
         @Override
         public void end(boolean interrupted) {   
+            //TODO figure out why this does not work any more
             LEDs.getInstance().removeCall("ArmDown"); 
             intake.setIntakePower(0);
+            timer.stop();
+            timer.reset();
             end = false;
         }
     

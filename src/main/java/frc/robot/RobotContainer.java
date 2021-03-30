@@ -88,8 +88,6 @@ public class RobotContainer {
     private ClimberPneumatics climberPneumatics;
     private Pneumatics pneumatics;
 
-    // private Lemonlight limelight;
-    private ColorSensorV3 colorSensor;
     private Lemonlight limelight;
     private Lidar turretLidar;
     private LidarLight lidarlight;
@@ -147,10 +145,9 @@ public class RobotContainer {
         //         new InstantCommand(shifter::lowGear));
 
         // things that happen when the robot is inishlided
-
-
         teleInit = new SequentialCommandGroup(
             new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
+            new InstantCommand(() -> joystick.ReEnableJoysticCalibrationCheck()),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
@@ -165,7 +162,7 @@ public class RobotContainer {
             new TurretToPosition(turret, 90),
             //for tuning turret pid
             // new HoodToAngle(hood, 20),
-            // sets the turret default command
+            // sets the turret default command based on the fun dile
             new InstantCommand(() -> {  
                 try {
                     turret.getDefaultCommand().cancel();
