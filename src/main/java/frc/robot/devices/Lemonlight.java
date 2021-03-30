@@ -13,7 +13,7 @@ public class Lemonlight {
     //TODO - make right
     public static final int X_OFFSET = 0;
 
-    public static final double mountAngle = 10;
+    public static final double mountAngle = 19.1;
 
     //in cm
     public static final double mountHeight = 60.5;
