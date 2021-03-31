@@ -30,7 +30,10 @@ public abstract class VisionTarget extends CommandBase {
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
-        pidController.setTolerance(0.1, 1);
+        pidController.setTolerance(1, 1);
+
+        SmartDashboard.putData(pidController);
+        
         
 		if (!partOfFullAuto){
 			addRequirements(turret);

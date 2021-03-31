@@ -11,7 +11,9 @@ import frc.robot.utilities.RollingAverage;;
  */
 public class LidarV3 implements Lidar {
 
-	private RollingAverage rollingAverage;
+    private RollingAverage rollingAverage;
+    
+    private boolean hasStartedMeasuring = false;
 
     public LidarV3() {
 
@@ -19,6 +21,9 @@ public class LidarV3 implements Lidar {
 		I2CJNI.i2CInitialize(m_port);
 
         rollingAverage = new RollingAverage(50, true);
+
+        hasStartedMeasuring = false;
+
         startMeasuring();
     }
     
@@ -52,6 +57,10 @@ public class LidarV3 implements Lidar {
 	 */
 	@Override
 	public int getDistance() {
+        if(!hasStartedMeasuring){
+            startMeasuring();
+            hasStartedMeasuring = true;
+        }
 		short value = readShort(0x8f);
 		rollingAverage.update(value);
 

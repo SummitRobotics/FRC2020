@@ -28,13 +28,13 @@ public class Conveyor extends SubsystemBase {
 	//TODO - make good
 	public static final double
 	SHOOT_POWER = 1,
-	SUBSUME_POWER = 1;
+	SUBSUME_POWER = 0.5;
 
 	// conveyor motor
 	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors
-	private DigitalInput breakbeam;
+	private DigitalInput breakbutton;
 
 	private boolean 
 	shootMode,
@@ -43,7 +43,7 @@ public class Conveyor extends SubsystemBase {
 	public Conveyor() {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
-		breakbeam = new DigitalInput(Ports.BREAKBEAM);
+		breakbutton = new DigitalInput(Ports.BREAKBEAM);
 
 		shootMode = false;
 		intakeMode = false;
@@ -63,8 +63,8 @@ public class Conveyor extends SubsystemBase {
 	 * 
 	 * @return the breakbeam state where true is unbroken and false is broken
 	 */
-	public boolean getBreakBeam() {
-		return breakbeam.get();
+	public boolean getBreakButton() {
+		return !breakbutton.get();
 	}
 
 	/**

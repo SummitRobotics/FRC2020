@@ -15,12 +15,15 @@ public class ConveyorAutomation extends CommandBase {
     private boolean shootModeLED = false;
     private LEDCall conveyorShoot = new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off);
 
+    private boolean intakeLatch = false;
+
 	/**
 	 * Default command for the conveyor to manage its current function based on its state
 	 * @param conveyor the conveyor
 	 */
 	public ConveyorAutomation(Conveyor conveyor) {
-		this.conveyor = conveyor;
+        this.conveyor = conveyor;
+        this.intakeLatch = false;
 	
 		addRequirements(conveyor);
 	}
@@ -34,7 +37,8 @@ public class ConveyorAutomation extends CommandBase {
 		 */
 		switch (conveyor.getState()) {
 			case SHOOT: 
-				power = Conveyor.SHOOT_POWER;
+                power = Conveyor.SHOOT_POWER;
+                intakeLatch = false;
 				if (!shootModeLED) {
 					shootModeLED = true;
 					conveyorShoot.activate();
@@ -52,9 +56,10 @@ public class ConveyorAutomation extends CommandBase {
                 break;
                 
 			case OFF: 
-				power = 0;
+                power = 0;
+                intakeLatch = false;
 				if (shootModeLED) {
-					shootModeLED = false;
+                    shootModeLED = false;
 					conveyorShoot.cancel();
                 }
                 
@@ -75,6 +80,7 @@ public class ConveyorAutomation extends CommandBase {
 			shootModeLED = false;
 			conveyorShoot.cancel();
         }
+        intakeLatch = false;
         
 		conveyor.stop();
 	}
@@ -82,11 +88,15 @@ public class ConveyorAutomation extends CommandBase {
 	 * Checks to see if there's a ball in position, and if there is, slurps it in
 	 */
 	private double intake() {
-		if (conveyor.getBreakBeam()) {
-            System.out.println("break beam!!!");
+        boolean beam = conveyor.getBreakButton();
+
+        if(!beam && !intakeLatch){
+            intakeLatch = true;
+        }
+
+		if (!intakeLatch) {
 			return Conveyor.SUBSUME_POWER;
 		}
-
 		return 0;
 	}
 }

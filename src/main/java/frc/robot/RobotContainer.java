@@ -9,6 +9,7 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,6 +52,7 @@ import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.TurretToPosition;
 import frc.robot.commands.turret.VisionTarget;
 import frc.robot.devices.LEDs.LEDs;
+import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -351,7 +353,7 @@ public class RobotContainer {
         // for testing ONLY
         //scheduler.schedule(testSpline);
 
-        // scheduler.schedule(teleInit);
+        scheduler.schedule(teleInit);
 
         // scheduler.schedule(new SpoolOnTarget(shooter, lidarlight));
        
@@ -387,7 +389,12 @@ public class RobotContainer {
         // launchpad.buttonD.commandBind(testSpline);
         // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
 
-        launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> System.out.println(turretLidar.getDistance())));
+        launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
+            SmartDashboard.putNumber("Lidar distance", turretLidar.getCompensatedLidarDistance(turretLidar.getDistance()));
+        }));
+        launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
+            SmartDashboard.putNumber("Limelight distance", limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset()));
+        }));
         launchpad.buttonD.toggleBind();
     }
 

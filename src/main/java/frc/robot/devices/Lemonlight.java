@@ -17,7 +17,7 @@ public class Lemonlight {
 
     //in cm
     public static final double mountHeight = 60.5;
-    private double targetHeight = 269;
+    private double targetHeight = 230;
 
     private NetworkTable limelight;
 

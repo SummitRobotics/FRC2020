@@ -89,8 +89,8 @@ public class FullAutoShooterAssembly extends CommandBase {
 			status.addStatus("badReadings", "there have been over 10 bad readings from the lidar", Colors.Yellow, 3);
 		}
 
-		boolean ReadyToShoot = spool.isUpToShootSpeed() && target.isOnTarget() && angler.isAtTargetAngle();
-
+        boolean ReadyToShoot = spool.isUpToShootSpeed() && target.isOnTarget() && angler.isAtTargetAngle();
+        System.out.println("spool is " + spool.isUpToShootSpeed() + ", limelight is " + target.isOnTarget() +", hood is "+ angler.isAtTargetAngle());
 		if (ReadyToShoot && !shootLEDCall) {
             autoFireReady.activate();
 			shootLEDCall = true;
