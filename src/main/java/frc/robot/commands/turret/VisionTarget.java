@@ -19,6 +19,8 @@ public abstract class VisionTarget extends CommandBase {
 
 	private PIDController pidController;
 
+	private double error = 1;
+
 	//WRONG - Make right 
 	private final static double
 	P = 0.012,
@@ -30,7 +32,8 @@ public abstract class VisionTarget extends CommandBase {
 		this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
-        pidController.setTolerance(1, 1);
+		pidController.setTolerance(error, 1);
+		pidController.setName("target pid");
 
         SmartDashboard.putData(pidController);
         
@@ -77,7 +80,9 @@ public abstract class VisionTarget extends CommandBase {
 	protected abstract double noTargetTurretAction(double turretAngle);
 
 	public boolean isOnTarget(){
-		return pidController.atSetpoint();
+		//return pidController.atSetpoint();
+		System.out.println("vision target error is: " + pidController.getPositionError());
+		return Math.abs(pidController.getPositionError()) < error;
 	}
 
 	public void end(boolean interrupted) {
