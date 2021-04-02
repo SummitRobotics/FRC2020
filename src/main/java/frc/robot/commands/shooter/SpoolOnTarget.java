@@ -18,7 +18,9 @@ public class SpoolOnTarget extends CommandBase {
     private static final double STAND_BY_RPM = 200;
 
 	private Shooter shooter;
-	private LidarLight lidarLight;
+    private LidarLight lidarLight;
+    
+    private boolean lessThanTransfer = false;
 
 	private PIDController pid;
 
@@ -49,11 +51,32 @@ public class SpoolOnTarget extends CommandBase {
 	public void execute() {
 
 		if (lidarLight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
-            if (lidarLight.getBestDistance() < 155) {
-                pid.setSetpoint(2000);
-            } else {
-                pid.setSetpoint((lidarLight.getBestDistance() * 4.61328) + 1366.23);
+            double distance = lidarLight.getBestDistance();
+            double target = 155;
+            double offset = 15;
+    
+            double out;
+            if (lessThanTransfer && distance > target + offset) {
+                lessThanTransfer = false;
+            } else if (!lessThanTransfer && distance <= target - offset) {
+                lessThanTransfer = true;
             }
+    
+            if (lessThanTransfer && distance < target + offset) {
+                out = 2000;
+            } else {
+                out = distance * 4.61328 + 1366.23;
+            }
+
+            out += 70;
+
+            pid.setSetpoint(out);
+    
+            // if (lidarLight.getBestDistance() < 155) {
+            //     pid.setSetpoint(2000);
+            // } else {
+            //     pid.setSetpoint((lidarLight.getBestDistance() * 4.61328) + 1366.23);
+            // }
             
 		} else if (lidarLight.hasTarget()) {
             pid.setSetpoint(TARGET_SIGHTED_RPM);

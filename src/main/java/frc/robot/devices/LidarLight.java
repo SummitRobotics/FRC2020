@@ -1,16 +1,13 @@
 package frc.robot.devices;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utilities.Functions;
 
 public class LidarLight {
     
-    //TODO - make good
-	private final double acceptableLidarVSLimelightDiscrepancy = 20;
-
-
     public Lemonlight limelight;
     public Lidar lidar;
+    
+    private double workingDistance = 0;
 
     private int lidarBadDistanceReading = 0;
     
@@ -21,11 +18,13 @@ public class LidarLight {
 
 	public double getBestDistance(){
         // double lidarDistance = lidar.getCompensatedLidarDistance(lidar.getAverageDistance());
-        double lidarDistance = lidar.getDistance();
-        double limelightDistance = limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset());
+        // double lidarDistance = lidar.getDistance();
+        if (limelight.hasTarget()) {
+            workingDistance = limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset());
+        }
 
-        SmartDashboard.putNumber("Distance from Limelight", limelightDistance);
-        return limelightDistance;
+        SmartDashboard.putNumber("Distance from Limelight", workingDistance);
+        return workingDistance;
 
 		// if the lidar is to far from the limelight distance we use the limelight estimate beacuse it should be more reliable but less acurate
 		// if (Functions.isWithin(lidarDistance, limelightDistance, acceptableLidarVSLimelightDiscrepancy)) {

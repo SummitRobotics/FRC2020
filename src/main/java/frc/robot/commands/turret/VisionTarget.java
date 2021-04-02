@@ -81,7 +81,7 @@ public abstract class VisionTarget extends CommandBase {
 
 	public boolean isOnTarget(){
 		//return pidController.atSetpoint();
-		System.out.println("vision target error is: " + pidController.getPositionError());
+		//System.out.println("vision target error is: " + pidController.getPositionError());
 		return Math.abs(pidController.getPositionError()) < error;
 	}
 

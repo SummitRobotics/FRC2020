@@ -22,6 +22,7 @@ public class HoodDistanceAngler extends CommandBase {
 
     private Hood hood;
     private PIDController pid;
+    private boolean lessThanTransfer = false;
 
     private LidarLight lidarlight;
 
@@ -35,7 +36,8 @@ public class HoodDistanceAngler extends CommandBase {
         pid = new PIDController(0.02, 0.015, 0);
         pid.setTolerance(2, 1);
         pid.setSetpoint(0);
-        //SmartDashboard.putData(pid);
+        pid.setName("hood");
+        SmartDashboard.putData(pid);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -55,11 +57,26 @@ public class HoodDistanceAngler extends CommandBase {
     public double getAngleFromDistance(double distance) {
         double out = 0;
 
-        if (distance > 155) {
-            out = 31.5;
-        } else {
-            out = (0.0677965 * distance) + 14.4861;
+        double target = 155;
+        double offset = 15;
+
+        if (lessThanTransfer && distance > target + offset) {
+            lessThanTransfer = false;
+        } else if (!lessThanTransfer && distance <= target - offset) {
+            lessThanTransfer = true;
         }
+
+        if (lessThanTransfer && distance < target + offset) {
+            out = (0.0677965 * distance) + 14.4861;
+        } else {
+            out = 31.5;
+        }
+
+        // if (distance > 155) {
+        //     out = 31.5;
+        // } else {
+        //     out = (0.0677965 * distance) + 14.4861;
+        // }
 
         return Functions.clampDouble(out, 32, 0);
     }
@@ -85,6 +102,6 @@ public class HoodDistanceAngler extends CommandBase {
      * @return true means it is ready to shoot
      */
     public boolean isAtTargetAngle() {
-        return pid.atSetpoint();
+        return Math.abs(pid.getPositionError()) < 2;
     }
 }

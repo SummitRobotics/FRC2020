@@ -39,6 +39,7 @@ import frc.robot.commands.drivetrain.ArcadeDrive;
 import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
 import frc.robot.commands.drivetrain.FollowSpline;
+import frc.robot.commands.drivetrain.FollowTrajectory;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
 import frc.robot.commands.intake.IntakeArmDefault;
@@ -360,7 +361,7 @@ public class RobotContainer {
     }
 
     public void robotInit(){
-        String path1 = "paths/garbo-auto-path-1.wpilib.json";
+        String path1 = "paths/test.wpilib.json";
         String path2 = "paths/garbo-auto-path-2.wpilib.json";
 
         Trajectory trajectory1 = new Trajectory();
@@ -380,22 +381,22 @@ public class RobotContainer {
             DriverStation.reportError("Unable to open trajectory: " + path2, ex.getStackTrace());
         }
 
-        // testSpline = new FollowTrajectory(drivetrain, trajectory);
+        testSpline = new FollowTrajectory(drivetrain, trajectory1);
         // testSpline = new SequentialCommandGroup(
         //     new FollowTrajectoryThreaded(drivetrain, trajectory1),
         //     new FollowTrajectoryThreaded(drivetrain, trajectory2)
         // );
-        // launchpad.buttonD.whenPressed(testSpline);
-        // launchpad.buttonD.commandBind(testSpline);
-        // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
+        launchpad.buttonD.whenPressed(testSpline);
+        launchpad.buttonD.commandBind(testSpline);
+        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
 
-        launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
-            SmartDashboard.putNumber("Lidar distance", turretLidar.getCompensatedLidarDistance(turretLidar.getDistance()));
-        }));
-        launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
-            SmartDashboard.putNumber("Limelight distance", limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset()));
-        }));
-        launchpad.buttonD.toggleBind();
+        // launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
+        //     SmartDashboard.putNumber("Lidar distance", turretLidar.getCompensatedLidarDistance(turretLidar.getDistance()));
+        // }));
+        // launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
+        //     SmartDashboard.putNumber("Limelight distance", limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset()));
+        // }));
+        // launchpad.buttonD.toggleBind();
     }
 
     /**
