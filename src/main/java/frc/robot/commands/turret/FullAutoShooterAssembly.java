@@ -1,5 +1,6 @@
 package frc.robot.commands.turret;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.hood.HoodDistanceAngler;
@@ -15,6 +16,8 @@ import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
 
 /**
@@ -38,6 +41,8 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	private boolean targetLEDCall = false;
     private boolean shootLEDCall = false;
+
+    private OIButton SCZ;
     
     private LEDCall autoTarget = new LEDCall(10000, LEDRange.All).solid(Colors.Blue);
     private LEDCall autoFireReady = new LEDCall(LEDPriorities.shooterReadyToFire, LEDRange.All).flashing(Colors.Yellow, Colors.Off);
@@ -48,17 +53,20 @@ public class FullAutoShooterAssembly extends CommandBase {
         Hood hood, 
         Conveyor conveyor, 
         LidarLight lidarlight, 
-        StatusDisplayWidget status
+        StatusDisplayWidget status,
+        OIButton SCZ,
+        OIAxis MSC
     ) {
 		this.status = status;
         this.lidarlight = lidarlight;
         this.conveyor = conveyor;
+        this.SCZ = SCZ;
 
 		changeRateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
-		spool = new SpoolOnTarget(shooter, lidarlight);
-		angler = new HoodDistanceAngler(hood, lidarlight);
-		target = new VisionTarget(turret, lidarlight.limelight, true) {
+		spool = new SpoolOnTarget(shooter, lidarlight, SCZ);
+		angler = new HoodDistanceAngler(hood, lidarlight, SCZ);
+		target = new VisionTarget(turret, lidarlight.limelight, true, SCZ, MSC) {
 			@Override
 			protected double noTargetTurretAction(double turretAngle) {
 				return turretPassiveAction(turretAngle);
@@ -89,8 +97,12 @@ public class FullAutoShooterAssembly extends CommandBase {
 			status.addStatus("badReadings", "there have been over 10 bad readings from the lidar", Colors.Yellow, 3);
 		}
 
-        boolean ReadyToShoot = spool.isUpToShootSpeed() && target.isOnTarget() && angler.isAtTargetAngle();
-        System.out.println("spool is " + spool.isUpToShootSpeed() + ", limelight is " + target.isOnTarget() +", hood is "+ angler.isAtTargetAngle());
+        boolean ReadyToShoot = (spool.isUpToShootSpeed() && target.isOnTarget() && angler.isAtTargetAngle()) || SCZ.get();
+        // System.out.println("spool is " + spool.isUpToShootSpeed() + ", limelight is " + target.isOnTarget() +", hood is "+ angler.isAtTargetAngle());
+        SmartDashboard.putBoolean("Has Spool", spool.isUpToShootSpeed());
+        SmartDashboard.putBoolean("Has Target", target.isOnTarget());
+        SmartDashboard.putBoolean("Has Angle", angler.isAtTargetAngle());
+
 		if (ReadyToShoot && !shootLEDCall) {
             autoFireReady.activate();
 			shootLEDCall = true;

@@ -23,7 +23,7 @@ public class LidarLight {
             workingDistance = limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset());
         }
 
-        SmartDashboard.putNumber("Distance from Limelight", workingDistance);
+        // SmartDashboard.putNumber("Distance from Limelight", workingDistance);
         return workingDistance;
 
 		// if the lidar is to far from the limelight distance we use the limelight estimate beacuse it should be more reliable but less acurate

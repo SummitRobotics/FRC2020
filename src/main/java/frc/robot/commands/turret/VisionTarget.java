@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.CamModes;
 import frc.robot.devices.Lemonlight.LEDModes;
+import frc.robot.oi.inputs.OIAxis;
+import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Functions;
 
@@ -15,9 +17,13 @@ import frc.robot.utilities.Functions;
 public abstract class VisionTarget extends CommandBase {
 
 	protected Turret turret;
-	private Lemonlight limelight;
+    private Lemonlight limelight;
+    private OIButton superCloseZone;
+    private OIAxis manualSuperClose;
 
-	private PIDController pidController;
+    private PIDController pidController;
+    
+    private TurretToPosition ttp;
 
 	private double error = 1;
 
@@ -27,15 +33,19 @@ public abstract class VisionTarget extends CommandBase {
 	I = 0,
 	D = 0;
 
-	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
+	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto, OIButton superCloseZone, OIAxis manualSuperClose) {
 		this.turret = turret;
-		this.limelight = limelight;
+        this.limelight = limelight;
+        this.superCloseZone = superCloseZone;
+        this.manualSuperClose = manualSuperClose;
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(error, 1);
-		pidController.setName("target pid");
+        pidController.setName("target pid");
+        
+        ttp = new TurretToPosition(turret, 90);
 
-        SmartDashboard.putData(pidController);
+        // SmartDashboard.putData(pidController);
         
         
 		if (!partOfFullAuto){
@@ -48,10 +58,17 @@ public abstract class VisionTarget extends CommandBase {
 		limelight.setPipeline(0);
         limelight.setLEDMode(LEDModes.PIPELINE);
         limelight.setCamMode(CamModes.VISION_PROCESSOR);
-		pidController.reset();
+        pidController.reset();
+        
+        ttp.initialize();
 	}
 
 	public void execute() {
+        if (superCloseZone.get()) {
+            ttp.execute();
+            return;
+        }
+
 		if (limelight.hasTarget()) {
 			double offset = -(limelight.getSmoothedHorizontalOffset());
 			double power = pidController.calculate(offset);
@@ -89,7 +106,9 @@ public abstract class VisionTarget extends CommandBase {
         pidController.reset();
 		pidController.close();
 
-		limelight.setLEDMode(LEDModes.FORCE_OFF);
+        limelight.setLEDMode(LEDModes.FORCE_OFF);
+        
+        ttp.end(interrupted);
 	}
 
 	public boolean isFinished() {

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LidarLight;
+import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Hood;
 import frc.robot.utilities.Functions;
 
@@ -23,31 +24,40 @@ public class HoodDistanceAngler extends CommandBase {
     private Hood hood;
     private PIDController pid;
     private boolean lessThanTransfer = false;
+    private OIButton superCloseZone;
 
     private LidarLight lidarlight;
 
-    public HoodDistanceAngler(Hood hood, LidarLight lidarLight) {
+    public HoodDistanceAngler(Hood hood, LidarLight lidarLight, OIButton superCloseZone) {
         addRequirements(hood);
 
         this.hood = hood;
         this.lidarlight = lidarLight;
+        this.superCloseZone = superCloseZone;
 
         // TODO - make good
         pid = new PIDController(0.02, 0.015, 0);
         pid.setTolerance(2, 1);
         pid.setSetpoint(0);
         pid.setName("hood");
-        SmartDashboard.putData(pid);
+        // SmartDashboard.putData(pid);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         double angle = hood.getAngle();
-        SmartDashboard.putNumber("Hood Angle Current", angle);
+        // SmartDashboard.putNumber("Hood Angle Current", angle);
 
-        double setpoint = getAngleFromDistance(lidarlight.getBestDistance());
-        SmartDashboard.putNumber("Hood Angle Setpoint", setpoint);
+        double setpoint;
+        if (superCloseZone.get()) {
+            setpoint = 13;
+
+        } else {
+            setpoint = getAngleFromDistance(lidarlight.getBestDistance());
+        }
+
+        // SmartDashboard.putNumber("Hood Angle Setpoint", setpoint);
         pid.setSetpoint(setpoint);
 
         double power = pid.calculate(angle);
@@ -67,7 +77,7 @@ public class HoodDistanceAngler extends CommandBase {
         }
 
         if (lessThanTransfer && distance < target + offset) {
-            out = (0.0677965 * distance) + 14.4861;
+            out = (0.063 * distance) + 14.4861;
         } else {
             out = 31.5;
         }

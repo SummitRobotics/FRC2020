@@ -36,9 +36,10 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
         LidarLight lidarlight, 
         StatusDisplayWidget status,
         OIAxis controlAxis,
-        OIButton trigger
+        OIButton trigger,
+        OIButton SCZ
     ) {
-        super(turret, shooter, hood, conveyor, lidarlight, status);
+        super(turret, shooter, hood, conveyor, lidarlight, status, SCZ, controlAxis);
 
 		simpleTrigger = new SimpleButton(trigger);
         rateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);

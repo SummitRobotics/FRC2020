@@ -174,9 +174,9 @@ public class RobotContainer {
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
                 } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
+                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger, launchpad.buttonD));
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay));
+                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
                 }
             })
             );
@@ -279,13 +279,13 @@ public class RobotContainer {
         //     () -> shooter.setCoolerSolenoid(false)));
         // launchpad.buttonG.pressBind();
 
-        launchpad.buttonG.toggleWhenPressed(new VisionTarget(turret, limelight, false) {
-            @Override
-            protected double noTargetTurretAction(double turretAngle) {
-                return joystick.axisX.get();
-            };
-        });
-        launchpad.buttonG.toggleBind();
+        // launchpad.buttonG.toggleWhenPressed(new VisionTarget(turret, limelight, false) {
+        //     @Override
+        //     protected double noTargetTurretAction(double turretAngle) {
+        //         return joystick.axisX.get();
+        //     };
+        // });
+        // launchpad.buttonG.toggleBind();
 
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
@@ -294,11 +294,11 @@ public class RobotContainer {
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger));
+            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger, launchpad.buttonD));
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay));
+            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
         }));
 
         //Controller bindings for intake
@@ -386,9 +386,10 @@ public class RobotContainer {
         //     new FollowTrajectoryThreaded(drivetrain, trajectory1),
         //     new FollowTrajectoryThreaded(drivetrain, trajectory2)
         // );
-        launchpad.buttonD.whenPressed(testSpline);
-        launchpad.buttonD.commandBind(testSpline);
-        launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
+        // launchpad.buttonD.whenPressed(testSpline);
+        // launchpad.buttonD.commandBind(testSpline);
+        // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
+        launchpad.buttonD.pressBind();
 
         // launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
         //     SmartDashboard.putNumber("Lidar distance", turretLidar.getCompensatedLidarDistance(turretLidar.getDistance()));

@@ -26,7 +26,7 @@ public class HoodToAngle extends CommandBase {
         pid = new PIDController(0.01, 0, 0);
         pid.setTolerance(0.1, 1);
         pid.setSetpoint(0);
-        SmartDashboard.putData(pid);
+        // SmartDashboard.putData(pid);
     }
 
     // Called when the command is initially scheduled.

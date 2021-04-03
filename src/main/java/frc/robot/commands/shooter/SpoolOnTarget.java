@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LidarLight;
+import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -19,23 +20,26 @@ public class SpoolOnTarget extends CommandBase {
 
 	private Shooter shooter;
     private LidarLight lidarLight;
+    private OIButton superCloseZone;
     
     private boolean lessThanTransfer = false;
 
 	private PIDController pid;
 
-	public SpoolOnTarget(Shooter shooter, LidarLight lidarLight) {
+	public SpoolOnTarget(Shooter shooter, LidarLight lidarLight, OIButton superCloseZone) {
         addRequirements(shooter);
         
 		this.shooter = shooter;
-		this.lidarLight = lidarLight;
+        this.lidarLight = lidarLight;
+        this.superCloseZone = superCloseZone;
 
-		pid = new PIDController(0.001, 0.0005, 0);
+        pid = new PIDController(0.001, 0.0005, 0);
+        // pid = new PIDController(0.0008, 0.0005, 0);
 		pid.setSetpoint(STAND_BY_RPM);
-		pid.setTolerance(50);
+        pid.setTolerance(100);
 		pid.setName("shooter pid");
 		
-		SmartDashboard.putData(pid);
+		// SmartDashboard.putData(pid);
 	}
 
 	/**
@@ -49,6 +53,12 @@ public class SpoolOnTarget extends CommandBase {
 
 	@Override
 	public void execute() {
+
+        // For closest zone outside of limelight range
+        if (superCloseZone.get()) {
+            pid.setSetpoint(2000);
+            return;
+        }
 
 		if (lidarLight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
             double distance = lidarLight.getBestDistance();
@@ -65,7 +75,8 @@ public class SpoolOnTarget extends CommandBase {
             if (lessThanTransfer && distance < target + offset) {
                 out = 2000;
             } else {
-                out = distance * 4.61328 + 1366.23;
+                // out = distance * 4.61328 + 1366.23;
+                out = distance * 5 + 1336.23; // fucky mods
             }
 
             out += 70;
@@ -86,7 +97,7 @@ public class SpoolOnTarget extends CommandBase {
         
 
         double power  = pid.calculate(shooter.getShooterRPM());
-        SmartDashboard.putNumber("Shooter Power", power);
+        // SmartDashboard.putNumber("Shooter Power", power);
         SmartDashboard.putNumber("Shooter Setpoint", pid.getSetpoint());
 
 		shooter.setPower(power);
