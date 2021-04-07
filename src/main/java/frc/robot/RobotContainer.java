@@ -153,8 +153,19 @@ public class RobotContainer {
 
         HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27);
 
-        // autoInit = new SequentialCommandGroup(new InstantCommand(climberPneumatics::extendClimb),
-        //         new InstantCommand(shifter::lowGear));
+        //things the robot does to make auto work
+        autoInit = new SequentialCommandGroup(
+            new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("auto", "robot in auto", Colors.Team, StatusPrioritys.enabled)),
+            new InstantCommand(climberPneumatics::extendClimb),
+            new InstantCommand(intakeArm::closeLock),
+            new InstantCommand(shifter::highGear),
+            new InstantCommand(() -> {
+                launchpad.bigLEDRed.set(false);
+                launchpad.bigLEDGreen.set(true);
+            }),
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new InstantCommand(() -> conveyor.disableShootMode())
+            );
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
@@ -443,11 +454,12 @@ public class RobotContainer {
         // );
 
         return new SequentialCommandGroup(
-            // teleInit,
+            autoInit,
             new SetDown(intakeArm),
-            new WaitCommand(5),
+            new WaitCommand(.75),
             new PrintCommand("Waiting over!"),
-            new SelectCommand(this::galacticSearchPath)
+            new SelectCommand(this::galacticSearchPath),
+            new SetUp(intakeArm)
         );
     }
 
