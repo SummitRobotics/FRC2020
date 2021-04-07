@@ -16,12 +16,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -103,6 +106,12 @@ public class RobotContainer {
     private HomeByCurrent HomeHood;
 
     Command testSpline;
+
+    private Command
+    AR = new InstantCommand(),
+    AB = new InstantCommand(),
+    BR = new InstantCommand(),
+    BB = new InstantCommand();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -361,43 +370,56 @@ public class RobotContainer {
     }
 
     public void robotInit(){
-        String path1 = "paths/test.wpilib.json";
-        String path2 = "paths/garbo-auto-path-2.wpilib.json";
+        // String path1 = "paths/test.wpilib.json";
+        // String path2 = "paths/garbo-auto-path-2.wpilib.json";
 
-        Trajectory trajectory1 = new Trajectory();
-        Trajectory trajectory2 = new Trajectory();
+        // Trajectory trajectory1 = new Trajectory();
+        // Trajectory trajectory2 = new Trajectory();
+
+        // try {
+        //     Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(path1);
+        //     trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+        // } catch (IOException ex) {
+        //     DriverStation.reportError("Unable to open trajectory: " + path1, ex.getStackTrace());
+        // }
+
+        // try {
+        //     Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(path2);
+        //     trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
+        // } catch (IOException ex) {
+        //     DriverStation.reportError("Unable to open trajectory: " + path2, ex.getStackTrace());
+        // }
+
+        // testSpline = new FollowTrajectory(drivetrain, trajectory1);
+
+        String
+        pathAR = "paths/AB.wpilib.json",
+        pathAB = "paths/AR.wpilib.json",
+        pathBR = "paths/BB.wpilib.json",
+        pathBB = "paths/BR.wpilib.json";
 
         try {
-            Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(path1);
-            trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+            Path loadedPathAR = Filesystem.getDeployDirectory().toPath().resolve(pathAR);
+            Path loadedPathAB = Filesystem.getDeployDirectory().toPath().resolve(pathAB);
+            Path loadedPathBR = Filesystem.getDeployDirectory().toPath().resolve(pathBR);
+            Path loadedPathBB = Filesystem.getDeployDirectory().toPath().resolve(pathBB);
+
+            Trajectory trajectoryAR = TrajectoryUtil.fromPathweaverJson(loadedPathAR);
+            Trajectory trajectoryAB = TrajectoryUtil.fromPathweaverJson(loadedPathAB);
+            Trajectory trajectoryBR = TrajectoryUtil.fromPathweaverJson(loadedPathBR);
+            Trajectory trajectoryBB = TrajectoryUtil.fromPathweaverJson(loadedPathBB);
+
+            AR = new FollowTrajectoryThreaded(drivetrain, trajectoryAR);
+            AB = new FollowTrajectoryThreaded(drivetrain, trajectoryAB);
+            BR = new FollowTrajectoryThreaded(drivetrain, trajectoryBR);
+            BB = new FollowTrajectoryThreaded(drivetrain, trajectoryBB);
+
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + path1, ex.getStackTrace());
+            ex.printStackTrace();
+            System.out.println(ex.getStackTrace());
+            System.out.println("PAINNNNN");
+            //DriverStation.reportError("Unable to open Galactic Search trajectory", ex.getStackTrace());
         }
-
-        try {
-            Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(path2);
-            trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + path2, ex.getStackTrace());
-        }
-
-        testSpline = new FollowTrajectory(drivetrain, trajectory1);
-        // testSpline = new SequentialCommandGroup(
-        //     new FollowTrajectoryThreaded(drivetrain, trajectory1),
-        //     new FollowTrajectoryThreaded(drivetrain, trajectory2)
-        // );
-        // launchpad.buttonD.whenPressed(testSpline);
-        // launchpad.buttonD.commandBind(testSpline);
-        // launchpad.buttonG.whenPressed(new InstantCommand(() -> testSpline.cancel()));
-        launchpad.buttonD.pressBind();
-
-        // launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
-        //     SmartDashboard.putNumber("Lidar distance", turretLidar.getCompensatedLidarDistance(turretLidar.getDistance()));
-        // }));
-        // launchpad.buttonD.toggleWhenPressed(new RunCommand(() -> {
-        //     SmartDashboard.putNumber("Limelight distance", limelight.getLimelightDistanceEstimateIN(limelight.getVerticalOffset()));
-        // }));
-        // launchpad.buttonD.toggleBind();
     }
 
     /**
@@ -406,18 +428,53 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        // return new SequentialCommandGroup(
+        //     teleInit,
+        //     // new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
+        //     new InstantCommand(() -> drivetrain.stop()),
+        //     new InstantCommand(() -> conveyor.enableIntakeMode()),
+        //     new SetDown(intakeArm),
+        //     new WaitCommand(1),
+        //     new EncoderDrive(drivetrain, 25, 25),
+        //     new InstantCommand(() -> conveyor.disableIntakeMode()),
+        //     new SetUp(intakeArm),
+        //     new FollowSpline(drivetrain),
+        //     new InstantCommand(() -> drivetrain.stop())
+        // );
+
         return new SequentialCommandGroup(
-            teleInit,
-            // new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
-            new InstantCommand(() -> drivetrain.stop()),
-            new InstantCommand(() -> conveyor.enableIntakeMode()),
+            // teleInit,
             new SetDown(intakeArm),
-            new WaitCommand(1),
-            new EncoderDrive(drivetrain, 25, 25),
-            new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new SetUp(intakeArm),
-            new FollowSpline(drivetrain),
-            new InstantCommand(() -> drivetrain.stop())
+            new WaitCommand(5),
+            new PrintCommand("Waiting over!"),
+            new SelectCommand(this::galacticSearchPath)
         );
+    }
+
+    private double
+    xThreshholdAR = 11.5,
+    xThreshholdAB = 25,
+    xThreshholdBR = -17.5,
+    xThreshholdBB = 15.5;
+
+    private Command galacticSearchPath() {
+        double targetX = limelight.getHorizontalOffset();
+        double error = 3.5;
+
+        if (Functions.isWithin(targetX, xThreshholdAR, error)) {
+            return AR;
+
+        } else if (Functions.isWithin(targetX, xThreshholdAB, error)) {
+            return AB;
+
+        } else if (Functions.isWithin(targetX, xThreshholdBR, error)) {
+            return BR;
+
+        } else if (Functions.isWithin(targetX, xThreshholdBB, error)) {
+            return BB;
+
+        }
+
+        return new PrintCommand("Could not find target ball :(");
     }
 }

@@ -39,7 +39,7 @@ public class SetDown extends CommandBase {
         intake.openLock();
 
         if (intake.getState() == States.UP) {
-            intake.setPivotPower(0.2);
+            intake.setPivotPower(0.4);
 
         } else {
             end = true;
