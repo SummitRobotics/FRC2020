@@ -111,7 +111,16 @@ public class RobotContainer {
     AR = new InstantCommand(),
     AB = new InstantCommand(),
     BR = new InstantCommand(),
-    BB = new InstantCommand();
+    BB = new InstantCommand(),
+    Slalom = new InstantCommand(),
+    BarrelRacing = new InstantCommand(),
+    Bounce1 = new InstantCommand(),
+    Bounce2 = new InstantCommand(),
+    Bounce3 = new InstantCommand(),
+    Bounce4 = new InstantCommand(),
+    BounceAll = new PrintCommand("unlimited badness"),
+    AllGalactic = new PrintCommand("unlimited badness");
+
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -407,29 +416,58 @@ public class RobotContainer {
         pathAR = "paths/AB.wpilib.json",
         pathAB = "paths/AR.wpilib.json",
         pathBR = "paths/BB.wpilib.json",
-        pathBB = "paths/BR.wpilib.json";
+        pathBB = "paths/BR.wpilib.json",
+        pathSlalom = "paths/Slalom.wpilib.json",
+        pathBarrel = "paths/BarrelRacing.wpilib.json",
+        // bounce1 = "paths/Bounce1.wpilib.json",
+        // bounce2 = "paths/Bounce1.wpilib.json",
+        // bounce3 = "paths/Bounce1.wpilib.json",
+        // bounce4 = "paths/Bounce1.wpilib.json",
+        pathAllGalactic = "paths/Allofemlol.wpilib.json",
+        bounceAll = "paths/BounceAll.wpilib.json";
 
         try {
             Path loadedPathAR = Filesystem.getDeployDirectory().toPath().resolve(pathAR);
             Path loadedPathAB = Filesystem.getDeployDirectory().toPath().resolve(pathAB);
             Path loadedPathBR = Filesystem.getDeployDirectory().toPath().resolve(pathBR);
             Path loadedPathBB = Filesystem.getDeployDirectory().toPath().resolve(pathBB);
+            Path loadedPathSlalom = Filesystem.getDeployDirectory().toPath().resolve(pathSlalom);
+            Path loadedPathBarrel = Filesystem.getDeployDirectory().toPath().resolve(pathBarrel);
+            // Path loadedPathBounce1 = Filesystem.getDeployDirectory().toPath().resolve(bounce1);
+            // Path loadedPathBounce2 = Filesystem.getDeployDirectory().toPath().resolve(bounce2);
+            // Path loadedPathBounce3 = Filesystem.getDeployDirectory().toPath().resolve(bounce3);
+            // Path loadedPathBounce4 = Filesystem.getDeployDirectory().toPath().resolve(bounce4);
+            Path loadedPathBounceAll = Filesystem.getDeployDirectory().toPath().resolve(bounceAll);
+            Path loadedPathAllGalactic = Filesystem.getDeployDirectory().toPath().resolve(pathAllGalactic);
 
             Trajectory trajectoryAR = TrajectoryUtil.fromPathweaverJson(loadedPathAR);
             Trajectory trajectoryAB = TrajectoryUtil.fromPathweaverJson(loadedPathAB);
             Trajectory trajectoryBR = TrajectoryUtil.fromPathweaverJson(loadedPathBR);
             Trajectory trajectoryBB = TrajectoryUtil.fromPathweaverJson(loadedPathBB);
+            Trajectory trajectorySlalom = TrajectoryUtil.fromPathweaverJson(loadedPathSlalom);
+            Trajectory trajectoryBarrel = TrajectoryUtil.fromPathweaverJson(loadedPathBarrel);
+            // Trajectory trajectoryBounce1 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce1);
+            // Trajectory trajectoryBounce2 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce2);
+            // Trajectory trajectoryBounce3 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce3);
+            // Trajectory trajectoryBounce4 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce4);
+            Trajectory trajectoryBounceAll = TrajectoryUtil.fromPathweaverJson(loadedPathBounceAll);
+            Trajectory trajectoryAllGalactic = TrajectoryUtil.fromPathweaverJson(loadedPathAllGalactic);
 
             AR = new FollowTrajectoryThreaded(drivetrain, trajectoryAR);
             AB = new FollowTrajectoryThreaded(drivetrain, trajectoryAB);
             BR = new FollowTrajectoryThreaded(drivetrain, trajectoryBR);
             BB = new FollowTrajectoryThreaded(drivetrain, trajectoryBB);
+            Slalom = new FollowTrajectoryThreaded(drivetrain, trajectorySlalom);
+            BarrelRacing = new FollowTrajectoryThreaded(drivetrain, trajectoryBarrel);
+            // Bounce1 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce1);
+            // Bounce2 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce2);
+            // Bounce3 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce3);
+            // Bounce4 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce4);
+            BounceAll = new FollowTrajectoryThreaded(drivetrain, trajectoryBounceAll);
+            AllGalactic = new FollowTrajectoryThreaded(drivetrain, trajectoryAllGalactic);
 
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println(ex.getStackTrace());
-            System.out.println("PAINNNNN");
-            //DriverStation.reportError("Unable to open Galactic Search trajectory", ex.getStackTrace());
+            DriverStation.reportError("Unable to open Galactic Search trajectory", ex.getStackTrace());
         }
     }
 
@@ -453,13 +491,20 @@ public class RobotContainer {
         //     new InstantCommand(() -> drivetrain.stop())
         // );
 
+        // return new SequentialCommandGroup(
+        //     autoInit,
+        //     new SetDown(intakeArm),
+        //     new WaitCommand(.75),
+        //     new PrintCommand("Waiting over!"),
+        //     new SelectCommand(this::galacticSearchPath),
+        //     new SetUp(intakeArm)
+        // );
+
         return new SequentialCommandGroup(
             autoInit,
             new SetDown(intakeArm),
             new WaitCommand(.75),
-            new PrintCommand("Waiting over!"),
-            new SelectCommand(this::galacticSearchPath),
-            new SetUp(intakeArm)
+            AllGalactic
         );
     }
 

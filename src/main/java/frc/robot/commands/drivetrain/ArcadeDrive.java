@@ -61,8 +61,8 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double forwardPower = forwardPowerAxis.get();
-        double reversePower = reversePowerAxis.get();
+        double forwardPower = forwardPowerAxis.get() * .8;
+        double reversePower = reversePowerAxis.get() * .8;
 
         forwardPower = Functions.deadzone(deadzone, forwardPower);
         reversePower = Functions.deadzone(deadzone, reversePower);
