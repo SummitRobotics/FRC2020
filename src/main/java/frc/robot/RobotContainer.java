@@ -72,9 +72,7 @@ import frc.robot.devices.LidarV3;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
-    // for science!
-
+    
     private CommandScheduler scheduler;
 
     private ControllerDriver controller1;
@@ -108,16 +106,8 @@ public class RobotContainer {
     Command testSpline;
 
     private Command
-    AR = new InstantCommand(),
-    AB = new InstantCommand(),
-    BR = new InstantCommand(),
-    BB = new InstantCommand(),
     Slalom = new InstantCommand(),
     BarrelRacing = new InstantCommand(),
-    Bounce1 = new InstantCommand(),
-    Bounce2 = new InstantCommand(),
-    Bounce3 = new InstantCommand(),
-    Bounce4 = new InstantCommand(),
     BounceAll = new PrintCommand("unlimited badness"),
     AllGalactic = new PrintCommand("unlimited badness");
 
@@ -268,7 +258,6 @@ public class RobotContainer {
         // );
         // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
 
-        // Command testSpline = new FollowSavedTrajectoryThreaded(drivetrain, "/home/admin/splines/spline.spl");
         // Command testSpline = new FollowSavedTrajectoryScheduledExecuter(drivetrain, "not currently relevant");
         
 
@@ -303,10 +292,6 @@ public class RobotContainer {
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        // launchpad.buttonG.whenHeld(new StartEndCommand(
-        //     () -> shooter.setCoolerSolenoid(true), 
-        //     () -> shooter.setCoolerSolenoid(false)));
-        // launchpad.buttonG.pressBind();
 
         // launchpad.buttonG.toggleWhenPressed(new VisionTarget(turret, limelight, false) {
         //     @Override
@@ -413,56 +398,24 @@ public class RobotContainer {
         // testSpline = new FollowTrajectory(drivetrain, trajectory1);
 
         String
-        pathAR = "paths/AB.wpilib.json",
-        pathAB = "paths/AR.wpilib.json",
-        pathBR = "paths/BB.wpilib.json",
-        pathBB = "paths/BR.wpilib.json",
         pathSlalom = "paths/Slalom.wpilib.json",
         pathBarrel = "paths/BarrelRacing.wpilib.json",
-        // bounce1 = "paths/Bounce1.wpilib.json",
-        // bounce2 = "paths/Bounce1.wpilib.json",
-        // bounce3 = "paths/Bounce1.wpilib.json",
-        // bounce4 = "paths/Bounce1.wpilib.json",
         pathAllGalactic = "paths/Allofemlol.wpilib.json",
         bounceAll = "paths/BounceAll.wpilib.json";
 
         try {
-            Path loadedPathAR = Filesystem.getDeployDirectory().toPath().resolve(pathAR);
-            Path loadedPathAB = Filesystem.getDeployDirectory().toPath().resolve(pathAB);
-            Path loadedPathBR = Filesystem.getDeployDirectory().toPath().resolve(pathBR);
-            Path loadedPathBB = Filesystem.getDeployDirectory().toPath().resolve(pathBB);
             Path loadedPathSlalom = Filesystem.getDeployDirectory().toPath().resolve(pathSlalom);
             Path loadedPathBarrel = Filesystem.getDeployDirectory().toPath().resolve(pathBarrel);
-            // Path loadedPathBounce1 = Filesystem.getDeployDirectory().toPath().resolve(bounce1);
-            // Path loadedPathBounce2 = Filesystem.getDeployDirectory().toPath().resolve(bounce2);
-            // Path loadedPathBounce3 = Filesystem.getDeployDirectory().toPath().resolve(bounce3);
-            // Path loadedPathBounce4 = Filesystem.getDeployDirectory().toPath().resolve(bounce4);
             Path loadedPathBounceAll = Filesystem.getDeployDirectory().toPath().resolve(bounceAll);
             Path loadedPathAllGalactic = Filesystem.getDeployDirectory().toPath().resolve(pathAllGalactic);
 
-            Trajectory trajectoryAR = TrajectoryUtil.fromPathweaverJson(loadedPathAR);
-            Trajectory trajectoryAB = TrajectoryUtil.fromPathweaverJson(loadedPathAB);
-            Trajectory trajectoryBR = TrajectoryUtil.fromPathweaverJson(loadedPathBR);
-            Trajectory trajectoryBB = TrajectoryUtil.fromPathweaverJson(loadedPathBB);
             Trajectory trajectorySlalom = TrajectoryUtil.fromPathweaverJson(loadedPathSlalom);
             Trajectory trajectoryBarrel = TrajectoryUtil.fromPathweaverJson(loadedPathBarrel);
-            // Trajectory trajectoryBounce1 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce1);
-            // Trajectory trajectoryBounce2 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce2);
-            // Trajectory trajectoryBounce3 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce3);
-            // Trajectory trajectoryBounce4 = TrajectoryUtil.fromPathweaverJson(loadedPathBounce4);
             Trajectory trajectoryBounceAll = TrajectoryUtil.fromPathweaverJson(loadedPathBounceAll);
             Trajectory trajectoryAllGalactic = TrajectoryUtil.fromPathweaverJson(loadedPathAllGalactic);
 
-            AR = new FollowTrajectoryThreaded(drivetrain, trajectoryAR);
-            AB = new FollowTrajectoryThreaded(drivetrain, trajectoryAB);
-            BR = new FollowTrajectoryThreaded(drivetrain, trajectoryBR);
-            BB = new FollowTrajectoryThreaded(drivetrain, trajectoryBB);
             Slalom = new FollowTrajectoryThreaded(drivetrain, trajectorySlalom);
             BarrelRacing = new FollowTrajectoryThreaded(drivetrain, trajectoryBarrel);
-            // Bounce1 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce1);
-            // Bounce2 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce2);
-            // Bounce3 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce3);
-            // Bounce4 = new FollowTrajectoryThreaded(drivetrain, trajectoryBounce4);
             BounceAll = new FollowTrajectoryThreaded(drivetrain, trajectoryBounceAll);
             AllGalactic = new FollowTrajectoryThreaded(drivetrain, trajectoryAllGalactic);
 
@@ -477,30 +430,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // return new SequentialCommandGroup(
-        //     teleInit,
-        //     // new FollowTrajectory(drivetrain, "paths/garbo-auto-path-1.wpilib.json"),
-        //     new InstantCommand(() -> drivetrain.stop()),
-        //     new InstantCommand(() -> conveyor.enableIntakeMode()),
-        //     new SetDown(intakeArm),
-        //     new WaitCommand(1),
-        //     new EncoderDrive(drivetrain, 25, 25),
-        //     new InstantCommand(() -> conveyor.disableIntakeMode()),
-        //     new SetUp(intakeArm),
-        //     new FollowSpline(drivetrain),
-        //     new InstantCommand(() -> drivetrain.stop())
-        // );
-
-        // return new SequentialCommandGroup(
-        //     autoInit,
-        //     new SetDown(intakeArm),
-        //     new WaitCommand(.75),
-        //     new PrintCommand("Waiting over!"),
-        //     new SelectCommand(this::galacticSearchPath),
-        //     new SetUp(intakeArm)
-        // );
-
-        return new SequentialCommandGroup(
+            return new SequentialCommandGroup(
             autoInit,
             new SetDown(intakeArm),
             new WaitCommand(.75),
@@ -508,30 +438,4 @@ public class RobotContainer {
         );
     }
 
-    private double
-    xThreshholdAR = 11.5,
-    xThreshholdAB = 25,
-    xThreshholdBR = -17.5,
-    xThreshholdBB = 15.5;
-
-    private Command galacticSearchPath() {
-        double targetX = limelight.getHorizontalOffset();
-        double error = 3.5;
-
-        if (Functions.isWithin(targetX, xThreshholdAR, error)) {
-            return AR;
-
-        } else if (Functions.isWithin(targetX, xThreshholdAB, error)) {
-            return AB;
-
-        } else if (Functions.isWithin(targetX, xThreshholdBR, error)) {
-            return BR;
-
-        } else if (Functions.isWithin(targetX, xThreshholdBB, error)) {
-            return BB;
-
-        }
-
-        return new PrintCommand("Could not find target ball :(");
-    }
 }
