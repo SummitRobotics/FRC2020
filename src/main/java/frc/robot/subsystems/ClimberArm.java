@@ -4,17 +4,18 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.utilities.Ports;
+import frc.robot.utilities.lists.Ports;
 
 public class ClimberArm extends SubsystemBase {
 
     public enum Sides {
-        LEFT(Ports.LEFT_ARM_MOTOR, true),
-        RIGHT(Ports.RIGHT_ARM_MOTOR, false);
+        LEFT(Ports.LEFT_CLIMB, true),
+        RIGHT(Ports.RIGHT_CLIMB, false);
 
         public int motorPort;
         public boolean inverted;
@@ -24,14 +25,11 @@ public class ClimberArm extends SubsystemBase {
             this.inverted = inverted;
         }
     }
-
-    public static final int 
-    LEFT_CONTROL_PANEL_POSITION = 205,
-    CLIMB_POSITION = 600;
-
+ 
     private CANSparkMax motor;
     private CANEncoder encoder;
     private CANPIDController pidController;
+    private Sides side;
 
     private static final double
     defaultP = 0,
@@ -39,8 +37,10 @@ public class ClimberArm extends SubsystemBase {
     defaultD = 0;
     
     public ClimberArm(Sides side) {
+        this.side = side;
         motor = new CANSparkMax(side.motorPort, MotorType.kBrushless);
         motor.setInverted(side.inverted);
+        motor.setIdleMode(IdleMode.kBrake);
 
         encoder = motor.getEncoder();
         pidController = motor.getPIDController();
@@ -75,5 +75,9 @@ public class ClimberArm extends SubsystemBase {
 
     public void setPosition(double setpoint) {
         pidController.setReference(setpoint, ControlType.kPosition);
+    }
+
+    public String getside(){
+        return side.toString();
     }
 }

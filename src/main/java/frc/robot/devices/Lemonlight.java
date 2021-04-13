@@ -3,20 +3,27 @@ package frc.robot.devices;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
+import frc.robot.utilities.RollingAverage;
 
 /**
  * Device driver for the limelight
  */
-public class Lemonlight implements Logger {
+public class Lemonlight {
 
     //TODO - make right
     public static final int X_OFFSET = 0;
 
-    NetworkTable limelight;
+    public static final double mountAngle = 19.1;
 
-    NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;
+    //in cm
+    public static final double mountHeight = 60.5;
+    private double targetHeight = 230;
+
+    private NetworkTable limelight;
+
+    private NetworkTableEntry tv, tx, ty, ta, ledMode, camMode, pipeline;
+
+    private RollingAverage horizontalSmoothed;
 
     public Lemonlight() {
         limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -30,6 +37,8 @@ public class Lemonlight implements Logger {
         camMode = limelight.getEntry("camMode");
 
         pipeline = limelight.getEntry("pipeline");
+
+        horizontalSmoothed = new RollingAverage(5, false);
     }
 
     /**
@@ -109,6 +118,11 @@ public class Lemonlight implements Logger {
         return tx.getDouble(0);
     }
 
+    public double getSmoothedHorizontalOffset() {
+        horizontalSmoothed.set(getHorizontalOffset());
+        return horizontalSmoothed.getAverage();
+    }
+
     /**
      * @return the vertical offset
      */
@@ -123,12 +137,12 @@ public class Lemonlight implements Logger {
         return ta.getDouble(0);
     }
 
-    //logging
-    @Override
-    public double[] getValues(double[] values) {
-        values[LoggerRelations.LEMONLIGHT_HAS_TARGET.value] = (hasTarget()) ? 1 : 0;
-        values[LoggerRelations.LEMONLIGHT_X_OFF.value] = getHorizontalOffset();
-        values[LoggerRelations.LEMONLIGHT_Y_OFF.value] = getVerticalOffset();     
-        return values;
+    /**
+     * gets a distance estimate of the target using the limelight
+     * @param ReportedAngle the angle from 0 the limelight reports
+     * @return the distance estmate
+     */
+    public double getLimelightDistanceEstimateIN(double reportedAngle){
+        return ((targetHeight-mountHeight) / Math.tan(((reportedAngle + Lemonlight.mountAngle) * (Math.PI/180)))) * 0.393701;
     }
 }

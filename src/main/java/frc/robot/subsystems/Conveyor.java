@@ -11,21 +11,16 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.logging.Logger;
-import frc.robot.logging.LoggerRelations;
-import frc.robot.utilities.Ports;
+import frc.robot.utilities.lists.Ports;
 
 /**
  * Subsystem to control the internal conveyor mechanism of the robot
  */
-public class Conveyor extends SubsystemBase implements Logger {
+public class Conveyor extends SubsystemBase {
 
 	public enum States {
 		SHOOT,
-		SAFE_SHOOT,
 		INTAKE,
 		OFF
 	}
@@ -33,51 +28,25 @@ public class Conveyor extends SubsystemBase implements Logger {
 	//TODO - make good
 	public static final double
 	SHOOT_POWER = 1,
-	SUBSUME_POWER = 0.75;
+	SUBSUME_POWER = 0.5;
 
-	// powers saved for faster logging
-	private double power;
-
-	// conveyor motors
+	// conveyor motor
 	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors
-	private DigitalInput breakbeamEnter;
-	private DigitalInput breakbeamExit;
+	private DigitalInput breakbutton;
 
 	private boolean 
-	safeShootMode,
 	shootMode,
 	intakeMode;
-
-	public Command
-	toggleSafeShootMode,
-	toggleShootMode,
-	toggleIntakeMode;
 
 	public Conveyor() {
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
-		breakbeamEnter = new DigitalInput(Ports.BREAKBEAM_ENTER);
-		breakbeamExit = new DigitalInput(Ports.BREAKBEAM_EXIT);
+		breakbutton = new DigitalInput(Ports.BREAKBEAM);
 
-		power = 0;
-
-		// Internal commands for toggling shooter flags
-		toggleSafeShootMode = new StartEndCommand(
-			this::enableSafeShootMode, 
-			this::disableSafeShootMode
-		);
-
-		toggleShootMode = new StartEndCommand(
-			this::enableShootMode, 
-			this::disableShootMode
-		);
-
-		toggleIntakeMode = new StartEndCommand(
-			this::enableIntakeMode, 
-			this::disableIntakeMode
-		);
+		shootMode = false;
+		intakeMode = false;
 	}
 
 	/**
@@ -86,17 +55,7 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 * @param power the new power
 	 */
 	public void setConveyor(double power) {
-		conveyorMotor.set(ControlMode.PercentOutput, power);
-	}
-
-	//TODO - Make sure that the docs are correct on the nature of breakbeam returns
-	/**
-	 * Gets the state of the entry breakbeam sensor
-	 * 
-	 * @return the breakbeam state where true is unbroken and false is broken
-	 */
-	public boolean getBreakBeamEnter() {
-		return breakbeamEnter.get();
+		conveyorMotor.set(ControlMode.PercentOutput, -power);
 	}
 
 	/**
@@ -104,8 +63,8 @@ public class Conveyor extends SubsystemBase implements Logger {
 	 * 
 	 * @return the breakbeam state where true is unbroken and false is broken
 	 */
-	public boolean getBreakBeamExit() {
-		return breakbeamExit.get();
+	public boolean getBreakButton() {
+		return !breakbutton.get();
 	}
 
 	/**
@@ -118,14 +77,10 @@ public class Conveyor extends SubsystemBase implements Logger {
 	/**
 	 * Gets the run state of the conveyor based on mode flags
 	 * 
-	 * @return the acntive state
+	 * @return the active state
 	 */
 	public States getState() {
 		if (shootMode) {
-			return States.SAFE_SHOOT;
-		}
-
-		if (safeShootMode) {
 			return States.SHOOT;
 		}
 
@@ -136,18 +91,12 @@ public class Conveyor extends SubsystemBase implements Logger {
 		return States.OFF;
 	}
 
+	//WRONG needs to be implimented
 	/**
-	 * Sets the safe shoot mode flag to true
+	 * shoots one ball
 	 */
-	public void enableSafeShootMode() {
-		safeShootMode = true;
-	}
+	public void shootOneBall(){
 
-	/**
-	 * Sets the safe shoot mode flag to false
-	 */
-	public void disableSafeShootMode() {
-		safeShootMode = false;
 	}
 
 	/**
@@ -164,6 +113,14 @@ public class Conveyor extends SubsystemBase implements Logger {
 		shootMode = false;
 	}
 
+	public void toggleShootMode() {
+		shootMode = !shootMode;
+	}
+
+	public void setShootMode(boolean newMode) {
+		shootMode = newMode;
+	}
+
 	/**
 	 * Sets the intake mode flag to true
 	 */
@@ -178,11 +135,15 @@ public class Conveyor extends SubsystemBase implements Logger {
 		intakeMode = false;
 	}
 
-	@Override
-	public double[] getValues(double[] values) {
-		values[LoggerRelations.CONVEYOR.value] = power;
-		values[LoggerRelations.CONVEYOR_BREAKBEAM_ENTER.value] = getBreakBeamEnter() ? 1 : 0;
-		values[LoggerRelations.CONVEYOR_BREAKBEAM_EXIT.value] = getBreakBeamExit() ? 1 : 0;
-		return values;
+	public void toggleIntakeMode() {
+		intakeMode = !intakeMode;
+	}
+
+	public void setIntakeMode(boolean newMode) {
+		intakeMode = newMode;
+	}
+
+	public boolean getIntakeMode() {
+		return intakeMode;
 	}
 }

@@ -1,21 +1,22 @@
 package frc.robot.commands.conveyor;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.oi.LoggerAxis;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.utilities.MOCommand;
 
-/**
- * Manual override for the conveyor
- */
 public class ConveyorMO extends MOCommand {
 
 	Conveyor conveyor;
-	LoggerAxis controlAxis;
+	OIAxis controlAxis;
 
-	public ConveyorMO(Subsystem controlSystem, Conveyor conveyor, LoggerAxis controlAxis) {
-		super(controlSystem, conveyor);
+	/**
+	 * Manual override for the conveyor
+	 * @param conveyor the conveyor
+	 * @param controlAxis the axis to control the conveyor
+	 */
+	public ConveyorMO(Conveyor conveyor, OIAxis controlAxis) {
+		addRequirements(conveyor);
+		addUsed(controlAxis);
 
 		this.conveyor = conveyor;
 		this.controlAxis = controlAxis;
@@ -23,6 +24,7 @@ public class ConveyorMO extends MOCommand {
 
 	@Override
 	public void initialize() {
+		super.initialize();
 		conveyor.stop();
 	}
 
@@ -33,6 +35,7 @@ public class ConveyorMO extends MOCommand {
 
 	@Override
 	public void end(final boolean interrupted) {
+		super.end(interrupted);
 		conveyor.stop();
 	}
 

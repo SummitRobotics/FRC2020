@@ -25,7 +25,7 @@ public class IntakeArmDefault extends CommandBase {
 
         addRequirements(intake);
     }
-
+    
     @Override
     public void execute() {
 		//puts up arm if limit switch says it is not up and it should be up

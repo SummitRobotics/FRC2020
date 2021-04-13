@@ -1,37 +1,36 @@
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.utilities.functionalinterfaces.Binder;
 
 /**
- * abstract class for creatign MOcommands
+ * abstract class for creating MOcommands
  */
 public abstract class MOCommand extends CommandBase {
 
-	protected MOCommand(Subsystem controlSystem, Subsystem... additionalRequirements) {
-		addRequirements(controlSystem);
-		addRequirements(additionalRequirements);
+	private ArrayList<Usable> used = new ArrayList<>();
+
+	public void addUsed(Usable... users) {
+		used = new ArrayList<Usable>(Arrays.asList(users));
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
 
-    public Command bindCommand(
-		Trigger trigger, 
-		Binder binding, 
-		Command command
-	) {
-		return bindCommand(trigger, binding, command, true);
+		for (Usable u : used) {
+			u.using(this);
+		}
 	}
 
+	@Override
+	public void end(boolean interrupted) {
+		super.end(interrupted);
 
-	public Command bindCommand(
-		Trigger trigger, 
-		Binder binding, 
-		Command command, 
-		boolean interruptable
-	) {
-		return Functions.bindCommand(this, trigger, binding, command, interruptable);
+		for (Usable u : used) {
+			u.release(this);
+		}
 	}
 }

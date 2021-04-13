@@ -8,23 +8,23 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Shifter;
-import frc.robot.oi.LoggerAxis;
+import frc.robot.utilities.ChangeRateLimiter;
+import frc.robot.utilities.Functions;
 
 public class ArcadeDrive extends CommandBase {
 
     private Drivetrain drivetrain;
-    private Shifter shift;
 
-    private LoggerAxis forwardPowerAxis;
-    private LoggerAxis reversePowerAxis;
-    private LoggerAxis turnAxis;
+    private OIAxis forwardPowerAxis;
+    private OIAxis reversePowerAxis;
+    private OIAxis turnAxis;
+    private ChangeRateLimiter limiter;
 
     private final double deadzone = .1;
 
-    private double old = 0;
-    private double max_change_rate = 0.05;
+    private double max_change_rate = 0.1;
     
     /**
      * teleop driver control
@@ -35,18 +35,18 @@ public class ArcadeDrive extends CommandBase {
      */
     public ArcadeDrive(
         Drivetrain drivetrain, 
-        Shifter shift, 
-        LoggerAxis forwardPowerAxis, 
-        LoggerAxis reversePowerAxis, 
-        LoggerAxis turnAxis)
+        OIAxis forwardPowerAxis, 
+        OIAxis reversePowerAxis, 
+        OIAxis turnAxis)
     {
 
         this.drivetrain = drivetrain;
-        this.shift = shift;
 
         this.forwardPowerAxis = forwardPowerAxis;
         this.reversePowerAxis = reversePowerAxis;
         this.turnAxis = turnAxis;
+
+        limiter = new ChangeRateLimiter(max_change_rate);
 
         addRequirements(drivetrain);
     }
@@ -55,45 +55,25 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.setOpenRampRate(0);
-        shift.lowGear();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
 
-        double forwardPower = forwardPowerAxis.get();
-        double reversePower = reversePowerAxis.get();
+        double forwardPower = forwardPowerAxis.get() * .8;
+        double reversePower = reversePowerAxis.get() * .8;
 
-        forwardPower = forwardPower < deadzone ? 0 : forwardPower;
-        reversePower = reversePower < deadzone ? 0 : reversePower;
+        forwardPower = Functions.deadzone(deadzone, forwardPower);
+        reversePower = Functions.deadzone(deadzone, reversePower);
 
         forwardPower = Math.pow(forwardPower, 2);
         reversePower = Math.pow(reversePower, 2);
 
         double power = forwardPower - reversePower;
+        double turn = Math.pow(turnAxis.get(), 3);
 
-        double turn = turnAxis.get();
-        turn = (turn / deadzone) - Math.copySign(1, turn);
-        turn = Math.pow(turnAxis.get(), 3);
-
-        /*
-        System.out.println(drivetrain.getLeftEncoderPosition());
-        System.out.println(drivetrain.getRightEncoderPosition());
-        System.out.println("-------------");
-        */
-        
-        // power rate of change
-        
-        if (power > old + max_change_rate) {
-            power = old + max_change_rate;
-            old = power;
-        } else if (power < old - max_change_rate) {
-            power = old - max_change_rate;
-            old = power;
-        } else {
-            old = power;
-        }
+        power = limiter.getRateLimitedValue(power);
 
         // calculates power to the motors
         double leftPower = power + turn;

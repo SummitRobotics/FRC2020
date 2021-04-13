@@ -5,10 +5,18 @@ import frc.robot.subsystems.ClimberArm;
 
 public class RaiseArmsSync extends ParallelCommandGroup {
 
-	public RaiseArmsSync(ClimberArm leftArm, ClimberArm rightArm, int distance) {
-		addCommands(
-			new RaiseArm(leftArm, distance),
-			new RaiseArm(rightArm, distance)
-		);
+	private static final int leftDistance = 332;
+	private static final int rightDistance = 310;
+
+	/**
+	 * Raises both climber arms a specific distance
+	 * @param leftArm the left climber arm
+	 * @param rightArm the right climber arm
+	 */
+	public RaiseArmsSync(ClimberArm leftArm, ClimberArm rightArm) {
+        super(
+            new RaiseArm(leftArm, leftDistance),
+			new RaiseArm(rightArm, rightDistance)
+        );
 	}
 }

@@ -9,16 +9,18 @@ import frc.robot.subsystems.Shooter;
 public class Spool extends CommandBase {
 
 	private Shooter shooter;
+	private double power;
 
-	public Spool(Shooter shooter) {
+	public Spool(Shooter shooter, double power) {
 		this.shooter = shooter;
+		this.power = power;
 
 		addRequirements(shooter);
 	}
 
 	@Override
 	public void execute() {
-		shooter.setPower(Shooter.SPOOL_POWER);
+		shooter.setPower(power);
 	}
 
 	@Override

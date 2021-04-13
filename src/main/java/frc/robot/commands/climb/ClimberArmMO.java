@@ -1,17 +1,20 @@
 package frc.robot.commands.climb;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.oi.LoggerAxis;
+import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.ClimberArm;
-import frc.robot.subsystems.ClimberPneumatics;
+import frc.robot.utilities.MOCommand;
 
-public class ClimberArmMO extends CommandBase {
+public class ClimberArmMO extends MOCommand {
 
 	private ClimberArm arm;
-	private LoggerAxis controlAxis;
+	private OIAxis controlAxis;
 
-	public ClimberArmMO(ClimberArm arm, LoggerAxis controlAxis) {
+	/**
+	 * Command for manually controlling a single climber arm
+	 */
+	public ClimberArmMO(ClimberArm arm, OIAxis controlAxis) {
 		addRequirements(arm);
+		addUsed(controlAxis);
 
 		this.arm = arm;
 		this.controlAxis = controlAxis;
@@ -19,16 +22,19 @@ public class ClimberArmMO extends CommandBase {
 
 	@Override
 	public void initialize() {
+		super.initialize();
 		arm.stop();
 	}
 
 	@Override
 	public void execute() {
 		arm.setPower(controlAxis.get());
+		//System.out.println(arm.getside() + " arm encoder: " + arm.getEncoderPosition());
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		super.end(interrupted);
 		arm.stop();
 	}
 

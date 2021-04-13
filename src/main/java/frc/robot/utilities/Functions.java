@@ -1,9 +1,9 @@
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.utilities.functionalinterfaces.Binder;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Contains various static utility functions for use throughout the program
@@ -30,6 +30,21 @@ public class Functions {
     }
 
     /**
+     * returns input value with deadzone applyed
+     * @param deadRange the range in both directions to be dead
+     * @param in the input value to kill
+     * @return the value to be used
+     */
+    public static double deadzone(double deadRange, double in) {
+        if(Math.abs(in) < deadRange){
+            return 0;
+        }
+        else{
+            return in;
+        }
+    }
+
+    /**
      * Tells if value is within a target range
      * @param toCompare the value to compare
      * @param target the target value
@@ -40,27 +55,49 @@ public class Functions {
         return Math.abs(toCompare - target) <= (error / 2);
     }
 
-    public static Command bindCommand(
-		Command bindable, 
-		Trigger trigger, 
-		Binder binding, 
-		Command command
-	) {
-		
-		return bindCommand(bindable, trigger, binding, command, true);
-	}
+    /**
+     * returns true if the abs of a is bigger than b
+     * @param a reference value
+     * @param b comparing value
+     * @return true if abs of reference is bigger
+     */
+    public static boolean absGreater(double a, double b) {
+        return Math.abs(a) > Math.abs(b);
+    }
 
+    /**
+     * saves an object to a file
+     * @param <T> the object type
+     * @param object the object to save
+     * @param path the path, including the file name, to save
+     * warning, this can fail and not save the object!
+     */
+    public static <T> void saveObjectToFile(T object, String path) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(object);
+            objectOut.close();
+            fileOut.close();
+ 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw(new RuntimeException("saving failed"));
+        }
+    }
 
-	public static Command bindCommand(
-		Command bindable, 
-		Trigger trigger, 
-		Binder binding, 
-		Command command, 
-		boolean interruptable
-	) {
-		Trigger activator = new Trigger(() -> CommandScheduler.getInstance().isScheduled(bindable));
-
-		binding.bind(activator.and(trigger), command, interruptable);
-		return command;
-	}
+    /**
+     * reads an object out of a file
+     * @param <T> the object type
+     * @param path the path where the object is
+     * @return the object read from thre file
+     * @throws Exception throws an exception if the fie can not be read
+     */
+    public static <T> T RetriveObjectFromFile(String path) throws Exception {
+        FileInputStream fis = new FileInputStream(path);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        T result = (T) ois.readObject();
+        ois.close();
+        return result;
+    }
 }

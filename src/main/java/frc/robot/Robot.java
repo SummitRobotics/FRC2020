@@ -1,5 +1,4 @@
 package frc.robot;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -26,6 +25,7 @@ public class Robot extends TimedRobot {
 		// and put our
 		// autonomous chooser on the dashboard.
 		m_robotContainer = new RobotContainer();
+		m_robotContainer.robotInit();
 	}
 
 	/**
@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		m_robotContainer.disabledInit();
 	}
 
 	@Override
@@ -100,12 +101,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		m_robotContainer.teleopPeriodic();
 	}
 
 	@Override
 	public void testInit() {
-		// Cancels all running commands at the start of test mode.
-		CommandScheduler.getInstance().cancelAll();
+		CommandScheduler.getInstance().enable();
+		teleopInit();
 	}
 
 	/**
@@ -113,5 +115,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		teleopPeriodic();
 	}
 }
