@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,14 +15,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
-import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -39,24 +34,18 @@ import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
-import frc.robot.commands.drivetrain.FollowSpline;
-import frc.robot.commands.drivetrain.FollowTrajectory;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
 import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
-import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.commands.turret.FullAutoShooterAssembly;
 import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.TurretToPosition;
-import frc.robot.commands.turret.VisionTarget;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -121,6 +110,16 @@ public class RobotContainer {
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
+
+        if(!controller1.isConnected() || !launchpad.isConnected() || !joystick.isConnected()){
+            System.out.println("not enough joysticks connected, plaease make sure the xbox controler, launchpad, and joystics are connected to the driverstation");
+            throw(new RuntimeException("not enough joysticks connected"));
+        }
+
+        if(!controller1.isXboxControler()){
+            System.out.println("controler 0 is not the xbox controler");
+            throw(new RuntimeException("incorect joystick in port 0"));
+        }
 
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.addStatus("default", "robot on", Colors.White, StatusPrioritys.on);
@@ -430,12 +429,13 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-            return new SequentialCommandGroup(
-            autoInit,
-            new SetDown(intakeArm),
-            new WaitCommand(.75),
-            AllGalactic
-        );
+        //     return new SequentialCommandGroup(
+        //     autoInit,
+        //     new SetDown(intakeArm),
+        //     new WaitCommand(.75),
+        //     AllGalactic
+        // );
+        return null;
     }
 
 }

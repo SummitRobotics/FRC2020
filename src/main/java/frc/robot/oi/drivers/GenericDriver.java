@@ -25,7 +25,7 @@ public abstract class GenericDriver {
      */
     protected double getRawAxis(int axis) {
         return driverStation.getStickAxis(port, axis);
-    }
+	}
 
     /**
      * Gets digital output
@@ -95,4 +95,17 @@ public abstract class GenericDriver {
 	protected OIAxis generateOIAxis(int port) {
 		return new OIAxis(getAxisGetter(port));
 	}
+
+	/**
+	 * gets if the joystick is connected to the driver station
+	 * @param port the port of the joystic on the ds
+	 */
+	public boolean isConnected(){
+		return driverStation.isJoystickConnected(this.port);
+	}
+
+	public boolean isXboxControler(){
+		return driverStation.getJoystickIsXbox(this.port);
+	}
+
 }

@@ -82,5 +82,5 @@ public class ControllerDriver extends GenericDriver {
 
 	private BooleanSupplier getDPadValue(DPadValues value) {
 		return () -> value.isEqual(getPOV());
-	}
+    }
 }
