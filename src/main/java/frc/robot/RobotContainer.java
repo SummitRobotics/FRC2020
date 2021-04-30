@@ -111,16 +111,6 @@ public class RobotContainer {
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
         joystick = new JoystickDriver(Ports.JOYSTICK_PORT);
 
-        if(!controller1.isConnected() || !launchpad.isConnected() || !joystick.isConnected()){
-            System.out.println("not enough joysticks connected, plaease make sure the xbox controler, launchpad, and joystics are connected to the driverstation");
-            throw(new RuntimeException("not enough joysticks connected"));
-        }
-
-        if(!controller1.isXboxControler()){
-            System.out.println("controler 0 is not the xbox controler");
-            throw(new RuntimeException("incorect joystick in port 0"));
-        }
-
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.addStatus("default", "robot on", Colors.White, StatusPrioritys.on);
 
@@ -167,6 +157,17 @@ public class RobotContainer {
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                if(!controller1.isConnected() || !launchpad.isConnected() || !joystick.isConnected()){
+                    System.out.println("not enough joysticks connected, plaease make sure the xbox controler, launchpad, and joystics are connected to the driverstation");
+                    throw(new RuntimeException("not enough joysticks connected"));
+                }
+        
+                if(!controller1.isXboxControler()){
+                    System.out.println("controler 0 is not the xbox controler");
+                    throw(new RuntimeException("incorect joystick in port 0"));
+                }
+            }),
             new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(() -> joystick.ReEnableJoysticCalibrationCheck()),
             new InstantCommand(climberPneumatics::extendClimb),
