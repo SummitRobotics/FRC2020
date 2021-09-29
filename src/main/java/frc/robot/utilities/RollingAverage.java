@@ -15,6 +15,7 @@ public class RollingAverage {
     /**
      * creates new rollingavrage
      * @param size the number of values you want to avrage
+     * @param fill true will fill the array with the first value input on the first update, false will fill the array with 0's
      */
     public RollingAverage(int size, boolean fill) {
         rollingAverageArray = new Double[size];

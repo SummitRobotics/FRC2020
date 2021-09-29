@@ -15,6 +15,7 @@ public class StatusPrioritys {
     on = 0,
     enabled = 1,
     badLidarReadings = 2,
-    shooterOver75 = 3;
+    stuckBall = 3,
+    shooterOver75 = 4;
 
 }

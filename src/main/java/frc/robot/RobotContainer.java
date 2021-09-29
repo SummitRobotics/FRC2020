@@ -126,7 +126,7 @@ public class RobotContainer {
         pneumatics = new Pneumatics(ShufhellboardDriver.pressure);
         shifter = new Shifter();
         conveyor = new Conveyor();
-        intakeArm = new IntakeArm();
+        intakeArm = new IntakeArm(pdp);
         shooter = new Shooter(ShufhellboardDriver.shooterSpeed, ShufhellboardDriver.shooterTemp, ShufhellboardDriver.statusDisplay);
         hood = new Hood(ShufhellboardDriver.hoodIndicator);
         leftArm = new ClimberArm(Sides.LEFT);
@@ -137,7 +137,7 @@ public class RobotContainer {
 
         
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 20, 2.5, 10.5);
+        HomeHood = new HomeByCurrent(hood, -.15, 15, 2.5, 10.5);
 
         HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27);
 
@@ -179,9 +179,11 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
+            new InstantCommand(() -> System.out.println("got halfway")),
             //these can both happen at the same time so we do want that to happen to save time
             new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             new TurretToPosition(turret, 90),
+            new InstantCommand(() -> System.out.println("homed")),
             //for tuning turret pid
             // new HoodToAngle(hood, 20),
             // sets the turret default command based on the fun dile

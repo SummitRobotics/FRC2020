@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+
 
 /**
  * Subsystem to control the intake and its arm
@@ -22,6 +24,8 @@ public class IntakeArm extends SubsystemBase {
 	}
 
 	public final static double intakePower = 0.7;
+	//TODO make the chanle right
+	private final int channel = 9;
 
 	public States state;
 
@@ -31,8 +35,10 @@ public class IntakeArm extends SubsystemBase {
 
 	private Solenoid lock;
 	private DigitalInput upperLimit;
+	private PowerDistributionPanel pdp;
 
-	public IntakeArm() {
+	public IntakeArm(PowerDistributionPanel pdp) {
+		this.pdp = pdp;
 		intake = new VictorSPX(Ports.INTAKE_ARM_SPIN);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
 		lock = new Solenoid(Ports.PCM_1, Ports.INTAKE_LOCK);
@@ -67,6 +73,10 @@ public class IntakeArm extends SubsystemBase {
 	public void setIntakePower(double power) {
 		power = Functions.clampDouble(power, 1, -1);
 		intake.set(ControlMode.PercentOutput, power);
+	}
+
+	public double getIntakeCurrent(){
+		return pdp.getCurrent(channel);
 	}
 
 	/**

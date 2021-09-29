@@ -14,7 +14,7 @@ public class SetUp extends SequentialCommandGroup {
     private IntakeArm intake;
     private boolean end;
 
-    private double intakeLiftPower = -0.42;
+    private double intakeLiftPower = -0.55;
 
     public SetUp(IntakeArm intake) {
         this.intake = intake;
