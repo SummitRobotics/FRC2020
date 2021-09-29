@@ -91,7 +91,7 @@ public class IntakeArmDefault extends CommandBase {
 
             //gets and avrages motor current
             double current = intake.getIntakeCurrent();
-            System.out.println(current);
+            //System.out.println(current);
             averageCurrent.update(current);
 
             //runs motor backward if current is to high or ball is stuck

@@ -179,11 +179,11 @@ public class RobotContainer {
             }),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode()),
-            new InstantCommand(() -> System.out.println("got halfway")),
+            //new InstantCommand(() -> System.out.println("got halfway")),
             //these can both happen at the same time so we do want that to happen to save time
             new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             new TurretToPosition(turret, 90),
-            new InstantCommand(() -> System.out.println("homed")),
+            //new InstantCommand(() -> System.out.println("homed")),
             //for tuning turret pid
             // new HoodToAngle(hood, 20),
             // sets the turret default command based on the fun dile
