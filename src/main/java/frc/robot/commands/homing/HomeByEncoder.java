@@ -4,6 +4,7 @@
 
 package frc.robot.commands.homing;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utilities.Homeable;
 
@@ -15,46 +16,55 @@ public class HomeByEncoder extends CommandBase {
     private int minLoops;
     private double reverseLimit;
     private double fowardLimit;
+    private double timeout;
+
+    private Timer timeoutTimer;
 
     private int loops;
 
-    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double timeout) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
+        this.timeout = timeout;
 
         loops = 0;
 
         setlimits = false;
+        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
     }
 
-    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit, double timeout) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
         this.reverseLimit = reverseLimit;
         this.fowardLimit = fowardLimit;
+        this.timeout = timeout;
 
         setlimits = true;
 
         loops = 0;
+        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
     }
 
     public HomeByEncoder getDuplicate() {
         if (setlimits) {
-            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit);
+            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout);
         }
-        return new HomeByEncoder(toHome, homingPower, minLoops);
+        return new HomeByEncoder(toHome, homingPower, minLoops, timeout);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         loops = 0;
+        timeoutTimer.reset();
+        timeoutTimer.start();
         toHome.DisableSoftLimits();
     }
 
@@ -84,12 +94,16 @@ public class HomeByEncoder extends CommandBase {
         double v = toHome.getVelocity();
 
         boolean done = (loops > minLoops) && (Math.abs(v) < 1);
+        boolean timeExpired = timeoutTimer.get() > timeout;
         
         if (done) {
             System.out.println("homing of " + 
             toHome.getSubsystemObject().getClass().getCanonicalName() + 
             " is done with " + loops + " loops and a velocity of " + v + " rpm" );
         }
-        return done;
+        if(timeExpired){
+            System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " timed out");
+        }
+        return done || timeExpired;
     }
 }

@@ -8,16 +8,17 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.lists.Colors;
@@ -29,6 +30,7 @@ import frc.robot.oi.drivers.ControllerDriver;
 import frc.robot.oi.drivers.JoystickDriver;
 import frc.robot.oi.drivers.LaunchpadDriver;
 import frc.robot.oi.drivers.ShufhellboardDriver;
+import frc.robot.commands.CommandThreader;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
@@ -95,10 +97,7 @@ public class RobotContainer {
     Command testSpline;
 
     private Command
-    Slalom = new PrintCommand("unlimited badness"),
-    BarrelRacing = new PrintCommand("unlimited badness"),
-    BounceAll = new PrintCommand("unlimited badness"),
-    AllGalactic = new PrintCommand("unlimited badness");
+    Test = new PrintCommand("unlimited badness");
 
 
     /**
@@ -137,9 +136,9 @@ public class RobotContainer {
 
         
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 15, 2.5, 10.5);
+        HomeHood = new HomeByCurrent(hood, -.15, 15, 2.5, 10.5, 4);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27);
+        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27, 4);
 
         //things the robot does to make auto work
         autoInit = new SequentialCommandGroup(
@@ -400,29 +399,25 @@ public class RobotContainer {
         // testSpline = new FollowTrajectory(drivetrain, trajectory1);
 
         String
-        pathSlalom = "paths/Slalom.wpilib.json",
-        pathBarrel = "paths/BarrelRacing.wpilib.json",
-        pathAllGalactic = "paths/Allofemlol.wpilib.json",
-        bounceAll = "paths/BounceAll.wpilib.json";
+        pathF2 = "paths/f2.wpilib.json",
+        pathF3 = "paths/f3.wpilib.json";
 
         try {
-            Path loadedPathSlalom = Filesystem.getDeployDirectory().toPath().resolve(pathSlalom);
-            Path loadedPathBarrel = Filesystem.getDeployDirectory().toPath().resolve(pathBarrel);
-            Path loadedPathBounceAll = Filesystem.getDeployDirectory().toPath().resolve(bounceAll);
-            Path loadedPathAllGalactic = Filesystem.getDeployDirectory().toPath().resolve(pathAllGalactic);
+            Path loadedPathSlalom = Filesystem.getDeployDirectory().toPath().resolve(pathF2);
+            Path loadedPathBarrel = Filesystem.getDeployDirectory().toPath().resolve(pathF3);
 
             Trajectory trajectorySlalom = TrajectoryUtil.fromPathweaverJson(loadedPathSlalom);
             Trajectory trajectoryBarrel = TrajectoryUtil.fromPathweaverJson(loadedPathBarrel);
-            Trajectory trajectoryBounceAll = TrajectoryUtil.fromPathweaverJson(loadedPathBounceAll);
-            Trajectory trajectoryAllGalactic = TrajectoryUtil.fromPathweaverJson(loadedPathAllGalactic);
 
-            Slalom = new FollowTrajectoryThreaded(drivetrain, trajectorySlalom);
-            BarrelRacing = new FollowTrajectoryThreaded(drivetrain, trajectoryBarrel);
-            BounceAll = new FollowTrajectoryThreaded(drivetrain, trajectoryBounceAll);
-            AllGalactic = new FollowTrajectoryThreaded(drivetrain, trajectoryAllGalactic);
+            Command f2 = new FollowTrajectoryThreaded(drivetrain, trajectorySlalom);
+            Command f3 = new FollowTrajectoryThreaded(drivetrain, trajectoryBarrel);
 
+            Test = new SequentialCommandGroup(f2, f3);
+
+            ShufhellboardDriver.autoChooser.addOption("testAuto", Test);
+            
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open Galactic Search trajectory", ex.getStackTrace());
+            DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());
         }
     }
 
@@ -432,13 +427,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        //     return new SequentialCommandGroup(
-        //     autoInit,
-        //     new SetDown(intakeArm),
-        //     new WaitCommand(.75),
-        //     AllGalactic
-        // );
-        return null;
+     
+        return (Command) ShufhellboardDriver.autoChooser.getSelected();
     }
 
 }

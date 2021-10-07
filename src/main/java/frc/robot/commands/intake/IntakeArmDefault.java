@@ -24,7 +24,7 @@ public class IntakeArmDefault extends CommandBase {
 
     //TODO tune val
     private final double StuckCurrent = 10;
-    private final double reverseTime = 1.5;
+    private final double reverseTime = 0.8;
 
     private final static double
     POWER_RAMP_RATE = 1,

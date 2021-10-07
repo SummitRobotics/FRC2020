@@ -10,9 +10,11 @@ package frc.robot.oi.drivers;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.oi.inputs.ShufhellboardLEDButton;
 import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
 /**
@@ -44,4 +46,7 @@ public class ShufhellboardDriver {
     shooterSpeed = InfoTable.getEntry("Shooter Speed"),
     shooterTemp = InfoTable.getEntry("Shooter Temp"),
     pressure = InfoTable.getEntry("pressure");
+
+    public static SendableChooser
+    autoChooser = new SendableChooser<Command>();
 }
