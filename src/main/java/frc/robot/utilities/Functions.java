@@ -2,8 +2,17 @@ package frc.robot.utilities;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
+
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * Contains various static utility functions for use throughout the program
@@ -99,5 +108,13 @@ public class Functions {
         T result = (T) ois.readObject();
         ois.close();
         return result;
+    }
+
+    public static Command splineCommandFromFile(Drivetrain drivetrain, String fileName) throws IOException{
+        Path path = Filesystem.getDeployDirectory().toPath().resolve(fileName);
+ 
+        Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(path);
+
+        return new FollowTrajectoryThreaded(drivetrain, trajectory);
     }
 }

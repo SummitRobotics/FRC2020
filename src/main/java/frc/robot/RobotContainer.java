@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
@@ -400,21 +401,18 @@ public class RobotContainer {
 
         String
         pathF2 = "paths/f2.wpilib.json",
-        pathF3 = "paths/f3.wpilib.json";
+        pathF3 = "paths/f3.wpilib.json",
+        pathLineMove = "paths/lineMove.wpilib.json";
 
         try {
-            Path loadedPathSlalom = Filesystem.getDeployDirectory().toPath().resolve(pathF2);
-            Path loadedPathBarrel = Filesystem.getDeployDirectory().toPath().resolve(pathF3);
-
-            Trajectory trajectorySlalom = TrajectoryUtil.fromPathweaverJson(loadedPathSlalom);
-            Trajectory trajectoryBarrel = TrajectoryUtil.fromPathweaverJson(loadedPathBarrel);
-
-            Command f2 = new FollowTrajectoryThreaded(drivetrain, trajectorySlalom);
-            Command f3 = new FollowTrajectoryThreaded(drivetrain, trajectoryBarrel);
+            Command f2 = Functions.splineCommandFromFile(drivetrain, pathF2);
+            Command f3 = Functions.splineCommandFromFile(drivetrain, pathF3);
+            Command lineDrive = Functions.splineCommandFromFile(drivetrain, pathLineMove);
 
             Test = new SequentialCommandGroup(f2, f3);
 
-            ShufhellboardDriver.autoChooser.addOption("testAuto", Test);
+            ShufhellboardDriver.autoChooser.setDefaultOption("line Drive", lineDrive);
+            ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
             
         } catch (IOException ex) {
             DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());
