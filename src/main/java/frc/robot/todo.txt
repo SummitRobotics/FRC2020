@@ -15,3 +15,5 @@ curent monitering + auto reverse on convayer
 convayer runs on intake down!!!
 
 fix pid controlers not being adjestable from shufhellboard
+
+make drivetrain override good

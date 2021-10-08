@@ -214,7 +214,14 @@ public class RobotContainer {
             drivetrain, 
             controller1.rightTrigger,
             controller1.leftTrigger, 
-            controller1.leftX));
+            controller1.leftX,
+            //TODO make this not chronic
+            launchpad.buttonD,
+            joystick.axisY,
+            joystick.axisX
+        ));
+        
+        launchpad.buttonD.pressBind();
 
         // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
