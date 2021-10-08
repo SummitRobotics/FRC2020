@@ -9,6 +9,7 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Turret;
 
 public class TurretToPosition extends CommandBase {
@@ -25,10 +26,11 @@ public class TurretToPosition extends CommandBase {
         addRequirements(turret);
         this.turret = turret;
         target = targetAngle;
-        // WRONG make good
+        // GOOD DONT CHANGE
         pid = new PIDController(0.024, 0.0, 0.0009);
         pid.setTolerance(.75, 1);
-        // SmartDashboard.putData(pid);
+        pid.setName("turret angle pid");
+        SmartDashboard.putData(pid);
     }
 
     // Called when the command is initially scheduled.

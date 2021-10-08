@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -138,7 +139,7 @@ public class RobotContainer {
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
         HomeHood = new HomeByCurrent(hood, -.15, 15, 2.5, 10.5, 4);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 2, 27, 4);
+        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 7, 27, 4);
 
         //things the robot does to make auto work
         autoInit = new SequentialCommandGroup(
@@ -252,15 +253,7 @@ public class RobotContainer {
         launchpad.buttonB.pressBind();
 
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
-        launchpad.buttonC.pressBind();
-
-        // launchpad.buttonD.whenPressed(
-        //     new InstantCommand(conveyor::toggleIntakeMode)
-        // );
-        // launchpad.buttonD.booleanSupplierBind(conveyor::getIntakeMode);
-
-        // Command testSpline = new FollowSavedTrajectoryScheduledExecuter(drivetrain, "not currently relevant");
-        
+        launchpad.buttonC.pressBind();        
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
         launchpad.buttonE.pressBind();
@@ -419,6 +412,9 @@ public class RobotContainer {
         } catch (IOException ex) {
             DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());
         }
+
+        //TODO move to shufhellboard driver
+        SmartDashboard.putData(ShufhellboardDriver.autoChooser);
     }
 
     /**

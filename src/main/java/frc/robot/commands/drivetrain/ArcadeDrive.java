@@ -24,7 +24,7 @@ public class ArcadeDrive extends CommandBase {
 
     private final double deadzone = .1;
 
-    private double max_change_rate = 0.1;
+    private double max_change_rate = 0.05;
     
     /**
      * teleop driver control

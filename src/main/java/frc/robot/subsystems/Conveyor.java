@@ -84,14 +84,14 @@ public class Conveyor extends SubsystemBase {
 			return States.SHOOT;
 		}
 
-		if (intakeMode) {
+		else if (intakeMode) {
 			return States.INTAKE;
 		}
 
-		return States.OFF;
+		else return States.OFF;
 	}
 
-	//WRONG needs to be implimented
+	//TODO needs to be implimented
 	/**
 	 * shoots one ball
 	 */

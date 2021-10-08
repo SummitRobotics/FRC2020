@@ -35,12 +35,12 @@ public class HoodDistanceAngler extends CommandBase {
         this.lidarlight = lidarLight;
         this.superCloseZone = superCloseZone;
 
-        // TODO - make good
+        // FINE probably dont touch
         pid = new PIDController(0.02, 0.015, 0);
         pid.setTolerance(2, 1);
         pid.setSetpoint(0);
         pid.setName("hood");
-        // SmartDashboard.putData(pid);
+        SmartDashboard.putData(pid);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

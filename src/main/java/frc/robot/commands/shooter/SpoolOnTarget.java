@@ -33,13 +33,13 @@ public class SpoolOnTarget extends CommandBase {
         this.lidarLight = lidarLight;
         this.superCloseZone = superCloseZone;
 
-        pid = new PIDController(0.001, 0.0005, 0);
+        pid = new PIDController(0.0005, 0.0003, 0);
         // pid = new PIDController(0.0008, 0.0005, 0);
 		pid.setSetpoint(STAND_BY_RPM);
         pid.setTolerance(100);
-		pid.setName("shooter pid");
+		pid.setName("shooter speed pid");
 		
-		// SmartDashboard.putData(pid);
+		SmartDashboard.putData(pid);
 	}
 
 	/**

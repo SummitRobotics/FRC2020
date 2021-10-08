@@ -29,9 +29,9 @@ public abstract class VisionTarget extends CommandBase {
 
 	//WRONG - Make right 
 	private final static double
-	P = 0.012,
-	I = 0,
-	D = 0;
+	P = 0.01,
+	I = 0.0002,
+	D = 0.0002;
 
 	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto, OIButton superCloseZone, OIAxis manualSuperClose) {
 		this.turret = turret;
@@ -41,7 +41,7 @@ public abstract class VisionTarget extends CommandBase {
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(error, 1);
-        pidController.setName("target pid");
+        pidController.setName("vision target pid");
         
         ttp = new TurretToPosition(turret, 90);
 

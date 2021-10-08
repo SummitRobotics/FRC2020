@@ -36,7 +36,9 @@ public class ConveyorAutomation extends CommandBase {
 		 * Sets the conveyors power based on its state. Shoot mode overrides intake mode
 		 */
 		switch (conveyor.getState()) {
+
 			case SHOOT: 
+				//System.out.println("convayer in shoot mode");
                 power = Conveyor.SHOOT_POWER;
                 intakeLatch = false;
 				if (!shootModeLED) {
@@ -47,6 +49,7 @@ public class ConveyorAutomation extends CommandBase {
                 break;
                 
 			case INTAKE: 
+				//System.out.println("convayer in intake mode");
 				power = intake();
 				if (shootModeLED) {
 					shootModeLED = false;
@@ -56,6 +59,7 @@ public class ConveyorAutomation extends CommandBase {
                 break;
                 
 			case OFF: 
+				//System.out.println("convayer off");
                 power = 0;
                 intakeLatch = false;
 				if (shootModeLED) {
@@ -65,6 +69,7 @@ public class ConveyorAutomation extends CommandBase {
                 
 				break;
 		}
+		//System.out.println("setting convayer to: "+ power);
 
 		conveyor.setConveyor(power);
 	}
@@ -88,7 +93,7 @@ public class ConveyorAutomation extends CommandBase {
 	 * Checks to see if there's a ball in position, and if there is, slurps it in
 	 */
 	private double intake() {
-        boolean beam = conveyor.getBreakButton();
+		boolean beam = conveyor.getBreakButton();
 
         if(!beam && !intakeLatch){
             intakeLatch = true;

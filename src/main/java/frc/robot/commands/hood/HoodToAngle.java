@@ -22,10 +22,10 @@ public class HoodToAngle extends CommandBase {
         addRequirements(hood);
         this.hood = hood;
         this.angle = angle;
-        // WRONG: make good
         pid = new PIDController(0.01, 0, 0);
         pid.setTolerance(0.1, 1);
         pid.setSetpoint(0);
+        pid.setName("hood to angle nv");
         // SmartDashboard.putData(pid);
     }
 

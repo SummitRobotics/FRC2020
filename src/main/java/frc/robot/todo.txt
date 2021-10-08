@@ -1,0 +1,17 @@
+make a pid controler interface in shefhellboard driver
+
+make shufhelboard driver instantiable
+
+over current dectetion for all motors
+
+thread turret commands
+
+tune turrent pid
+
+better controler dectetion
+
+curent monitering + auto reverse on convayer
+
+convayer runs on intake down!!!
+
+fix pid controlers not being adjestable from shufhellboard
