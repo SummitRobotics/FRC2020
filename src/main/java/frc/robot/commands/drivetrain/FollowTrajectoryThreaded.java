@@ -143,7 +143,7 @@ class ThreadedSplineExecutor extends Thread {
                 long sleepPeriod = period - executeTime;
 
                 if (sleepPeriod < 0) {
-                    System.out.println(String.format("Loop overran with time %d", Math.abs((sleepPeriod)/1_000_00)));
+                    System.out.println(String.format("Spline loop overran with time %d", Math.abs((sleepPeriod)/1_000_00)));
 
                 } else {
                     sleep(sleepPeriod / 1_000_000, (int) (sleepPeriod % 1_000_000));

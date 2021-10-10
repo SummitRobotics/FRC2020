@@ -22,10 +22,6 @@ public class ArcadeDrive extends CommandBase {
     private OIAxis reversePowerAxis;
     private OIAxis turnAxis;
 
-    private Button override;
-    private OIAxis overideMovePower;
-    private OIAxis overrideTurnPower;
-
     private ChangeRateLimiter limiter;
 
     private final double deadzone = .1;
@@ -43,10 +39,7 @@ public class ArcadeDrive extends CommandBase {
         Drivetrain drivetrain, 
         OIAxis forwardPowerAxis, 
         OIAxis reversePowerAxis, 
-        OIAxis turnAxis,
-        Button override,
-        OIAxis overideMovePower, 
-        OIAxis overrideTurnPower)
+        OIAxis turnAxis)
     {
 
         this.drivetrain = drivetrain;
@@ -54,10 +47,6 @@ public class ArcadeDrive extends CommandBase {
         this.forwardPowerAxis = forwardPowerAxis;
         this.reversePowerAxis = reversePowerAxis;
         this.turnAxis = turnAxis;
-
-        this.override = override;
-        this.overideMovePower = overideMovePower;
-        this.overrideTurnPower = overrideTurnPower;
 
         limiter = new ChangeRateLimiter(max_change_rate);
 
@@ -74,25 +63,17 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double power = 0;
-        double turn = 0;
-        if(override.get()){
-            power = Math.pow(Functions.deadzone(deadzone, overideMovePower.get()), 2);
-            turn = Math.pow(Functions.deadzone(deadzone, overideMovePower.get()), 3);
-        }
-        else {
-            double forwardPower = forwardPowerAxis.get();
-            double reversePower = reversePowerAxis.get();
+        double forwardPower = forwardPowerAxis.get();
+        double reversePower = reversePowerAxis.get();
 
-            forwardPower = Functions.deadzone(deadzone, forwardPower);
-            reversePower = Functions.deadzone(deadzone, reversePower);
+        forwardPower = Functions.deadzone(deadzone, forwardPower);
+        reversePower = Functions.deadzone(deadzone, reversePower);
 
-            forwardPower = Math.pow(forwardPower, 2);
-            reversePower = Math.pow(reversePower, 2);
+        forwardPower = Math.pow(forwardPower, 2);
+        reversePower = Math.pow(reversePower, 2);
 
-            power = forwardPower - reversePower;
-            turn = Math.pow(turnAxis.get(), 3);
-        }
+        double power = forwardPower - reversePower;
+        double turn = Math.pow(turnAxis.get(), 3);
         
 
         power = limiter.getRateLimitedValue(power);

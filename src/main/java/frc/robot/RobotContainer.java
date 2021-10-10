@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
@@ -152,6 +153,7 @@ public class RobotContainer {
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
             }),
+            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode())
             );
@@ -215,11 +217,7 @@ public class RobotContainer {
             drivetrain, 
             controller1.rightTrigger,
             controller1.leftTrigger, 
-            controller1.leftX,
-            //TODO make this not chronic
-            launchpad.buttonD,
-            joystick.axisY,
-            joystick.axisX
+            controller1.leftX
         ));
         
         launchpad.buttonD.pressBind();
@@ -293,6 +291,18 @@ public class RobotContainer {
 
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
+
+        //TODO make less pain
+
+        Command turretToPos = new TurretToPosition(turret, 12, false);
+
+        Command turretStow = new StartEndCommand(
+            () -> {turret.setSoftLimits(2, 27); scheduler.schedule(true, turretToPos);}, 
+            () -> {scheduler.cancel(turretToPos); turret.setSoftLimits(7, 27);}, 
+            turret, shooter, hood, conveyor);
+
+        launchpad.buttonG.toggleWhenPressed(turretStow);
+        launchpad.buttonG.commandBind(turretStow);
 
 
         // launchpad.buttonG.toggleWhenPressed(new VisionTarget(turret, limelight, false) {
@@ -411,7 +421,9 @@ public class RobotContainer {
 
             Test = new SequentialCommandGroup(f2, f3);
 
-            ShufhellboardDriver.autoChooser.setDefaultOption("line Drive", lineDrive);
+            Command auto = new SequentialCommandGroup(lineDrive, new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
+
+            ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
             ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
             
         } catch (IOException ex) {
