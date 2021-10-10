@@ -24,7 +24,6 @@ public class IntakeArm extends SubsystemBase {
 	}
 
 	public final static double intakePower = 0.7;
-	//TODO make the chanle right
 	private final int channel = 9;
 
 	public States state;

@@ -33,7 +33,7 @@ public abstract class VisionTarget extends CommandBase {
 	I = 0.0002,
 	D = 0.0002;
 
-	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto, OIButton superCloseZone, OIAxis manualSuperClose) {
+	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
 		this.turret = turret;
         this.limelight = limelight;
         this.superCloseZone = superCloseZone;
@@ -46,7 +46,6 @@ public abstract class VisionTarget extends CommandBase {
         ttp = new TurretToPosition(turret, 90);
 
         // SmartDashboard.putData(pidController);
-        
         
 		if (!partOfFullAuto){
 			addRequirements(turret);

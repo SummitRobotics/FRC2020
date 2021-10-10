@@ -28,7 +28,6 @@ public class JoystickDriver extends GenericDriver {
 	public JoystickDriver(int port) {
 		super(port);
 
-		//TODO - make sure ports are correct
 		trigger = generateOIButton(1);
 
 		button2 = generateOIButton(2);

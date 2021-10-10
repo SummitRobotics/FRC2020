@@ -70,7 +70,6 @@ public class SetUp extends SequentialCommandGroup {
     
         @Override
         public void end(boolean interrupted) {   
-            //TODO figure out why this does not work any more
             LEDs.getInstance().removeCall("ArmDown"); 
             intake.setIntakePower(0);
             timer.stop();

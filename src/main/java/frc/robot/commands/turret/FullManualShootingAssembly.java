@@ -3,7 +3,6 @@ package frc.robot.commands.turret;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.LEDs.LEDs;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.oi.inputs.OIAxis;
@@ -31,8 +30,6 @@ public class FullManualShootingAssembly extends CommandBase {
 	shooterHoodPower;
 
 	private OIButton trigger;
-
-	private boolean startupSpinPrevention;
 
 	private ChangeRateLimiter limiter;
 
@@ -66,7 +63,6 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		limiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
-		startupSpinPrevention = true;
 		ledON = false;
 
 		addRequirements(turret);
@@ -101,11 +97,6 @@ public class FullManualShootingAssembly extends CommandBase {
             // double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
             double shooterPower = shooterSpoolPower.get();
 
-			// if (startupSpinPrevention && (shooterPower > 0.75)) {
-			// 	startupSpinPrevention = false;
-			// }
-			
-			// if (!startupSpinPrevention) {
             if ((shooterPower > 0.1) && !ledON) {
                 manualShoot.activate();
                 ledON = true;
@@ -117,10 +108,6 @@ public class FullManualShootingAssembly extends CommandBase {
             }
 
             shooter.setPower(shooterPower);
-                
-			// } else {
-			// 	shooter.setPower(0);
-			// }
 		}
 		
 		if (!trigger.inUse()) {

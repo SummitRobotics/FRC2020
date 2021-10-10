@@ -11,7 +11,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.SimpleButton;
 
 /**
  * Command for running the semi auto mode
@@ -25,8 +24,6 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
     private OIButton trigger;
     private OIAxis controlAxis;
 
-    private SimpleButton simpleTrigger;
-
 	public SemiAutoShooterAssembly
     (
         Turret turret, 
@@ -36,18 +33,15 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
         LidarLight lidarlight, 
         StatusDisplayWidget status,
         OIAxis controlAxis,
-        OIButton trigger,
-        OIButton SCZ
+        OIButton trigger
     ) {
-        super(turret, shooter, hood, conveyor, lidarlight, status, SCZ, controlAxis);
+        super(turret, shooter, hood, conveyor, lidarlight, status);
 
-		simpleTrigger = new SimpleButton(trigger);
         rateLimiter = new ChangeRateLimiter(Turret.MAX_CHANGE_RATE);
 
         this.controlAxis = controlAxis;
-        this.trigger = trigger;
-
         this.conveyor = conveyor;
+        
         this.trigger = trigger;
     }
 

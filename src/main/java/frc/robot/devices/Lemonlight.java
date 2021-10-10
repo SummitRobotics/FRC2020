@@ -10,7 +10,6 @@ import frc.robot.utilities.RollingAverage;
  */
 public class Lemonlight {
 
-    //TODO - make right
     public static final int X_OFFSET = 0;
 
     public static final double mountAngle = 19.1;
@@ -67,14 +66,6 @@ public class Lemonlight {
         private CamModes(int value) {
             this.value = value;
         }
-    }
-
-    //TODO - make right
-    /**
-     * @return if the limelight is at target
-     */
-    public boolean atTarget() {
-        return false;
     }
 
     /**

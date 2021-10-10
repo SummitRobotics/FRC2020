@@ -30,6 +30,9 @@ public class Hood extends SubsystemBase implements Homeable{
     private CANEncoder hoodEncoder;
     private DoubleDisplayWidget indicator;
 
+    public static final double fowardLimit = 10.5;
+    public static final double backLimit = 2.5;
+
     //WRONG ANGLE
     public double LidarMountAngle = Lemonlight.mountAngle;
 

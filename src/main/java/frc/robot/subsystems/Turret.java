@@ -23,6 +23,10 @@ public class Turret extends SubsystemBase implements Homeable {
 
     public static final double MAX_CHANGE_RATE = 0.025;
 
+    public static final double fowardLimit = 27;
+    public static final double shootingBackLimit = 7;
+    public static final double normalBackLimit = 2;
+
     public Turret(DoubleDisplayWidget indicator) {
         this.indicator = indicator;
 
@@ -56,9 +60,19 @@ public class Turret extends SubsystemBase implements Homeable {
     }
 
     public double getAngle() {
-        double angle = getEncoder()*360;
-        angle = angle/69;
-        return angle;
+        return encoderToAngle(getEncoder());
+    }
+
+    public static double encoderToAngle(double encoder){
+        double out = encoder*360;
+        out = out/69;
+        return out;
+    }
+
+    public static double angleToEncoder(double angle){
+        double out = angle*69;
+        out = out/360;
+        return out;
     }
 
     public boolean isAtFowardLimit() {

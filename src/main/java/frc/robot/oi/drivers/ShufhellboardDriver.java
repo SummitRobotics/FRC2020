@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.oi.inputs.ShufhellboardLEDButton;
 import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
@@ -49,4 +50,8 @@ public class ShufhellboardDriver {
 
     public static SendableChooser
     autoChooser = new SendableChooser<Command>();
+
+    public static void init(){
+        SmartDashboard.putData(ShufhellboardDriver.autoChooser);
+    }
 }

@@ -20,18 +20,16 @@ public class SpoolOnTarget extends CommandBase {
 
 	private Shooter shooter;
     private LidarLight lidarLight;
-    private OIButton superCloseZone;
     
     private boolean lessThanTransfer = false;
 
 	private PIDController pid;
 
-	public SpoolOnTarget(Shooter shooter, LidarLight lidarLight, OIButton superCloseZone) {
+	public SpoolOnTarget(Shooter shooter, LidarLight lidarLight) {
         addRequirements(shooter);
         
 		this.shooter = shooter;
         this.lidarLight = lidarLight;
-        this.superCloseZone = superCloseZone;
 
         pid = new PIDController(0.0005, 0.0003, 0);
         // pid = new PIDController(0.0008, 0.0005, 0);
@@ -53,12 +51,6 @@ public class SpoolOnTarget extends CommandBase {
 
 	@Override
 	public void execute() {
-
-        // For closest zone outside of limelight range
-        if (superCloseZone.get()) {
-            pid.setSetpoint(2000);
-            return;
-        }
 
 		if (lidarLight.getHorizontalOffset() < TARGET_CLOSE_CUTOFF) {
             double distance = lidarLight.getBestDistance();

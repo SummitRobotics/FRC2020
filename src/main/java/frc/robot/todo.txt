@@ -1,7 +1,5 @@
 make a pid controler interface in shefhellboard driver
 
-make shufhelboard driver instantiable
-
 over current dectetion for all motors
 
 thread turret commands
@@ -17,3 +15,5 @@ fix pid controlers not being adjestable from shufhellboard
 make drivetrain override good
 
 make robot leds bindable to commands like button leds
+
+make good colored printing

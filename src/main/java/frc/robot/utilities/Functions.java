@@ -110,6 +110,13 @@ public class Functions {
         return result;
     }
 
+    /**
+     * creates a trajectory command from a file name
+     * @param drivetrain the drivetrain subsystem
+     * @param fileName the path to and name of the file
+     * @return the FollowTrajectoryThreaded for the path file
+     * @throws IOException thrown if the file was not found or readable
+     */
     public static Command splineCommandFromFile(Drivetrain drivetrain, String fileName) throws IOException{
         Path path = Filesystem.getDeployDirectory().toPath().resolve(fileName);
  

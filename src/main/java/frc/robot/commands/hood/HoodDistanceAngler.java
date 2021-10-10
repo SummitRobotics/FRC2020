@@ -24,16 +24,14 @@ public class HoodDistanceAngler extends CommandBase {
     private Hood hood;
     private PIDController pid;
     private boolean lessThanTransfer = false;
-    private OIButton superCloseZone;
 
     private LidarLight lidarlight;
 
-    public HoodDistanceAngler(Hood hood, LidarLight lidarLight, OIButton superCloseZone) {
+    public HoodDistanceAngler(Hood hood, LidarLight lidarLight) {
         addRequirements(hood);
 
         this.hood = hood;
         this.lidarlight = lidarLight;
-        this.superCloseZone = superCloseZone;
 
         // FINE probably dont touch
         pid = new PIDController(0.02, 0.015, 0);
@@ -48,14 +46,8 @@ public class HoodDistanceAngler extends CommandBase {
     public void execute() {
         double angle = hood.getAngle();
         // SmartDashboard.putNumber("Hood Angle Current", angle);
-
-        double setpoint;
-        if (superCloseZone.get()) {
-            setpoint = 13;
-
-        } else {
-            setpoint = getAngleFromDistance(lidarlight.getBestDistance());
-        }
+    
+        double setpoint = getAngleFromDistance(lidarlight.getBestDistance());
 
         // SmartDashboard.putNumber("Hood Angle Setpoint", setpoint);
         pid.setSetpoint(setpoint);

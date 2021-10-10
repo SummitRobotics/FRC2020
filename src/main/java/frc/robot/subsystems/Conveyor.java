@@ -25,7 +25,6 @@ public class Conveyor extends SubsystemBase {
 		OFF
 	}
 
-	//TODO - make good
 	public static final double
 	SHOOT_POWER = 1,
 	SUBSUME_POWER = 0.5;

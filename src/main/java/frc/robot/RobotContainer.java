@@ -1,24 +1,17 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.*;
@@ -33,13 +26,11 @@ import frc.robot.oi.drivers.ControllerDriver;
 import frc.robot.oi.drivers.JoystickDriver;
 import frc.robot.oi.drivers.LaunchpadDriver;
 import frc.robot.oi.drivers.ShufhellboardDriver;
-import frc.robot.commands.CommandThreader;
 import frc.robot.commands.climb.ClimbSequence;
 import frc.robot.commands.climb.ClimberArmMO;
 import frc.robot.commands.conveyor.ConveyorAutomation;
 import frc.robot.commands.conveyor.ConveyorMO;
 import frc.robot.commands.drivetrain.ArcadeDrive;
-import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
 import frc.robot.commands.homing.HomeByCurrent;
 import frc.robot.commands.homing.HomeByEncoder;
 import frc.robot.commands.intake.IntakeArmDefault;
@@ -97,11 +88,9 @@ public class RobotContainer {
     private HomeByEncoder HomeTurret;
     private HomeByCurrent HomeHood;
 
-    Command testSpline;
-
-    private Command
-    Test = new PrintCommand("unlimited badness");
-
+    private Command fullAutoShooting;
+    private Command semiAutoShooting;
+    private Command fullManualShooting;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -139,9 +128,16 @@ public class RobotContainer {
 
         
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 15, 2.5, 10.5, 4);
+        HomeHood = new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit, 4);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 20, 7, 27, 4);
+        HomeTurret = new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4);
+
+        fullAutoShooting = new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
+
+        semiAutoShooting = new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger);
+
+        fullManualShooting = new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger);
+
 
         //things the robot does to make auto work
         autoInit = new SequentialCommandGroup(
@@ -171,6 +167,7 @@ public class RobotContainer {
                     throw(new RuntimeException("incorect joystick in port 0"));
                 }
             }),
+            new InstantCommand(() -> ShufhellboardDriver.statusDisplay.removeStatus("auto")),
             new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("enabled", "robot enabled", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(() -> joystick.ReEnableJoysticCalibrationCheck()),
             new InstantCommand(climberPneumatics::extendClimb),
@@ -196,11 +193,11 @@ public class RobotContainer {
                 } catch(NullPointerException e) {
                 }
                 if (launchpad.funLeft.get()) {
-                    turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+                    turret.setDefaultCommand(fullManualShooting);
                 } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger, launchpad.buttonD));
+                    turret.setDefaultCommand(semiAutoShooting);
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
+                    turret.setDefaultCommand(fullAutoShooting);
                 }
             })
             );
@@ -220,11 +217,10 @@ public class RobotContainer {
             controller1.leftX
         ));
         
-        launchpad.buttonD.pressBind();
-
         // makes intake arm go back to limit when not on limit
         intakeArm.setDefaultCommand(new IntakeArmDefault(intakeArm));
 
+        //makes the convayer run
         conveyor.setDefaultCommand(new ConveyorAutomation(conveyor));
 
     }
@@ -267,6 +263,7 @@ public class RobotContainer {
         launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
         launchpad.buttonF.pressBind();
 
+        //buttons to home on shufflebaord
         ShufhellboardDriver.homeTurret.whenPressed(HomeTurret);
         ShufhellboardDriver.homeTurret.commandBind(HomeTurret);
 
@@ -285,20 +282,19 @@ public class RobotContainer {
             new SetUp(intakeArm)
         );
 
-        
+        //launchpad intake arm buttons
         launchpad.buttonH.whenPressed(intake, false);
         launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
 
         launchpad.buttonI.whenPressed(up, false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
-        //TODO make less pain
-
+        //toggle to stow te turret while moving
         Command turretToPos = new TurretToPosition(turret, 12, false);
 
         Command turretStow = new StartEndCommand(
-            () -> {turret.setSoftLimits(2, 27); scheduler.schedule(true, turretToPos);}, 
-            () -> {scheduler.cancel(turretToPos); turret.setSoftLimits(7, 27);}, 
+            () -> {turret.setSoftLimits(turret.normalBackLimit, turret.fowardLimit); scheduler.schedule(true, turretToPos);}, 
+            () -> {scheduler.cancel(turretToPos); turret.setSoftLimits(turret.shootingBackLimit, turret.fowardLimit);}, 
             turret, shooter, hood, conveyor);
 
         launchpad.buttonG.toggleWhenPressed(turretStow);
@@ -316,15 +312,15 @@ public class RobotContainer {
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger));
+            turret.setDefaultCommand(fullAutoShooting);
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger, launchpad.buttonD));
+            turret.setDefaultCommand(semiAutoShooting);
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
+            turret.setDefaultCommand(fullAutoShooting);
         }));
 
         //Controller bindings for intake
@@ -362,12 +358,18 @@ public class RobotContainer {
             "b", "b", "b", "b", "b", "b", "b", "b");
     }
 
+    /**
+     * runs when the robot gets disabled
+     */
     public void disabledInit(){
         LEDs.getInstance().removeAllCalls();
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
     }
 
+    /**
+     * runs once every ~20ms when in telyop
+     */
     public void teleopPeriodic(){
 
     }
@@ -376,39 +378,18 @@ public class RobotContainer {
      * runs when robot is inited to telyop
      */
     public void teleopInit() {
-        // initialises robot
-        // for testing ONLY
-        //scheduler.schedule(testSpline);
 
-        scheduler.schedule(teleInit);
-
-        // scheduler.schedule(new SpoolOnTarget(shooter, lidarlight));
-       
+        scheduler.schedule(teleInit);       
     }
 
+    /**
+     * runs when the robot is powered on
+     */
     public void robotInit(){
-        // String path1 = "paths/test.wpilib.json";
-        // String path2 = "paths/garbo-auto-path-2.wpilib.json";
 
-        // Trajectory trajectory1 = new Trajectory();
-        // Trajectory trajectory2 = new Trajectory();
-
-        // try {
-        //     Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(path1);
-        //     trajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
-        // } catch (IOException ex) {
-        //     DriverStation.reportError("Unable to open trajectory: " + path1, ex.getStackTrace());
-        // }
-
-        // try {
-        //     Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(path2);
-        //     trajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
-        // } catch (IOException ex) {
-        //     DriverStation.reportError("Unable to open trajectory: " + path2, ex.getStackTrace());
-        // }
-
-        // testSpline = new FollowTrajectory(drivetrain, trajectory1);
-
+        //sets up all the splines so we dont need to spend lots of time
+        //turning the json files into trajectorys when we want to run them
+        //TODO make this run faster somehow
         String
         pathF2 = "paths/f2.wpilib.json",
         pathF3 = "paths/f3.wpilib.json",
@@ -419,9 +400,9 @@ public class RobotContainer {
             Command f3 = Functions.splineCommandFromFile(drivetrain, pathF3);
             Command lineDrive = Functions.splineCommandFromFile(drivetrain, pathLineMove);
 
-            Test = new SequentialCommandGroup(f2, f3);
+            Command auto = new SequentialCommandGroup(lineDrive, fullAutoShooting);
 
-            Command auto = new SequentialCommandGroup(lineDrive, new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, launchpad.buttonD, joystick.axisX));
+            Command Test = new SequentialCommandGroup(f2, f3);
 
             ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
             ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
@@ -430,8 +411,8 @@ public class RobotContainer {
             DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());
         }
 
-        //TODO move to shufhellboard driver
-        SmartDashboard.putData(ShufhellboardDriver.autoChooser);
+        //inits shuffleboard
+        ShufhellboardDriver.init();
     }
 
     /**
@@ -441,7 +422,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
      
-        return (Command) ShufhellboardDriver.autoChooser.getSelected();
+        return new SequentialCommandGroup(autoInit,  (Command) ShufhellboardDriver.autoChooser.getSelected());
     }
 
 }

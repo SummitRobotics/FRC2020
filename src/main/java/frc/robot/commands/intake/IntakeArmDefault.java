@@ -22,7 +22,6 @@ public class IntakeArmDefault extends CommandBase {
     private Boolean isStuck;
     private Timer reverseTimer;
 
-    //TODO tune val
     private final double StuckCurrent = 10;
     private final double reverseTime = 0.8;
 
@@ -38,7 +37,6 @@ public class IntakeArmDefault extends CommandBase {
         resetToggle = true;
         resetAvrage = true;
         isStuck = false;
-        //TODO tune array lenght
         averageCurrent = new RollingAverage(20, false);
 
         addRequirements(intake);
