@@ -3,7 +3,6 @@ package frc.robot.commands.conveyor;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.LEDs.LEDs;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.subsystems.Conveyor;
@@ -13,7 +12,7 @@ public class ConveyorAutomation extends CommandBase {
     private Conveyor conveyor;
     
     private boolean shootModeLED = false;
-    private LEDCall conveyorShoot = new LEDCall(LEDPriorities.firing, LEDRange.All).flashing(Colors.Orange, Colors.Off);
+    private LEDCall conveyorShoot = new LEDCall(LEDPriorities.firing, LEDRange.All).ffh(Colors.Orange, Colors.Off);
 
     private boolean intakeLatch = false;
 

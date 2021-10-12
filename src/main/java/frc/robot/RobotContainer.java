@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.Functions;
@@ -92,6 +94,8 @@ public class RobotContainer {
     private Command semiAutoShooting;
     private Command fullManualShooting;
 
+    private Command intake;
+    private Command up;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -138,6 +142,15 @@ public class RobotContainer {
 
         fullManualShooting = new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger);
 
+        intake = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.enableIntakeMode()),
+            new SetDown(intakeArm)
+        );
+
+        up = new SequentialCommandGroup(
+            new InstantCommand(() -> conveyor.disableIntakeMode()),
+            new SetUp(intakeArm)
+        );
 
         //things the robot does to make auto work
         autoInit = new SequentialCommandGroup(
@@ -233,15 +246,17 @@ public class RobotContainer {
         //controller1.buttonB.whenPressed(new PlayRecording(scheduler, "test1.chs", drivetrain, shifter, intakeArm, allLEDS));
         
         //climb
-        launchpad.missileA.whenPressed(new ClimbSequence(
-            leftArm, 
-            rightArm, 
-            climberPneumatics, 
-            launchpad.axisA,
-            launchpad.axisB, 
-            launchpad.missileA, 
-            launchpad.bigLEDGreen, 
-            launchpad.bigLEDRed));
+        launchpad.missileA.whenPressed(new ParallelCommandGroup(
+                new ClimbSequence(
+                    leftArm, 
+                    rightArm, 
+                    climberPneumatics, 
+                    launchpad.axisA,
+                    launchpad.axisB, 
+                    launchpad.missileA, 
+                    launchpad.bigLEDGreen, 
+                    launchpad.bigLEDRed), 
+                new TurretToPosition(turret, 90)));
 
         launchpad.buttonA.whenPressed(
             new InstantCommand(
@@ -270,17 +285,6 @@ public class RobotContainer {
         ShufhellboardDriver.homeHood.whenPressed(HomeHood);
         ShufhellboardDriver.homeHood.commandBind(HomeHood);
 
-        //intake arm
-
-        Command intake = new SequentialCommandGroup(
-            new InstantCommand(() -> conveyor.enableIntakeMode()),
-            new SetDown(intakeArm)
-        );
-
-        Command up = new SequentialCommandGroup(
-            new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new SetUp(intakeArm)
-        );
 
         //launchpad intake arm buttons
         launchpad.buttonH.whenPressed(intake, false);
@@ -393,18 +397,25 @@ public class RobotContainer {
         String
         pathF2 = "paths/f2.wpilib.json",
         pathF3 = "paths/f3.wpilib.json",
-        pathLineMove = "paths/lineMove.wpilib.json";
+        pathLineMove = "paths/lineMove.wpilib.json",
+        pathDriveBack = "paths/driveBack.wpilib.json",
+        pathColectBalls = "paths/colectBalls.wpilib.json";
 
         try {
             Command f2 = Functions.splineCommandFromFile(drivetrain, pathF2);
             Command f3 = Functions.splineCommandFromFile(drivetrain, pathF3);
             Command lineDrive = Functions.splineCommandFromFile(drivetrain, pathLineMove);
+            Command driveBack = Functions.splineCommandFromFile(drivetrain, pathDriveBack);
+            Command getBals = Functions.splineCommandFromFile(drivetrain, pathColectBalls);
 
             Command auto = new SequentialCommandGroup(lineDrive, fullAutoShooting);
+            //                                                          makes the full auto shooting stop after 5s
+            Command BallAuto = new SequentialCommandGroup(driveBack, new ParallelDeadlineGroup(new WaitCommand(5), fullAutoShooting), intake, getBals, fullAutoShooting);
 
             Command Test = new SequentialCommandGroup(f2, f3);
 
             ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
+            ShufhellboardDriver.autoChooser.addOption("5Ball", BallAuto);
             ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
             
         } catch (IOException ex) {

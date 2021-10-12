@@ -37,10 +37,10 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	private int badDistanceReadings = 0;
 
-	private boolean targetLEDCall = false;
+	//private boolean targetLEDCall = false;
     private boolean shootLEDCall = false;
     
-    private LEDCall autoTarget = new LEDCall(10000, LEDRange.All).solid(Colors.Blue);
+    //private LEDCall autoTarget = new LEDCall(10000, LEDRange.All).solid(Colors.Blue);
     private LEDCall autoFireReady = new LEDCall(LEDPriorities.shooterReadyToFire, LEDRange.All).flashing(Colors.Yellow, Colors.Off);
 
 	public FullAutoShooterAssembly(
@@ -71,20 +71,20 @@ public class FullAutoShooterAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(spool, target, angler);
-		LEDs.getInstance().addCall("fullautoshooting", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
+		//LEDs.getInstance().addCall("fullautoshooting", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
 	}
 
 	@Override
 	public void execute() {
 		// we don't want to feed it bad/random distances if the limelight has no target
-		if (lidarlight.limelight.hasTarget()) {
-            autoTarget.activate();
-			targetLEDCall = true;
+		// if (lidarlight.limelight.hasTarget()) {
+        //     autoTarget.activate();
+		// 	targetLEDCall = true;
 
-		} else if (targetLEDCall) {
-            autoTarget.cancel();
-            targetLEDCall = false;
-		}
+		// } else if (targetLEDCall) {
+        //     autoTarget.cancel();
+        //     targetLEDCall = false;
+		// }
 
 		if (badDistanceReadings > 10) {
 			status.addStatus("badReadings", "there have been over 10 bad readings from the lidar", Colors.Yellow, 3);
@@ -112,9 +112,9 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		if (targetLEDCall) {
-            autoTarget.cancel();
-		}
+		// if (targetLEDCall) {
+        //     autoTarget.cancel();
+		// }
 
 		if (shootLEDCall) {
             autoFireReady.cancel();

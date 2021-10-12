@@ -43,7 +43,7 @@ public class MoveByDistance extends CommandBase {
     public void initialize() {
         if (shifter.getShiftState()) {
             rightRotations = ((wheelDiameter * Math.PI) * right) * highGearRatio;
-            leftRotations = (wheelDiameter * Math.PI) * highGearRatio * left;
+            leftRotations = ((wheelDiameter * Math.PI) * left) * highGearRatio;
 
         } else {
             rightRotations = (wheelDiameter * Math.PI) * lowGearRatio * right;
