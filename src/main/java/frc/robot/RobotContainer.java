@@ -90,7 +90,7 @@ public class RobotContainer {
     private HomeByEncoder HomeTurret;
     private HomeByCurrent HomeHood;
 
-    private Command fullAutoShooting;
+    private FullAutoShooterAssembly fullAutoShooting;
     private Command semiAutoShooting;
     private Command fullManualShooting;
 
@@ -294,7 +294,7 @@ public class RobotContainer {
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         //toggle to stow te turret while moving
-        Command turretToPos = new TurretToPosition(turret, 12, false);
+        Command turretToPos = new TurretToPosition(turret, 12).perpetually();
 
         Command turretStow = new StartEndCommand(
             () -> {turret.setSoftLimits(turret.normalBackLimit, turret.fowardLimit); scheduler.schedule(true, turretToPos);}, 
@@ -316,7 +316,7 @@ public class RobotContainer {
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(fullAutoShooting);
+            turret.setDefaultCommand(fullManualShooting);
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
@@ -408,9 +408,9 @@ public class RobotContainer {
             Command driveBack = Functions.splineCommandFromFile(drivetrain, pathDriveBack);
             Command getBals = Functions.splineCommandFromFile(drivetrain, pathColectBalls);
 
-            Command auto = new SequentialCommandGroup(lineDrive, fullAutoShooting);
-            //                                                          makes the full auto shooting stop after 5s
-            Command BallAuto = new SequentialCommandGroup(driveBack, new ParallelDeadlineGroup(new WaitCommand(5), fullAutoShooting), intake, getBals, fullAutoShooting);
+            Command auto = new SequentialCommandGroup(lineDrive, fullAutoShooting.getDuplicate());
+            //                                                       makes the full auto shooting stop after 5s
+            Command BallAuto = new SequentialCommandGroup(driveBack, fullAutoShooting.getDuplicate().withTimeout(5), new InstantCommand(() -> conveyor.enableIntakeMode()), new SetDown(intakeArm), getBals, fullAutoShooting.getDuplicate());
 
             Command Test = new SequentialCommandGroup(f2, f3);
 

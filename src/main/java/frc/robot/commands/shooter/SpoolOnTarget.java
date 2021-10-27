@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LidarLight;
-import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -35,9 +34,7 @@ public class SpoolOnTarget extends CommandBase {
         // pid = new PIDController(0.0008, 0.0005, 0);
 		pid.setSetpoint(STAND_BY_RPM);
         pid.setTolerance(100);
-		pid.setName("shooter speed pid");
-		
-		SmartDashboard.putData(pid);
+		SmartDashboard.putData("shooter speed pid", pid);
 	}
 
 	/**

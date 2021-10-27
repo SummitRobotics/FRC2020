@@ -6,10 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.CamModes;
 import frc.robot.devices.Lemonlight.LEDModes;
-import frc.robot.oi.inputs.OIAxis;
-import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Turret;
-import frc.robot.utilities.Functions;
 
 /**
  * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITSELF**
@@ -18,8 +15,6 @@ public abstract class VisionTarget extends CommandBase {
 
 	protected Turret turret;
     private Lemonlight limelight;
-    private OIButton superCloseZone;
-    private OIAxis manualSuperClose;
 
     private PIDController pidController;
     
@@ -28,24 +23,25 @@ public abstract class VisionTarget extends CommandBase {
 	private double error = 1;
 
 	//WRONG - Make right 
+	// private final static double
+	// P = 0.01,
+	// I = 0.0003,
+	// D = 0.0002;
 	private final static double
 	P = 0.01,
-	I = 0.0002,
+	I = 0.0005,
 	D = 0.0002;
 
 	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
 		this.turret = turret;
         this.limelight = limelight;
-        this.superCloseZone = superCloseZone;
-        this.manualSuperClose = manualSuperClose;
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(error, 1);
-        pidController.setName("vision target pid");
-        
+                
         ttp = new TurretToPosition(turret, 90);
 
-        // SmartDashboard.putData(pidController);
+        // SmartDashboard.putData("vision target pid", pidController);
         
 		if (!partOfFullAuto){
 			addRequirements(turret);
@@ -63,10 +59,6 @@ public abstract class VisionTarget extends CommandBase {
 	}
 
 	public void execute() {
-        if (superCloseZone.get()) {
-            ttp.execute();
-            return;
-        }
 
 		if (limelight.hasTarget()) {
 			double offset = -(limelight.getSmoothedHorizontalOffset());

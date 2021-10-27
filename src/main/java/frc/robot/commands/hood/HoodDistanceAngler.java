@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.devices.LidarLight;
-import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Hood;
 import frc.robot.utilities.Functions;
 
@@ -37,8 +36,7 @@ public class HoodDistanceAngler extends CommandBase {
         pid = new PIDController(0.02, 0.015, 0);
         pid.setTolerance(2, 1);
         pid.setSetpoint(0);
-        pid.setName("hood");
-        SmartDashboard.putData(pid);
+        SmartDashboard.putData("hood", pid);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

@@ -8,7 +8,6 @@
 package frc.robot.commands.hood;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Hood;
 
@@ -25,8 +24,7 @@ public class HoodToAngle extends CommandBase {
         pid = new PIDController(0.01, 0, 0);
         pid.setTolerance(0.1, 1);
         pid.setSetpoint(0);
-        pid.setName("hood to angle nv");
-        // SmartDashboard.putData(pid);
+        // SmartDashboard.putData("hood to angle nv", pid);
     }
 
     // Called when the command is initially scheduled.

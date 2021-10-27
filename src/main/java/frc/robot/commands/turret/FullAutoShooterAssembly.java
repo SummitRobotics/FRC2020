@@ -8,7 +8,6 @@ import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.LidarLight;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
@@ -26,6 +25,9 @@ public class FullAutoShooterAssembly extends CommandBase {
     private StatusDisplayWidget status;
     private LidarLight lidarlight;
 	private Conveyor conveyor;
+	private Turret turret;
+	private Shooter shooter;
+	private Hood hood;
 
 	private SpoolOnTarget spool;
 	private VisionTarget target;
@@ -51,6 +53,9 @@ public class FullAutoShooterAssembly extends CommandBase {
         LidarLight lidarlight, 
         StatusDisplayWidget status
     ) {
+		this.turret = turret;
+		this.shooter =  shooter;
+		this.hood = hood;
 		this.status = status;
         this.lidarlight = lidarlight;
         this.conveyor = conveyor;
@@ -66,6 +71,10 @@ public class FullAutoShooterAssembly extends CommandBase {
 			}
 		};
 		addRequirements(turret);
+	}
+
+	public FullAutoShooterAssembly getDuplicate(){
+		return new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, status);
 	}
 
 	@Override

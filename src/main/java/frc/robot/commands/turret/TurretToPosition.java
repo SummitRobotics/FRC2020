@@ -19,8 +19,6 @@ public class TurretToPosition extends CommandBase {
 
     private PIDController pid;
 
-    private boolean finish;
-
     /**
      * Creates a new TurretToPosition.
      */
@@ -33,19 +31,6 @@ public class TurretToPosition extends CommandBase {
         pid.setTolerance(.75, 1);
         pid.setName("turret angle pid");
         SmartDashboard.putData(pid);
-        this.finish = true;
-    }
-
-    public TurretToPosition(Turret turret, double targetAngle, boolean finish) {
-        addRequirements(turret);
-        this.turret = turret;
-        target = targetAngle;
-        // GOOD DONT CHANGE
-        pid = new PIDController(0.024, 0.0, 0.0009);
-        pid.setTolerance(.75, 1);
-        pid.setName("turret angle pid");
-        SmartDashboard.putData(pid);
-        this.finish = finish;
     }
 
     // Called when the command is initially scheduled.
@@ -72,7 +57,7 @@ public class TurretToPosition extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (pid.atSetpoint() && finish);
+        return pid.atSetpoint();
         // return false;
     }
 }
