@@ -63,6 +63,28 @@ public class HomeByCurrent extends CommandBase {
         addRequirements(toHome.getSubsystemObject());
     }
 
+    public HomeByCurrent(
+        Homeable toHome, 
+        double homingPower, 
+        double CurrentThreshold, 
+        double reversLimit,
+        double fowardLimit,
+        double timeout,
+        boolean aaaa
+    ) {
+        this.toHome = toHome;
+        this.homingPower = homingPower;
+        this.CurrentThreshold = CurrentThreshold;
+        this.reverseLimit = reversLimit;
+        this.fowardLimit = fowardLimit;
+        this.timeout = timeout;
+
+        setlimits = true;
+        timeoutTimer = new Timer();
+
+        ///addRequirements(toHome.getSubsystemObject());
+    }
+
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {

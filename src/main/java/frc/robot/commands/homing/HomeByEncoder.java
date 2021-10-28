@@ -52,6 +52,22 @@ public class HomeByEncoder extends CommandBase {
         addRequirements(toHome.getSubsystemObject());
     }
 
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit, double timeout, boolean aaaa) {
+        this.toHome = toHome;
+        this.homingPower = homingPower;
+        this.minLoops = minLoops;
+        this.reverseLimit = reverseLimit;
+        this.fowardLimit = fowardLimit;
+        this.timeout = timeout;
+
+        setlimits = true;
+
+        loops = 0;
+        timeoutTimer = new Timer();
+
+        //addRequirements(toHome.getSubsystemObject());
+    }
+
     public HomeByEncoder getDuplicate() {
         if (setlimits) {
             return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout);

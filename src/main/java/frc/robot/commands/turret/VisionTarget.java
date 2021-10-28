@@ -29,7 +29,7 @@ public abstract class VisionTarget extends CommandBase {
 	// D = 0.0002;
 	private final static double
 	P = 0.01,
-	I = 0.0005,
+	I = 0.001,
 	D = 0.0002;
 
 	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {

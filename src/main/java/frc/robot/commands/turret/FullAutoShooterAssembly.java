@@ -73,18 +73,16 @@ public class FullAutoShooterAssembly extends CommandBase {
 		addRequirements(turret);
 	}
 
-	public FullAutoShooterAssembly getDuplicate(){
-		return new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, status);
-	}
-
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(spool, target, angler);
+		//System.out.println("itited full shooter");
 		//LEDs.getInstance().addCall("fullautoshooting", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
 	}
 
 	@Override
 	public void execute() {
+		//System.out.println("full shooter run");
 		// we don't want to feed it bad/random distances if the limelight has no target
 		// if (lidarlight.limelight.hasTarget()) {
         //     autoTarget.activate();
@@ -131,6 +129,8 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 		conveyor.setShootMode(false);
 		CommandScheduler.getInstance().cancel(spool, target, angler);
+
+		//System.out.println("full shooter end " + interrupted);
 	}
 
 	@Override
