@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -85,14 +86,14 @@ public class RobotContainer {
     private LidarLight lidarlight;
     private AHRS gyro;
 
-    private Command autoInit;
-    private Command autoInit2;
+    private Supplier<Command> autoInit;
+    // private Command autoInit;
     private Command teleInit;
 
     private HomeByEncoder HomeTurret;
     private HomeByCurrent HomeHood;
 
-    private FullAutoShooterAssembly fullAutoShooting;
+    private Supplier<Command> fullAutoShooterAssembly;
     private Command semiAutoShooting;
     private Command fullManualShooting;
 
@@ -140,7 +141,7 @@ public class RobotContainer {
 
         HomeTurret = new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4);
 
-        fullAutoShooting = new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
+        fullAutoShooterAssembly = () -> new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
 
         semiAutoShooting = new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger);
 
@@ -157,7 +158,7 @@ public class RobotContainer {
         );
 
         //things the robot does to make auto work
-        autoInit = new SequentialCommandGroup(
+        autoInit = () -> new SequentialCommandGroup(
             new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("auto", "robot in auto", Colors.Team, StatusPrioritys.enabled)),
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
@@ -169,21 +170,7 @@ public class RobotContainer {
             new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode())
-            );
-
-            autoInit2 = new SequentialCommandGroup(
-                new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("auto", "robot in auto", Colors.Team, StatusPrioritys.enabled)),
-                new InstantCommand(climberPneumatics::extendClimb),
-                new InstantCommand(intakeArm::closeLock),
-                new InstantCommand(shifter::highGear),
-                new InstantCommand(() -> {
-                    launchpad.bigLEDRed.set(false);
-                    launchpad.bigLEDGreen.set(true);
-                }),
-                new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
-                new InstantCommand(() -> conveyor.disableIntakeMode()),
-                new InstantCommand(() -> conveyor.disableShootMode())
-                );
+        );
 
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
@@ -228,7 +215,7 @@ public class RobotContainer {
                 } else if (launchpad.funMiddle.get()) {
                     turret.setDefaultCommand(semiAutoShooting);
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(fullAutoShooting);
+                    turret.setDefaultCommand(fullAutoShooterAssembly.get());
                 }
             })
             );
@@ -342,7 +329,7 @@ public class RobotContainer {
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
             turret.getDefaultCommand().cancel();
-            turret.setDefaultCommand(fullAutoShooting);
+            turret.setDefaultCommand(fullAutoShooterAssembly.get());
         }));
 
         //Controller bindings for intake
@@ -426,35 +413,27 @@ public class RobotContainer {
             Command driveBack = Functions.splineCommandFromFile(drivetrain, pathDriveBack);
             Command getBals = Functions.splineCommandFromFile(drivetrain, pathColectBalls);
 
-            auto = new SequentialCommandGroup(new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("auto", "robot in auto", Colors.Team, StatusPrioritys.enabled)),
-            new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(intakeArm::closeLock),
-            new InstantCommand(shifter::highGear),
-            new InstantCommand(() -> {
-                launchpad.bigLEDRed.set(false);
-                launchpad.bigLEDGreen.set(true);
-            }),
-            new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit, 4, true),
-            new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4, true),
-            new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new InstantCommand(() -> conveyor.disableShootMode()),
-             lineDrive, 
-             new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay));
+            auto = new SequentialCommandGroup(
+                autoInit.get(),
+                lineDrive, 
+                fullAutoShooterAssembly.get()
+            );
             //                                                       makes the full auto shooting stop after 5s
-            Command BallAuto = new SequentialCommandGroup(new InstantCommand(() -> ShufhellboardDriver.statusDisplay.addStatus("auto", "robot in auto", Colors.Team, StatusPrioritys.enabled)),
-            new InstantCommand(climberPneumatics::extendClimb),
-            new InstantCommand(intakeArm::closeLock),
-            new InstantCommand(shifter::highGear),
-            new InstantCommand(() -> {
-                launchpad.bigLEDRed.set(false);
-                launchpad.bigLEDGreen.set(true);
-            }),
-            new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit, 4, true),
-            new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4, true),
-            new InstantCommand(() -> conveyor.disableIntakeMode()),
-            new InstantCommand(() -> conveyor.disableShootMode()), 
-            new PrintCommand("autoinit done"),
-            driveBack, new PrintCommand("drove back"), new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay).withTimeout(10), new PrintCommand("done shooting"), new InstantCommand(() -> conveyor.enableIntakeMode()), new SetDown(intakeArm), new PrintCommand("intake down"), getBals, new PrintCommand("got bals"), new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay), new PrintCommand("done"));
+            Command BallAuto = new SequentialCommandGroup(
+                autoInit.get(),
+                new PrintCommand("autoinit done"),
+                driveBack, 
+                new PrintCommand("drove back"), 
+                fullAutoShooterAssembly.get().withTimeout(10), 
+                new PrintCommand("done shooting"), 
+                new InstantCommand(() -> conveyor.enableIntakeMode()), 
+                new SetDown(intakeArm), 
+                new PrintCommand("intake down"), 
+                getBals, 
+                new PrintCommand("got bals"), 
+                fullAutoShooterAssembly.get(),
+                new PrintCommand("done")
+            );
 
             //Command Test = new SequentialCommandGroup(f2, f3);
 

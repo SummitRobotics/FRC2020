@@ -75,6 +75,17 @@ public class HomeByEncoder extends CommandBase {
         return new HomeByEncoder(toHome, homingPower, minLoops, timeout);
     }
 
+    public HomeByEncoder getDuplicate(boolean requireSubsystems) {
+        if (setlimits) {
+            if (requireSubsystems) {
+                return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout, true);
+            }
+
+            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout);
+        }
+        return new HomeByEncoder(toHome, homingPower, minLoops, timeout);
+    }
+
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {

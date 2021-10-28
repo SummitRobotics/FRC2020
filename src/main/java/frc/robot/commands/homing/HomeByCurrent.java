@@ -100,9 +100,22 @@ public class HomeByCurrent extends CommandBase {
     public HomeByCurrent getDuplicate() {
         if (setlimits) {
             return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout);
-        } else
+        } else {
             return new HomeByCurrent(toHome, homingPower, CurrentThreshold, timeout);
+        }
     }
+
+    // needed beacuse command groups are dumb
+    public HomeByCurrent getDuplicate(boolean requireSubsystems) {
+        if (setlimits) {
+            if (!requireSubsystems) {
+                return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout, true);
+            }
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout);
+        } else {
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, timeout);
+        }
+    }    
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
