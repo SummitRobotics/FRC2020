@@ -46,7 +46,8 @@ public class ShufhellboardDriver {
     public static NetworkTableEntry
     shooterSpeed = InfoTable.getEntry("Shooter Speed"),
     shooterTemp = InfoTable.getEntry("Shooter Temp"),
-    pressure = InfoTable.getEntry("pressure");
+    pressure = InfoTable.getEntry("pressure"),
+    shotBalls = InfoTable.getEntry("shotBalls");
 
     public static SendableChooser
     autoChooser = new SendableChooser<Command>();

@@ -125,7 +125,7 @@ public class RobotContainer {
         //our subsystems
         pneumatics = new Pneumatics(ShufhellboardDriver.pressure);
         shifter = new Shifter();
-        conveyor = new Conveyor();
+        conveyor = new Conveyor(ShufhellboardDriver.shotBalls);
         intakeArm = new IntakeArm(pdp);
         shooter = new Shooter(ShufhellboardDriver.shooterSpeed, ShufhellboardDriver.shooterTemp, ShufhellboardDriver.statusDisplay);
         hood = new Hood(ShufhellboardDriver.hoodIndicator);
@@ -374,6 +374,7 @@ public class RobotContainer {
         LEDs.getInstance().removeAllCalls();
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
+        conveyor.uninitBallCount();
     }
 
     /**

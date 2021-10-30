@@ -10,8 +10,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.RollingAverage;
 import frc.robot.utilities.lists.Ports;
 
 /**
@@ -29,23 +32,49 @@ public class Conveyor extends SubsystemBase {
 	SHOOT_POWER = 1,
 	SUBSUME_POWER = 0.5;
 
+	//the number of balls shot
+	private int ballsShot;
+
+	private int ballShotOfset;
+
+	private boolean initlised;
+
+	private boolean initalSwitchState;
+
+	private boolean previousSwitchState;
+
+	private RollingAverage switchVals;
+
+	private double lastMotorPower;
+
 	// conveyor motor
 	private VictorSPX conveyorMotor;
 
 	// breakbeam sensors
 	private DigitalInput breakbutton;
 
+	private NetworkTableEntry ballsEntry;
+
 	private boolean 
 	shootMode,
 	intakeMode;
 
-	public Conveyor() {
+	public Conveyor(NetworkTableEntry balls) {
+		ballsEntry = balls;
+
 		conveyorMotor = new VictorSPX(Ports.CONVEYOR);
 
 		breakbutton = new DigitalInput(Ports.BREAKBEAM);
 
 		shootMode = false;
 		intakeMode = false;
+		ballsShot = 0;
+		ballShotOfset = 0;
+		initlised = false;
+		initalSwitchState = false;
+
+		switchVals = new RollingAverage(5, true);
+		lastMotorPower = 0;
 	}
 
 	/**
@@ -55,6 +84,11 @@ public class Conveyor extends SubsystemBase {
 	 */
 	public void setConveyor(double power) {
 		conveyorMotor.set(ControlMode.PercentOutput, -power);
+		lastMotorPower = power;
+	}
+
+	public double getLastMotorPower(){
+		return lastMotorPower;
 	}
 
 	/**
@@ -67,10 +101,21 @@ public class Conveyor extends SubsystemBase {
 	}
 
 	/**
+	 * Gets the debounced state of the ball detection switch
+	 * 
+	 * @return the state of the ball dection switch after debouncing
+	 */
+	public boolean getDebouncedSwitch() {
+		switchVals.update(getBreakButton() ? 1 : 0);
+		//if the last 3 reads are 1 return true
+		return switchVals.getAverage() >= 0.5;
+	}
+
+	/**
 	 * Stops both conveyor motors
 	 */
 	public void stop() {
-		conveyorMotor.set(ControlMode.PercentOutput, 0);
+		setConveyor(0);
 	}
 
 	/**
@@ -144,5 +189,64 @@ public class Conveyor extends SubsystemBase {
 
 	public boolean getIntakeMode() {
 		return intakeMode;
+	}
+
+	/**
+	 * gets the number of balls shot sense the robot enabled
+	 * @return the number of shots
+	 */
+	public int getAbsoluteShotBals(){
+		return ballsShot;
+	}
+
+	/**
+	 * gets the number of balls shot sense the last call of resetRelitiveBasl()
+	 * @returnthe the number of acumilated shots
+	 */
+	public int getRelitiveBallsShot(){
+		return ballsShot-ballShotOfset;
+	}
+
+	/**
+	 * resets the number of balls shot for getRelitiveBallShots()
+	 */
+	public void resetRelitiveBals(){
+		ballShotOfset = ballsShot;
+	}
+
+	/**
+	 * resets the total number of balls the robot has shot, only call when robot disables/enables
+	 */
+	public void resetAbsoluteBallSHots(){
+		ballsShot = 0;
+		resetRelitiveBals();
+	}
+
+	public void uninitBallCount(){
+		initlised = false;
+		resetAbsoluteBallSHots();
+	}
+
+	@Override
+	public void periodic() {
+		//we only want to do things if the robot is enabled, otherwise people can move the bals
+		if(DriverStation.getInstance().isEnabled()){
+			//sets up important vars on forst run
+			boolean switchState = getDebouncedSwitch();
+			if(!initlised){
+				initalSwitchState = switchState;
+				previousSwitchState = switchState;
+				initlised = true;
+				return;
+			}
+
+			//detects the switch reverting to its origonal pos whis the motor is runing fowards as a shot ball
+			if((switchState != previousSwitchState) && (switchState == initalSwitchState) && (getLastMotorPower() > 0)){
+				ballsShot +=1;
+			}
+
+			previousSwitchState = switchState;
+		}
+		ballsEntry.forceSetNumber(getAbsoluteShotBals());
 	}
 }
