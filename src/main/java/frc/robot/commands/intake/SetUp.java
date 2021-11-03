@@ -14,6 +14,8 @@ public class SetUp extends SequentialCommandGroup {
     private IntakeArm intake;
     private boolean end;
 
+    private int loopsClosed = 0;
+
     private double intakeLiftPower = -0.55;
 
     public SetUp(IntakeArm intake) {
@@ -28,6 +30,7 @@ public class SetUp extends SequentialCommandGroup {
                 intake.closeLock();
             }, intake)
         );
+        loopsClosed = 0;
     }
 
     private class SetUpProxy extends CommandBase {
@@ -51,10 +54,9 @@ public class SetUp extends SequentialCommandGroup {
                     intake.setIntakePower(IntakeArm.intakePower);
                 }
     
-                intake.setState(States.UP);
-    
                 intake.setPivotPower(intakeLPower);
             }
+            loopsClosed = 0;
         }
 
         //fix for trying to rase intake if battery is low
@@ -70,8 +72,12 @@ public class SetUp extends SequentialCommandGroup {
     
         @Override
         public void end(boolean interrupted) {   
+            if(!interrupted){
+                intake.setState(States.UP);
+            }
             LEDs.getInstance().removeCall("ArmDown"); 
             intake.setIntakePower(0);
+            intake.setPivotPower(0);
             timer.stop();
             timer.reset();
             end = false;
@@ -79,7 +85,11 @@ public class SetUp extends SequentialCommandGroup {
     
         @Override
         public boolean isFinished() {
-            return intake.getUpperLimit() || end;
+            boolean sw = intake.getUpperLimit();
+            if(sw){
+                loopsClosed++;
+            }
+            return (sw && loopsClosed > 5) || end;
         }    
     }
 

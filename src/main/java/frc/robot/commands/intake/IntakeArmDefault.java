@@ -66,7 +66,7 @@ public class IntakeArmDefault extends CommandBase {
                 );
 
 				//fake pid™
-				intake.setPivotPower(power);
+				//intake.setPivotPower(power);
 
 			} else {
                 if (!resetToggle) {

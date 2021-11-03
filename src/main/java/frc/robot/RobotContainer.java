@@ -97,8 +97,8 @@ public class RobotContainer {
     private Command semiAutoShooting;
     private Command fullManualShooting;
 
-    private Command intake;
-    private Command up;
+    private  Supplier<Command> intake;
+    private  Supplier<Command> up;
 
     private Command auto;
     /**
@@ -147,15 +147,15 @@ public class RobotContainer {
 
         fullManualShooting = new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger);
 
-        intake = new SequentialCommandGroup(
+        intake = () -> new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
             new SetDown(intakeArm)
         );
 
-        up = new SequentialCommandGroup(
+        up = () -> new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new SetUp(intakeArm)
-        );
+        ).withTimeout(5);
 
         //things the robot does to make auto work
         autoInit = () -> new SequentialCommandGroup(
@@ -167,7 +167,7 @@ public class RobotContainer {
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
             }),
-            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
+            HomeTurret.getDuplicate(false), HomeHood.getDuplicate(false),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode())
         );
@@ -292,10 +292,10 @@ public class RobotContainer {
 
 
         //launchpad intake arm buttons
-        launchpad.buttonH.whenPressed(intake, false);
+        launchpad.buttonH.whenPressed(intake.get(), false);
         launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
 
-        launchpad.buttonI.whenPressed(up, false);
+        launchpad.buttonI.whenPressed(up.get(), false);
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         //toggle to stow te turret while moving
@@ -320,21 +320,27 @@ public class RobotContainer {
 
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
+            if (turret.getDefaultCommand() != null) {
+                turret.getDefaultCommand().cancel();
+            }
             turret.setDefaultCommand(fullManualShooting);
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
+            if (turret.getDefaultCommand() != null) {
+                turret.getDefaultCommand().cancel();
+            }
             turret.setDefaultCommand(semiAutoShooting);
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
-            turret.getDefaultCommand().cancel();
+            if (turret.getDefaultCommand() != null) {
+                turret.getDefaultCommand().cancel();
+            }
             turret.setDefaultCommand(fullAutoShooterAssembly.get());
         }));
 
         //Controller bindings for intake
-        controller1.buttonX.whenPressed(up, false);
-        controller1.buttonA.whenPressed(intake, false);
+        controller1.buttonX.whenPressed(up.get(), false);
+        controller1.buttonA.whenPressed(intake.get(), false);
 
         //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
@@ -365,6 +371,12 @@ public class RobotContainer {
         Konami.getInstance().addSequence(
             new InstantCommand(secretLEDs::cancel), 
             "b", "b", "b", "b", "b", "b", "b", "b");
+
+        launchpad.missileB.whileHeld(new StartEndCommand(
+            () -> {
+                System.out.println("there should be rainbows");
+                secretLEDs.activate();
+            }, secretLEDs::cancel));
     }
 
     /**
@@ -381,7 +393,7 @@ public class RobotContainer {
      * runs once every ~20ms when in telyop
      */
     public void teleopPeriodic(){
-
+        SmartDashboard.putBoolean("intake position limit switch", intakeArm.getUpperLimit());
     }
 
     /**
@@ -420,26 +432,26 @@ public class RobotContainer {
                 fullAutoShooterAssembly.get()
             );
             //                                                       makes the full auto shooting stop after 5s
-            Command BallAuto = new SequentialCommandGroup(
-                autoInit.get(),
-                new PrintCommand("autoinit done"),
-                driveBack, 
-                new PrintCommand("drove back"), 
-                fullAutoShooterAssembly.get().withTimeout(10), 
-                new PrintCommand("done shooting"), 
-                new InstantCommand(() -> conveyor.enableIntakeMode()), 
-                new SetDown(intakeArm), 
-                new PrintCommand("intake down"), 
-                getBals, 
-                new PrintCommand("got bals"), 
-                fullAutoShooterAssembly.get(),
-                new PrintCommand("done")
-            );
+            // Command BallAuto = new SequentialCommandGroup(
+            //     autoInit.get(),
+            //     new PrintCommand("autoinit done"),
+            //     driveBack, 
+            //     new PrintCommand("drove back"), 
+            //     fullAutoShooterAssembly.get().withTimeout(10), 
+            //     new PrintCommand("done shooting"), 
+            //     new InstantCommand(() -> conveyor.enableIntakeMode()), 
+            //     new SetDown(intakeArm), 
+            //     new PrintCommand("intake down"), 
+            //     getBals, 
+            //     new PrintCommand("got bals"), 
+            //     fullAutoShooterAssembly.get(),
+            //     new PrintCommand("done")
+            // );
 
             //Command Test = new SequentialCommandGroup(f2, f3);
 
             ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
-            ShufhellboardDriver.autoChooser.addOption("5Ball", BallAuto);
+            //ShufhellboardDriver.autoChooser.addOption("5Ball", BallAuto);
             // ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
             
         } catch (IOException ex) {

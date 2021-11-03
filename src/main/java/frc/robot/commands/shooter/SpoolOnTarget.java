@@ -69,6 +69,7 @@ public class SpoolOnTarget extends CommandBase {
             }
 
             out += 70;
+            //out *= 1.07;
 
             pid.setSetpoint(out);
     

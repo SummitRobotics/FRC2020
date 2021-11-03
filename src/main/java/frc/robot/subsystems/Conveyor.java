@@ -39,8 +39,6 @@ public class Conveyor extends SubsystemBase {
 
 	private boolean initlised;
 
-	private boolean initalSwitchState;
-
 	private boolean previousSwitchState;
 
 	private RollingAverage switchVals;
@@ -71,7 +69,6 @@ public class Conveyor extends SubsystemBase {
 		ballsShot = 0;
 		ballShotOfset = 0;
 		initlised = false;
-		initalSwitchState = false;
 
 		switchVals = new RollingAverage(5, true);
 		lastMotorPower = 0;
@@ -234,14 +231,13 @@ public class Conveyor extends SubsystemBase {
 			//sets up important vars on forst run
 			boolean switchState = getDebouncedSwitch();
 			if(!initlised){
-				initalSwitchState = switchState;
 				previousSwitchState = switchState;
 				initlised = true;
 				return;
 			}
 
 			//detects the switch reverting to its origonal pos whis the motor is runing fowards as a shot ball
-			if((switchState != previousSwitchState) && (switchState == initalSwitchState) && (getLastMotorPower() > 0)){
+			if((switchState != previousSwitchState) && (!switchState) && (getLastMotorPower() > 0)){
 				ballsShot +=1;
 			}
 

@@ -39,11 +39,11 @@ public enum LEDRange {
      * They are the building blocks of LEDRanges, and they manage their own interal state to update LED colors.
      */
     protected enum Atomic {
-        LeftClimb(34, 57),
+        LeftClimb(34, 56),
         RightClimb(0, 23),
         Middle(24, 33),
-        LeftIntake(58, 76),
-        RightIntake(77, 95);
+        LeftIntake(57, 75),
+        RightIntake(76, 94);
 
         private int start;
         private int end;
