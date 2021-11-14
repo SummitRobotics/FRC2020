@@ -47,7 +47,7 @@ public class JoystickDriver extends GenericDriver {
                 if (!assureZUp) {
                     if (position > .95) {
                         assureZUp = true;
-                        System.out.println("axis z is up");
+                        //System.out.println("axis z is up");
                     }
 
                     return 0;
@@ -56,7 +56,7 @@ public class JoystickDriver extends GenericDriver {
                 if (!assureZDown) {
                     if (position < .05) {
                         assureZDown = true;
-                        System.out.println("axis z is down, activated");
+                        //System.out.println("axis z is down, activated");
                     }
 
                     return 0;

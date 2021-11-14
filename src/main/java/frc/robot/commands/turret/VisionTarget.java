@@ -29,7 +29,7 @@ public abstract class VisionTarget extends CommandBase {
 	// D = 0.0002;
 	private final static double
 	P = 0.01,
-	I = 0.001,
+    I = 0.15,
 	D = 0.0002;
 
 	public VisionTarget(Turret turret, Lemonlight limelight, boolean partOfFullAuto) {
@@ -37,7 +37,7 @@ public abstract class VisionTarget extends CommandBase {
         this.limelight = limelight;
 
 		pidController = new PIDController(P, I, D);
-		pidController.setTolerance(error, 1);
+		pidController.setTolerance(error, 2);
                 
         ttp = new TurretToPosition(turret, 90);
 

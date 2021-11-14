@@ -68,7 +68,8 @@ public class Conveyor extends SubsystemBase {
 		intakeMode = false;
 		ballsShot = 0;
 		ballShotOfset = 0;
-		initlised = false;
+        initlised = false;
+        previousSwitchState = false;
 
 		switchVals = new RollingAverage(5, true);
 		lastMotorPower = 0;
@@ -220,7 +221,6 @@ public class Conveyor extends SubsystemBase {
 	}
 
 	public void uninitBallCount(){
-		initlised = false;
 		resetAbsoluteBallSHots();
 	}
 
@@ -229,16 +229,13 @@ public class Conveyor extends SubsystemBase {
 		//we only want to do things if the robot is enabled, otherwise people can move the bals
 		if(DriverStation.getInstance().isEnabled()){
 			//sets up important vars on forst run
-			boolean switchState = getDebouncedSwitch();
-			if(!initlised){
-				previousSwitchState = switchState;
-				initlised = true;
-				return;
-			}
+            boolean switchState = getBreakButton();
+            //System.out.println(switchState);
 
 			//detects the switch reverting to its origonal pos whis the motor is runing fowards as a shot ball
 			if((switchState != previousSwitchState) && (!switchState) && (getLastMotorPower() > 0)){
-				ballsShot +=1;
+                ballsShot +=1;
+                //System.out.println("balls + 1");
 			}
 
 			previousSwitchState = switchState;

@@ -12,7 +12,7 @@ import frc.robot.utilities.lists.LEDPriorities;
 
 public class SetDown extends CommandBase {
 
-    private final static double targetTime = 0.5;
+    private final static double targetTime = 0.75;
 
     protected IntakeArm intake;
 
@@ -34,6 +34,7 @@ public class SetDown extends CommandBase {
     @Override
     public void initialize() {
         // new LEDCall("ArmDown", LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off).activate();
+        System.out.println("setdown start");
         LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off));
         
         timer.reset();
@@ -48,13 +49,15 @@ public class SetDown extends CommandBase {
             end = true;
         }
 
-        intake.setIntakePower(IntakeArm.intakePower);
-        intake.setState(States.DOWN_YES_INTAKE);
+        intake.setIntakePower(IntakeArm.intakePower);        
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        if(!interrupted){
+            intake.setState(States.DOWN_YES_INTAKE);
+        }
+        System.out.println("setdown ended");
         intake.setPivotPower(0);
         
         timer.stop();

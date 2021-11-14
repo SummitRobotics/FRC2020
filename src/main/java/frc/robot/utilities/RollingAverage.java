@@ -30,6 +30,7 @@ public class RollingAverage {
 
     public void reset() {
         set(0);
+        initialized = false;
     }
 
     /**

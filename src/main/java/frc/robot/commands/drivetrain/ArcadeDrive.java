@@ -12,6 +12,7 @@ import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.RollingAverage;
 
 public class ArcadeDrive extends CommandBase {
 
@@ -26,6 +27,13 @@ public class ArcadeDrive extends CommandBase {
     private final double deadzone = .1;
 
     private double max_change_rate = 0.05;
+
+    private Runnable shiftLow;
+
+    private RollingAverage avgSpeed = new RollingAverage(2, true);
+
+    private RollingAverage avgPower = new RollingAverage(2, true);
+    
     
     /**
      * teleop driver control
@@ -38,7 +46,8 @@ public class ArcadeDrive extends CommandBase {
         Drivetrain drivetrain, 
         OIAxis forwardPowerAxis, 
         OIAxis reversePowerAxis, 
-        OIAxis turnAxis)
+        OIAxis turnAxis,
+        Runnable shiftLow)
     {
 
         this.drivetrain = drivetrain;
@@ -46,8 +55,11 @@ public class ArcadeDrive extends CommandBase {
         this.forwardPowerAxis = forwardPowerAxis;
         this.reversePowerAxis = reversePowerAxis;
         this.turnAxis = turnAxis;
+        this.shiftLow = shiftLow;
 
         limiter = new ChangeRateLimiter(max_change_rate);
+
+        
 
         addRequirements(drivetrain);
     }
@@ -56,6 +68,8 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void initialize() {
         drivetrain.setOpenRampRate(0);
+        avgPower.reset();
+        avgSpeed.reset();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -77,12 +91,22 @@ public class ArcadeDrive extends CommandBase {
 
         power = limiter.getRateLimitedValue(power);
 
+        avgPower.update(Math.abs(power));
+
+        avgSpeed.update(Math.abs(drivetrain.getRightRPM()) + Math.abs(drivetrain.getLeftRPM()));
+
+        if((avgPower.getAverage() > .5) && avgSpeed.getAverage() < 15){
+            shiftLow.run();
+        }
+
         // calculates power to the motors
         double leftPower = power + turn;
         double rightPower = power - turn;
 
         drivetrain.setLeftMotorPower(leftPower);
         drivetrain.setRightMotorPower(rightPower);
+
+
 
     }
 

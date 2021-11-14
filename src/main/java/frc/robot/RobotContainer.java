@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
+import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
@@ -46,6 +47,7 @@ import frc.robot.commands.turret.FullManualShootingAssembly;
 import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.TurretToPosition;
 import frc.robot.devices.LEDs.LEDs;
+import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.Lemonlight;
@@ -191,6 +193,7 @@ public class RobotContainer {
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
+            new InstantCommand(() -> limelight.setLEDMode(LEDModes.FORCE_OFF)),
             new InstantCommand(() -> {
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
@@ -232,7 +235,8 @@ public class RobotContainer {
             drivetrain, 
             controller1.rightTrigger,
             controller1.leftTrigger, 
-            controller1.leftX
+            controller1.leftX,
+            shifter::lowGear
         ));
         
         // makes intake arm go back to limit when not on limit
@@ -387,6 +391,7 @@ public class RobotContainer {
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
         conveyor.uninitBallCount();
+        ChangeRateLimiter.resetAllChangeRateLimiters();
     }
 
     /**
@@ -448,11 +453,11 @@ public class RobotContainer {
             //     new PrintCommand("done")
             // );
 
-            //Command Test = new SequentialCommandGroup(f2, f3);
+            Command Test = new SequentialCommandGroup(f2, f3);
 
             ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
             //ShufhellboardDriver.autoChooser.addOption("5Ball", BallAuto);
-            // ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
+            ShufhellboardDriver.autoChooser.addOption("fun", Test);
             
         } catch (IOException ex) {
             DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());

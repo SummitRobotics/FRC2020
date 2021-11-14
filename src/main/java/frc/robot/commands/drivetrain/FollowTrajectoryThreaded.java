@@ -46,6 +46,23 @@ public class FollowTrajectoryThreaded extends CommandBase {
         addRequirements(drivetrain);
     }
 
+    public FollowTrajectoryThreaded(Drivetrain drivetrain, Trajectory trajectory, boolean req) {
+        super();
+
+        this.drivetrain = drivetrain;
+        this.trajectory = trajectory;
+
+        this.period = 5_000_000;
+
+        if(req){
+            addRequirements(drivetrain);
+        }
+    }
+
+    public FollowTrajectoryThreaded withoutRequirements(){
+        return new FollowTrajectoryThreaded(drivetrain, trajectory, false);
+    }
+
     @Override
     public void initialize() {
         splineLEDs.activate();

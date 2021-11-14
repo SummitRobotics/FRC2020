@@ -7,6 +7,8 @@
 
 package frc.robot.utilities;
 
+import java.util.Vector;
+
 /**
  * Add your docs here.
  */
@@ -14,7 +16,8 @@ public class ChangeRateLimiter {
 
     private double rate;
     private double old;
-
+    
+    public static Vector<ChangeRateLimiter> allLimiters = new Vector<ChangeRateLimiter>();
     /**
      * new rate limiter with starting value of 0
      * @param rate the maximum change each time the function is called
@@ -22,6 +25,7 @@ public class ChangeRateLimiter {
     public ChangeRateLimiter(double rate) {
         this.rate = rate;
         old = 0;
+        allLimiters.add(this);
     }
 
     /**
@@ -32,6 +36,7 @@ public class ChangeRateLimiter {
     public ChangeRateLimiter(double rate, double startingValue) {
         this.rate = rate;
         old = startingValue;
+        allLimiters.add(this);
     }
 
     /**
@@ -52,4 +57,15 @@ public class ChangeRateLimiter {
 
         return value;
     }
+
+    public void resetOld(){
+        old = 0;
+    }
+
+    public static void resetAllChangeRateLimiters(){
+        for (ChangeRateLimiter x : allLimiters){
+            x.resetOld();
+        }
+    }
+
 }
