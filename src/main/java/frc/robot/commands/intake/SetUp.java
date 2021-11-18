@@ -1,10 +1,10 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.InstantCommand;
+import frc.robot.commandegment.SequentialCommandGroup;
+import frc.robot.commandegment.WaitCommand;
 import frc.robot.subsystems.IntakeArm.States;
 import frc.robot.devices.LEDs.LEDs;
 import frc.robot.subsystems.IntakeArm;

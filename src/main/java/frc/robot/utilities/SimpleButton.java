@@ -9,7 +9,7 @@ package frc.robot.utilities;
 
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commandegment.button.Button;
 
 /**
  * takes a button or boolean supplyer and makes a new button that is only true on the rising edge of the press

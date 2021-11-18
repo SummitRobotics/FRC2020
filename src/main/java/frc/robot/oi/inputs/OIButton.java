@@ -3,7 +3,7 @@ package frc.robot.oi.inputs;
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commandegment.button.Button;
 import frc.robot.oi.Konami;
 import frc.robot.utilities.Usable;
 

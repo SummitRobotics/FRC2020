@@ -8,7 +8,7 @@
 package frc.robot.commands.homing;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commandegment.CommandBase;
 import frc.robot.utilities.Homeable;
 import frc.robot.utilities.RollingAverage;
 

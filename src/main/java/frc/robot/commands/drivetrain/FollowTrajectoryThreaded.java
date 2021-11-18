@@ -8,9 +8,9 @@ import java.lang.Thread.State;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.commandegment.Command;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.RamseteCommand;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.subsystems.Drivetrain;

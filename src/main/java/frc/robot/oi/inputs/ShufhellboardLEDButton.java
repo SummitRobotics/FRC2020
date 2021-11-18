@@ -1,7 +1,7 @@
 package frc.robot.oi.inputs;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.commandegment.StartEndCommand;
 
 public class ShufhellboardLEDButton extends LEDButton {
 

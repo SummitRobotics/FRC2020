@@ -3,7 +3,7 @@ package frc.robot.utilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commandegment.CommandBase;
 
 /**
  * abstract class for creating MOcommands

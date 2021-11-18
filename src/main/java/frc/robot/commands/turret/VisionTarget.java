@@ -2,7 +2,7 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commandegment.CommandBase;
 import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.CamModes;
 import frc.robot.devices.Lemonlight.LEDModes;

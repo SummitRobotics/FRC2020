@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.oi.inputs.ShufhellboardLEDButton;
 import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commandegment.Command;
 
 
 /**

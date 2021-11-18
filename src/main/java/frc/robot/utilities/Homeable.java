@@ -7,7 +7,7 @@
 
 package frc.robot.utilities;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.commandegment.Subsystem;
 
 /**
  * interface for homing a subsystem

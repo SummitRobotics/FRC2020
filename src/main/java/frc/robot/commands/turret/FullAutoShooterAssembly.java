@@ -1,8 +1,8 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandScheduler;
 import frc.robot.commands.hood.HoodDistanceAngler;
 import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.LidarLight;

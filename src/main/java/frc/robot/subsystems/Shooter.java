@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commandegment.SubsystemBase;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;

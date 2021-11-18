@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.RamseteCommand;
 import frc.robot.subsystems.Drivetrain;
 
 //this is REAL bad

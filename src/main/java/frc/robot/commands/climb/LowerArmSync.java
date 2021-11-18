@@ -1,7 +1,7 @@
 package frc.robot.commands.climb;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.commandegment.ParallelCommandGroup;
+import frc.robot.commandegment.RunCommand;
 import frc.robot.subsystems.ClimberArm;
 
 public class LowerArmSync extends ParallelCommandGroup {

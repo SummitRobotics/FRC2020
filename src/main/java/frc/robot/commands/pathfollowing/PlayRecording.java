@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.InstantCommand;
 import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetLoad;

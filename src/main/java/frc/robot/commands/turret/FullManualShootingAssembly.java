@@ -1,6 +1,6 @@
 package frc.robot.commands.turret;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commandegment.CommandBase;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.utilities.lists.Colors;

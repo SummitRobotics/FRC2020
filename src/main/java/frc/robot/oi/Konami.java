@@ -2,9 +2,9 @@ package frc.robot.oi;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commandegment.Command;
+import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandScheduler;
 
 public class Konami {
 

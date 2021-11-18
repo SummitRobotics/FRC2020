@@ -6,8 +6,8 @@ package frc.robot.commands;
 
 import java.lang.Thread.State;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commandegment.Command;
+import frc.robot.commandegment.CommandBase;
 
 public class CommandThreader extends CommandBase {
 

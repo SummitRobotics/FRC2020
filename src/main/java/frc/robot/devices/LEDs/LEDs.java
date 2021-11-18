@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commandegment.SubsystemBase;
 import frc.robot.devices.LEDs.LEDRange.Atomic;
 import frc.robot.utilities.lists.Ports;
 

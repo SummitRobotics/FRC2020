@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commandegment.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
