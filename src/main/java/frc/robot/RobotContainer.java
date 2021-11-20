@@ -1,10 +1,6 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -13,11 +9,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commandegment.Command;
 import frc.robot.commandegment.CommandSchedulest;
@@ -103,8 +97,8 @@ public class RobotContainer {
     // private Command autoInit;
     private Command teleInit;
 
-    private HomeByEncoder HomeTurret;
-    private HomeByCurrent HomeHood;
+    private Supplier<Command> HomeTurret;
+    private Supplier<Command> HomeHood;
 
     private Supplier<Command> fullAutoShooterAssembly;
     private Command semiAutoShooting;
@@ -150,9 +144,9 @@ public class RobotContainer {
 
         
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit, 4);
+        HomeHood = () -> new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit).withTimeout(4);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4);
+        HomeTurret = () -> new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit).withTimeout(4);
 
         fullAutoShooterAssembly = () -> new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
 
@@ -180,7 +174,7 @@ public class RobotContainer {
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
             }),
-            HomeTurret.getDuplicate(false), HomeHood.getDuplicate(false),
+            HomeTurret.get(), HomeHood.get(),
             new InstantCommand(() -> conveyor.disableIntakeMode()),
             new InstantCommand(() -> conveyor.disableShootMode())
         );
@@ -216,7 +210,7 @@ public class RobotContainer {
             new InstantCommand(() -> conveyor.disableShootMode()),
             //new InstantCommand(() -> System.out.println("got halfway")),
             //these can both happen at the same time so we do want that to happen to save time
-            new ParallelCommandGroup(HomeTurret.getDuplicate(), HomeHood.getDuplicate()),
+            new ParallelCommandGroup(HomeTurret.get(), HomeHood.get()),
             new TurretToPosition(turret, 90),
             //new InstantCommand(() -> System.out.println("homed")),
             //for tuning turret pid
@@ -302,11 +296,10 @@ public class RobotContainer {
         launchpad.buttonF.pressBind();
 
         //buttons to home on shufflebaord
-        ShufhellboardDriver.homeTurret.whenPressed(HomeTurret);
-        ShufhellboardDriver.homeTurret.commandBind(HomeTurret);
 
-        ShufhellboardDriver.homeHood.whenPressed(HomeHood);
-        ShufhellboardDriver.homeHood.commandBind(HomeHood);
+        ShufhellboardDriver.homeHood.commandBind(HomeHood.get(), ShufhellboardDriver.homeHood::whenPressed);
+
+        ShufhellboardDriver.homeTurret.commandBind(HomeTurret.get(), ShufhellboardDriver.homeTurret::whenPressed);
 
 
         //launchpad intake arm buttons

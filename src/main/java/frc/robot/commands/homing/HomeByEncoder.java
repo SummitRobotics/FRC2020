@@ -16,82 +16,46 @@ public class HomeByEncoder extends CommandBase {
     private int minLoops;
     private double reverseLimit;
     private double fowardLimit;
-    private double timeout;
-
-    private Timer timeoutTimer;
 
     private int loops;
 
-    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double timeout) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
-        this.timeout = timeout;
 
         loops = 0;
 
         setlimits = false;
-        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
     }
 
-    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit, double timeout) {
+    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.minLoops = minLoops;
         this.reverseLimit = reverseLimit;
         this.fowardLimit = fowardLimit;
-        this.timeout = timeout;
 
         setlimits = true;
 
         loops = 0;
-        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
-    }
-
-    public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit, double timeout, boolean aaaa) {
-        this.toHome = toHome;
-        this.homingPower = homingPower;
-        this.minLoops = minLoops;
-        this.reverseLimit = reverseLimit;
-        this.fowardLimit = fowardLimit;
-        this.timeout = timeout;
-
-        setlimits = true;
-
-        loops = 0;
-        timeoutTimer = new Timer();
-
-        //addRequirements(toHome.getSubsystemObject());
     }
 
     public HomeByEncoder getDuplicate() {
         if (setlimits) {
-            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout);
+            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit);
         }
-        return new HomeByEncoder(toHome, homingPower, minLoops, timeout);
-    }
-
-    public HomeByEncoder getDuplicate(boolean requireSubsystems) {
-        if (setlimits) {
-            if (requireSubsystems) {
-                return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout, true);
-            }
-
-            return new HomeByEncoder(toHome, homingPower, minLoops, reverseLimit, fowardLimit, timeout);
-        }
-        return new HomeByEncoder(toHome, homingPower, minLoops, timeout);
+        return new HomeByEncoder(toHome, homingPower, minLoops);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         loops = 0;
-        timeoutTimer.reset();
-        timeoutTimer.start();
         toHome.DisableSoftLimits();
     }
 
@@ -121,16 +85,7 @@ public class HomeByEncoder extends CommandBase {
         double v = toHome.getVelocity();
 
         boolean done = (loops > minLoops) && (Math.abs(v) < 1);
-        boolean timeExpired = timeoutTimer.get() > timeout;
         
-        if (done) {
-            System.out.println("homing of " + 
-            toHome.getSubsystemObject().getClass().getCanonicalName() + 
-            " is done with " + loops + " loops and a velocity of " + v + " rpm" );
-        }
-        if(timeExpired){
-            System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " timed out");
-        }
-        return done || timeExpired;
+        return done;
     }
 }

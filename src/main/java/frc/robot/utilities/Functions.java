@@ -122,6 +122,6 @@ public class Functions {
  
         Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(path);
 
-        return new FollowTrajectoryThreaded(drivetrain, trajectory).withoutRequirements();
+        return new FollowTrajectoryThreaded(drivetrain, trajectory);
     }
 }

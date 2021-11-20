@@ -504,9 +504,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-    System.out.println("BUILDING HELLLLLLLLLLLLLL");
-    
+  public void initSendable(SendableBuilder builder) {   
     builder.setSmartDashboardType("Scheduler");
     final NetworkTableEntry namesEntry = builder.getEntry("Names");
     final NetworkTableEntry idsEntry = builder.getEntry("Ids");

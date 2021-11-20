@@ -21,23 +21,18 @@ public class HomeByCurrent extends CommandBase {
     private double CurrentThreshold;
     private double reverseLimit;
     private double fowardLimit;
-    private double timeout;
-
-    private Timer timeoutTimer;
 
     private RollingAverage currentAverage = new RollingAverage(10, false);
 
     /**
      * Creates a new HomeByCurrent.
      */
-    public HomeByCurrent(Homeable toHome, double homingPower, double CurrentThreshold, double timeout) {
+    public HomeByCurrent(Homeable toHome, double homingPower, double CurrentThreshold) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.CurrentThreshold = CurrentThreshold;
-        this.timeout = timeout;
 
         setlimits = false;
-        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
     }
@@ -47,50 +42,23 @@ public class HomeByCurrent extends CommandBase {
         double homingPower, 
         double CurrentThreshold, 
         double reversLimit,
-        double fowardLimit,
-        double timeout
+        double fowardLimit
     ) {
         this.toHome = toHome;
         this.homingPower = homingPower;
         this.CurrentThreshold = CurrentThreshold;
         this.reverseLimit = reversLimit;
         this.fowardLimit = fowardLimit;
-        this.timeout = timeout;
 
         setlimits = true;
-        timeoutTimer = new Timer();
 
         addRequirements(toHome.getSubsystemObject());
-    }
-
-    public HomeByCurrent(
-        Homeable toHome, 
-        double homingPower, 
-        double CurrentThreshold, 
-        double reversLimit,
-        double fowardLimit,
-        double timeout,
-        boolean aaaa
-    ) {
-        this.toHome = toHome;
-        this.homingPower = homingPower;
-        this.CurrentThreshold = CurrentThreshold;
-        this.reverseLimit = reversLimit;
-        this.fowardLimit = fowardLimit;
-        this.timeout = timeout;
-
-        setlimits = true;
-        timeoutTimer = new Timer();
-
-        ///addRequirements(toHome.getSubsystemObject());
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         currentAverage.reset();
-        timeoutTimer.reset();
-        timeoutTimer.start();
 
         // System.out.println("running");
         toHome.DisableSoftLimits();
@@ -99,23 +67,11 @@ public class HomeByCurrent extends CommandBase {
     // needed beacuse command groups are dumb
     public HomeByCurrent getDuplicate() {
         if (setlimits) {
-            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout);
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit);
         } else {
-            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, timeout);
+            return new HomeByCurrent(toHome, homingPower, CurrentThreshold);
         }
     }
-
-    // needed beacuse command groups are dumb
-    public HomeByCurrent getDuplicate(boolean requireSubsystems) {
-        if (setlimits) {
-            if (!requireSubsystems) {
-                return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout, true);
-            }
-            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, reverseLimit, fowardLimit, timeout);
-        } else {
-            return new HomeByCurrent(toHome, homingPower, CurrentThreshold, timeout);
-        }
-    }    
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -129,8 +85,6 @@ public class HomeByCurrent extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         toHome.setHomingPower(0);
-        timeoutTimer.stop();
-        timeoutTimer.reset();
         //prints out homing completed message
         System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " ended with intrupted "+ interrupted);
         if (!interrupted) {
@@ -147,13 +101,6 @@ public class HomeByCurrent extends CommandBase {
     public boolean isFinished() {
         double current = currentAverage.getAverage();
         boolean done = current >= CurrentThreshold;
-        boolean timeExpired = timeoutTimer.get()  > timeout;
-        if (done){
-            System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " is done");
-        }
-        if (timeExpired){
-            System.out.println("homing of " + toHome.getSubsystemObject().getClass().getCanonicalName() + " timed out");
-        }
-        return done || timeExpired;
+        return done;
     }
 }
