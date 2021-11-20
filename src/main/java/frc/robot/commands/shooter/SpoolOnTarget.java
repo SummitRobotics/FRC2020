@@ -34,7 +34,7 @@ public class SpoolOnTarget extends CommandBase {
         // pid = new PIDController(0.0008, 0.0005, 0);
 		pid.setSetpoint(STAND_BY_RPM);
         pid.setTolerance(100);
-		SmartDashboard.putData("shooter speed pid", pid);
+        pid.setName("shooter speed");
 	}
 
 	/**

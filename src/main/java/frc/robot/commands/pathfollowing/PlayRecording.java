@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import frc.robot.commandegment.CommandBase;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.commandegment.InstantCommand;
 import frc.robot.commands.drivetrain.EncoderDrive;
 import frc.robot.commands.intake.SetDown;
@@ -34,14 +34,14 @@ public class PlayRecording extends CommandBase {
     //the end function must have been lost in a merge or somthing as this should end i think
     private boolean aborted = false;
 
-    private CommandScheduler scheduler;
+    private CommandSchedulest scheduler;
 
     private EncoderDrive CurrentDrivetrainCommand;
 
     private String recordingName;
 
 
-    public PlayRecording(CommandScheduler scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake) {
+    public PlayRecording(CommandSchedulest scheduler, String recording, Drivetrain drivetrain, Shifter shift, IntakeArm intake) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/saved/" + recording);
         this.drivetrain = drivetrain;
@@ -51,7 +51,7 @@ public class PlayRecording extends CommandBase {
         recordingName = recording;
     }
 
-    public PlayRecording(CommandScheduler scheduler, Drivetrain drivetrain) {
+    public PlayRecording(CommandSchedulest scheduler, Drivetrain drivetrain) {
         this.scheduler = scheduler;
         this.recording = new File("/home/admin/recordings/cache.chs");
         this.drivetrain = drivetrain;

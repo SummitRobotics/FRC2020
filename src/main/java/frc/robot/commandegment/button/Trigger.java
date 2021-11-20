@@ -7,7 +7,7 @@ package frc.robot.commandegment.button;
 import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
 
 import frc.robot.commandegment.Command;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.commandegment.InstantCommand;
 import frc.robot.commandegment.Subsystem;
 import java.util.function.BooleanSupplier;
@@ -64,7 +64,7 @@ public class Trigger {
   public Trigger whenActive(final Command command, boolean interruptible) {
     requireNonNullParam(command, "command", "whenActive");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();
@@ -119,7 +119,7 @@ public class Trigger {
   public Trigger whileActiveContinuous(final Command command, boolean interruptible) {
     requireNonNullParam(command, "command", "whileActiveContinuous");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();
@@ -175,7 +175,7 @@ public class Trigger {
   public Trigger whileActiveOnce(final Command command, boolean interruptible) {
     requireNonNullParam(command, "command", "whileActiveOnce");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();
@@ -217,7 +217,7 @@ public class Trigger {
   public Trigger whenInactive(final Command command, boolean interruptible) {
     requireNonNullParam(command, "command", "whenInactive");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();
@@ -267,7 +267,7 @@ public class Trigger {
   public Trigger toggleWhenActive(final Command command, boolean interruptible) {
     requireNonNullParam(command, "command", "toggleWhenActive");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();
@@ -309,7 +309,7 @@ public class Trigger {
   public Trigger cancelWhenActive(final Command command) {
     requireNonNullParam(command, "command", "cancelWhenActive");
 
-    CommandScheduler.getInstance()
+    CommandSchedulest.getInstance()
         .addButton(
             new Runnable() {
               private boolean m_pressedLast = get();

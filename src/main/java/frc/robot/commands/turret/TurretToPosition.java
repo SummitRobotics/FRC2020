@@ -29,7 +29,7 @@ public class TurretToPosition extends CommandBase {
         // GOOD DONT CHANGE
         pid = new PIDController(0.024, 0.0, 0.0009);
         pid.setTolerance(.75, 1);
-        SmartDashboard.putData("turret angle pid", pid);
+        pid.setName("turret angle");
     }
 
     // Called when the command is initially scheduled.

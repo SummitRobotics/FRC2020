@@ -22,9 +22,9 @@ public class HoodToAngle extends CommandBase {
         this.hood = hood;
         this.angle = angle;
         pid = new PIDController(0.01, 0, 0);
+        pid.setName("hood angle");
         pid.setTolerance(0.1, 1);
         pid.setSetpoint(0);
-        // SmartDashboard.putData("hood to angle nv", pid);
     }
 
     // Called when the command is initially scheduled.

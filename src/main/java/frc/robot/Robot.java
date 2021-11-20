@@ -1,7 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.commandegment.Command;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 		// and running subsystem periodic() methods. This must be called from the
 		// robot's periodic
 		// block in order for anything in the Command-based framework to work.
-		CommandScheduler.getInstance().run();
+		CommandSchedulest.getInstance().run();
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		CommandScheduler.getInstance().enable();
+		CommandSchedulest.getInstance().enable();
 		teleopInit();
 	}
 

@@ -9,7 +9,7 @@ import java.util.function.BooleanSupplier;
 
 /**
  * A state machine representing a complete action to be performed by the robot. Commands are run by
- * the {@link CommandScheduler}, and can be composed into CommandGroups to allow users to build
+ * the {@link CommandSchedulest}, and can be composed into CommandGroups to allow users to build
  * complicated multi-step actions without the need to roll the state machine logic themselves.
  *
  * <p>Commands are run synchronously from the main robot loop; no multithreading is used, unless
@@ -239,7 +239,7 @@ public interface Command {
    *     of its requirements
    */
   default void schedule(boolean interruptible) {
-    CommandScheduler.getInstance().schedule(interruptible, this);
+    CommandSchedulest.getInstance().schedule(interruptible, this);
   }
 
   /** Schedules this command, defaulting to interruptible. */
@@ -252,7 +252,7 @@ public interface Command {
    * even if they are not marked as interruptible.
    */
   default void cancel() {
-    CommandScheduler.getInstance().cancel(this);
+    CommandSchedulest.getInstance().cancel(this);
   }
 
   /**
@@ -262,7 +262,7 @@ public interface Command {
    * @return Whether the command is scheduled.
    */
   default boolean isScheduled() {
-    return CommandScheduler.getInstance().isScheduled(this);
+    return CommandSchedulest.getInstance().isScheduled(this);
   }
 
   /**

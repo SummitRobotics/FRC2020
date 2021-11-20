@@ -1,15 +1,26 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commandegment.Command;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.commandegment.InstantCommand;
 import frc.robot.commandegment.ParallelCommandGroup;
 import frc.robot.commandegment.ParallelDeadlineGroup;
@@ -64,7 +75,7 @@ import frc.robot.devices.LidarV3;
  */
 public class RobotContainer {
     
-    private CommandScheduler scheduler;
+    private CommandSchedulest scheduler;
 
     private ControllerDriver controller1;
     private LaunchpadDriver launchpad;
@@ -107,7 +118,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        scheduler = CommandScheduler.getInstance();
+        scheduler = CommandSchedulest.getInstance();
 
         controller1 = new ControllerDriver(Ports.XBOX_PORT);
         launchpad = new LaunchpadDriver(Ports.LAUNCHPAD_PORT);
@@ -177,14 +188,17 @@ public class RobotContainer {
         // things that happen when the robot is inishlided
         teleInit = new SequentialCommandGroup(
             new InstantCommand(() -> {
-                if(!controller1.isConnected() || !launchpad.isConnected() || !joystick.isConnected()){
-                    System.out.println("not enough joysticks connected, plaease make sure the xbox controler, launchpad, and joystics are connected to the driverstation");
-                    throw(new RuntimeException("not enough joysticks connected"));
-                }
-        
-                if(!controller1.isXboxControler()){
-                    System.out.println("controler 0 is not the xbox controler");
-                    throw(new RuntimeException("incorect joystick in port 0"));
+                //simulated robots dont have joysticks
+                if(RobotBase.isReal()){
+                    if(!controller1.isConnected() || !launchpad.isConnected() || !joystick.isConnected()){
+                        System.out.println("not enough joysticks connected, plaease make sure the xbox controler, launchpad, and joystics are connected to the driverstation");
+                        throw(new RuntimeException("not enough joysticks connected"));
+                    }
+            
+                    if(!controller1.isXboxControler()){
+                        System.out.println("controler 0 is not the xbox controler");
+                        throw(new RuntimeException("incorect joystick in port 0"));
+                    }
                 }
             }),
             new InstantCommand(() -> ShufhellboardDriver.statusDisplay.removeStatus("auto")),
@@ -399,6 +413,18 @@ public class RobotContainer {
      */
     public void teleopPeriodic(){
         SmartDashboard.putBoolean("intake position limit switch", intakeArm.getUpperLimit());
+        //System.out.println(SendableRegistry.contains(pdp));
+        if(RoboRioSim.getFPGAButton()){
+            System.out.println("removing all sendable items and clearing network table");
+            //java reflection sin to fix sendable
+            
+            LiveWindow.disableAllTelemetry();
+            NetworkTable t = NetworkTableInstance.getDefault().getTable("LiveWindow");
+            for(String x : t.getKeys()){
+                t.delete(x);
+            }
+           
+        }
     }
 
     /**
@@ -413,6 +439,9 @@ public class RobotContainer {
      * runs when the robot is powered on
      */
     public void robotInit(){
+
+        //removes the live window garbage in shuffhellboard
+        ShufhellboardDriver.removeBadItems();
 
         //sets up all the splines so we dont need to spend lots of time
         //turning the json files into trajectorys when we want to run them
@@ -465,6 +494,7 @@ public class RobotContainer {
 
         //inits shuffleboard
         ShufhellboardDriver.init();
+        
     }
 
     /**

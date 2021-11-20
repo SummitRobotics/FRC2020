@@ -2,7 +2,7 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commandegment.CommandBase;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.commands.hood.HoodDistanceAngler;
 import frc.robot.commands.shooter.SpoolOnTarget;
 import frc.robot.devices.LidarLight;
@@ -75,7 +75,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 
 	@Override
 	public void initialize() {
-		CommandScheduler.getInstance().schedule(spool, target, angler);
+		CommandSchedulest.getInstance().schedule(spool, target, angler);
 		//System.out.println("itited full shooter");
 		//LEDs.getInstance().addCall("fullautoshooting", new LEDCall(10000, LEDRange.All).solid(Colors.Blue));
 	}
@@ -128,7 +128,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 		}
 
 		conveyor.setShootMode(false);
-		CommandScheduler.getInstance().cancel(spool, target, angler);
+		CommandSchedulest.getInstance().cancel(spool, target, angler);
 
 		//System.out.println("full shooter end " + interrupted);
 	}

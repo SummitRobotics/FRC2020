@@ -38,10 +38,9 @@ public abstract class VisionTarget extends CommandBase {
 
 		pidController = new PIDController(P, I, D);
 		pidController.setTolerance(error, 2);
+		pidController.setName("turret vision");
                 
         ttp = new TurretToPosition(turret, 90);
-
-        // SmartDashboard.putData("vision target pid", pidController);
         
 		if (!partOfFullAuto){
 			addRequirements(turret);
@@ -70,7 +69,7 @@ public abstract class VisionTarget extends CommandBase {
 			turret.setPower(power);
 		} else {
 			noTarget();
-        }
+		}
 	}
 
 	private void noTarget() {

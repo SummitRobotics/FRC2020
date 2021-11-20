@@ -7,7 +7,7 @@ package frc.robot.commandegment;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * Class that holds scheduling state for a command. Used internally by the {@link CommandScheduler}.
+ * Class that holds scheduling state for a command. Used internally by the {@link CommandSchedulest}.
  */
 class CommandState {
   // The time since this command was initialized.

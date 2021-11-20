@@ -7,10 +7,18 @@
 
 package frc.robot.oi.drivers;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Map;
+import java.util.Vector;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.oi.inputs.ShufhellboardLEDButton;
 import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
@@ -22,6 +30,8 @@ import frc.robot.commandegment.Command;
  * Driver for virtual shuffleboard buttons
  */
 public class ShufhellboardDriver {
+
+    private static String[] badShuffHellItems = {"navX", "Solenoid", "Compressor"};
 
     private static NetworkTable 
     InfoTable = NetworkTableInstance.getDefault().getTable("RobotInfo"),
@@ -54,5 +64,54 @@ public class ShufhellboardDriver {
 
     public static void init(){
         SmartDashboard.putData(ShufhellboardDriver.autoChooser);
+    }
+
+    /**
+     * uses a truly incredable amount of sin to remove the chronic pneumatic, gyro, etc livewindow items from shufhellboard
+     */
+    public static void removeBadItems(){
+        //i know this is horificaly sinfull but i at least commented it
+        try{
+            //gets the components map from sendableRegistery
+            Field f = SendableRegistry.class.getDeclaredField("components");
+            //makes components not private
+            f.setAccessible(true);
+
+            //makes components not final (from stack overflow)
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+
+            //sets components to an empty list
+            //f.set(null, new WeakHashMap<>());
+
+            //goes through and removes any sendable items that are bad (by name)
+            //gets the hashmap from sendableRegistery
+            Map hm = (Map) f.get(null);
+            //an array to hold all the bjects to be removed (you cant remove objects form an array while in a for each loop)
+            Vector<Object> toRemove = new Vector<>();
+            //loops through all the objects in the array
+            for(Object x : hm.keySet()){
+                //gets the name of the object
+                String name = SendableRegistry.getName((Sendable) x);
+
+                //loops through all bad item defs
+                for(String badItem : badShuffHellItems){
+
+                    //if the name of the curent object contains a bad name def remove it and stop looping
+                    if(name.contains(badItem)){
+                        toRemove.add(x);
+                        break;
+                    }
+                }
+            }
+            //removes any of the objects in the toRemove array from the sendableRegistery
+            toRemove.forEach((obj) -> SendableRegistry.remove((Sendable)obj));
+            //toRemove.forEach((obj) -> System.out.println("remove of " + SendableRegistry.getName((Sendable) obj) + " was " + (SendableRegistry.remove((Sendable)obj)? "sucessfull" : "BAD")));
+        }
+        //i hope this never happnes
+        catch(Exception e){
+            throw new RuntimeException(e);
+        }
     }
 }

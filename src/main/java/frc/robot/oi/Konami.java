@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import frc.robot.commandegment.Command;
 import frc.robot.commandegment.CommandBase;
-import frc.robot.commandegment.CommandScheduler;
+import frc.robot.commandegment.CommandSchedulest;
 
 public class Konami {
 
@@ -76,7 +76,7 @@ public class Konami {
                 count++;
 
                 if (count == code.length) {
-                    CommandScheduler.getInstance().schedule(command);
+                    CommandSchedulest.getInstance().schedule(command);
                     resetCount();
                 }
             

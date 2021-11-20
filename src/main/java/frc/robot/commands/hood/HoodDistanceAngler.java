@@ -34,9 +34,9 @@ public class HoodDistanceAngler extends CommandBase {
 
         // FINE probably dont touch
         pid = new PIDController(0.02, 0.015, 0);
+        pid.setName("hoodDistance");
         pid.setTolerance(2, 1);
         pid.setSetpoint(0);
-        SmartDashboard.putData("hood", pid);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

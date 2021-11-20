@@ -29,24 +29,24 @@ import java.util.function.Consumer;
 
 /**
  * The scheduler responsible for running {@link Command}s. A Command-based robot should call {@link
- * CommandScheduler#run()} on the singleton instance in its periodic block in order to run commands
+ * CommandSchedulest#run()} on the singleton instance in its periodic block in order to run commands
  * synchronously from the main loop. Subsystems should be registered with the scheduler using {@link
- * CommandScheduler#registerSubsystem(Subsystem...)} in order for their {@link Subsystem#periodic()}
+ * CommandSchedulest#registerSubsystem(Subsystem...)} in order for their {@link Subsystem#periodic()}
  * methods to be called and for their default commands to be scheduled.
  */
 @SuppressWarnings({"PMD.GodClass", "PMD.TooManyFields"})
-public final class CommandScheduler implements Sendable, AutoCloseable {
+public final class CommandSchedulest implements Sendable, AutoCloseable {
   /** The Singleton Instance. */
-  private static CommandScheduler instance;
+  private static CommandSchedulest instance;
 
   /**
    * Returns the Scheduler instance.
    *
    * @return the instance
    */
-  public static synchronized CommandScheduler getInstance() {
+  public static synchronized CommandSchedulest getInstance() {
     if (instance == null) {
-      instance = new CommandScheduler();
+      instance = new CommandSchedulest();
     }
     return instance;
   }
@@ -82,18 +82,18 @@ public final class CommandScheduler implements Sendable, AutoCloseable {
 
   private final Watchdog m_watchdog = new Watchdog(TimedRobot.kDefaultPeriod, () -> {});
 
-  CommandScheduler() {
+  CommandSchedulest() {
     HAL.report(tResourceType.kResourceType_Command, tInstances.kCommand2_Scheduler);
-    SendableRegistry.addLW(this, "Scheduler");
-    LiveWindow.setEnabledListener(
-        () -> {
-          disable();
-          cancelAll();
-        });
-    LiveWindow.setDisabledListener(
-        () -> {
-          enable();
-        });
+    // SendableRegistry.addLW(this, "Scheduler");
+    // LiveWindow.setEnabledListener(
+    //     () -> {
+    //       disable();
+    //       cancelAll();
+    //     });
+    // LiveWindow.setDisabledListener(
+    //     () -> {
+    //       enable();
+    //     });
   }
 
   /**
@@ -505,6 +505,8 @@ public final class CommandScheduler implements Sendable, AutoCloseable {
 
   @Override
   public void initSendable(SendableBuilder builder) {
+    System.out.println("BUILDING HELLLLLLLLLLLLLL");
+    
     builder.setSmartDashboardType("Scheduler");
     final NetworkTableEntry namesEntry = builder.getEntry("Names");
     final NetworkTableEntry idsEntry = builder.getEntry("Ids");
