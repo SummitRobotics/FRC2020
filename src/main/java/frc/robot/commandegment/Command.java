@@ -7,6 +7,8 @@ package frc.robot.commandegment;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+//TODO fix all of this javadoc
+
 /**
  * A state machine representing a complete action to be performed by the robot. Commands are run by
  * the {@link CommandSchedulest}, and can be composed into CommandGroups to allow users to build
@@ -56,6 +58,25 @@ public interface Command {
    * @return the set of subsystems that are required
    */
   Set<Subsystem> getRequirements();
+
+  /**
+   * gets the pritorty of the command
+   * @return
+   */
+  default int getPriority(){
+    return 0;
+  }
+
+  /**
+   * sets a commands priority to any arbatrary value larget then 0
+   * @param priority the new priority of the command 0-MAX_INT
+   * @return a ParallelCommandGroup with the new priority
+   */
+  default ParallelCommandGroup withPriority(int priority){
+    InstantCommand i = new InstantCommand();
+    i.setPriority(priority);
+    return new ParallelCommandGroup(this, i);
+  }
 
   /**
    * Decorates this command with a timeout. If the specified timeout is exceeded before the command
@@ -232,19 +253,10 @@ public interface Command {
     return new ProxyScheduleCommand(this);
   }
 
-  /**
-   * Schedules this command.
-   *
-   * @param interruptible whether this command can be interrupted by another command that shares one
-   *     of its requirements
-   */
-  default void schedule(boolean interruptible) {
-    CommandSchedulest.getInstance().schedule(interruptible, this);
-  }
 
   /** Schedules this command, defaulting to interruptible. */
   default void schedule() {
-    schedule(true);
+    CommandSchedulest.getInstance().schedule(this);
   }
 
   /**
@@ -295,5 +307,16 @@ public interface Command {
    */
   default String getName() {
     return this.getClass().getSimpleName();
+  }
+
+  static int getHighestPriority(Command... commands){
+    int highest = 0;
+    for(Command x : commands){
+      int priority = x.getPriority();
+      if(priority > highest){
+        highest = priority;
+      }
+    }
+    return highest;
   }
 }

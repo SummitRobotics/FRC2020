@@ -50,26 +50,6 @@ public interface Subsystem {
   }
 
   /**
-   * Gets the default command for this subsystem. Returns null if no default command is currently
-   * associated with the subsystem.
-   *
-   * @return the default command associated with this subsystem
-   */
-  default Command getDefaultCommand() {
-    return CommandSchedulest.getInstance().getDefaultCommand(this);
-  }
-
-  /**
-   * Returns the command currently running on this subsystem. Returns null if no command is
-   * currently scheduled that requires this subsystem.
-   *
-   * @return the scheduled command currently requiring this subsystem
-   */
-  default Command getCurrentCommand() {
-    return CommandSchedulest.getInstance().requiring(this);
-  }
-
-  /**
    * Registers this subsystem with the {@link CommandSchedulest}, allowing its {@link
    * Subsystem#periodic()} method to be called when the scheduler runs.
    */

@@ -61,7 +61,7 @@ public class Trigger {
    * @param interruptible whether the command is interruptible
    * @return this trigger, so calls can be chained
    */
-  public Trigger whenActive(final Command command, boolean interruptible) {
+  public Trigger whenActive(final Command command) {
     requireNonNullParam(command, "command", "whenActive");
 
     CommandSchedulest.getInstance()
@@ -74,7 +74,7 @@ public class Trigger {
                 boolean pressed = get();
 
                 if (!m_pressedLast && pressed) {
-                  command.schedule(interruptible);
+                  command.schedule();
                 }
 
                 m_pressedLast = pressed;
@@ -82,17 +82,6 @@ public class Trigger {
             });
 
     return this;
-  }
-
-  /**
-   * Starts the given command whenever the trigger just becomes active. The command is set to be
-   * interruptible.
-   *
-   * @param command the command to start
-   * @return this trigger, so calls can be chained
-   */
-  public Trigger whenActive(final Command command) {
-    return whenActive(command, true);
   }
 
   /**
@@ -116,7 +105,7 @@ public class Trigger {
    * @param interruptible whether the command is interruptible
    * @return this trigger, so calls can be chained
    */
-  public Trigger whileActiveContinuous(final Command command, boolean interruptible) {
+  public Trigger whileActiveContinuous(final Command command) {
     requireNonNullParam(command, "command", "whileActiveContinuous");
 
     CommandSchedulest.getInstance()
@@ -129,7 +118,7 @@ public class Trigger {
                 boolean pressed = get();
 
                 if (pressed) {
-                  command.schedule(interruptible);
+                  command.schedule();
                 } else if (m_pressedLast) {
                   command.cancel();
                 }
@@ -138,19 +127,6 @@ public class Trigger {
               }
             });
     return this;
-  }
-
-  /**
-   * Constantly starts the given command while the button is held.
-   *
-   * <p>{@link Command#schedule(boolean)} will be called repeatedly while the trigger is active, and
-   * will be canceled when the trigger becomes inactive. The command is set to be interruptible.
-   *
-   * @param command the command to start
-   * @return this trigger, so calls can be chained
-   */
-  public Trigger whileActiveContinuous(final Command command) {
-    return whileActiveContinuous(command, true);
   }
 
   /**
@@ -172,7 +148,7 @@ public class Trigger {
    * @param interruptible whether the command is interruptible
    * @return this trigger, so calls can be chained
    */
-  public Trigger whileActiveOnce(final Command command, boolean interruptible) {
+  public Trigger whileActiveOnce(final Command command) {
     requireNonNullParam(command, "command", "whileActiveOnce");
 
     CommandSchedulest.getInstance()
@@ -185,7 +161,7 @@ public class Trigger {
                 boolean pressed = get();
 
                 if (!m_pressedLast && pressed) {
-                  command.schedule(interruptible);
+                  command.schedule();
                 } else if (m_pressedLast && !pressed) {
                   command.cancel();
                 }
@@ -197,24 +173,13 @@ public class Trigger {
   }
 
   /**
-   * Starts the given command when the trigger initially becomes active, and ends it when it becomes
-   * inactive, but does not re-start it in-between. The command is set to be interruptible.
-   *
-   * @param command the command to start
-   * @return this trigger, so calls can be chained
-   */
-  public Trigger whileActiveOnce(final Command command) {
-    return whileActiveOnce(command, true);
-  }
-
-  /**
    * Starts the command when the trigger becomes inactive.
    *
    * @param command the command to start
    * @param interruptible whether the command is interruptible
    * @return this trigger, so calls can be chained
    */
-  public Trigger whenInactive(final Command command, boolean interruptible) {
+  public Trigger whenInactive(final Command command) {
     requireNonNullParam(command, "command", "whenInactive");
 
     CommandSchedulest.getInstance()
@@ -227,23 +192,13 @@ public class Trigger {
                 boolean pressed = get();
 
                 if (m_pressedLast && !pressed) {
-                  command.schedule(interruptible);
+                  command.schedule();
                 }
 
                 m_pressedLast = pressed;
               }
             });
     return this;
-  }
-
-  /**
-   * Starts the command when the trigger becomes inactive. The command is set to be interruptible.
-   *
-   * @param command the command to start
-   * @return this trigger, so calls can be chained
-   */
-  public Trigger whenInactive(final Command command) {
-    return whenInactive(command, true);
   }
 
   /**
@@ -264,7 +219,7 @@ public class Trigger {
    * @param interruptible whether the command is interruptible
    * @return this trigger, so calls can be chained
    */
-  public Trigger toggleWhenActive(final Command command, boolean interruptible) {
+  public Trigger toggleWhenActive(final Command command) {
     requireNonNullParam(command, "command", "toggleWhenActive");
 
     CommandSchedulest.getInstance()
@@ -280,7 +235,7 @@ public class Trigger {
                   if (command.isScheduled()) {
                     command.cancel();
                   } else {
-                    command.schedule(interruptible);
+                    command.schedule();
                   }
                 }
 
@@ -288,16 +243,6 @@ public class Trigger {
               }
             });
     return this;
-  }
-
-  /**
-   * Toggles a command when the trigger becomes active. The command is set to be interruptible.
-   *
-   * @param command the command to toggle
-   * @return this trigger, so calls can be chained
-   */
-  public Trigger toggleWhenActive(final Command command) {
-    return toggleWhenActive(command, true);
   }
 
   /**

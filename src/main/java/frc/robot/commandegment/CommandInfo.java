@@ -4,20 +4,25 @@
 
 package frc.robot.commandegment;
 
+import java.util.Set;
+import java.util.Vector;
+
 import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Class that holds scheduling state for a command. Used internally by the {@link CommandSchedulest}.
  */
-class CommandState {
+class CommandInfo {
   // The time since this command was initialized.
   private double m_startTime = -1;
 
-  // Whether or not it is interruptible.
-  private final boolean m_interruptible;
+  private int priority;
 
-  CommandState(boolean interruptible) {
-    m_interruptible = interruptible;
+  private Vector<Subsystem> requirements = new Vector<>();
+
+  CommandInfo(int priority, Set<Subsystem> requirements) {
+    this.priority = priority;
+    this.requirements.addAll(requirements);
     startTiming();
     startRunning();
   }
@@ -30,8 +35,16 @@ class CommandState {
     m_startTime = -1;
   }
 
-  boolean isInterruptible() {
-    return m_interruptible;
+  int getPriority(){
+    return priority;
+  }
+
+  void setPriority(int priority){
+    this.priority = priority;
+  }
+
+  Vector<Subsystem> getRequirements(){
+    return requirements;
   }
 
   double timeSinceInitialized() {

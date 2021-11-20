@@ -15,11 +15,29 @@ import java.util.Set;
 public abstract class CommandBase implements Sendable, Command {
 
   protected Set<Subsystem> m_requirements = new HashSet<>();
+  protected int priority;
 
   protected CommandBase() {
     String name = getClass().getName();
     SendableRegistry.add(this, name.substring(name.lastIndexOf('.') + 1));
+    priority = 0;
   }
+
+  @Override
+  public int getPriority() {
+    return priority;
+  }
+
+  public void setPriority(int priority){
+    if(priority < 0){
+      throw new IllegalArgumentException("priorities below 0 are not aloud");
+    }
+    else{
+      this.priority = priority;
+    }
+  }
+
+
 
   /**
    * Adds the specified requirements to the command.

@@ -29,6 +29,7 @@ public class PerpetualCommand extends CommandBase {
     registerGroupedCommands(command);
     m_command = command;
     m_requirements.addAll(command.getRequirements());
+    setPriority(command.getPriority());
   }
 
   @Override

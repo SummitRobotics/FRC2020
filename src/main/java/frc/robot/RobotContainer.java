@@ -217,10 +217,6 @@ public class RobotContainer {
             // new HoodToAngle(hood, 20),
             // sets the turret default command based on the fun dile
             new InstantCommand(() -> {  
-                try {
-                    turret.getDefaultCommand().cancel();
-                } catch(NullPointerException e) {
-                }
                 if (launchpad.funLeft.get()) {
                     turret.setDefaultCommand(fullManualShooting);
                 } else if (launchpad.funMiddle.get()) {
@@ -283,16 +279,16 @@ public class RobotContainer {
         launchpad.buttonA.booleanSupplierBind(climberPneumatics::getClimbState);
 
         //moes
-        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY), false);
+        launchpad.buttonB.whileActiveContinuous(new ClimberArmMO(rightArm, joystick.axisY));
         launchpad.buttonB.pressBind();
 
-        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY), false);
+        launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY));
         launchpad.buttonC.pressBind();        
 
-        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY), false);
+        launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY));
         launchpad.buttonE.pressBind();
 
-        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2), false);
+        launchpad.buttonF.whileActiveContinuous(new IntakeArmMO(intakeArm, joystick.axisY, joystick.trigger, joystick.button3, joystick.button2));
         launchpad.buttonF.pressBind();
 
         //buttons to home on shufflebaord
@@ -303,17 +299,17 @@ public class RobotContainer {
 
 
         //launchpad intake arm buttons
-        launchpad.buttonH.whenPressed(intake.get(), false);
+        launchpad.buttonH.whenPressed(intake.get());
         launchpad.buttonH.booleanSupplierBind(intakeArm::isDown);
 
-        launchpad.buttonI.whenPressed(up.get(), false);
+        launchpad.buttonI.whenPressed(up.get());
         launchpad.buttonI.booleanSupplierBind(intakeArm::isUp);
 
         //toggle to stow te turret while moving
         Command turretToPos = new TurretToPosition(turret, 12).perpetually();
 
         Command turretStow = new StartEndCommand(
-            () -> {turret.setSoftLimits(turret.normalBackLimit, turret.fowardLimit); scheduler.schedule(true, turretToPos);}, 
+            () -> {turret.setSoftLimits(turret.normalBackLimit, turret.fowardLimit); scheduler.schedule(turretToPos);}, 
             () -> {scheduler.cancel(turretToPos); turret.setSoftLimits(turret.shootingBackLimit, turret.fowardLimit);}, 
             turret, shooter, hood, conveyor);
 
@@ -331,27 +327,18 @@ public class RobotContainer {
 
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
-            if (turret.getDefaultCommand() != null) {
-                turret.getDefaultCommand().cancel();
-            }
             turret.setDefaultCommand(fullManualShooting);
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
-            if (turret.getDefaultCommand() != null) {
-                turret.getDefaultCommand().cancel();
-            }
             turret.setDefaultCommand(semiAutoShooting);
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
-            if (turret.getDefaultCommand() != null) {
-                turret.getDefaultCommand().cancel();
-            }
             turret.setDefaultCommand(fullAutoShooterAssembly.get());
         }));
 
         //Controller bindings for intake
-        controller1.buttonX.whenPressed(up.get(), false);
-        controller1.buttonA.whenPressed(intake.get(), false);
+        controller1.buttonX.whenPressed(up.get());
+        controller1.buttonA.whenPressed(intake.get());
 
         //shifting
         controller1.leftBumper.toggleWhenPressed(new StartEndCommand(
