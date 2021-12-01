@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
 
 import frc.robot.utilities.Functions;
-import frc.robot.utilities.Usable;
 
 /**
  * Wrapper for axes that allows for better management
  */
-public class OIAxis implements Usable {
+public class OIAxis {
 
 	private final static double DEFAULT_DEADZONE = 0.05;
 
@@ -58,18 +57,4 @@ public class OIAxis implements Usable {
 		this.deadzone = deadzone;
 	}
 
-	@Override
-	public void using(Object user) {
-		users.add(user);
-	}
-
-	@Override
-	public void release(Object user) {
-		users.remove(user);
-	}
-
-	@Override
-	public boolean inUse() {
-		return !users.isEmpty();
-	}
 }

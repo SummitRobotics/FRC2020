@@ -19,15 +19,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.function.Consumer;
 
 /**
  * The scheduler responsible for running {@link Command}s. A Command-based robot should call {@link
@@ -57,7 +55,12 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
   // A map from commands to their scheduling state.  Also used as a set of the currently-running
   // commands.
-  private final Map<Command, CommandInfo> scheduledCommands = new LinkedHashMap<>();
+  private final Vector<Command> scheduledCommands = new Vector<Command>();
+
+  private final Vector<Command> runningCommands = new Vector<Command>();
+
+
+  //keeps track of the priority for each command
 
   // // A map from required subsystems to their requiring commands.  Also used as a set of the
   // // currently-required subsystems.
@@ -127,21 +130,6 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
   }
 
   /**
-   * Initializes a given command, adds its requirements to the list, and performs the init actions.
-   *
-   * @param command The command to initialize
-   * @param interruptible Whether the command is interruptible
-   * @param requirements The command requirements
-   */
-  private void initCommand(Command command, int priority, Set<Subsystem> requirements) {
-    CommandInfo scheduledCommand = new CommandInfo(priority, requirements);
-    scheduledCommands.put(command, scheduledCommand);
-    command.initialize();
-
-    m_watchdog.addEpoch(command.getName() + ".initialize()");
-  }
-
-  /**
    * Schedules a command for execution. Does nothing if the command is already scheduled. If a
    * command's requirements are not available, it will only be started if all the commands currently
    * using those requirements have been scheduled as interruptible. If this is the case, they will
@@ -166,18 +154,21 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
     // run when disabled, or the command is already scheduled.
     if (m_disabled
         || (RobotState.isDisabled() && !command.runsWhenDisabled())
-        || scheduledCommands.containsKey(command)) {
+        || scheduledCommands.contains(command)) {
       return;
     }
 
-    Set<Subsystem> requirements = command.getRequirements();
-
-    //TODO scedual the command
+    initCommand(priority, command);
   }
 
+  /**
+   * sceduals a command with a spisfic priority
+   * @param priority
+   * @param command
+   */
   public void scheduleWithPriority(int priority, Command command){
     if(priority < 0){
-      throw new IllegalArgumentException("Command priorities can not be less than 1");
+      throw new IllegalArgumentException("Command priorities can not be less than 0");
     }
     else{
       scheduleWithUnlimitedPriority(priority, command);
@@ -196,6 +187,91 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
   public void schedule(Command... commands) {
     for (Command command : commands) {
       scheduleWithPriority(command.getPriority(), command);
+    }
+  }
+
+  /**
+   * Initializes a given command, adds its requirements to the list, and performs the init actions.
+   *
+   * @param command The command to initialize
+   * @param interruptible Whether the command is interruptible
+   * @param requirements The command requirements
+   */
+  private void initCommand(int priority, Command command) {
+    command.initialize();
+
+    m_watchdog.addEpoch(command.getName() + ".initialize()");
+
+    boolean scedualedSucesfull = false;
+
+    //add the command to its place in the map (at the end of the group of commands with the saame priority)
+    for(int i = 0; i < scheduledCommands.size(); i++){
+      int previousCommandPriority = scheduledCommands.get(i).getPriority();
+
+      //java should be rust
+      long nextCommandPriority;
+      try{
+        nextCommandPriority = (long)scheduledCommands.get(i+1).getPriority();
+      }
+      catch(Exception e){
+        nextCommandPriority = Long.MAX_VALUE;
+      }
+
+      //scedual command if apropreate
+      if((priority >= previousCommandPriority) && priority < nextCommandPriority){
+        scheduledCommands.add(i, command);
+        scedualedSucesfull = true;
+        break;
+      }
+    }
+   
+    if(!scedualedSucesfull){
+        scheduledCommands.add(command);
+    }
+  }
+
+  //updates what commands souuld curently be running
+  private void updateRunningCommands(){
+    Map<Subsystem, Command> commandSubAscotion = new HashMap<>();
+    Vector<Command> newRunningCommands = new Vector<>();
+    //adds subsystems to map
+    for(Subsystem s : m_subsystems){
+      commandSubAscotion.put(s, null);
+    }
+    //moves through commands in reverse order
+    for(int i = scheduledCommands.size()-1; i >= 0; i--){
+      Command commandToTryToRun = scheduledCommands.get(i);
+
+      Set<Subsystem> reqs =  commandToTryToRun.getRequirements();
+
+      //if the command has requirements see if it is acceptable to run
+      if(reqs.size()  > 0){
+        boolean okToRun = true;
+        //checks if command is ok to run
+        for(Subsystem s : reqs){
+          if(commandSubAscotion.get(s) != null){
+            okToRun = false;
+          }
+        }
+
+        //if it is then add it to running subsystems and associates its requirements
+        if(okToRun){
+          for(Subsystem s : commandToTryToRun.getRequirements()){
+            commandSubAscotion.replace(s, commandToTryToRun);
+          }
+          newRunningCommands.addElement(commandToTryToRun);
+        }
+      }
+      else{
+        runningCommands.addElement(commandToTryToRun);
+      }      
+      
+    }
+
+    //updates the running command list
+    runningCommands.clear();
+    for(Command c : newRunningCommands){
+      runningCommands.addElement(c);
     }
   }
 
@@ -236,49 +312,33 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
     m_watchdog.addEpoch("buttons.run()");
 
 		m_inRunLoop = true;
+
+    updateRunningCommands();
 		
-		//TODO make this work
-
-		//sort the commands from highest to lowest priority (probably best to do this when they are scedualed)
-
-		//apply each command to all of its required subsystems so long as no other command is useing them
-
-		//run the command applyed to each subsystem
-
-		//run and commands that dont require subsystems
-
-
     // Run scheduled commands, remove finished commands.
-    // for (Iterator<Command> iterator = scheduledCommands.keySet().iterator();
-    //     iterator.hasNext(); ) {
-    //   Command command = iterator.next();
+    for (Command command : runningCommands) {
 
-    //   if (!command.runsWhenDisabled() && RobotState.isDisabled()) {
-    //     command.end(true);
+      if (!command.runsWhenDisabled() && RobotState.isDisabled()) {
+        command.end(true);
 
-    //     m_requirements.keySet().removeAll(command.getRequirements());
-    //     iterator.remove();
-    //     m_watchdog.addEpoch(command.getName() + ".end(true)");
-    //     continue;
-    //   }
+        scheduledCommands.remove(command);
+      }
 
-    //   command.execute();
+      command.execute();
 
-    //   m_watchdog.addEpoch(command.getName() + ".execute()");
-    //   if (command.isFinished()) {
-    //     command.end(false);
+      m_watchdog.addEpoch(command.getName() + ".execute()");
+      if (command.isFinished()) {
+        command.end(false);
    
-    //     iterator.remove();
+        scheduledCommands.remove(command);
+      }
+    }
 
-    //     m_requirements.keySet().removeAll(command.getRequirements());
-    //     m_watchdog.addEpoch(command.getName() + ".end(false)");
-    //   }
-    // }
     m_inRunLoop = false;
 
     // Schedule/cancel commands from queues populated during loop
-    for (Map.Entry<Command, Integer> commandInterruptible : m_toSchedule.entrySet()) {
-      scheduleWithUnlimitedPriority(commandInterruptible.getValue(), commandInterruptible.getKey());
+    for (Map.Entry<Command, Integer> commandToScedual : m_toSchedule.entrySet()) {
+      scheduleWithUnlimitedPriority(commandToScedual.getValue(), commandToScedual.getKey());
     }
 
     for (Command command : m_toCancel) {
@@ -287,14 +347,6 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
     m_toSchedule.clear();
     m_toCancel.clear();
-
-    // Add default commands for un-required registered subsystems.
-    // for (Map.Entry<Subsystem, Command> subsystemCommand : m_subsystems.entrySet()) {
-    //   if (!m_requirements.containsKey(subsystemCommand.getKey())
-    //       && subsystemCommand.getValue() != null) {
-    //     schedule(subsystemCommand.getValue());
-    //   }
-    // }
 
     m_watchdog.disable();
     if (m_watchdog.isExpired()) {
@@ -326,15 +378,13 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 		for(Subsystem s : subsystems){
 			m_subsystems.remove(s);
 		}
-		
   }
 
   /**
    * Sets the default command for a subsystem. Registers that subsystem if it is not already
    * registered. Default commands will run whenever there is no other command currently scheduled
    * that requires the subsystem. Default commands should be written to never end (i.e. their {@link
-   * Command#isFinished()} method should return false), as they would simply be re-scheduled if they
-   * do. Default commands must also require their subsystem.
+   * Command#isFinished()} method should return false).
    *
    * @param subsystem the subsystem whose default command will be set
    * @param defaultCommand the default command to associate with the subsystem
@@ -348,7 +398,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
       throw new IllegalArgumentException("Default commands should not end!");
     }
 
-    scheduleWithUnlimitedPriority(deafultCommandPriority, defaultCommand);
+    scheduleWithUnlimitedPriority(deafultCommandPriority, defaultCommand.perpetually());
   }
 
   /**
@@ -366,49 +416,44 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
       return;
     }
 
+    //makes sure alreadt stopped commands are not ended twice
     for (Command command : commands) {
-      if (!scheduledCommands.containsKey(command)) {
+      if (!scheduledCommands.contains(command)) {
         continue;
       }
 
       command.end(true);
 
       scheduledCommands.remove(command);
-      //m_requirements.keySet().removeAll(command.getRequirements());
       m_watchdog.addEpoch(command.getName() + ".end(true)");
     }
   }
 
   /** Cancels all commands that are currently scheduled. */
   public void cancelAll() {
-    for (Command command : scheduledCommands.keySet().toArray(new Command[0])) {
+    for (Command command : scheduledCommands) {
       cancel(command);
     }
 	}
 	
+  /**
+   * cancles any commands associated with a subsystem
+   * @param subsystem 
+   */
 	public void cancleCommandsForSubsystem(Subsystem subsystem){
-		//TODO make this
+    ArrayList<Command> toCancle = new ArrayList<Command>();
+		for(Command c : scheduledCommands){
+      if(c.getRequirements().contains(subsystem)){
+        toCancle.add(c);
+      }
+    }
+    for(Command c : toCancle){
+      cancel(c);
+    }
 	}
 
   /**
-   * Returns the time since a given command was scheduled. Note that this only works on commands
-   * that are directly scheduled by the scheduler; it will not work on commands inside of
-   * commandgroups, as the scheduler does not see them.
-   *
-   * @param command the command to query
-   * @return the time since the command was scheduled, in seconds
-   */
-  public double timeSinceScheduled(Command command) {
-    CommandInfo commandState = scheduledCommands.get(command);
-    if (commandState != null) {
-      return commandState.timeSinceInitialized();
-    } else {
-      return -1;
-    }
-  }
-
-  /**
-   * Whether the given commands are running. Note that this only works on commands that are directly
+   * Whether the given commands are scedualed. Note that this only works on commands that are directly
    * scheduled by the scheduler; it will not work on commands inside of CommandGroups, as the
    * scheduler does not see them.
    *
@@ -416,7 +461,19 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
    * @return whether the command is currently scheduled
    */
   public boolean isScheduled(Command... commands) {
-    return scheduledCommands.keySet().containsAll(Set.of(commands));
+    return scheduledCommands.containsAll(Set.of(commands));
+  }
+
+  /**
+   * Whether the given commands are curently running. Note that this only works on commands that are directly
+   * scheduled by the scheduler; it will not work on commands inside of CommandGroups, as the
+   * scheduler does not see them.
+   *
+   * @param commands the command to query
+   * @return whether the command is currently scheduled
+   */
+  public boolean isRunning(Command... commands) {
+    return runningCommands.containsAll(Set.of(commands));
   }
 
   /** Disables the command scheduler. */
@@ -443,7 +500,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
           Map<Double, Command> ids = new LinkedHashMap<>();
 
-          for (Command command : scheduledCommands.keySet()) {
+          for (Command command : scheduledCommands) {
             ids.put((double) command.hashCode(), command);
           }
 

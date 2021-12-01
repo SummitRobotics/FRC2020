@@ -75,13 +75,13 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void execute() {
-		if (!turretRotationPower.inUse() && Functions.absGreater(turretRotationPower.get(), shooterHoodPower.get())) {
+		if (Functions.absGreater(turretRotationPower.get(), shooterHoodPower.get())) {
             double turretPower = turretRotationPower.get() / 3;
             turretPower = limiter.getRateLimitedValue(turretPower);
             turretPower = Functions.deadzone(.05, turretPower);
 			turret.setPower(turretPower); 
 
-		} else if (!shooterHoodPower.inUse() && Functions.absGreater(shooterHoodPower.get(), turretRotationPower.get())) {
+		} else if (Functions.absGreater(shooterHoodPower.get(), turretRotationPower.get())) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
 			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
@@ -93,27 +93,25 @@ public class FullManualShootingAssembly extends CommandBase {
 
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
-		if (!shooterSpoolPower.inUse()) {
-            // double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
-            double shooterPower = shooterSpoolPower.get();
+		// double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
+		double shooterPower = shooterSpoolPower.get();
 
-            if ((shooterPower > 0.1) && !ledON) {
-                manualShoot.activate();
-                ledON = true;
-            }
-            
-            if (ledON && (shooterPower < 0.1)) {
-                manualShoot.cancel();
-                ledON = false;
-            }
-
-            shooter.setPower(shooterPower);
+		if ((shooterPower > 0.1) && !ledON) {
+			manualShoot.activate();
+			ledON = true;
 		}
 		
-		if (!trigger.inUse()) {
-	
-			conveyor.setShootMode(trigger.get());
+		if (ledON && (shooterPower < 0.1)) {
+			manualShoot.cancel();
+			ledON = false;
 		}
+
+		shooter.setPower(shooterPower);
+		
+		
+	
+		conveyor.setShootMode(trigger.get());
+		
 
 
 		//System.out.println("runnign curent: " + hood.getCurrent() + " curent encoder: " + hood.getEncoder());

@@ -1,10 +1,10 @@
 package frc.robot.commands.conveyor;
 
+import frc.robot.commandegment.CommandBase;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.utilities.MOCommand;
 
-public class ConveyorMO extends MOCommand {
+public class ConveyorMO extends CommandBase {
 
 	Conveyor conveyor;
 	OIAxis controlAxis;
@@ -16,7 +16,7 @@ public class ConveyorMO extends MOCommand {
 	 */
 	public ConveyorMO(Conveyor conveyor, OIAxis controlAxis) {
 		addRequirements(conveyor);
-		addUsed(controlAxis);
+		setPriority(1);
 
 		this.conveyor = conveyor;
 		this.controlAxis = controlAxis;

@@ -53,7 +53,7 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
     
     @Override
     protected void shootAction(boolean readyToShoot) {
-        if (readyToShoot && trigger.get() && !trigger.inUse()) {
+        if (readyToShoot && trigger.get()) {
             // conveyor.shootOneBall();
             conveyor.setShootMode(true);
         } else {
@@ -63,10 +63,6 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
 
     @Override
     protected double turretPassiveAction(double turretAngle) {
-        if (!controlAxis.inUse()) {
-            return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
-        } else {
-            return rateLimiter.getRateLimitedValue(0);
-        }
+        return Functions.deadzone(0.05, rateLimiter.getRateLimitedValue(controlAxis.get()/3));
     }
 }

@@ -5,12 +5,11 @@ import java.util.function.BooleanSupplier;
 
 import frc.robot.commandegment.button.Button;
 import frc.robot.oi.Konami;
-import frc.robot.utilities.Usable;
 
 /**
  * Wrapper class for WPI's button that allows for better management
  */
-public class OIButton extends Button implements Usable {
+public class OIButton extends Button {
 
     private ArrayList<Object> users;
 
@@ -36,18 +35,4 @@ public class OIButton extends Button implements Usable {
         users = new ArrayList<>();
     }
 
-    @Override
-    public void using(Object user) {
-        users.add(user);
-    }
-
-    @Override
-    public void release(Object user) {
-        users.remove(user);
-    }
-
-    @Override
-    public boolean inUse() {
-        return !users.isEmpty();
-    }
 }

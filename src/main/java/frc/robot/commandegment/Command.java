@@ -72,10 +72,8 @@ public interface Command {
    * @param priority the new priority of the command 0-MAX_INT
    * @return a ParallelCommandGroup with the new priority
    */
-  default ParallelCommandGroup withPriority(int priority){
-    InstantCommand i = new InstantCommand();
-    i.setPriority(priority);
-    return new ParallelCommandGroup(this, i);
+  default PrioritisedCommand withPriority(int priority){
+    return new PrioritisedCommand(this, priority);
   }
 
   /**

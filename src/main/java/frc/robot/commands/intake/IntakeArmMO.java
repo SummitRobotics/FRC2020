@@ -1,14 +1,14 @@
 package frc.robot.commands.intake;
 
+import frc.robot.commandegment.CommandBase;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.IntakeArm;
-import frc.robot.utilities.MOCommand;
 
 /**
  * Manual override for the intake arm
  */
-public class IntakeArmMO extends MOCommand {
+public class IntakeArmMO extends CommandBase {
 
     private IntakeArm intakeArm;
     private OIAxis controlAxis;
@@ -23,7 +23,7 @@ public class IntakeArmMO extends MOCommand {
         OIButton controlButtonC
     ) {
         addRequirements(intakeArm);
-        addUsed(controlAxis, controlButtonA, controlButtonB, controlButtonC);
+        setPriority(1);
 
         this.intakeArm = intakeArm;
         this.controlAxis = controlAxis;
@@ -38,7 +38,6 @@ public class IntakeArmMO extends MOCommand {
         super.initialize();
         intakeArm.stop();
 
-        controlAxis.using(this);
     }
 
     @Override
@@ -63,7 +62,6 @@ public class IntakeArmMO extends MOCommand {
         super.end(interrupted);
         intakeArm.stop();
 
-        controlAxis.release(this);
     }
 
     @Override
