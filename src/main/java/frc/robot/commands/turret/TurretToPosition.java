@@ -9,7 +9,6 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.commandegment.CommandBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Turret;
 
 public class TurretToPosition extends CommandBase {

@@ -46,6 +46,7 @@ public class FollowTrajectory extends CommandBase {
 
     @Override
     public void execute() {
+        drivetrain.updateOdometry();
         command.execute();
     }
 

@@ -5,24 +5,11 @@ import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commandegment.Command;
-import frc.robot.commandegment.CommandSchedulest;
-import frc.robot.commandegment.InstantCommand;
-import frc.robot.commandegment.ParallelCommandGroup;
-import frc.robot.commandegment.ParallelDeadlineGroup;
-import frc.robot.commandegment.PrintCommand;
-import frc.robot.commandegment.ProxyScheduleCommand;
-import frc.robot.commandegment.SequentialCommandGroup;
-import frc.robot.commandegment.StartEndCommand;
-import frc.robot.commandegment.WaitCommand;
+import frc.robot.commandegment.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
 import frc.robot.utilities.ChangeRateLimiter;
@@ -393,18 +380,6 @@ public class RobotContainer {
      */
     public void teleopPeriodic(){
         SmartDashboard.putBoolean("intake position limit switch", intakeArm.getUpperLimit());
-        //System.out.println(SendableRegistry.contains(pdp));
-        if(RoboRioSim.getFPGAButton()){
-            System.out.println("removing all sendable items and clearing network table");
-            //java reflection sin to fix sendable
-            
-            LiveWindow.disableAllTelemetry();
-            NetworkTable t = NetworkTableInstance.getDefault().getTable("LiveWindow");
-            for(String x : t.getKeys()){
-                t.delete(x);
-            }
-           
-        }
     }
 
     /**
@@ -429,16 +404,12 @@ public class RobotContainer {
         String
         pathF2 = "paths/f2.wpilib.json",
         pathF3 = "paths/f3.wpilib.json",
-        pathLineMove = "paths/lineMove.wpilib.json",
-        pathDriveBack = "paths/driveBack.wpilib.json",
-        pathColectBalls = "paths/colectBalls.wpilib.json";
+        pathLineMove = "paths/lineMove.wpilib.json";
 
         try {
             Command f2 = Functions.splineCommandFromFile(drivetrain, pathF2);
             Command f3 = Functions.splineCommandFromFile(drivetrain, pathF3);
             Command lineDrive = Functions.splineCommandFromFile(drivetrain, pathLineMove);
-            Command driveBack = Functions.splineCommandFromFile(drivetrain, pathDriveBack);
-            Command getBals = Functions.splineCommandFromFile(drivetrain, pathColectBalls);
 
             auto = new SequentialCommandGroup(
                 autoInit.get(),

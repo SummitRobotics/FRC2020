@@ -37,8 +37,6 @@ public class Conveyor extends SubsystemBase {
 
 	private int ballShotOfset;
 
-	private boolean initlised;
-
 	private boolean previousSwitchState;
 
 	private RollingAverage switchVals;
@@ -68,7 +66,6 @@ public class Conveyor extends SubsystemBase {
 		intakeMode = false;
 		ballsShot = 0;
 		ballShotOfset = 0;
-        initlised = false;
         previousSwitchState = false;
 
 		switchVals = new RollingAverage(5, true);

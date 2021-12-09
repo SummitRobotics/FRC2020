@@ -58,8 +58,7 @@ public class ShufhellboardDriver {
     pressure = InfoTable.getEntry("pressure"),
     shotBalls = InfoTable.getEntry("shotBalls");
 
-    public static SendableChooser
-    autoChooser = new SendableChooser<Command>();
+    public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     public static void init(){
         SmartDashboard.putData(ShufhellboardDriver.autoChooser);

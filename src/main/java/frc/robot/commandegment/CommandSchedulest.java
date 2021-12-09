@@ -55,7 +55,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
   // A map from commands to their scheduling state.  Also used as a set of the currently-running
   // commands.
-  private final Vector<Command> scheduledCommands = new Vector<Command>();
+  private final Vector<CommandWithPriroty> scheduledCommands = new Vector<CommandWithPriroty>();
 
   private final Vector<Command> runningCommands = new Vector<Command>();
 
@@ -154,7 +154,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
     // run when disabled, or the command is already scheduled.
     if (m_disabled
         || (RobotState.isDisabled() && !command.runsWhenDisabled())
-        || scheduledCommands.contains(command)) {
+        || isScheduled(command)) {
       return;
     }
 
@@ -199,6 +199,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
    */
   private void initCommand(int priority, Command command) {
     command.initialize();
+    CommandWithPriroty commandWithPriroty = new CommandWithPriroty(command, priority);
 
     m_watchdog.addEpoch(command.getName() + ".initialize()");
 
@@ -219,14 +220,14 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
       //scedual command if apropreate
       if((priority >= previousCommandPriority) && priority < nextCommandPriority){
-        scheduledCommands.add(i, command);
+        scheduledCommands.add(i, commandWithPriroty);
         scedualedSucesfull = true;
         break;
       }
     }
    
     if(!scedualedSucesfull){
-        scheduledCommands.add(command);
+        scheduledCommands.add(commandWithPriroty);
     }
   }
 
@@ -240,7 +241,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
     }
     //moves through commands in reverse order
     for(int i = scheduledCommands.size()-1; i >= 0; i--){
-      Command commandToTryToRun = scheduledCommands.get(i);
+      Command commandToTryToRun = scheduledCommands.get(i).getCommand();
 
       Set<Subsystem> reqs =  commandToTryToRun.getRequirements();
 
@@ -251,12 +252,13 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
         for(Subsystem s : reqs){
           if(commandSubAscotion.get(s) != null){
             okToRun = false;
+            break;
           }
         }
 
         //if it is then add it to running subsystems and associates its requirements
         if(okToRun){
-          for(Subsystem s : commandToTryToRun.getRequirements()){
+          for(Subsystem s : reqs){
             commandSubAscotion.replace(s, commandToTryToRun);
           }
           newRunningCommands.addElement(commandToTryToRun);
@@ -321,7 +323,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
       if (!command.runsWhenDisabled() && RobotState.isDisabled()) {
         command.end(true);
 
-        scheduledCommands.remove(command);
+        removeCommand(command);
       }
 
       command.execute();
@@ -330,7 +332,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
       if (command.isFinished()) {
         command.end(false);
    
-        scheduledCommands.remove(command);
+        removeCommand(command);
       }
     }
 
@@ -401,6 +403,15 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
     scheduleWithUnlimitedPriority(deafultCommandPriority, defaultCommand.perpetually());
   }
 
+  private void removeCommand(Command command){
+    for(int i = 0; i<scheduledCommands.size(); i++){
+      if(scheduledCommands.get(i).getCommand().equals(command)){
+        scheduledCommands.remove(i);
+        break;
+      }
+    }
+  }
+
   /**
    * Cancels commands. The scheduler will only call {@link Command#end(boolean)} method of the
    * canceled command with {@code true}, indicating they were canceled (as opposed to finishing
@@ -418,21 +429,21 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
     //makes sure alreadt stopped commands are not ended twice
     for (Command command : commands) {
-      if (!scheduledCommands.contains(command)) {
+      if (!isScheduled(command)) {
         continue;
       }
 
       command.end(true);
 
-      scheduledCommands.remove(command);
+      removeCommand(command);
       m_watchdog.addEpoch(command.getName() + ".end(true)");
     }
   }
 
   /** Cancels all commands that are currently scheduled. */
   public void cancelAll() {
-    for (Command command : scheduledCommands) {
-      cancel(command);
+    for (CommandWithPriroty command : scheduledCommands) {
+      cancel(command.getCommand());
     }
 	}
 	
@@ -442,9 +453,9 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
    */
 	public void cancleCommandsForSubsystem(Subsystem subsystem){
     ArrayList<Command> toCancle = new ArrayList<Command>();
-		for(Command c : scheduledCommands){
-      if(c.getRequirements().contains(subsystem)){
-        toCancle.add(c);
+		for(CommandWithPriroty c : scheduledCommands){
+      if(c.getCommand().getRequirements().contains(subsystem)){
+        toCancle.add(c.getCommand());
       }
     }
     for(Command c : toCancle){
@@ -461,7 +472,15 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
    * @return whether the command is currently scheduled
    */
   public boolean isScheduled(Command... commands) {
-    return scheduledCommands.containsAll(Set.of(commands));
+    for (Command c: commands){
+      for (CommandWithPriroty cwp: scheduledCommands){
+        if (cwp.getCommand().equals(c)){
+          return true;
+        }
+      }
+    }
+    return false;
+    // return scheduledCommands.containsAll(Set.of(commands));
   }
 
   /**
@@ -500,8 +519,8 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
           Map<Double, Command> ids = new LinkedHashMap<>();
 
-          for (Command command : scheduledCommands) {
-            ids.put((double) command.hashCode(), command);
+          for (CommandWithPriroty command : scheduledCommands) {
+            ids.put((double) command.getCommand().hashCode(), command.getCommand());
           }
 
           double[] toCancel = cancelEntry.getDoubleArray(new double[0]);
@@ -521,4 +540,22 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
           idsEntry.setNumberArray(ids.keySet().toArray(new Double[0]));
         });
   }
-}
+
+  private class CommandWithPriroty{
+    private int priroty;
+    private Command command;
+
+    public CommandWithPriroty(Command command, int priroty){
+      this.priroty = priroty;
+      this.command = command;
+    }
+
+    public int getPriority() {
+      return this.priroty;
+    }
+
+    public Command getCommand(){
+      return this.command;
+    }
+  }
+} 

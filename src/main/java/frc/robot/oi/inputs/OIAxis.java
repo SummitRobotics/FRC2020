@@ -1,6 +1,5 @@
 package frc.robot.oi.inputs;
 
-import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
 
 import frc.robot.utilities.Functions;
@@ -15,7 +14,6 @@ public class OIAxis {
 	protected DoubleSupplier getter;
 	protected double deadzone;
 
-	private ArrayList<Object> users;
 
 	public OIAxis(DoubleSupplier getter) {
 		this(getter, DEFAULT_DEADZONE);
@@ -25,7 +23,6 @@ public class OIAxis {
 		this.getter = getter;
 		this.deadzone = deadzone;
 
-		users = new ArrayList<>();
 	}
 
 	/**

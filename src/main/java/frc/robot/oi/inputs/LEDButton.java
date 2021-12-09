@@ -48,7 +48,7 @@ public class LEDButton extends OIButton {
 	 * binds a button light to a command and the button being pressed to a command in 1 function call
 	 * @param command the command for the button to be bound to
 	 * @param butonAction the method refrence to the action the button should activate on (eg buttonObj::whenPressed)
-	 * it might be """ovrcomplicated""" but it saves you having to explicilty define a verable
+	 * it might be """overcomplicated""" but it saves you having to explicilty define a verable
 	 */
 	public void commandBind(Command command, Consumer<Command> butonAction){
 		butonAction.accept(command);
