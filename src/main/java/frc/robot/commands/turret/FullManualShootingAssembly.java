@@ -71,24 +71,24 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
-		turretRotationPower.using(this, getScedualedPriority());
-		shooterSpoolPower.using(this, getScedualedPriority());
-		shooterHoodPower.using(this, getScedualedPriority());
-		trigger.using(this, getScedualedPriority());
+		turretRotationPower.using(this);
+		shooterSpoolPower.using(this);
+		shooterHoodPower.using(this);
+		trigger.using(this);
 	}
 
 	@Override
 	public void execute() {
-		if (Functions.absGreater(turretRotationPower.getWithPriorityOrDeafult(this, 0), shooterHoodPower.getWithPriorityOrDeafult(this, 0))) {
-            double turretPower = turretRotationPower.getWithPriorityOrDeafult(this, 0) / 3;
+		if (Functions.absGreater(turretRotationPower.getWithPriority(this), shooterHoodPower.getWithPriority(this))) {
+            double turretPower = turretRotationPower.getWithPriority(this) / 3;
             turretPower = limiter.getRateLimitedValue(turretPower);
             turretPower = Functions.deadzone(.05, turretPower);
 			turret.setPower(turretPower); 
 
-		} else if (Functions.absGreater(shooterHoodPower.getWithPriorityOrDeafult(this, 0), turretRotationPower.getWithPriorityOrDeafult(this, 0))) {
+		} else if (Functions.absGreater(shooterHoodPower.getWithPriority(this), turretRotationPower.getWithPriority(this))) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
-			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.getWithPriorityOrDeafult(this, 0)) / 3)); // Scaled by 3 for proper motor control
+			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.getWithPriority(this)) / 3)); // Scaled by 3 for proper motor control
 
 		} else {
 			turret.setPower(limiter.getRateLimitedValue(0));
@@ -98,7 +98,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
 		// double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
-		double shooterPower = shooterSpoolPower.getWithPriorityOrDeafult(this, 0);
+		double shooterPower = shooterSpoolPower.getWithPriority(this);
 
 		if ((shooterPower > 0.1) && !ledON) {
 			manualShoot.activate();

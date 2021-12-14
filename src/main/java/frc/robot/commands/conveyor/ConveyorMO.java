@@ -31,7 +31,7 @@ public class ConveyorMO extends CommandBase {
 
 	@Override
 	public void execute() {
-		conveyor.setConveyor(controlAxis.getWithPriorityOrDeafult(this, 0));
+		conveyor.setConveyor(controlAxis.getWithPriority(this));
 	}
 
 	@Override

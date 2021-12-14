@@ -6,7 +6,7 @@ package frc.robot.utilities;
 
 /** Add your docs here. */
 public interface PrioritisedInput {
-    public void using(Object user, int Priority);
+    public void register(Object user, int Priority);
     public void release(Object user);
     public boolean ableToUse(Object user);
 }

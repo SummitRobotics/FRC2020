@@ -3,6 +3,7 @@ package frc.robot.oi.inputs;
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 
+import frc.robot.commandegment.CommandBase;
 import frc.robot.commandegment.button.Button;
 import frc.robot.oi.Konami;
 import frc.robot.utilities.PrioritisedInput;
@@ -36,6 +37,10 @@ public class OIButton extends Button implements PrioritisedInput {
         users = new HashMap<>();
     }
 
+    public boolean getWithPriority(Object user){
+		return getWithPriorityOrDeafult(user, false);
+	}
+
     public boolean getWithPriorityOrDeafult(Object user, boolean deafult){
         if(ableToUse(user)){
             return get();
@@ -45,8 +50,13 @@ public class OIButton extends Button implements PrioritisedInput {
         }
     }
 
+    public void using(CommandBase user) {
+        users.putIfAbsent(user, user.getScedualedPriority());
+        
+    }
+
     @Override
-    public void using(Object user, int priority) {
+    public void register(Object user, int priority) {
         users.putIfAbsent(user, priority);
         
     }
