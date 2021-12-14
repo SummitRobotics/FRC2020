@@ -71,10 +71,7 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
-		turretRotationPower.using(this);
-		shooterSpoolPower.using(this);
-		shooterHoodPower.using(this);
-		trigger.using(this);
+		registerAxies(turretRotationPower, shooterSpoolPower, shooterHoodPower, trigger);
 	}
 
 	@Override
@@ -123,10 +120,7 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
-		turretRotationPower.release(this);
-		shooterSpoolPower.release(this);
-		shooterHoodPower.release(this);
-		trigger.release(this);
+		reliceAxies();
 
 		conveyor.setShootMode(false);
 

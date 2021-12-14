@@ -3,7 +3,6 @@ package frc.robot.oi.inputs;
 import java.util.HashMap;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commandegment.CommandBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.PrioritisedInput;
@@ -60,10 +59,21 @@ public class OIAxis implements PrioritisedInput {
 		this.deadzone = deadzone;
 	}
 
+	/**
+	 * gets the axis useing the commands priority
+	 * @param user the object atempting to get the axis value (same one that registered with a priority)
+	 * @return the value if this object has the highest priority or 0
+	 */
 	public double getWithPriority(Object user){
 		return getWithPriorityOrDeafult(user, 0);
 	}
 
+	/**
+	 * gets the axis useing the commands priority
+	 * @param user the object atempting to get the axis value (same one that registered with a priority)
+	 * @param deafult the value that should be returned if the axis is used bu somthign else
+	 * @return the value if avalible or the deafult if not
+	 */
 	public double getWithPriorityOrDeafult(Object user, double deafult){
         if(ableToUse(user)){
             return get();
@@ -73,9 +83,9 @@ public class OIAxis implements PrioritisedInput {
         }
     }
 
-public void using (CommandBase user){
-	register(user, user.getScedualedPriority());
-}
+	public void register(CommandBase user){
+		register(user, user.getScedualedPriority());
+	}
 
     @Override
     public void register(Object user, int priority) {

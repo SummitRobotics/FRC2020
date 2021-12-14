@@ -7,8 +7,11 @@ package frc.robot.commandegment;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import frc.robot.utilities.PrioritisedInput;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 /** A {@link Sendable} base class for {@link Command}s. */
 @SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
@@ -16,6 +19,7 @@ public abstract class CommandBase implements Sendable, Command {
 
   protected Set<Subsystem> m_requirements = new HashSet<>();
   protected int priority;
+  private Vector<PrioritisedInput> registeredInputs = new Vector<>();
 
   protected CommandBase() {
     String name = getClass().getName();
@@ -41,6 +45,45 @@ public abstract class CommandBase implements Sendable, Command {
     }
   }
 
+  /**
+   * registers a set of inputs with a spisfic priority
+   * @param priority the priority of the inputs
+   * @param inputs the inputs to register
+   */
+  protected void registerAxies(int priority, PrioritisedInput... inputs){
+    for(PrioritisedInput i : inputs){
+      registeredInputs.add(i);
+      i.register(this, priority);
+    }
+  }
+
+   /**
+   * registers a set of inputs with the priority the command is scedulaed with
+   * @param inputs the inputs to register
+   */
+  protected void registerAxies(PrioritisedInput... inputs){
+    registerAxies(getScedualedPriority(), inputs);
+  }
+
+  /**
+   * relices all registered axies
+   */
+  protected void reliceAxies(){
+    for(PrioritisedInput i : registeredInputs){
+      reliceAxies(i);
+    }
+  }
+
+  /**
+   * relices all inputs passed in
+   * @param inputs the inputs to relice
+   */
+  protected void reliceAxies(PrioritisedInput... inputs){
+    for(PrioritisedInput i : inputs){
+      registeredInputs.remove(i);
+      i.release(this);
+    }
+  }
 
 
   /**

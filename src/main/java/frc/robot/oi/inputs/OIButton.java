@@ -37,10 +37,21 @@ public class OIButton extends Button implements PrioritisedInput {
         users = new HashMap<>();
     }
 
+    /**
+	 * gets the axis useing the commands priority
+	 * @param user the object atempting to get the axis value (same one that registered with a priority)
+	 * @return the value if this object has the highest priority or false
+	 */
     public boolean getWithPriority(Object user){
 		return getWithPriorityOrDeafult(user, false);
 	}
 
+    /**
+	 * gets the axis useing the commands priority
+	 * @param user the object atempting to get the axis value (same one that registered with a priority)
+	 * @param deafult the value that should be returned if the axis is used bu somthign else
+	 * @return the value if avalible or the deafult if not
+	 */
     public boolean getWithPriorityOrDeafult(Object user, boolean deafult){
         if(ableToUse(user)){
             return get();
