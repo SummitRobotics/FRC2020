@@ -28,6 +28,10 @@ public abstract class CommandBase implements Sendable, Command {
     return priority;
   }
 
+  public int getScedualedPriority(){
+    return CommandSchedulest.getInstance().getCommandScedualedPriority(this);
+  }
+  
   public void setPriority(int priority){
     if(priority < 0){
       throw new IllegalArgumentException("priorities below 0 are not aloud");

@@ -71,20 +71,24 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
+		turretRotationPower.using(this, getScedualedPriority());
+		shooterSpoolPower.using(this, getScedualedPriority());
+		shooterHoodPower.using(this, getScedualedPriority());
+		trigger.using(this, getScedualedPriority());
 	}
 
 	@Override
 	public void execute() {
-		if (Functions.absGreater(turretRotationPower.get(), shooterHoodPower.get())) {
-            double turretPower = turretRotationPower.get() / 3;
+		if (Functions.absGreater(turretRotationPower.getWithPriorityOrDeafult(this, 0), shooterHoodPower.getWithPriorityOrDeafult(this, 0))) {
+            double turretPower = turretRotationPower.getWithPriorityOrDeafult(this, 0) / 3;
             turretPower = limiter.getRateLimitedValue(turretPower);
             turretPower = Functions.deadzone(.05, turretPower);
 			turret.setPower(turretPower); 
 
-		} else if (Functions.absGreater(shooterHoodPower.get(), turretRotationPower.get())) {
+		} else if (Functions.absGreater(shooterHoodPower.getWithPriorityOrDeafult(this, 0), turretRotationPower.getWithPriorityOrDeafult(this, 0))) {
 			turret.setPower(limiter.getRateLimitedValue(0));
 
-			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.get()) / 3)); // Scaled by 3 for proper motor control
+			hood.setPower(-(Functions.deadzone(.05, shooterHoodPower.getWithPriorityOrDeafult(this, 0)) / 3)); // Scaled by 3 for proper motor control
 
 		} else {
 			turret.setPower(limiter.getRateLimitedValue(0));
@@ -94,7 +98,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		//System.out.println("shoot power: " + shooterSpoolPower.get());
 
 		// double shooterPower  = (shooterSpoolPower.get() - 1) / -2;
-		double shooterPower = shooterSpoolPower.get();
+		double shooterPower = shooterSpoolPower.getWithPriorityOrDeafult(this, 0);
 
 		if ((shooterPower > 0.1) && !ledON) {
 			manualShoot.activate();
@@ -110,7 +114,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		
 		
 	
-		conveyor.setShootMode(trigger.get());
+		conveyor.setShootMode(trigger.getWithPriorityOrDeafult(this, false));
 		
 
 
@@ -119,6 +123,11 @@ public class FullManualShootingAssembly extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		turretRotationPower.release(this);
+		shooterSpoolPower.release(this);
+		shooterHoodPower.release(this);
+		trigger.release(this);
+
 		conveyor.setShootMode(false);
 
 		turret.stop();

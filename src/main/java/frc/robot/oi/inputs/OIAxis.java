@@ -1,18 +1,22 @@
 package frc.robot.oi.inputs;
 
+import java.util.HashMap;
 import java.util.function.DoubleSupplier;
 
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.PrioritisedInput;
 
 /**
  * Wrapper for axes that allows for better management
  */
-public class OIAxis {
+public class OIAxis implements PrioritisedInput {
 
 	private final static double DEFAULT_DEADZONE = 0.05;
 
 	protected DoubleSupplier getter;
 	protected double deadzone;
+	private HashMap<Object, Integer> users;
+
 
 
 	public OIAxis(DoubleSupplier getter) {
@@ -53,5 +57,46 @@ public class OIAxis {
 	public void setDeadzone(double deadzone) {
 		this.deadzone = deadzone;
 	}
+
+	public double getWithPriorityOrDeafult(Object user, double deafult){
+        if(ableToUse(user)){
+            return get();
+        }
+        else{
+            return deafult;
+        }
+    }
+
+    @Override
+    public void using(Object user, int priority) {
+        users.putIfAbsent(user, priority);
+        
+    }
+
+    @Override
+    public void release(Object user) {
+        users.remove(user);
+        
+    }
+
+    @Override
+    public boolean ableToUse(Object user) {
+        //if the object trying to use is not registered say no
+        if(users.containsKey(user)){
+            //gets the priority atempting to be used
+            int atemptPriority = users.get(user);
+            //loops through all the objects and sees if there is one with a larger priority registered
+            for (Object x : users.keySet()){
+                if(atemptPriority < users.get(x)){
+                    return false;
+                }
+            }
+            //return true if there is no bigger priority
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
 }

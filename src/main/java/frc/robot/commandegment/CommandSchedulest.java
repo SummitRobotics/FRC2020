@@ -130,6 +130,20 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
   }
 
   /**
+   * gets the priority of a scedulaed command
+   * @param command the command to get the priority of
+   * @return the priority of the command or -2 if not scedualed
+   */
+  public int getCommandScedualedPriority(Command command){
+    for(CommandWithPriroty c : scheduledCommands){
+      if(c.getCommand().equals(command)){
+        return c.getPriority();
+      }
+    }
+    return -2;
+  }
+
+  /**
    * Schedules a command for execution. Does nothing if the command is already scheduled. If a
    * command's requirements are not available, it will only be started if all the commands currently
    * using those requirements have been scheduled as interruptible. If this is the case, they will

@@ -24,17 +24,19 @@ public class ConveyorMO extends CommandBase {
 
 	@Override
 	public void initialize() {
+		controlAxis.getWithPriorityOrDeafult(this, getScedualedPriority());
 		super.initialize();
 		conveyor.stop();
 	}
 
 	@Override
 	public void execute() {
-		conveyor.setConveyor(controlAxis.get());
+		conveyor.setConveyor(controlAxis.getWithPriorityOrDeafult(this, 0));
 	}
 
 	@Override
 	public void end(final boolean interrupted) {
+		controlAxis.release(this);
 		super.end(interrupted);
 		conveyor.stop();
 	}
