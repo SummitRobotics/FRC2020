@@ -33,6 +33,8 @@ public class ArcadeDrive extends CommandBase {
     private RollingAverage avgSpeed = new RollingAverage(2, true);
 
     private RollingAverage avgPower = new RollingAverage(2, true);
+
+    private boolean isSingleAxis = false;
     
     
     /**
@@ -62,12 +64,47 @@ public class ArcadeDrive extends CommandBase {
         
 
         addRequirements(drivetrain);
+        isSingleAxis = false;
+    }
+
+        /**
+     * teleop driver control
+     * @param drivetrain drivetrain instance
+     * @param shift shifter instance
+     * @param powerAxis control axis for the drivetrain power
+     * @param turnAxis control axis for the drivetrain turn
+     */
+    public ArcadeDrive(
+        Drivetrain drivetrain, 
+        OIAxis PowerAxis, 
+        OIAxis turnAxis,
+        Runnable shiftLow)
+    {
+
+        this.drivetrain = drivetrain;
+
+        this.forwardPowerAxis = PowerAxis;
+        this.turnAxis = turnAxis;
+        this.shiftLow = shiftLow;
+
+        limiter = new ChangeRateLimiter(max_change_rate);
+
+        
+
+        addRequirements(drivetrain);
+        isSingleAxis = true;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        registerAxies(forwardPowerAxis, reversePowerAxis, turnAxis);
+        if(isSingleAxis){
+            registerAxies(forwardPowerAxis, reversePowerAxis, turnAxis);
+        }
+        else{
+            registerAxies(forwardPowerAxis, turnAxis);
+        }
+        
         drivetrain.setOpenRampRate(0);
         avgPower.reset();
         avgSpeed.reset();
@@ -77,16 +114,23 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double forwardPower = forwardPowerAxis.getWithPriority(this);
-        double reversePower = reversePowerAxis.getWithPriority(this);
+        double power;
+        if(isSingleAxis){
+            power = Math.pow(Functions.deadzone(deadzone, forwardPowerAxis.getWithPriority(this)), 3);
+        }
+        else{
+            double forwardPower = forwardPowerAxis.getWithPriority(this);
+            double reversePower = reversePowerAxis.getWithPriority(this);
 
-        forwardPower = Functions.deadzone(deadzone, forwardPower);
-        reversePower = Functions.deadzone(deadzone, reversePower);
+            forwardPower = Functions.deadzone(deadzone, forwardPower);
+            reversePower = Functions.deadzone(deadzone, reversePower);
 
-        forwardPower = Math.pow(forwardPower, 2);
-        reversePower = Math.pow(reversePower, 2);
+            forwardPower = Math.pow(forwardPower, 2);
+            reversePower = Math.pow(reversePower, 2);
 
-        double power = forwardPower - reversePower;
+            power = forwardPower - reversePower;
+        }
+        
         double turn = Math.pow(turnAxis.getWithPriority(this), 3);
         
 
@@ -96,6 +140,7 @@ public class ArcadeDrive extends CommandBase {
 
         avgSpeed.update(Math.abs(drivetrain.getRightRPM()) + Math.abs(drivetrain.getLeftRPM()));
 
+        //shifts into low gear if drivetrain stalled
         if((avgPower.getAverage() > .5) && avgSpeed.getAverage() < 15){
             shiftLow.run();
         }

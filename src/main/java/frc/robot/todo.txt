@@ -11,5 +11,3 @@ curent monitering + auto reverse on convayer
 make drivetrain override good
 
 make good colored printing
-
-make things like intake set pos not be chronic by being able to stop all other commands acting on the same subsystem when a command starts

@@ -18,6 +18,7 @@ import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.utilities.lists.Ports;
 import frc.robot.utilities.lists.StatusPrioritys;
+import frc.robot.utilities.lists.commandPriorities;
 import frc.robot.oi.Konami;
 import frc.robot.oi.drivers.ControllerDriver;
 import frc.robot.oi.drivers.JoystickDriver;
@@ -212,7 +213,7 @@ public class RobotContainer {
                     scheduler.schedule(fullAutoShooterAssembly.get());
                 }
             })
-            );
+            ).withPriority(40);
 
 
         //these should always be the last things to run in the constructure
@@ -270,7 +271,10 @@ public class RobotContainer {
         launchpad.buttonB.pressBind();
 
         launchpad.buttonC.whileActiveContinuous(new ClimberArmMO(leftArm, joystick.axisY));
-        launchpad.buttonC.pressBind();        
+        launchpad.buttonC.pressBind();  
+        
+        //drivetrain override
+        launchpad.buttonD.commandBind(new ArcadeDrive(drivetrain, joystick.axisY, joystick.axisX, shifter::lowGear).withPriority(commandPriorities.MoPriority), launchpad.buttonD::whileHeld);
 
         launchpad.buttonE.whileActiveContinuous(new ConveyorMO(conveyor, joystick.axisY));
         launchpad.buttonE.pressBind();
