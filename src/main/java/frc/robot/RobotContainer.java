@@ -205,11 +205,11 @@ public class RobotContainer {
             // sets the turret default command based on the fun dile
             new InstantCommand(() -> {  
                 if (launchpad.funLeft.get()) {
-                    turret.setDefaultCommand(fullManualShooting);
+                    scheduler.schedule(fullManualShooting);
                 } else if (launchpad.funMiddle.get()) {
-                    turret.setDefaultCommand(semiAutoShooting);
+                    scheduler.schedule(semiAutoShooting);
                 } else if (launchpad.funRight.get()) {
-                    turret.setDefaultCommand(fullAutoShooterAssembly.get());
+                    scheduler.schedule(fullAutoShooterAssembly.get());
                 }
             })
             );
@@ -314,13 +314,13 @@ public class RobotContainer {
 
         // bindings for fun dial
         launchpad.funLeft.whenPressed(new InstantCommand(() -> {
-            turret.setDefaultCommand(fullManualShooting);
+            scheduler.schedule(fullManualShooting);
         }));
         launchpad.funMiddle.whenPressed(new InstantCommand(() -> {
-            turret.setDefaultCommand(semiAutoShooting);
+            scheduler.schedule(semiAutoShooting);
         }));
         launchpad.funRight.whenPressed(new InstantCommand(() -> {
-            turret.setDefaultCommand(fullAutoShooterAssembly.get());
+            scheduler.schedule(fullAutoShooterAssembly.get());
         }));
 
         //Controller bindings for intake
@@ -387,7 +387,7 @@ public class RobotContainer {
      */
     public void teleopInit() {
 
-        scheduler.schedule(teleInit);       
+        scheduler.schedule(teleInit);     
     }
 
     /**

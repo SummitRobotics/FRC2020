@@ -3,6 +3,7 @@ package frc.robot.commands.conveyor;
 import frc.robot.commandegment.CommandBase;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.utilities.lists.commandPriorities;
 
 public class ConveyorMO extends CommandBase {
 
@@ -16,7 +17,7 @@ public class ConveyorMO extends CommandBase {
 	 */
 	public ConveyorMO(Conveyor conveyor, OIAxis controlAxis) {
 		addRequirements(conveyor);
-		setPriority(1);
+		setPriority(commandPriorities.MoPriority);
 
 		this.conveyor = conveyor;
 		this.controlAxis = controlAxis;
@@ -24,7 +25,8 @@ public class ConveyorMO extends CommandBase {
 
 	@Override
 	public void initialize() {
-		controlAxis.getWithPriorityOrDeafult(this, getScedualedPriority());
+		registerAxies(controlAxis);
+		controlAxis.getWithPriority(this);
 		super.initialize();
 		conveyor.stop();
 	}
@@ -36,7 +38,7 @@ public class ConveyorMO extends CommandBase {
 
 	@Override
 	public void end(final boolean interrupted) {
-		controlAxis.release(this);
+		reliceAxies();
 		super.end(interrupted);
 		conveyor.stop();
 	}

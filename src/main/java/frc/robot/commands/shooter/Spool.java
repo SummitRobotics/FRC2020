@@ -16,6 +16,7 @@ public class Spool extends CommandBase {
 		this.power = power;
 
 		addRequirements(shooter);
+		setPriority(2);
 	}
 
 	@Override

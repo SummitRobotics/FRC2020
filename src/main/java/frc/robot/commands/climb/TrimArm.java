@@ -28,10 +28,12 @@ public class TrimArm extends CommandBase {
 		average = new RollingAverage(8, true); //Rolling average to increase slider precision
 
 		addRequirements(arm);
+		setPriority(2);
 	}
 
 	@Override
 	public void initialize() {
+		registerAxies(slider);
 		startingPosition = arm.getEncoderPosition();
 		sliderOffset = slider.get();
 	}
@@ -54,6 +56,7 @@ public class TrimArm extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		reliceAxies();
 		arm.stop();
 	}
 

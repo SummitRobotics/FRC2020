@@ -23,6 +23,7 @@ public class TurretToPosition extends CommandBase {
      */
     public TurretToPosition(Turret turret, double targetAngle) {
         addRequirements(turret);
+        setPriority(2);
         this.turret = turret;
         target = targetAngle;
         // GOOD DONT CHANGE

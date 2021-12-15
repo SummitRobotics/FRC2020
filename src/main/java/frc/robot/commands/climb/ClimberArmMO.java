@@ -3,6 +3,7 @@ package frc.robot.commands.climb;
 import frc.robot.commandegment.CommandBase;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.subsystems.ClimberArm;
+import frc.robot.utilities.lists.commandPriorities;
 
 public class ClimberArmMO extends CommandBase {
 
@@ -14,7 +15,7 @@ public class ClimberArmMO extends CommandBase {
 	 */
 	public ClimberArmMO(ClimberArm arm, OIAxis controlAxis) {
 		addRequirements(arm);
-		setPriority(1);
+		setPriority(commandPriorities.MoPriority);
 
 		this.arm = arm;
 		this.controlAxis = controlAxis;

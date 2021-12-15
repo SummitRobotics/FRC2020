@@ -9,6 +9,7 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.subsystems.IntakeArm;
 import frc.robot.subsystems.IntakeArm.States;
 
@@ -28,10 +29,13 @@ public class SetLoad extends CommandBase {
         end = false;
 
         addRequirements(intake);
+        setPriority(2);
     }
 
     @Override
     public void initialize() {
+        CommandSchedulest.getInstance().cancleCommandsForSubsystem(intake, getScedualedPriority(), this);
+
         timer.reset();
         timer.start();
 

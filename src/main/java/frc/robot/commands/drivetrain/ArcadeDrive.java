@@ -67,6 +67,7 @@ public class ArcadeDrive extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        registerAxies(forwardPowerAxis, reversePowerAxis, turnAxis);
         drivetrain.setOpenRampRate(0);
         avgPower.reset();
         avgSpeed.reset();
@@ -76,8 +77,8 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
 
-        double forwardPower = forwardPowerAxis.get();
-        double reversePower = reversePowerAxis.get();
+        double forwardPower = forwardPowerAxis.getWithPriority(this);
+        double reversePower = reversePowerAxis.getWithPriority(this);
 
         forwardPower = Functions.deadzone(deadzone, forwardPower);
         reversePower = Functions.deadzone(deadzone, reversePower);
@@ -86,7 +87,7 @@ public class ArcadeDrive extends CommandBase {
         reversePower = Math.pow(reversePower, 2);
 
         double power = forwardPower - reversePower;
-        double turn = Math.pow(turnAxis.get(), 3);
+        double turn = Math.pow(turnAxis.getWithPriority(this), 3);
         
 
         power = limiter.getRateLimitedValue(power);
@@ -113,6 +114,7 @@ public class ArcadeDrive extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(final boolean interrupted) {
+        reliceAxies();
         drivetrain.stop();
     }
 

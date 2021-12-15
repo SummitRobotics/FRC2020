@@ -2,6 +2,7 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.commandegment.InstantCommand;
 import frc.robot.commandegment.SequentialCommandGroup;
 import frc.robot.commandegment.WaitCommand;
@@ -31,6 +32,7 @@ public class SetUp extends SequentialCommandGroup {
             }, intake)
         );
         loopsClosed = 0;
+        setPriority(2);
     }
 
     private class SetUpProxy extends CommandBase {
@@ -40,6 +42,7 @@ public class SetUp extends SequentialCommandGroup {
 
         @Override
         public void initialize() {
+            CommandSchedulest.getInstance().cancleCommandsForSubsystem(intake, getScedualedPriority(), this);
             System.out.println("setup start");
             timer.reset();
             timer.start();

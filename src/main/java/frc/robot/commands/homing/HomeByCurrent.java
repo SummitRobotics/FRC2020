@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commandegment.CommandBase;
 import frc.robot.utilities.Homeable;
 import frc.robot.utilities.RollingAverage;
+import frc.robot.utilities.lists.commandPriorities;
 
 public class HomeByCurrent extends CommandBase {
 
@@ -35,6 +36,7 @@ public class HomeByCurrent extends CommandBase {
         setlimits = false;
 
         addRequirements(toHome.getSubsystemObject());
+        setPriority(commandPriorities.HomingPriority);
     }
 
     public HomeByCurrent(

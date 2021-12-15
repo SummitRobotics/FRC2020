@@ -16,6 +16,7 @@ import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
 import frc.robot.oi.shufhellboardwidgets.StatusDisplayWidget;
+import frc.robot.utilities.lists.commandPriorities;
 
 /**
  * Command for running the full auto mode
@@ -71,6 +72,7 @@ public class FullAutoShooterAssembly extends CommandBase {
 			}
 		};
 		addRequirements(turret);
+		setPriority(commandPriorities.shooterPriority);
 	}
 
 	@Override

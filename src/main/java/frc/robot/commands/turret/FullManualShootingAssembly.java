@@ -5,6 +5,7 @@ import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
+import frc.robot.utilities.lists.commandPriorities;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.Conveyor;
@@ -66,6 +67,7 @@ public class FullManualShootingAssembly extends CommandBase {
 		ledON = false;
 
 		addRequirements(turret);
+		setPriority(commandPriorities.shooterPriority);
 	}
 
 	@Override

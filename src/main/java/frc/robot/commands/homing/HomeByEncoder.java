@@ -7,6 +7,7 @@ package frc.robot.commands.homing;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commandegment.CommandBase;
 import frc.robot.utilities.Homeable;
+import frc.robot.utilities.lists.commandPriorities;
 
 public class HomeByEncoder extends CommandBase {
 
@@ -29,6 +30,7 @@ public class HomeByEncoder extends CommandBase {
         setlimits = false;
 
         addRequirements(toHome.getSubsystemObject());
+        setPriority(commandPriorities.HomingPriority);
     }
 
     public HomeByEncoder(Homeable toHome, double homingPower, int minLoops, double reverseLimit, double fowardLimit) {

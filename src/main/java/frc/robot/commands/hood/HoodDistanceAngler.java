@@ -13,6 +13,7 @@ import frc.robot.commandegment.CommandBase;
 import frc.robot.devices.LidarLight;
 import frc.robot.subsystems.Hood;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.lists.commandPriorities;
 
 /**
  * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, IT SHOULD NOT BE USED BY
@@ -28,6 +29,7 @@ public class HoodDistanceAngler extends CommandBase {
 
     public HoodDistanceAngler(Hood hood, LidarLight lidarLight) {
         addRequirements(hood);
+        setPriority(commandPriorities.shooterPriority);
 
         this.hood = hood;
         this.lidarlight = lidarLight;

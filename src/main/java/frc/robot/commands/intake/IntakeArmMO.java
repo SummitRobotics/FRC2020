@@ -4,6 +4,7 @@ import frc.robot.commandegment.CommandBase;
 import frc.robot.oi.inputs.OIAxis;
 import frc.robot.oi.inputs.OIButton;
 import frc.robot.subsystems.IntakeArm;
+import frc.robot.utilities.lists.commandPriorities;
 
 /**
  * Manual override for the intake arm
@@ -23,7 +24,7 @@ public class IntakeArmMO extends CommandBase {
         OIButton controlButtonC
     ) {
         addRequirements(intakeArm);
-        setPriority(1);
+        setPriority(commandPriorities.MoPriority);
 
         this.intakeArm = intakeArm;
         this.controlAxis = controlAxis;
@@ -35,6 +36,7 @@ public class IntakeArmMO extends CommandBase {
 
     @Override
     public void initialize() {
+        reliceAxies(controlAxis, controlButtonA, controlButtonB, controlButtonC);
         super.initialize();
         intakeArm.stop();
 
@@ -43,22 +45,23 @@ public class IntakeArmMO extends CommandBase {
     @Override
     public void execute() {
         if (controlButtonB.get()) {
-            intakeArm.setIntakePower(controlAxis.get());
+            intakeArm.setIntakePower(controlAxis.getWithPriority(this));
         } else {
-            if (controlButtonA.get()) {
+            if (controlButtonA.getWithPriority(this)) {
                 intakeArm.setIntakePower(IntakeArm.intakePower);
             } else {
                 intakeArm.setIntakePower(0);
             }
 
-            intakeArm.setPivotPower(controlAxis.get());
+            intakeArm.setPivotPower(controlAxis.getWithPriority(this));
         }
 
-        intakeArm.setLock(controlButtonC.get());
+        intakeArm.setLock(controlButtonC.getWithPriority(this));
     }
 
     @Override
     public void end(final boolean interrupted) {
+        reliceAxies();
         super.end(interrupted);
         intakeArm.stop();
 

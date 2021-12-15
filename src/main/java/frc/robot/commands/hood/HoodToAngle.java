@@ -19,6 +19,7 @@ public class HoodToAngle extends CommandBase {
 
     public HoodToAngle(Hood hood, double angle) {
         addRequirements(hood);
+        setPriority(2);
         this.hood = hood;
         this.angle = angle;
         pid = new PIDController(0.01, 0, 0);

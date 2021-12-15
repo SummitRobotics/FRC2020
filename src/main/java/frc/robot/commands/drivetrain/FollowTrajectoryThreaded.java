@@ -44,6 +44,7 @@ public class FollowTrajectoryThreaded extends CommandBase {
         this.period = 5_000_000;
 
         addRequirements(drivetrain);
+        setPriority(1);
     }
 
     @Override

@@ -329,25 +329,36 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
 		m_inRunLoop = true;
 
+    //removes commands that dont run when the robot is disabled
+
+    Vector<CommandWithPriroty> toRemove = new Vector<>();
+
+    for(CommandWithPriroty c : scheduledCommands){
+      if (!c.getCommand().runsWhenDisabled() && RobotState.isDisabled()) {
+        c.getCommand().end(true);
+
+        toRemove.add(c);
+      }
+    }
+
+    scheduledCommands.removeAll(toRemove);
+
     updateRunningCommands();
 		
     // Run scheduled commands, remove finished commands.
     for (Command command : runningCommands) {
 
-      if (!command.runsWhenDisabled() && RobotState.isDisabled()) {
-        command.end(true);
-
-        removeCommand(command);
-      }
-
       command.execute();
 
-      m_watchdog.addEpoch(command.getName() + ".execute()");
+      
       if (command.isFinished()) {
         command.end(false);
    
         removeCommand(command);
       }
+
+      m_watchdog.addEpoch(command.getName() + ".execute()");
+
     }
 
     m_inRunLoop = false;
@@ -462,14 +473,66 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 	}
 	
   /**
-   * cancles any commands associated with a subsystem
-   * @param subsystem 
+   * cancles any commands associated with a subsystem, except for deafult commands
+   * @param subsystem the subsystem to cancle commands for
    */
 	public void cancleCommandsForSubsystem(Subsystem subsystem){
     ArrayList<Command> toCancle = new ArrayList<Command>();
 		for(CommandWithPriroty c : scheduledCommands){
-      if(c.getCommand().getRequirements().contains(subsystem)){
+      if(c.getCommand().getRequirements().contains(subsystem) && getCommandScedualedPriority(c.getCommand()) >= 0){
         toCancle.add(c.getCommand());
+      }
+    }
+    for(Command c : toCancle){
+      cancel(c);
+    }
+	}
+
+  /**
+   * cancles any commands associated with a subsystem, except for deafult commands
+   * @param subsystem the subsystem to cancle commands for
+   * @param priority the priority for the cancle, all commands with a priority less that or equal will be cancled
+   */
+	public void cancleCommandsForSubsystem(Subsystem subsystem, int priority){
+    if(priority < 0){
+      throw new IllegalArgumentException("the priority can not be less than 0");
+    }
+    ArrayList<Command> toCancle = new ArrayList<Command>();
+		for(CommandWithPriroty c : scheduledCommands){
+      if(c.getCommand().getRequirements().contains(subsystem) && getCommandScedualedPriority(c.getCommand()) >= priority){
+        toCancle.add(c.getCommand());
+      }
+    }
+    for(Command c : toCancle){
+      cancel(c);
+    }
+	}
+
+   /**
+   * cancles any commands associated with a subsystem, except for deafult commands
+   * @param subsystem the subsystem to cancle commands for
+   * @param priority the priority for the cancle, all commands with a priority less that or equal will be cancled
+   * @param exclude commands to exclude from being cancled
+   */
+	public void cancleCommandsForSubsystem(Subsystem subsystem, int priority, Command... exclude){
+    if(priority < 0){
+      throw new IllegalArgumentException("the priority can not be less than 0");
+    }
+    ArrayList<Command> toCancle = new ArrayList<Command>();
+		for(CommandWithPriroty c : scheduledCommands){
+      if(c.getCommand().getRequirements().contains(subsystem) && (getCommandScedualedPriority(c.getCommand()) >= priority)){
+        //prevents command from being removed if it has been excluded
+        boolean canRemove = true;
+        for(int i=0; i<exclude.length; i++){
+          if(c.getCommand().equals(exclude[i])){
+            canRemove = false;
+            break;
+          }
+        }
+
+        if(canRemove){
+          toCancle.add(c.getCommand());
+        }
       }
     }
     for(Command c : toCancle){

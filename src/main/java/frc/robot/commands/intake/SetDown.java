@@ -2,6 +2,7 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commandegment.CommandBase;
+import frc.robot.commandegment.CommandSchedulest;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
 import frc.robot.devices.LEDs.LEDs;
@@ -25,6 +26,7 @@ public class SetDown extends CommandBase {
         this.intake = intake;
 
         addRequirements(intake);
+        setPriority(2);
     }
 
     public SetDown getDuplicate(){
@@ -33,6 +35,7 @@ public class SetDown extends CommandBase {
 
     @Override
     public void initialize() {
+        CommandSchedulest.getInstance().cancleCommandsForSubsystem(intake, getScedualedPriority(), this);
         // new LEDCall("ArmDown", LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off).activate();
         System.out.println("setdown start");
         LEDs.getInstance().addCall("ArmDown", new LEDCall(LEDPriorities.intakeDown, LEDRange.All).ffh(Colors.Blue, Colors.Off));

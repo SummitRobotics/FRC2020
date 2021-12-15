@@ -6,6 +6,7 @@ import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lemonlight.CamModes;
 import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.lists.commandPriorities;
 
 /**
  * THIS SHOULD ONLY BE USED IN A SHOOTING ASSEMBLY, **IT SHOULD NOT BE USED BY ITSELF**
@@ -44,6 +45,7 @@ public abstract class VisionTarget extends CommandBase {
 		if (!partOfFullAuto){
 			addRequirements(turret);
 		}
+		setPriority(commandPriorities.shooterPriority);
 	}
 
 	public void initialize() {

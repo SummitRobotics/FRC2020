@@ -16,6 +16,8 @@ import frc.robot.oi.inputs.LEDButton.LED;
 
 public class ClimbSequence extends SequentialCommandGroup {
 
+	private OIButton next;
+
 	/**
 	 * Robot's climbing sequence
 	 * 
@@ -46,6 +48,9 @@ public class ClimbSequence extends SequentialCommandGroup {
         
         LEDCall armsUp = new LEDCall(LEDPriorities.armsUp, LEDRange.All).flashing(Colors.Red, Colors.Off);
 
+		setPriority(1);
+
+		this.next = nextPhase;
 		/**
 		 * A command to allow for both climber arms to be manually trimmed using the trimming sliders
 		 * on the launchpad.
@@ -90,5 +95,17 @@ public class ClimbSequence extends SequentialCommandGroup {
 			new RaiseArmsSync(leftArm, rightArm),
 			trim
 		);
+	}
+
+	@Override
+	public void initialize() {
+		registerAxies(next);
+		super.initialize();
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		super.end(interrupted);
+		reliceAxies();
 	}
 }

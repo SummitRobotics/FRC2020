@@ -11,6 +11,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
+import frc.robot.utilities.lists.commandPriorities;
 
 /**
  * Command for running the semi auto mode
@@ -43,11 +44,13 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
         this.conveyor = conveyor;
         
         this.trigger = trigger;
+        setPriority(commandPriorities.shooterPriority);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        registerAxies(controlAxis, trigger);
         LEDs.getInstance().removeCall("fullautoshooting");
     }
     
@@ -59,6 +62,12 @@ public class SemiAutoShooterAssembly extends FullAutoShooterAssembly {
         } else {
             conveyor.setShootMode(false);
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        reliceAxies();
     }
 
     @Override
