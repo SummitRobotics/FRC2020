@@ -16,7 +16,7 @@ public class OIAxis implements PrioritisedInput {
 
 	protected DoubleSupplier getter;
 	protected double deadzone;
-	private HashMap<Object, Integer> users;
+	private HashMap<Object, Integer> users = new HashMap<>();
 
 
 

@@ -73,7 +73,11 @@ public class FullManualShootingAssembly extends CommandBase {
 	@Override
 	public void initialize() {
 		turret.stop();
-		registerAxies(turretRotationPower, shooterSpoolPower, shooterHoodPower, trigger);
+        registerAxies(turretRotationPower, shooterSpoolPower, shooterHoodPower, trigger);
+        //registerAxies(turretRotationPower);
+        //turretRotationPower.register(this, 10);
+        //registerAxies(shooterHoodPower);
+        //registerAxies(shooterSpoolPower, trigger);
 	}
 
 	@Override

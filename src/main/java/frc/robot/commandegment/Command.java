@@ -5,6 +5,8 @@
 package frc.robot.commandegment;
 
 import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
 import java.util.function.BooleanSupplier;
 
 //TODO fix all of this javadoc
@@ -317,4 +319,8 @@ public interface Command {
     }
     return highest;
   }
+
+  public Vector<UUID> getUUID();
+
+  public boolean equalsUUID(Object command);
 }

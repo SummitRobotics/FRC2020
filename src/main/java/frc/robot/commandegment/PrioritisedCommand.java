@@ -27,6 +27,7 @@ public class PrioritisedCommand extends CommandBase {
   public PrioritisedCommand(Command command, int priority) {
     requireUngrouped(command);
     registerGroupedCommands(command);
+    addUuids(command.getUUID());
     m_command = command;
     m_requirements.addAll(command.getRequirements());
     setPriority(priority);

@@ -25,6 +25,7 @@ public class PerpetualCommand extends CommandBase {
    * @param command the command to run perpetually
    */
   public PerpetualCommand(Command command) {
+    addUuids(command.getUUID());
     requireUngrouped(command);
     registerGroupedCommands(command);
     m_command = command;

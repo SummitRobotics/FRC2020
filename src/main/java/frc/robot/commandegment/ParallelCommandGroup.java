@@ -48,6 +48,7 @@ public class ParallelCommandGroup extends CommandGroupBase {
       m_commands.put(command, false);
       m_requirements.addAll(command.getRequirements());
       m_runWhenDisabled &= command.runsWhenDisabled();
+      addUuids(command.getUUID());
     }
     setPriority(Command.getHighestPriority(commands));
   }

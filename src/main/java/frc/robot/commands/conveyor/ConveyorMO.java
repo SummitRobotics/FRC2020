@@ -16,6 +16,7 @@ public class ConveyorMO extends CommandBase {
 	 * @param controlAxis the axis to control the conveyor
 	 */
 	public ConveyorMO(Conveyor conveyor, OIAxis controlAxis) {
+        super();
 		addRequirements(conveyor);
 		setPriority(commandPriorities.MoPriority);
 
@@ -25,8 +26,8 @@ public class ConveyorMO extends CommandBase {
 
 	@Override
 	public void initialize() {
+        System.out.println("convayer mo uuid is: " + getUUID());
 		registerAxies(controlAxis);
-		controlAxis.getWithPriority(this);
 		super.initialize();
 		conveyor.stop();
 	}

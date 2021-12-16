@@ -41,6 +41,8 @@ public class SelectCommand extends CommandBase {
 
     CommandGroupBase.registerGroupedCommands(commands.values().toArray(new Command[] {}));
 
+    commands.values().forEach((Command c) -> addUuids(c.getUUID()));
+
     m_commands = requireNonNullParam(commands, "commands", "SelectCommand");
     m_selector = requireNonNullParam(selector, "selector", "SelectCommand");
 

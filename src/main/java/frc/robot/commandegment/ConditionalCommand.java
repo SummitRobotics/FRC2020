@@ -37,6 +37,7 @@ public class ConditionalCommand extends CommandBase {
    */
   public ConditionalCommand(Command onTrue, Command onFalse, BooleanSupplier condition) {
     requireUngrouped(onTrue, onFalse);
+    addUuids(onTrue.getUUID(), onFalse.getUUID());
 
     CommandGroupBase.registerGroupedCommands(onTrue, onFalse);
 

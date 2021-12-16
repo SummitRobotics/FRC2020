@@ -135,12 +135,14 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
    * @return the priority of the command or -2 if not scedualed
    */
   public int getCommandScedualedPriority(Command command){
-    for(CommandWithPriroty c : scheduledCommands){
-      if(c.getCommand().equals(command)){
-        return c.getPriority();
-      }
-    }
-    return -2;
+        for(CommandWithPriroty c : scheduledCommands){
+            System.out.println(command.getName() + " has uuids " + command.getUUID() + " \n ::::::::::::: \n " + c.getCommand().getName() + " has uuids " + c.getCommand().getUUID() + "\n\n\n\n");
+            if(c.getCommand().equalsUUID(command)){
+                System.out.println("returned good");
+                return c.getPriority();
+            }
+        }
+        return -2;
   }
 
   /**
@@ -430,7 +432,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
 
   private void removeCommand(Command command){
     for(int i = 0; i<scheduledCommands.size(); i++){
-      if(scheduledCommands.get(i).getCommand().equals(command)){
+      if(scheduledCommands.get(i).getCommand().equalsUUID(command)){
         scheduledCommands.remove(i);
         break;
       }
@@ -524,7 +526,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
         //prevents command from being removed if it has been excluded
         boolean canRemove = true;
         for(int i=0; i<exclude.length; i++){
-          if(c.getCommand().equals(exclude[i])){
+          if(c.getCommand().equalsUUID(exclude[i])){
             canRemove = false;
             break;
           }
@@ -551,7 +553,7 @@ public final class CommandSchedulest implements Sendable, AutoCloseable {
   public boolean isScheduled(Command... commands) {
     for (Command c: commands){
       for (CommandWithPriroty cwp: scheduledCommands){
-        if (cwp.getCommand().equals(c)){
+        if (cwp.getCommand().equalsUUID(c)){
           return true;
         }
       }

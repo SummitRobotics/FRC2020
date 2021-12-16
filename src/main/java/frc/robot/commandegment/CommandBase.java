@@ -11,6 +11,7 @@ import frc.robot.utilities.PrioritisedInput;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Vector;
 
 /** A {@link Sendable} base class for {@link Command}s. */
@@ -19,12 +20,14 @@ public abstract class CommandBase implements Sendable, Command {
 
   protected Set<Subsystem> m_requirements = new HashSet<>();
   protected int priority;
+  public Vector<UUID> uuid = new Vector<>();
   private Vector<PrioritisedInput> registeredInputs = new Vector<>();
 
   protected CommandBase() {
     String name = getClass().getName();
     SendableRegistry.add(this, name.substring(name.lastIndexOf('.') + 1));
     priority = 0;
+    this.uuid.add(UUID.randomUUID());
   }
 
   @Override
@@ -62,7 +65,8 @@ public abstract class CommandBase implements Sendable, Command {
    * @param inputs the inputs to register
    */
   protected void registerAxies(PrioritisedInput... inputs){
-    registerAxies(getScedualedPriority(), inputs);
+    System.out.println(this.getScedualedPriority());
+    registerAxies(this.getScedualedPriority(), inputs);
   }
 
   /**
@@ -70,8 +74,9 @@ public abstract class CommandBase implements Sendable, Command {
    */
   protected void reliceAxies(){
     for(PrioritisedInput i : registeredInputs){
-      reliceAxies(i);
+      i.release(this);
     }
+    registeredInputs.clear();
   }
 
   /**
@@ -171,5 +176,33 @@ public abstract class CommandBase implements Sendable, Command {
         });
     builder.addBooleanProperty(
         ".isParented", () -> CommandGroupBase.getGroupedCommands().contains(this), null);
+  }
+
+  @Override
+  public boolean equalsUUID(Object command){
+      try{
+          CommandBase cmd = ((CommandBase)command);
+          for (int i = 0; i < cmd.getUUID().size(); i++){
+              if (this.uuid.contains(cmd.getUUID().get(i))){
+                  return true;
+              }
+          }
+          return false;
+
+      } catch (Exception e){
+          return false;
+      }
+  }
+
+  protected void addUuids(Vector<UUID>... uuids){
+    for(int i = 0; i<uuids.length; i++){
+        this.uuid.addAll(uuids[i]);
+    }
+  }
+
+
+  @Override
+  public Vector<UUID> getUUID(){
+      return this.uuid;
   }
 }

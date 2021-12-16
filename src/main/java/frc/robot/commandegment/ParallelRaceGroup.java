@@ -49,6 +49,7 @@ public class ParallelRaceGroup extends CommandGroupBase {
       m_commands.add(command);
       m_requirements.addAll(command.getRequirements());
       m_runWhenDisabled &= command.runsWhenDisabled();
+      addUuids(command.getUUID());
     }
     setPriority(Command.getHighestPriority(commands));
   }
