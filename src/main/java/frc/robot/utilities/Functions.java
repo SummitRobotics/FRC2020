@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.drivetrain.FollowTrajectoryThreaded;
 import frc.robot.subsystems.Drivetrain;
@@ -122,6 +122,6 @@ public class Functions {
  
         Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(path);
 
-        return new FollowTrajectoryThreaded(drivetrain, trajectory).withoutRequirements();
+        return new FollowTrajectoryThreaded(drivetrain, trajectory);
     }
 }

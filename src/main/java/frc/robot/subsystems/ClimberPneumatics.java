@@ -2,6 +2,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.lists.Ports;
@@ -13,7 +14,7 @@ public class ClimberPneumatics extends SubsystemBase {
     private boolean climbState;
 
     public ClimberPneumatics() {
-        climb = new Solenoid(Ports.PCM_1, Ports.EXTEND_CLIMB);
+        climb = new Solenoid(Ports.PCM_1, PneumaticsModuleType.CTREPCM, Ports.EXTEND_CLIMB);
 
         climbState = true;
     }

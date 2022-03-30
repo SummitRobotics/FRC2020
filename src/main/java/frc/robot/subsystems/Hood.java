@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.Homeable;
-import frc.robot.devices.Lemonlight;
+// import frc.robot.devices.Lemonlight;
 import frc.robot.utilities.lists.Ports;
 import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 
@@ -27,14 +27,14 @@ import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 public class Hood extends SubsystemBase implements Homeable{
 
     private CANSparkMax adjustableHood;
-    private CANEncoder hoodEncoder;
+    private RelativeEncoder hoodEncoder;
     private DoubleDisplayWidget indicator;
 
     public static final double fowardLimit = 10.5;
     public static final double backLimit = 2.5;
 
     //WRONG ANGLE
-    public double LidarMountAngle = Lemonlight.mountAngle;
+    // public double LidarMountAngle = Lemonlight.mountAngle;
 
     public Hood(DoubleDisplayWidget indicator){
 

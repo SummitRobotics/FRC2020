@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -18,7 +18,7 @@ import frc.robot.oi.shufhellboardwidgets.DoubleDisplayWidget;
 public class Turret extends SubsystemBase implements Homeable {
 
     private CANSparkMax turret;
-    private CANEncoder encoder;
+    private RelativeEncoder encoder;
     private DoubleDisplayWidget indicator;
 
     public static final double MAX_CHANGE_RATE = 0.025;

@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.lists.Ports;
 
@@ -23,8 +24,8 @@ public class Pneumatics extends SubsystemBase {
 
   public Pneumatics(NetworkTableEntry entry) {
     this.entry = entry;
-    compressor = new Compressor(Ports.PCM_1);
-    compressor.setClosedLoopControl(true);
+    compressor = new Compressor(Ports.PCM_1, PneumaticsModuleType.CTREPCM);
+    compressor.enableDigital();
     pressureSensor = new AnalogInput(Ports.PRESSURE_SENSOR);
 
     entry.forceSetNumber(getPressure());
@@ -34,9 +35,9 @@ public class Pneumatics extends SubsystemBase {
     return (250 * (pressureSensor.getAverageVoltage() / 5)) - 25;
   }
 
-  public void setColosedLoopControl(boolean set){
-    compressor.setClosedLoopControl(set);
-  }
+  // public void setClosedLoopControl(boolean set){
+  //   compressor.setClosedLoopControl(set);
+  // }
 
   public boolean getPressureSwitch(){
     return compressor.getPressureSwitchValue();
@@ -44,10 +45,10 @@ public class Pneumatics extends SubsystemBase {
 
   public void setCompressor(boolean set){
     if(set){
-      compressor.start();
+      compressor.enableDigital();
     }
     else{
-      compressor.stop();
+      compressor.disable();
     }
   }
 

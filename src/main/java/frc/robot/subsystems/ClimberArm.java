@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -27,8 +27,8 @@ public class ClimberArm extends SubsystemBase {
     }
  
     private CANSparkMax motor;
-    private CANEncoder encoder;
-    private CANPIDController pidController;
+    private RelativeEncoder encoder;
+    private SparkMaxPIDController pidController;
     private Sides side;
 
     private static final double

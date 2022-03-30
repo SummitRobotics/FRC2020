@@ -40,7 +40,6 @@ public class SetUp extends SequentialCommandGroup {
 
         @Override
         public void initialize() {
-            System.out.println("setup start");
             timer.reset();
             timer.start();
 
@@ -60,21 +59,19 @@ public class SetUp extends SequentialCommandGroup {
             loopsClosed = 0;
         }
 
-        // //fix for trying to rase intake if battery is low
-        // //this will gradualy increse the motor power if the intake has not raised after 3s
-        // //this way the intake will not be left down if the battery is low and the motor therefor has less power
-        // @Override
-        // public void execute() {
-        //     System.out.println("setup exicuted");
-        //     if((intakeLPower < 1) && (timer.get() > timeBeforePowerIncrese)){
-        //         intakeLPower = intakeLPower + Math.copySign(0.05, intakeLPower);
-        //         intake.setPivotPower(intakeLPower);
-        //     } 
-        // }
+        //fix for trying to rase intake if battery is low
+        //this will gradualy increse the motor power if the intake has not raised after 3s
+        //this way the intake will not be left down if the battery is low and the motor therefor has less power
+        @Override
+        public void execute() {
+            if((intakeLPower < 1) && (timer.get() > timeBeforePowerIncrese)){
+                intakeLPower = intakeLPower + Math.copySign(0.05, intakeLPower);
+                intake.setPivotPower(intakeLPower);
+            } 
+        }
     
         @Override
         public void end(boolean interrupted) {   
-            System.out.println("setup end");
             if(!interrupted){
                 intake.setState(States.UP);
             }
@@ -90,10 +87,9 @@ public class SetUp extends SequentialCommandGroup {
         public boolean isFinished() {
             boolean sw = intake.getUpperLimit();
             if(sw){
-                intake.closeLock();
                 loopsClosed++;
             }
-            return (sw && loopsClosed > 3) || end;
+            return (sw && loopsClosed > 5) || end;
         }    
     }
 

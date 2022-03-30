@@ -6,8 +6,8 @@ package frc.robot.commands.drivetrain;
 
 import java.lang.Thread.State;
 
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -44,23 +44,6 @@ public class FollowTrajectoryThreaded extends CommandBase {
         this.period = 5_000_000;
 
         addRequirements(drivetrain);
-    }
-
-    public FollowTrajectoryThreaded(Drivetrain drivetrain, Trajectory trajectory, boolean req) {
-        super();
-
-        this.drivetrain = drivetrain;
-        this.trajectory = trajectory;
-
-        this.period = 5_000_000;
-
-        if(req){
-            addRequirements(drivetrain);
-        }
-    }
-
-    public FollowTrajectoryThreaded withoutRequirements(){
-        return new FollowTrajectoryThreaded(drivetrain, trajectory, false);
     }
 
     @Override

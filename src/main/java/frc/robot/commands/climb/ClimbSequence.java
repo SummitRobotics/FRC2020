@@ -84,7 +84,7 @@ public class ClimbSequence extends SequentialCommandGroup {
 			new InstantCommand(armsUp::activate),
 			new InstantCommand(pneumatics::extendClimb),
 			new InstantCommand(() -> {
-				ledA.set(true);
+				ledA.set(false);
 				ledB.set(true);
 			}),
 			new RaiseArmsSync(leftArm, rightArm),

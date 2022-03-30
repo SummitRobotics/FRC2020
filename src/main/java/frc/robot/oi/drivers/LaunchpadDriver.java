@@ -117,5 +117,4 @@ public class LaunchpadDriver extends GenericDriver {
         outputs = (outputs & ~(1 << (outputNumber - 1))) | ((value ? 1 : 0) << (outputNumber - 1));
         HAL.setJoystickOutputs((byte) port, outputs, (short)0, (short)0);
     }
-
 }

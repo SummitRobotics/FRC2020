@@ -5,11 +5,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 
 /**
@@ -34,13 +35,13 @@ public class IntakeArm extends SubsystemBase {
 
 	private Solenoid lock;
 	private DigitalInput upperLimit;
-	private PowerDistributionPanel pdp;
+	private PowerDistribution pdp;
 
-	public IntakeArm(PowerDistributionPanel pdp) {
+	public IntakeArm(PowerDistribution pdp) {
 		this.pdp = pdp;
 		intake = new VictorSPX(Ports.INTAKE_ARM_SPIN);
 		pivot = new VictorSPX(Ports.INTAKE_ARM_PIVOT);
-		lock = new Solenoid(Ports.PCM_1, Ports.INTAKE_LOCK);
+		lock = new Solenoid(Ports.PCM_1, PneumaticsModuleType.CTREPCM, Ports.INTAKE_LOCK);
 
 		upperLimit = new DigitalInput(Ports.UPPER_LIMIT);
 		

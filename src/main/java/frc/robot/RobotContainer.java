@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.ClimberArm.Sides;
-import frc.robot.utilities.ChangeRateLimiter;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Colors;
 import frc.robot.utilities.lists.LEDPriorities;
@@ -42,17 +41,16 @@ import frc.robot.commands.intake.IntakeArmDefault;
 import frc.robot.commands.intake.IntakeArmMO;
 import frc.robot.commands.intake.SetDown;
 import frc.robot.commands.intake.SetUp;
-import frc.robot.commands.turret.FullAutoShooterAssembly;
-import frc.robot.commands.turret.FullManualShootingAssembly;
-import frc.robot.commands.turret.SemiAutoShooterAssembly;
+// import frc.robot.commands.turret.FullAutoShooterAssembly;
+// import frc.robot.commands.turret.FullManualShootingAssembly;
+// import frc.robot.commands.turret.SemiAutoShooterAssembly;
 import frc.robot.commands.turret.TurretToPosition;
 import frc.robot.devices.LEDs.LEDs;
-import frc.robot.devices.Lemonlight.LEDModes;
 import frc.robot.devices.LEDs.LEDCall;
 import frc.robot.devices.LEDs.LEDRange;
-import frc.robot.devices.Lemonlight;
+// import frc.robot.devices.Lemonlight;
 import frc.robot.devices.Lidar;
-import frc.robot.devices.LidarLight;
+// import frc.robot.devices.LidarLight;
 import frc.robot.devices.LidarV3;
 
 /**
@@ -70,22 +68,22 @@ public class RobotContainer {
     private LaunchpadDriver launchpad;
     private JoystickDriver joystick;
 
-    private PowerDistributionPanel pdp;
+    private PowerDistribution pdp;
 
     private Drivetrain drivetrain;
     private Shifter shifter;
     private Conveyor conveyor;
     private IntakeArm intakeArm;
-    private Shooter shooter;
+    // private Shooter shooter;
     private Hood hood;
     private ClimberArm leftArm, rightArm;
     private Turret turret;
     private ClimberPneumatics climberPneumatics;
     private Pneumatics pneumatics;
 
-    private Lemonlight limelight;
+    // private Lemonlight limelight;
     private Lidar turretLidar;
-    private LidarLight lidarlight;
+    // private LidarLight lidarlight;
     private AHRS gyro;
 
     private Supplier<Command> autoInit;
@@ -117,19 +115,19 @@ public class RobotContainer {
         ShufhellboardDriver.statusDisplay.addStatus("default", "robot on", Colors.White, StatusPrioritys.on);
 
         gyro = new AHRS();
-        limelight = new Lemonlight();
+        // limelight = new Lemonlight();
         turretLidar = new LidarV3();
-        lidarlight = new LidarLight(limelight, turretLidar);
+        // lidarlight = new LidarLight(limelight, turretLidar);
 
         //wpilib parts
-        pdp = new PowerDistributionPanel();
+        pdp = new PowerDistribution();
 
         //our subsystems
         pneumatics = new Pneumatics(ShufhellboardDriver.pressure);
         shifter = new Shifter();
         conveyor = new Conveyor(ShufhellboardDriver.shotBalls);
         intakeArm = new IntakeArm(pdp);
-        shooter = new Shooter(ShufhellboardDriver.shooterSpeed, ShufhellboardDriver.shooterTemp, ShufhellboardDriver.statusDisplay);
+        // shooter = new Shooter(ShufhellboardDriver.shooterSpeed, ShufhellboardDriver.shooterTemp, ShufhellboardDriver.statusDisplay);
         hood = new Hood(ShufhellboardDriver.hoodIndicator);
         leftArm = new ClimberArm(Sides.LEFT);
         rightArm = new ClimberArm(Sides.RIGHT);
@@ -139,15 +137,15 @@ public class RobotContainer {
 
         
         //HomeTurret = new HomeByCurrent(turret, -.2, 26, 2, 27);
-        HomeHood = new HomeByCurrent(hood, -.15, 15, hood.backLimit, hood.fowardLimit, 4);
+        HomeHood = new HomeByCurrent(hood, -.15, 15, Hood.backLimit, Hood.fowardLimit, 4);
 
-        HomeTurret = new HomeByEncoder(turret, -0.2, 20, turret.shootingBackLimit, turret.fowardLimit, 4);
+        HomeTurret = new HomeByEncoder(turret, -0.2, 20, Turret.shootingBackLimit, Turret.fowardLimit, 4);
 
-        fullAutoShooterAssembly = () -> new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
+        // fullAutoShooterAssembly = () -> new FullAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay);
 
-        semiAutoShooting = new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger);
+        // semiAutoShooting = new SemiAutoShooterAssembly(turret, shooter, hood, conveyor, lidarlight, ShufhellboardDriver.statusDisplay, joystick.axisX, joystick.trigger);
 
-        fullManualShooting = new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger);
+        // fullManualShooting = new FullManualShootingAssembly(turret, shooter, hood, conveyor, joystick.axisX, joystick.axisZ, joystick.axisY, joystick.trigger);
 
         intake = () -> new SequentialCommandGroup(
             new InstantCommand(() -> conveyor.enableIntakeMode()),
@@ -193,7 +191,6 @@ public class RobotContainer {
             new InstantCommand(climberPneumatics::extendClimb),
             new InstantCommand(intakeArm::closeLock),
             new InstantCommand(shifter::highGear),
-            new InstantCommand(() -> limelight.setLEDMode(LEDModes.FORCE_OFF)),
             new InstantCommand(() -> {
                 launchpad.bigLEDRed.set(false);
                 launchpad.bigLEDGreen.set(true);
@@ -235,8 +232,7 @@ public class RobotContainer {
             drivetrain, 
             controller1.rightTrigger,
             controller1.leftTrigger, 
-            controller1.leftX,
-            shifter::lowGear
+            controller1.leftX
         ));
         
         // makes intake arm go back to limit when not on limit
@@ -308,7 +304,7 @@ public class RobotContainer {
         Command turretStow = new StartEndCommand(
             () -> {turret.setSoftLimits(turret.normalBackLimit, turret.fowardLimit); scheduler.schedule(true, turretToPos);}, 
             () -> {scheduler.cancel(turretToPos); turret.setSoftLimits(turret.shootingBackLimit, turret.fowardLimit);}, 
-            turret, shooter, hood, conveyor);
+            turret, /*shooter,*/ hood, conveyor);
 
         launchpad.buttonG.toggleWhenPressed(turretStow);
         launchpad.buttonG.commandBind(turretStow);
@@ -391,7 +387,6 @@ public class RobotContainer {
         new LEDCall("disabled", LEDPriorities.on, LEDRange.All).solid(Colors.DimGreen).activate();
         ShufhellboardDriver.statusDisplay.removeStatus("enabled");
         conveyor.uninitBallCount();
-        ChangeRateLimiter.resetAllChangeRateLimiters();
     }
 
     /**
@@ -453,11 +448,11 @@ public class RobotContainer {
             //     new PrintCommand("done")
             // );
 
-            Command Test = new SequentialCommandGroup(f2, f3);
+            //Command Test = new SequentialCommandGroup(f2, f3);
 
             ShufhellboardDriver.autoChooser.setDefaultOption("auto", auto);
             //ShufhellboardDriver.autoChooser.addOption("5Ball", BallAuto);
-            ShufhellboardDriver.autoChooser.addOption("fun", Test);
+            // ShufhellboardDriver.autoChooser.addOption("test Auto", Test);
             
         } catch (IOException ex) {
             DriverStation.reportError("Unable to get auto paths", ex.getStackTrace());

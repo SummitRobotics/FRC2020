@@ -1,20 +1,20 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.Functions;
 import frc.robot.utilities.lists.Ports;
 import java.util.function.BooleanSupplier;
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -54,12 +54,12 @@ public class Drivetrain extends SubsystemBase {
     private CANSparkMax rightBack = new CANSparkMax(Ports.RIGHT_DRIVE_1, MotorType.kBrushless);
 
     // pid controllers
-    private CANPIDController leftPID = left.getPIDController();
-    private CANPIDController rightPID = right.getPIDController();
+    private SparkMaxPIDController leftPID = left.getPIDController();
+    private SparkMaxPIDController rightPID = right.getPIDController();
 
     // encoders
-    private CANEncoder leftEncoder = left.getEncoder();
-    private CANEncoder rightEncoder = right.getEncoder();
+    private RelativeEncoder leftEncoder = left.getEncoder();
+    private RelativeEncoder rightEncoder = right.getEncoder();
 
     private DifferentialDriveOdometry odometry;
 
